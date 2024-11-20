@@ -1,0 +1,14 @@
+.bannerArea {
+  flex-grow: 1;
+  position: relative;
+  background: #fff;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  width: 1080px;
+  height: 1080px;
+}
+
+.object {
+  position: absolute;
+  cursor: grab;
+}
