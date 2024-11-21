@@ -1,21 +1,23 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useBanner } from "../context/BannerContext";
 
 const BannerArea: React.FC = () => {
   const { objects, updateObject } = useBanner();
   const [draggingId, setDraggingId] = useState<number | null>(null);
+  const bannerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
+    event.preventDefault();
     setDraggingId(id);
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
-    if (draggingId !== null) {
-      const rect = (event.target as HTMLElement).getBoundingClientRect();
-      updateObject(draggingId, {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-      });
+    if (draggingId !== null && bannerRef.current) {
+      const rect = bannerRef.current.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      updateObject(draggingId, { x, y });
     }
   };
 
@@ -26,6 +28,7 @@ const BannerArea: React.FC = () => {
   return (
     <div
       className="banner-area"
+      ref={bannerRef}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >

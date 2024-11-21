@@ -8,7 +8,6 @@ const App: React.FC = () => {
     <BannerProvider>
       <div className="app">
         <Sidebar />
-
         <BannerArea />
         <ObjectProperties />
       </div>

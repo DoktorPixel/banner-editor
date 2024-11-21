@@ -3,10 +3,10 @@ export interface BannerObject1 {
   type: "text" | "image";
   x: number;
   y: number;
-  content?: string; // Для текста
+  content?: string;
   fontSize?: number;
   color?: string;
-  src?: string; // Для изображения
+  src?: string;
   width?: number;
   height?: number;
 }

@@ -16,7 +16,7 @@ const ObjectProperties: React.FC = () => {
 
   return (
     <div className="object-properties">
-      <h3>Свойства объекта</h3>
+      <h3>Властивості об'єкту</h3>
       {selectedObject ? (
         <>
           {selectedObject.type === "text" && (
@@ -30,7 +30,7 @@ const ObjectProperties: React.FC = () => {
                 />
               </label>
               <label>
-                Размер шрифта:
+                Розмір шрифта:
                 <input
                   type="number"
                   value={selectedObject.fontSize || 16}
@@ -40,7 +40,7 @@ const ObjectProperties: React.FC = () => {
                 />
               </label>
               <label>
-                Цвет:
+                Колір:
                 <input
                   type="color"
                   value={selectedObject.color || "#000000"}
@@ -52,7 +52,7 @@ const ObjectProperties: React.FC = () => {
           {selectedObject.type === "image" && (
             <>
               <label>
-                URL изображения:
+                URL зображення:
                 <input
                   type="text"
                   value={selectedObject.src || ""}
@@ -63,10 +63,10 @@ const ObjectProperties: React.FC = () => {
           )}
         </>
       ) : (
-        <p>Выберите объект для редактирования</p>
+        <p>Виберіть об'єкт для редагування</p>
       )}
       <div className="object-list">
-        <h4>Список объектов</h4>
+        <h4>Список об'єктів</h4>
         <ul>
           {objects.map((obj) => (
             <li
@@ -77,7 +77,7 @@ const ObjectProperties: React.FC = () => {
                 fontWeight: obj.id === selectedId ? "bold" : "normal",
               }}
             >
-              {obj.type === "text" ? obj.content || "Текст" : "Изображение"}
+              {obj.type === "text" ? obj.content || "Текст" : "Зображення"}
             </li>
           ))}
         </ul>
