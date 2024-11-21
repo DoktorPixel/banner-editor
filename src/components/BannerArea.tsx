@@ -7,7 +7,7 @@ const BannerArea: React.FC = () => {
   const bannerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
-    event.preventDefault();
+    event.preventDefault(); // Отключает выделение текста при перетаскивании
     setDraggingId(id);
   };
 
@@ -40,18 +40,28 @@ const BannerArea: React.FC = () => {
             left: object.x,
             top: object.y,
             cursor: "move",
+            width: object.width || "auto",
+            height: object.height || "auto",
           }}
           onMouseDown={(e) => handleMouseDown(object.id, e)}
         >
           {object.type === "text" ? (
-            <p style={{ fontSize: object.fontSize, color: object.color }}>
+            <p
+              style={{
+                fontSize: object.fontSize,
+                color: object.color,
+              }}
+            >
               {object.content}
             </p>
           ) : (
             <img
               src={object.src}
-              alt=""
-              style={{ width: "300px", height: "300px" }}
+              alt="img"
+              style={{
+                width: object.width || 300,
+                height: object.height || 300,
+              }}
             />
           )}
         </div>

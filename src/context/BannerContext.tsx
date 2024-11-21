@@ -22,7 +22,10 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const objects = history[currentStep] || [];
 
   const addObject = (object: BannerObject) => {
-    const newObjects = [...objects, object];
+    const newObjects = [
+      ...objects,
+      { ...object, width: object.width || 300, height: object.height || 300 }, // Установим размеры по умолчанию
+    ];
     updateHistory(newObjects);
   };
 

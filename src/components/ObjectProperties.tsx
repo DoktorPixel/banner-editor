@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useBanner } from "../context/BannerContext";
 import { BannerObject } from "../types";
+import {
+  Box,
+  Typography,
+  TextField,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 
 const ObjectProperties: React.FC = () => {
   const { objects, updateObject } = useBanner();
@@ -8,81 +16,105 @@ const ObjectProperties: React.FC = () => {
 
   const selectedObject = objects.find((obj) => obj.id === selectedId);
 
-  const handleChange = (key: keyof BannerObject, value: any) => {
+  const handleChange = (key: keyof BannerObject, value: string | number) => {
     if (selectedId !== null) {
       updateObject(selectedId, { [key]: value });
     }
   };
 
   return (
-    <div className="object-properties">
-      <h3>Властивості об'єкту</h3>
+    <Box className="object-properties">
+      <Typography variant="h5">Властивости объекта</Typography>
       {selectedObject ? (
-        <>
+        <Box>
           {selectedObject.type === "text" && (
             <>
-              <label>
-                Текст:
-                <input
-                  type="text"
-                  value={selectedObject.content || ""}
-                  onChange={(e) => handleChange("content", e.target.value)}
-                />
-              </label>
-              <label>
-                Розмір шрифта:
-                <input
-                  type="number"
-                  value={selectedObject.fontSize || 16}
-                  onChange={(e) =>
-                    handleChange("fontSize", parseInt(e.target.value))
-                  }
-                />
-              </label>
-              <label>
-                Колір:
-                <input
-                  type="color"
-                  value={selectedObject.color || "#000000"}
-                  onChange={(e) => handleChange("color", e.target.value)}
-                />
-              </label>
+              <TextField
+                label="Текст"
+                value={selectedObject.content || ""}
+                onChange={(e) => handleChange("content", e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Размер шрифта"
+                type="number"
+                value={selectedObject.fontSize || 16}
+                onChange={(e) =>
+                  handleChange("fontSize", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Цвет"
+                type="color"
+                value={selectedObject.color || "#000000"}
+                onChange={(e) => handleChange("color", e.target.value)}
+                fullWidth
+                margin="normal"
+              />
             </>
           )}
           {selectedObject.type === "image" && (
             <>
-              <label>
-                URL зображення:
-                <input
-                  type="text"
-                  value={selectedObject.src || ""}
-                  onChange={(e) => handleChange("src", e.target.value)}
-                />
-              </label>
+              <TextField
+                label="URL изображения"
+                value={selectedObject.src || ""}
+                onChange={(e) => handleChange("src", e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Ширина (px)"
+                type="number"
+                value={selectedObject.width || 300}
+                onChange={(e) =>
+                  handleChange("width", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Высота (px)"
+                type="number"
+                value={selectedObject.height || 300}
+                onChange={(e) =>
+                  handleChange("height", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
             </>
           )}
-        </>
+        </Box>
       ) : (
-        <p>Виберіть об'єкт для редагування</p>
+        <Typography>Выберите объект для редактирования</Typography>
       )}
-      <div className="object-list">
-        <h4>Список об'єктів</h4>
-        <ul>
-          {objects.map((obj) => (
-            <li
-              key={obj.id}
-              onClick={() => setSelectedId(obj.id)}
-              style={{
-                cursor: "pointer",
-                fontWeight: obj.id === selectedId ? "bold" : "normal",
-              }}
-            >
-              {obj.type === "text" ? obj.content || "Текст" : "Зображення"}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+      <Typography variant="h6" sx={{ marginTop: "20px" }}>
+        Список объектов
+      </Typography>
+      <List>
+        {objects.map((obj) => (
+          <ListItem
+            key={obj.id}
+            component="li"
+            onClick={() => setSelectedId(obj.id)}
+            sx={{
+              cursor: "pointer",
+              backgroundColor: obj.id === selectedId ? "lightgray" : "white",
+              "&:hover": { backgroundColor: "lightblue" },
+            }}
+          >
+            <ListItemText
+              primary={
+                obj.type === "text" ? obj.content || "Текст" : "Изображение"
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   );
 };
 

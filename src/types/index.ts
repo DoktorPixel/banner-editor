@@ -20,4 +20,6 @@ export interface BannerObject {
   fontSize?: number;
   color?: string;
   src?: string;
+  width?: number;
+  height?: number;
 }
