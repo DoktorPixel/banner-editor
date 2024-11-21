@@ -1,5 +1,10 @@
-@import "fonts";
-@import "reset";
+@use "fonts";
+@use "reset";
+
+@use "./components/App.scss";
+@use "./components/BannerArea.scss";
+@use "./components/ObjectProperties.scss";
+@use "./components/Sidebar.scss";
 
 * {
   font-family: "Poppins", sans-serif;

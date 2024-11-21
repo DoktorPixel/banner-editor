@@ -1,48 +1,34 @@
-import { BannerObject } from "../types";
-import styles from "../styles/modules/Sidebar.module.scss";
+import { useBanner } from "../context/BannerContext";
 
-interface SidebarProps {
-  setObjects: React.Dispatch<React.SetStateAction<BannerObject[]>>;
-}
+const Sidebar: React.FC = () => {
+  const { addObject } = useBanner();
 
-const Sidebar: React.FC<SidebarProps> = ({ setObjects }) => {
   const addText = () => {
-    setObjects((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        type: "text",
-        x: 50,
-        y: 50,
-        content: "Текст",
-        fontSize: 16,
-        color: "#000",
-      },
-    ]);
+    addObject({
+      id: Date.now(),
+      type: "text",
+      x: 50,
+      y: 50,
+      content: "Текст",
+      fontSize: 16,
+      color: "#000",
+    });
   };
 
   const addImage = () => {
-    const imageUrl = prompt("Введіть URL зображення:");
-    if (imageUrl) {
-      setObjects((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          type: "image",
-          x: 50,
-          y: 50,
-          src: imageUrl,
-          width: 200,
-          height: 200,
-        },
-      ]);
-    }
+    addObject({
+      id: Date.now(),
+      type: "image",
+      x: 50,
+      y: 50,
+      src: "https://via.placeholder.com/300",
+    });
   };
 
   return (
-    <div className={styles.sidebar}>
-      <button onClick={addText}>Додати текст</button>
-      <button onClick={addImage}>Додати зображення</button>
+    <div className="sidebar">
+      <button onClick={addText}>Добавить текст</button>
+      <button onClick={addImage}>Добавить изображение</button>
     </div>
   );
 };
