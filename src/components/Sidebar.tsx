@@ -1,7 +1,7 @@
 import { useBanner } from "../context/BannerContext";
 
 const Sidebar: React.FC = () => {
-  const { addObject } = useBanner();
+  const { addObject, undo, redo, canUndo, canRedo } = useBanner();
 
   const addText = () => {
     const content = prompt("Введіть текст", "Текст");
@@ -21,7 +21,7 @@ const Sidebar: React.FC = () => {
 
   const addImage = () => {
     const src = prompt(
-      "Введіть URL зображення",
+      "Введите URL изображения",
       "https://via.placeholder.com/300"
     );
 
@@ -38,6 +38,13 @@ const Sidebar: React.FC = () => {
     <div className="sidebar">
       <button onClick={addText}>Додати текст</button>
       <button onClick={addImage}>Додати зображення</button>
+      <hr />
+      <button onClick={undo} disabled={!canUndo}>
+        Назад
+      </button>
+      <button onClick={redo} disabled={!canRedo}>
+        Вперед
+      </button>
     </div>
   );
 };
