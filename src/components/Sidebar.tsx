@@ -18,7 +18,6 @@ const Sidebar: React.FC = () => {
   const [textContent, setTextContent] = useState("");
   const [imageSrc, setImageSrc] = useState("");
 
-  // Handlers for adding text
   const openTextDialog = () => setTextDialogOpen(true);
   const closeTextDialog = () => {
     setTextDialogOpen(false);
@@ -38,7 +37,6 @@ const Sidebar: React.FC = () => {
     closeTextDialog();
   };
 
-  // Handlers for adding image
   const openImageDialog = () => setImageDialogOpen(true);
   const closeImageDialog = () => {
     setImageDialogOpen(false);
@@ -58,12 +56,11 @@ const Sidebar: React.FC = () => {
 
   return (
     <Stack spacing={2} className="sidebar">
-      {/* Buttons */}
       <Button variant="contained" color="primary" onClick={openTextDialog}>
-        Добавить текст
+        Додати текст
       </Button>
       <Button variant="contained" color="secondary" onClick={openImageDialog}>
-        Добавить изображение
+        Додати зображення
       </Button>
       <Button
         variant="outlined"
@@ -84,7 +81,7 @@ const Sidebar: React.FC = () => {
 
       {/* Dialog for adding text */}
       <Dialog open={isTextDialogOpen} onClose={closeTextDialog}>
-        <DialogTitle>Добавить текст</DialogTitle>
+        <DialogTitle>Додати текст</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -97,22 +94,22 @@ const Sidebar: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeTextDialog} color="secondary">
-            Отмена
+            Відмінити
           </Button>
           <Button onClick={handleAddText} color="primary">
-            Добавить
+            Додати
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Dialog for adding image */}
       <Dialog open={isImageDialogOpen} onClose={closeImageDialog}>
-        <DialogTitle>Добавить изображение</DialogTitle>
+        <DialogTitle>Додати зображення</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="URL изображения"
+            label="URL зображення"
             fullWidth
             value={imageSrc}
             onChange={(e) => setImageSrc(e.target.value)}
@@ -120,10 +117,10 @@ const Sidebar: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeImageDialog} color="secondary">
-            Отмена
+            Відмінити
           </Button>
           <Button onClick={handleAddImage} color="primary">
-            Добавить
+            Додати
           </Button>
         </DialogActions>
       </Dialog>

@@ -9,6 +9,10 @@ import {
   ListItem,
   ListItemText,
   Button,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 
 const ObjectProperties: React.FC = () => {
@@ -26,13 +30,13 @@ const ObjectProperties: React.FC = () => {
   const handleDelete = () => {
     if (selectedId !== null) {
       deleteObject(selectedId);
-      setSelectedId(null); // Сбрасываем выбор объекта после удаления
+      setSelectedId(null);
     }
   };
 
   return (
     <Box className="object-properties">
-      <Typography variant="h5">Властивости объекта</Typography>
+      <Typography variant="h5">Властивості об'єкту</Typography>
       {selectedObject ? (
         <Box className="properties-list">
           {selectedObject.type === "text" && (
@@ -45,7 +49,7 @@ const ObjectProperties: React.FC = () => {
                 margin="normal"
               />
               <TextField
-                label="Размер шрифта"
+                label="Розмір шрифта"
                 type="number"
                 value={selectedObject.fontSize || 16}
                 onChange={(e) =>
@@ -55,21 +59,10 @@ const ObjectProperties: React.FC = () => {
                 margin="normal"
               />
               <TextField
-                label="Цвет"
+                label="Колір"
                 type="color"
                 value={selectedObject.color || "#000000"}
                 onChange={(e) => handleChange("color", e.target.value)}
-                fullWidth
-                margin="normal"
-              />
-            </>
-          )}
-          {selectedObject.type === "image" && (
-            <>
-              <TextField
-                label="URL изображения"
-                value={selectedObject.src || ""}
-                onChange={(e) => handleChange("src", e.target.value)}
                 fullWidth
                 margin="normal"
               />
@@ -84,9 +77,110 @@ const ObjectProperties: React.FC = () => {
                 margin="normal"
               />
               <TextField
-                label="Высота (px)"
+                label="Висота (px)"
                 type="number"
                 value={selectedObject.height || 300}
+                onChange={(e) =>
+                  handleChange("height", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Товщина тексту</InputLabel>
+                <Select
+                  value={selectedObject.fontWeight || "normal"}
+                  onChange={(e) => handleChange("fontWeight", e.target.value)}
+                  fullWidth
+                >
+                  <MenuItem value="normal">Normal</MenuItem>
+                  <MenuItem value="bold">Bold</MenuItem>
+                  <MenuItem value="lighter">Lighter</MenuItem>
+                  <MenuItem value="bolder">Bolder</MenuItem>
+                  <MenuItem value="400">400</MenuItem>
+                  <MenuItem value="700">700</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Стиль тексту</InputLabel>
+                <Select
+                  value={selectedObject.fontStyle || "normal"}
+                  onChange={(e) => handleChange("fontStyle", e.target.value)}
+                >
+                  <MenuItem value="normal">Normal</MenuItem>
+                  <MenuItem value="italic">Italic</MenuItem>
+                  <MenuItem value="oblique">Oblique</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Text Transform</InputLabel>
+                <Select
+                  value={selectedObject.textTransform || "none"}
+                  onChange={(e) =>
+                    handleChange("textTransform", e.target.value)
+                  }
+                >
+                  <MenuItem value="none">None</MenuItem>
+                  <MenuItem value="capitalize">Capitalize</MenuItem>
+                  <MenuItem value="uppercase">Uppercase</MenuItem>
+                  <MenuItem value="lowercase">Lowercase</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Text Decoration</InputLabel>
+                <Select
+                  value={selectedObject.textDecoration || "none"}
+                  onChange={(e) =>
+                    handleChange("textDecoration", e.target.value)
+                  }
+                >
+                  <MenuItem value="none">None</MenuItem>
+                  <MenuItem value="underline">Underline</MenuItem>
+                  <MenuItem value="overline">Overline</MenuItem>
+                  <MenuItem value="line-through">Line-Through</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Text Align</InputLabel>
+                <Select
+                  value={selectedObject.textAlign || "left"}
+                  onChange={(e) => handleChange("textAlign", e.target.value)}
+                >
+                  <MenuItem value="left">Left</MenuItem>
+                  <MenuItem value="center">Center</MenuItem>
+                  <MenuItem value="right">Right</MenuItem>
+                  <MenuItem value="justify">Justify</MenuItem>
+                </Select>
+              </FormControl>
+            </>
+          )}
+          {selectedObject.type === "image" && (
+            <>
+              <TextField
+                label="URL изображения"
+                value={selectedObject.src || ""}
+                onChange={(e) => handleChange("src", e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Ширина (px)"
+                type="number"
+                value={selectedObject.width}
+                onChange={(e) =>
+                  handleChange("width", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Висота (px)"
+                type="number"
+                value={selectedObject.height}
                 onChange={(e) =>
                   handleChange("height", parseInt(e.target.value))
                 }
@@ -102,14 +196,14 @@ const ObjectProperties: React.FC = () => {
             onClick={handleDelete}
             sx={{ marginTop: "20px" }}
           >
-            Удалить объект
+            Видалити об'єкт
           </Button>
         </Box>
       ) : (
-        <Typography>Выберите объект для редактирования</Typography>
+        <Typography>Виберіть об'єкт для редагування</Typography>
       )}
       <Typography variant="h6" sx={{ marginTop: "20px" }}>
-        Список объектов
+        Список об'єктів
       </Typography>
       <List>
         {objects.map((obj) => (
@@ -125,7 +219,7 @@ const ObjectProperties: React.FC = () => {
           >
             <ListItemText
               primary={
-                obj.type === "text" ? obj.content || "Текст" : "Изображение"
+                obj.type === "text" ? obj.content || "Текст" : "Зображення"
               }
             />
           </ListItem>
