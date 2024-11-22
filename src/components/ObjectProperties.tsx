@@ -8,10 +8,11 @@ import {
   List,
   ListItem,
   ListItemText,
+  Button,
 } from "@mui/material";
 
 const ObjectProperties: React.FC = () => {
-  const { objects, updateObject } = useBanner();
+  const { objects, updateObject, deleteObject } = useBanner();
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const selectedObject = objects.find((obj) => obj.id === selectedId);
@@ -22,11 +23,18 @@ const ObjectProperties: React.FC = () => {
     }
   };
 
+  const handleDelete = () => {
+    if (selectedId !== null) {
+      deleteObject(selectedId);
+      setSelectedId(null); // Сбрасываем выбор объекта после удаления
+    }
+  };
+
   return (
     <Box className="object-properties">
       <Typography variant="h5">Властивости объекта</Typography>
       {selectedObject ? (
-        <Box>
+        <Box className="properties-list">
           {selectedObject.type === "text" && (
             <>
               <TextField
@@ -87,6 +95,15 @@ const ObjectProperties: React.FC = () => {
               />
             </>
           )}
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDelete}
+            sx={{ marginTop: "20px" }}
+          >
+            Удалить объект
+          </Button>
         </Box>
       ) : (
         <Typography>Выберите объект для редактирования</Typography>

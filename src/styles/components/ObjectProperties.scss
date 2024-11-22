@@ -3,4 +3,8 @@
   padding: 10px;
   border: 1px solid #ccc;
   background: #f0f0f0;
+  .properties-list {
+    display: flex;
+    flex-direction: column;
+  }
 }

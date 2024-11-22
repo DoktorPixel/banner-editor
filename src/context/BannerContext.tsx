@@ -5,6 +5,7 @@ interface BannerContextProps {
   objects: BannerObject[];
   addObject: (object: BannerObject) => void;
   updateObject: (id: number, updates: Partial<BannerObject>) => void;
+  deleteObject: (id: number) => void;
   undo: () => void;
   redo: () => void;
   canUndo: boolean;
@@ -36,6 +37,11 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     updateHistory(newObjects);
   };
 
+  const deleteObject = (id: number) => {
+    const newObjects = objects.filter((obj) => obj.id !== id);
+    updateHistory(newObjects);
+  };
+
   const updateHistory = (newObjects: BannerObject[]) => {
     const newHistory = [...history.slice(0, currentStep + 1), newObjects];
     setHistory(newHistory);
@@ -55,7 +61,16 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <BannerContext.Provider
-      value={{ objects, addObject, updateObject, undo, redo, canUndo, canRedo }}
+      value={{
+        objects,
+        addObject,
+        updateObject,
+        deleteObject,
+        undo,
+        redo,
+        canUndo,
+        canRedo,
+      }}
     >
       {children}
     </BannerContext.Provider>
