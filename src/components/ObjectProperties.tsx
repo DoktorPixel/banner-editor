@@ -1,55 +1,231 @@
 import { useState } from "react";
+import { useBanner } from "../context/BannerContext";
 import { BannerObject } from "../types";
-import styles from "../styles/modules/ObjectProperties.module.scss";
+import {
+  Box,
+  Typography,
+  TextField,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
-interface ObjectPropertiesProps {
-  selectedObject: BannerObject;
-  updateObject: (id: number, updatedProperties: Partial<BannerObject>) => void;
-}
+const ObjectProperties: React.FC = () => {
+  const { objects, updateObject, deleteObject } = useBanner();
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
-const ObjectProperties: React.FC<ObjectPropertiesProps> = ({
-  selectedObject,
-  updateObject,
-}) => {
-  const [localProperties, setLocalProperties] =
-    useState<BannerObject>(selectedObject);
+  const selectedObject = objects.find((obj) => obj.id === selectedId);
 
-  const updateProperties = (key: keyof BannerObject, value: unknown) => {
-    setLocalProperties((prev) => ({ ...prev, [key]: value }));
-    updateObject(selectedObject.id, { [key]: value });
+  const handleChange = (key: keyof BannerObject, value: string | number) => {
+    if (selectedId !== null) {
+      updateObject(selectedId, { [key]: value });
+    }
+  };
+
+  const handleDelete = () => {
+    if (selectedId !== null) {
+      deleteObject(selectedId);
+      setSelectedId(null);
+    }
   };
 
   return (
-    <div className={styles.properties}>
-      {selectedObject.type === "text" && (
-        <>
-          <label>
-            Текст:
-            <input
-              type="text"
-              value={localProperties.content || ""}
-              onChange={(e) => updateProperties("content", e.target.value)}
-            />
-          </label>
-          <label>
-            Колір:
-            <input
-              type="color"
-              value={localProperties.color || "#000"}
-              onChange={(e) => updateProperties("color", e.target.value)}
-            />
-          </label>
-          <label>
-            Розмір шрифта:
-            <input
-              type="number"
-              value={localProperties.fontSize || 16}
-              onChange={(e) => updateProperties("fontSize", +e.target.value)}
-            />
-          </label>
-        </>
+    <Box className="object-properties">
+      <Typography variant="h5">Властивості об'єкту</Typography>
+      {selectedObject ? (
+        <Box className="properties-list">
+          {selectedObject.type === "text" && (
+            <>
+              <TextField
+                label="Текст"
+                value={selectedObject.content || ""}
+                onChange={(e) => handleChange("content", e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Розмір шрифта"
+                type="number"
+                value={selectedObject.fontSize || 16}
+                onChange={(e) =>
+                  handleChange("fontSize", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Колір"
+                type="color"
+                value={selectedObject.color || "#000000"}
+                onChange={(e) => handleChange("color", e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Ширина (px)"
+                type="number"
+                value={selectedObject.width || 300}
+                onChange={(e) =>
+                  handleChange("width", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Висота (px)"
+                type="number"
+                value={selectedObject.height || 300}
+                onChange={(e) =>
+                  handleChange("height", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Товщина тексту</InputLabel>
+                <Select
+                  value={selectedObject.fontWeight || "normal"}
+                  onChange={(e) => handleChange("fontWeight", e.target.value)}
+                  fullWidth
+                >
+                  <MenuItem value="normal">Normal</MenuItem>
+                  <MenuItem value="bold">Bold</MenuItem>
+                  <MenuItem value="lighter">Lighter</MenuItem>
+                  <MenuItem value="bolder">Bolder</MenuItem>
+                  <MenuItem value="400">400</MenuItem>
+                  <MenuItem value="700">700</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Стиль тексту</InputLabel>
+                <Select
+                  value={selectedObject.fontStyle || "normal"}
+                  onChange={(e) => handleChange("fontStyle", e.target.value)}
+                >
+                  <MenuItem value="normal">Normal</MenuItem>
+                  <MenuItem value="italic">Italic</MenuItem>
+                  <MenuItem value="oblique">Oblique</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Text Transform</InputLabel>
+                <Select
+                  value={selectedObject.textTransform || "none"}
+                  onChange={(e) =>
+                    handleChange("textTransform", e.target.value)
+                  }
+                >
+                  <MenuItem value="none">None</MenuItem>
+                  <MenuItem value="capitalize">Capitalize</MenuItem>
+                  <MenuItem value="uppercase">Uppercase</MenuItem>
+                  <MenuItem value="lowercase">Lowercase</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Text Decoration</InputLabel>
+                <Select
+                  value={selectedObject.textDecoration || "none"}
+                  onChange={(e) =>
+                    handleChange("textDecoration", e.target.value)
+                  }
+                >
+                  <MenuItem value="none">None</MenuItem>
+                  <MenuItem value="underline">Underline</MenuItem>
+                  <MenuItem value="overline">Overline</MenuItem>
+                  <MenuItem value="line-through">Line-Through</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Text Align</InputLabel>
+                <Select
+                  value={selectedObject.textAlign || "left"}
+                  onChange={(e) => handleChange("textAlign", e.target.value)}
+                >
+                  <MenuItem value="left">Left</MenuItem>
+                  <MenuItem value="center">Center</MenuItem>
+                  <MenuItem value="right">Right</MenuItem>
+                  <MenuItem value="justify">Justify</MenuItem>
+                </Select>
+              </FormControl>
+            </>
+          )}
+          {selectedObject.type === "image" && (
+            <>
+              <TextField
+                label="URL изображения"
+                value={selectedObject.src || ""}
+                onChange={(e) => handleChange("src", e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Ширина (px)"
+                type="number"
+                value={selectedObject.width}
+                onChange={(e) =>
+                  handleChange("width", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Висота (px)"
+                type="number"
+                value={selectedObject.height}
+                onChange={(e) =>
+                  handleChange("height", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+            </>
+          )}
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDelete}
+            sx={{ marginTop: "20px" }}
+          >
+            Видалити об'єкт
+          </Button>
+        </Box>
+      ) : (
+        <Typography>Виберіть об'єкт для редагування</Typography>
       )}
-    </div>
+      <Typography variant="h6" sx={{ marginTop: "20px" }}>
+        Список об'єктів
+      </Typography>
+      <List>
+        {objects.map((obj) => (
+          <ListItem
+            key={obj.id}
+            component="li"
+            onClick={() => setSelectedId(obj.id)}
+            sx={{
+              cursor: "pointer",
+              backgroundColor: obj.id === selectedId ? "lightgray" : "white",
+              "&:hover": { backgroundColor: "lightblue" },
+            }}
+          >
+            <ListItemText
+              primary={
+                obj.type === "text" ? obj.content || "Текст" : "Зображення"
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   );
 };
 

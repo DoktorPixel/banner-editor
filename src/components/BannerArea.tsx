@@ -1,56 +1,74 @@
-import { BannerObject } from "../types";
-import styles from "../styles/modules/BannerArea.module.scss";
+import { useState, useRef } from "react";
+import { useBanner } from "../context/BannerContext";
 
-interface BannerAreaProps {
-  objects: BannerObject[];
-  setSelectedObject: React.Dispatch<React.SetStateAction<BannerObject | null>>;
-  setObjects: React.Dispatch<React.SetStateAction<BannerObject[]>>;
-}
+const BannerArea: React.FC = () => {
+  const { objects, updateObject } = useBanner();
+  const [draggingId, setDraggingId] = useState<number | null>(null);
+  const bannerRef = useRef<HTMLDivElement>(null);
 
-const BannerArea: React.FC<BannerAreaProps> = ({
-  objects,
-  setSelectedObject,
-  setObjects,
-}) => {
-  const onDrag = (e: React.DragEvent<HTMLDivElement>, id: number) => {
-    const deltaX = e.movementX;
-    const deltaY = e.movementY;
-
-    setObjects((prev) =>
-      prev.map((obj) =>
-        obj.id === id ? { ...obj, x: obj.x + deltaX, y: obj.y + deltaY } : obj
-      )
-    );
+  const handleMouseDown = (id: number, event: React.MouseEvent) => {
+    event.preventDefault();
+    setDraggingId(id);
   };
 
-  const deleteObject = (id: number) => {
-    setObjects((prev) => prev.filter((obj) => obj.id !== id));
+  const handleMouseMove = (event: React.MouseEvent) => {
+    if (draggingId !== null && bannerRef.current) {
+      const rect = bannerRef.current.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      updateObject(draggingId, { x, y });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setDraggingId(null);
   };
 
   return (
-    <div className={styles.bannerArea}>
-      {objects.map((obj) => (
+    <div
+      className="banner-area"
+      ref={bannerRef}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
+      {objects.map((object) => (
         <div
-          key={obj.id}
-          style={{ top: obj.y, left: obj.x }}
-          className={styles.object}
-          onMouseDown={() => setSelectedObject(obj)}
-          draggable
-          onDrag={(e) => onDrag(e, obj.id)}
+          key={object.id}
+          style={{
+            position: "absolute",
+            left: object.x,
+            top: object.y,
+            cursor: "move",
+            width: object.width || "auto",
+            height: object.height || "auto",
+          }}
+          onMouseDown={(e) => handleMouseDown(object.id, e)}
         >
-          {obj.type === "text" && (
-            <span style={{ fontSize: obj.fontSize, color: obj.color }}>
-              {obj.content}
-            </span>
-          )}
-          {obj.type === "image" && (
+          {object.type === "text" ? (
+            <p
+              style={{
+                fontSize: object.fontSize,
+                color: object.color,
+                fontWeight: object.fontWeight,
+                fontStyle: object.fontStyle,
+                textTransform: object.textTransform,
+                textDecoration: object.textDecoration,
+                textAlign: object.textAlign,
+              }}
+            >
+              {object.content}
+            </p>
+          ) : (
             <img
-              src={obj.src}
-              alt=""
-              style={{ width: obj.width, height: obj.height }}
+              src={object.src}
+              alt="img"
+              style={{
+                width: object.width || 300,
+                height: object.height || 300,
+              }}
             />
           )}
-          <button onClick={() => deleteObject(obj.id)}>Удалить</button>
         </div>
       ))}
     </div>

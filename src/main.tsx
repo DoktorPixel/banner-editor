@@ -5,7 +5,10 @@ import App from "./App";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <main className="main ">
+      {" "}
+      <App />
+    </main>
   </StrictMode>
 );
 

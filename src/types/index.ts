@@ -3,10 +3,15 @@ export interface BannerObject {
   type: "text" | "image";
   x: number;
   y: number;
-  content?: string; // Для текста
+  content?: string;
   fontSize?: number;
+  fontWeight?: React.CSSProperties["fontWeight"];
+  fontStyle?: React.CSSProperties["fontStyle"];
+  textTransform?: React.CSSProperties["textTransform"];
+  textDecoration?: React.CSSProperties["textDecoration"];
+  textAlign?: React.CSSProperties["textAlign"];
   color?: string;
-  src?: string; // Для изображения
+  src?: string;
   width?: number;
   height?: number;
 }
