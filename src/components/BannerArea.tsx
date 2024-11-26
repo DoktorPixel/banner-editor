@@ -4,18 +4,30 @@ import { useBanner } from "../context/BannerContext";
 const BannerArea: React.FC = () => {
   const { objects, updateObject, selectedObjectId, selectObject } = useBanner();
   const [draggingId, setDraggingId] = useState<number | null>(null);
+  const [offset, setOffset] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
   const bannerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
     event.preventDefault();
-    setDraggingId(id);
+
+    const object = objects.find((obj) => obj.id === id);
+    if (object && bannerRef.current) {
+      const rect = bannerRef.current.getBoundingClientRect();
+      const offsetX = event.clientX - (rect.left + object.x);
+      const offsetY = event.clientY - (rect.top + object.y);
+      setOffset({ x: offsetX, y: offsetY });
+      setDraggingId(id);
+    }
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
     if (draggingId !== null && bannerRef.current) {
       const rect = bannerRef.current.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      const x = event.clientX - rect.left - offset.x;
+      const y = event.clientY - rect.top - offset.y;
 
       updateObject(draggingId, { x, y });
     }

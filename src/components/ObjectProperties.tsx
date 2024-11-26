@@ -73,7 +73,7 @@ const ObjectProperties: React.FC = () => {
               <TextField
                 label="Ширина (px)"
                 type="number"
-                value={selectedObject.width}
+                value={selectedObject.width || 300}
                 onChange={(e) =>
                   handleChange("width", parseInt(e.target.value))
                 }
@@ -83,7 +83,7 @@ const ObjectProperties: React.FC = () => {
               <TextField
                 label="Висота (px)"
                 type="number"
-                value={selectedObject.height}
+                value={selectedObject.height || 50}
                 onChange={(e) =>
                   handleChange("height", parseInt(e.target.value))
                 }
@@ -184,7 +184,7 @@ const ObjectProperties: React.FC = () => {
               <TextField
                 label="Ширина (px)"
                 type="number"
-                value={selectedObject.width}
+                value={selectedObject.width || 300}
                 onChange={(e) =>
                   handleChange("width", parseInt(e.target.value))
                 }
@@ -194,7 +194,7 @@ const ObjectProperties: React.FC = () => {
               <TextField
                 label="Висота (px)"
                 type="number"
-                value={selectedObject.height}
+                value={selectedObject.height || 300}
                 onChange={(e) =>
                   handleChange("height", parseInt(e.target.value))
                 }
