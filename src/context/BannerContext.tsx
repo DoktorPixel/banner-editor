@@ -10,6 +10,9 @@ interface BannerContextProps {
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  selectedObjectId: number | null;
+  selectObject: (id: number) => void;
+  clearSelection: () => void;
 }
 
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
@@ -19,13 +22,21 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [history, setHistory] = useState<BannerObject[][]>([[]]);
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [selectedObjectId, setSelectedObjectId] = useState<number | null>(null);
 
   const objects = history[currentStep] || [];
 
   const addObject = (object: BannerObject) => {
+    const maxZIndex = objects.reduce(
+      (max, obj) => Math.max(max, obj.zIndex ?? 0),
+      0
+    );
     const newObjects = [
       ...objects,
-      { ...object, width: object.width || 300, height: object.height || 300 },
+      {
+        ...object,
+        zIndex: maxZIndex + 1,
+      },
     ];
     updateHistory(newObjects);
   };
@@ -58,6 +69,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const canUndo = currentStep > 0;
   const canRedo = currentStep < history.length - 1;
+  const selectObject = (id: number) => setSelectedObjectId(id);
+  const clearSelection = () => setSelectedObjectId(null);
 
   return (
     <BannerContext.Provider
@@ -70,6 +83,9 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         redo,
         canUndo,
         canRedo,
+        selectedObjectId,
+        selectObject,
+        clearSelection,
       }}
     >
       {children}

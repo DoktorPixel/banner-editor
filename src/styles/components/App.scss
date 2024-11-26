@@ -1,6 +1,8 @@
 .main {
-  max-width: 1440px;
-  margin: 0 auto;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
 }
 
 .app {
@@ -10,11 +12,21 @@
 }
 
 .main .app .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input,
-.main
-  .app
-  .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+.main .app .css-1pk1fka {
   padding: 5px 10px;
 }
-.main .app .css-113d811-MuiFormLabel-root-MuiInputLabel-root {
+.main
+  .app
+  .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input,
+.main .app .css-mp9f0v {
+  padding: 5px 10px;
+}
+.main .app .css-113d811-MuiFormLabel-root-MuiInputLabel-root,
+.main .app .css-1niro10 {
   top: -7px;
+}
+
+.main .app .css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root,
+.main .app .css-160rfsr {
+  top: -10px;
 }

@@ -3,6 +3,7 @@ export interface BannerObject {
   type: "text" | "image";
   x: number;
   y: number;
+  zIndex?: number | undefined;
   content?: string;
   fontSize?: number;
   fontWeight?: React.CSSProperties["fontWeight"];

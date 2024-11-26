@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useBanner } from "../context/BannerContext";
 import { BannerObject } from "../types";
 import {
@@ -16,21 +15,26 @@ import {
 } from "@mui/material";
 
 const ObjectProperties: React.FC = () => {
-  const { objects, updateObject, deleteObject } = useBanner();
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-
-  const selectedObject = objects.find((obj) => obj.id === selectedId);
+  const {
+    objects,
+    updateObject,
+    deleteObject,
+    selectedObjectId,
+    selectObject,
+    clearSelection,
+  } = useBanner();
+  const selectedObject = objects.find((obj) => obj.id === selectedObjectId);
 
   const handleChange = (key: keyof BannerObject, value: string | number) => {
-    if (selectedId !== null) {
-      updateObject(selectedId, { [key]: value });
+    if (selectedObjectId !== null) {
+      updateObject(selectedObjectId, { [key]: value });
     }
   };
 
   const handleDelete = () => {
-    if (selectedId !== null) {
-      deleteObject(selectedId);
-      setSelectedId(null);
+    if (selectedObjectId !== null) {
+      deleteObject(selectedObjectId);
+      clearSelection();
     }
   };
 
@@ -43,7 +47,7 @@ const ObjectProperties: React.FC = () => {
             <>
               <TextField
                 label="Текст"
-                value={selectedObject.content || ""}
+                value={selectedObject.content}
                 onChange={(e) => handleChange("content", e.target.value)}
                 fullWidth
                 margin="normal"
@@ -79,9 +83,19 @@ const ObjectProperties: React.FC = () => {
               <TextField
                 label="Висота (px)"
                 type="number"
-                value={selectedObject.height || 300}
+                value={selectedObject.height || 50}
                 onChange={(e) =>
                   handleChange("height", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Номер шару (z-Index)"
+                type="number"
+                value={selectedObject.zIndex || 0}
+                onChange={(e) =>
+                  handleChange("zIndex", parseInt(e.target.value))
                 }
                 fullWidth
                 margin="normal"
@@ -170,7 +184,7 @@ const ObjectProperties: React.FC = () => {
               <TextField
                 label="Ширина (px)"
                 type="number"
-                value={selectedObject.width}
+                value={selectedObject.width || 300}
                 onChange={(e) =>
                   handleChange("width", parseInt(e.target.value))
                 }
@@ -180,9 +194,19 @@ const ObjectProperties: React.FC = () => {
               <TextField
                 label="Висота (px)"
                 type="number"
-                value={selectedObject.height}
+                value={selectedObject.height || 300}
                 onChange={(e) =>
                   handleChange("height", parseInt(e.target.value))
+                }
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Номер шару (z-Index)"
+                type="number"
+                value={selectedObject.zIndex || 0}
+                onChange={(e) =>
+                  handleChange("zIndex", parseInt(e.target.value))
                 }
                 fullWidth
                 margin="normal"
@@ -210,10 +234,11 @@ const ObjectProperties: React.FC = () => {
           <ListItem
             key={obj.id}
             component="li"
-            onClick={() => setSelectedId(obj.id)}
+            onClick={() => selectObject(obj.id)}
             sx={{
               cursor: "pointer",
-              backgroundColor: obj.id === selectedId ? "lightgray" : "white",
+              backgroundColor:
+                obj.id === selectedObjectId ? "lightgray" : "white",
               "&:hover": { backgroundColor: "lightblue" },
             }}
           >
