@@ -12,3 +12,14 @@
   position: absolute;
   cursor: grab;
 }
+//
+.banner-object {
+  padding: 1px;
+  margin: 5px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.banner-object.selected {
+  border: 1px solid blue;
+}

@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useBanner } from "../context/BannerContext";
 
 const BannerArea: React.FC = () => {
-  const { objects, updateObject } = useBanner();
+  const { objects, updateObject, selectedObjectId, selectObject } = useBanner();
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
 
@@ -39,11 +39,16 @@ const BannerArea: React.FC = () => {
             position: "absolute",
             left: object.x,
             top: object.y,
+            zIndex: object.zIndex || 0,
             cursor: "move",
             width: object.width || "auto",
             height: object.height || "auto",
           }}
           onMouseDown={(e) => handleMouseDown(object.id, e)}
+          className={`banner-object ${
+            selectedObjectId === object.id ? "selected" : ""
+          }`}
+          onClick={() => selectObject(object.id)}
         >
           {object.type === "text" ? (
             <p
@@ -55,6 +60,8 @@ const BannerArea: React.FC = () => {
                 textTransform: object.textTransform,
                 textDecoration: object.textDecoration,
                 textAlign: object.textAlign,
+                width: object.width || 300,
+                height: object.height || 50,
               }}
             >
               {object.content}
