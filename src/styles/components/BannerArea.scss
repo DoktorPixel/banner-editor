@@ -14,11 +14,21 @@
 //
 .banner-object {
   padding: 1px;
-  margin: 5px;
+  // margin: 5px;
   border: 1px solid transparent;
   cursor: pointer;
 }
 
 .banner-object.selected {
   border: 1px solid blue;
+}
+
+.resize-handle.selected {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  right: 0;
+  bottom: 0;
+  background-color: blue;
+  cursor: se-resize;
 }

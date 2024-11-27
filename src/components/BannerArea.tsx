@@ -8,11 +8,12 @@ const BannerArea: React.FC = () => {
     x: 0,
     y: 0,
   });
+  const [resizingId, setResizingId] = useState<number | null>(null);
+  const [resizeDirection, setResizeDirection] = useState<string | null>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
     event.preventDefault();
-
     const object = objects.find((obj) => obj.id === id);
     if (object && bannerRef.current) {
       const rect = bannerRef.current.getBoundingClientRect();
@@ -23,6 +24,16 @@ const BannerArea: React.FC = () => {
     }
   };
 
+  const handleResizeMouseDown = (
+    id: number,
+    direction: string,
+    event: React.MouseEvent
+  ) => {
+    event.preventDefault();
+    setResizingId(id);
+    setResizeDirection(direction);
+  };
+
   const handleMouseMove = (event: React.MouseEvent) => {
     if (draggingId !== null && bannerRef.current) {
       const rect = bannerRef.current.getBoundingClientRect();
@@ -31,10 +42,31 @@ const BannerArea: React.FC = () => {
 
       updateObject(draggingId, { x, y });
     }
+
+    if (resizingId !== null && bannerRef.current) {
+      const object = objects.find((obj) => obj.id === resizingId);
+      if (object) {
+        const rect = bannerRef.current.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
+        const updates: Partial<typeof object> = {};
+        if (resizeDirection?.includes("right")) {
+          updates.width = mouseX - object.x;
+        }
+        if (resizeDirection?.includes("bottom")) {
+          updates.height = mouseY - object.y;
+        }
+
+        updateObject(resizingId, updates);
+      }
+    }
   };
 
   const handleMouseUp = () => {
     setDraggingId(null);
+    setResizingId(null);
+    setResizeDirection(null);
   };
 
   return (
@@ -51,10 +83,10 @@ const BannerArea: React.FC = () => {
             position: "absolute",
             left: object.x,
             top: object.y,
+            width: object.width || 300,
+            height: object.height || 300,
             zIndex: object.zIndex || 0,
             cursor: "move",
-            width: object.width || "auto",
-            height: object.height || "auto",
           }}
           onMouseDown={(e) => handleMouseDown(object.id, e)}
           className={`banner-object ${
@@ -72,8 +104,7 @@ const BannerArea: React.FC = () => {
                 textTransform: object.textTransform,
                 textDecoration: object.textDecoration,
                 textAlign: object.textAlign,
-                width: object.width || 300,
-                height: object.height || 50,
+                wordBreak: "break-all",
               }}
             >
               {object.content}
@@ -83,11 +114,20 @@ const BannerArea: React.FC = () => {
               src={object.src}
               alt="img"
               style={{
-                width: object.width || 300,
-                height: object.height || 300,
+                width: "100%",
+                height: "100%",
               }}
             />
           )}
+
+          <div
+            className={`resize-handle bottom-right ${
+              selectedObjectId === object.id ? "selected" : ""
+            }`}
+            onMouseDown={(e) =>
+              handleResizeMouseDown(object.id, "bottom-right", e)
+            }
+          ></div>
         </div>
       ))}
     </div>
