@@ -4,9 +4,6 @@ import {
   Box,
   Typography,
   TextField,
-  List,
-  ListItem,
-  ListItemText,
   Button,
   MenuItem,
   Select,
@@ -20,7 +17,6 @@ const ObjectProperties: React.FC = () => {
     updateObject,
     deleteObject,
     selectedObjectId,
-    selectObject,
     clearSelection,
   } = useBanner();
   const selectedObject = objects.find((obj) => obj.id === selectedObjectId);
@@ -170,6 +166,24 @@ const ObjectProperties: React.FC = () => {
                   <MenuItem value="justify">Justify</MenuItem>
                 </Select>
               </FormControl>
+
+              <TextField
+                label="Координата X"
+                type="number"
+                value={selectedObject.x}
+                onChange={(e) => handleChange("x", parseInt(e.target.value))}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Координата Y"
+                type="number"
+                value={selectedObject.y}
+                onChange={(e) => handleChange("y", parseInt(e.target.value))}
+                fullWidth
+                margin="normal"
+              />
             </>
           )}
           {selectedObject.type === "image" && (
@@ -211,6 +225,23 @@ const ObjectProperties: React.FC = () => {
                 fullWidth
                 margin="normal"
               />
+              <TextField
+                label="Координата X"
+                type="number"
+                value={selectedObject.x}
+                onChange={(e) => handleChange("x", parseInt(e.target.value))}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Координата Y"
+                type="number"
+                value={selectedObject.y}
+                onChange={(e) => handleChange("y", parseInt(e.target.value))}
+                fullWidth
+                margin="normal"
+              />
             </>
           )}
 
@@ -226,30 +257,6 @@ const ObjectProperties: React.FC = () => {
       ) : (
         <Typography>Виберіть об'єкт для редагування</Typography>
       )}
-      <Typography variant="h6" sx={{ marginTop: "20px" }}>
-        Список об'єктів
-      </Typography>
-      <List>
-        {objects.map((obj) => (
-          <ListItem
-            key={obj.id}
-            component="li"
-            onClick={() => selectObject(obj.id)}
-            sx={{
-              cursor: "pointer",
-              backgroundColor:
-                obj.id === selectedObjectId ? "lightgray" : "white",
-              "&:hover": { backgroundColor: "lightblue" },
-            }}
-          >
-            <ListItemText
-              primary={
-                obj.type === "text" ? obj.content || "Текст" : "Зображення"
-              }
-            />
-          </ListItem>
-        ))}
-      </List>
     </Box>
   );
 };
