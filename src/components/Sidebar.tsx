@@ -8,6 +8,10 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
 } from "@mui/material";
 
 const Sidebar: React.FC = () => {
@@ -17,6 +21,8 @@ const Sidebar: React.FC = () => {
   const [isImageDialogOpen, setImageDialogOpen] = useState(false);
   const [textContent, setTextContent] = useState("");
   const [imageSrc, setImageSrc] = useState("");
+
+  const { objects, selectedObjectId, selectObject } = useBanner();
 
   const openTextDialog = () => setTextDialogOpen(true);
   const closeTextDialog = () => {
@@ -122,6 +128,32 @@ const Sidebar: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Typography variant="h6" sx={{ marginTop: "20px" }}>
+        Список об'єктів
+      </Typography>
+
+      <List>
+        {objects.map((obj) => (
+          <ListItem
+            key={obj.id}
+            component="li"
+            onClick={() => selectObject(obj.id)}
+            sx={{
+              cursor: "pointer",
+              backgroundColor:
+                obj.id === selectedObjectId ? "lightgray" : "white",
+              "&:hover": { backgroundColor: "lightblue" },
+            }}
+          >
+            <ListItemText
+              primary={
+                obj.type === "text" ? obj.content || "Текст" : "Зображення"
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
     </Stack>
   );
 };
