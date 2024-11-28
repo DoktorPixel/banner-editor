@@ -79,7 +79,6 @@ const Sidebar: React.FC = () => {
         Вперед
       </Button>
 
-      {/* Dialog for adding text */}
       <Dialog open={isTextDialogOpen} onClose={closeTextDialog}>
         <DialogTitle>Додати текст</DialogTitle>
         <DialogContent>
@@ -102,7 +101,6 @@ const Sidebar: React.FC = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Dialog for adding image */}
       <Dialog open={isImageDialogOpen} onClose={closeImageDialog}>
         <DialogTitle>Додати зображення</DialogTitle>
         <DialogContent>
