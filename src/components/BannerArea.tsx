@@ -2,7 +2,13 @@ import { useState, useRef } from "react";
 import { useBanner } from "../context/BannerContext";
 
 const BannerArea: React.FC = () => {
-  const { objects, updateObject, selectedObjectId, selectObject } = useBanner();
+  const {
+    objects,
+    updateObject,
+    selectedObjectIds,
+    selectObject,
+    clearSelection,
+  } = useBanner();
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [offset, setOffset] = useState<{ x: number; y: number }>({
     x: 0,
@@ -32,6 +38,11 @@ const BannerArea: React.FC = () => {
     event.preventDefault();
     setResizingId(id);
     setResizeDirection(direction);
+  };
+
+  const handleObjectClick = (id: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    selectObject(id, event.ctrlKey || event.metaKey);
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
@@ -75,6 +86,7 @@ const BannerArea: React.FC = () => {
       ref={bannerRef}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
+      onClick={() => clearSelection()}
     >
       {objects.map((object) => (
         <div
@@ -89,22 +101,16 @@ const BannerArea: React.FC = () => {
             cursor: "move",
           }}
           onMouseDown={(e) => handleMouseDown(object.id, e)}
+          onClick={(e) => handleObjectClick(object.id, e)}
           className={`banner-object ${
-            selectedObjectId === object.id ? "selected" : ""
+            selectedObjectIds.includes(object.id) ? "selected" : ""
           }`}
-          onClick={() => selectObject(object.id)}
         >
           {object.type === "text" ? (
             <p
               style={{
                 fontSize: object.fontSize,
                 color: object.color,
-                fontWeight: object.fontWeight,
-                fontStyle: object.fontStyle,
-                textTransform: object.textTransform,
-                textDecoration: object.textDecoration,
-                textAlign: object.textAlign,
-                wordBreak: "break-all",
               }}
             >
               {object.content}
@@ -122,7 +128,7 @@ const BannerArea: React.FC = () => {
 
           <div
             className={`resize-handle bottom-right ${
-              selectedObjectId === object.id ? "selected" : ""
+              selectedObjectIds[0] === object.id ? "selected" : ""
             }`}
             onMouseDown={(e) =>
               handleResizeMouseDown(object.id, "bottom-right", e)
