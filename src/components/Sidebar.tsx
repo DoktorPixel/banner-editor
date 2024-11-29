@@ -15,15 +15,23 @@ import {
 } from "@mui/material";
 
 const Sidebar: React.FC = () => {
-  const { addObject, undo, redo, canUndo, canRedo, clearHistory } = useBanner();
+  const {
+    addObject,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    clearHistory,
+    objects,
+    selectedObjectIds,
+    selectObject,
+  } = useBanner();
 
   const [isTextDialogOpen, setTextDialogOpen] = useState(false);
   const [isImageDialogOpen, setImageDialogOpen] = useState(false);
   const [isClearHistoryDialogOpen, setClearHistoryDialogOpen] = useState(false);
   const [textContent, setTextContent] = useState("");
   const [imageSrc, setImageSrc] = useState("");
-
-  const { objects, selectedObjectId, selectObject } = useBanner();
 
   const openTextDialog = () => setTextDialogOpen(true);
   const closeTextDialog = () => {
@@ -169,11 +177,12 @@ const Sidebar: React.FC = () => {
           <ListItem
             key={obj.id}
             component="li"
-            onClick={() => selectObject(obj.id)}
+            onClick={(e) => selectObject(obj.id, e.ctrlKey || e.metaKey)}
             sx={{
               cursor: "pointer",
-              backgroundColor:
-                obj.id === selectedObjectId ? "lightgray" : "white",
+              backgroundColor: selectedObjectIds.includes(obj.id)
+                ? "lightgray"
+                : "white",
               "&:hover": { backgroundColor: "lightblue" },
             }}
           >

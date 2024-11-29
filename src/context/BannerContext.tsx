@@ -6,12 +6,13 @@ interface BannerContextProps {
   addObject: (object: BannerObject) => void;
   updateObject: (id: number, updates: Partial<BannerObject>) => void;
   deleteObject: (id: number) => void;
+  deleteMultipleObjects: (ids: number[]) => void;
   undo: () => void;
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
-  selectedObjectId: number | null;
-  selectObject: (id: number) => void;
+  selectedObjectIds: number[];
+  selectObject: (id: number, toggle?: boolean) => void;
   clearSelection: () => void;
   clearHistory: () => void;
 }
@@ -31,7 +32,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     return savedStep ? parseInt(savedStep, 10) : 0;
   });
 
-  const [selectedObjectId, setSelectedObjectId] = useState<number | null>(null);
+  const [selectedObjectIds, setSelectedObjectIds] = useState<number[]>([]);
 
   const objects = history[currentStep] || [];
 
@@ -59,6 +60,11 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const deleteObject = (id: number) => {
     const newObjects = objects.filter((obj) => obj.id !== id);
+    updateHistory(newObjects);
+  };
+
+  const deleteMultipleObjects = (ids: number[]) => {
+    const newObjects = objects.filter((obj) => !ids.includes(obj.id));
     updateHistory(newObjects);
   };
 
@@ -93,8 +99,20 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const canUndo = currentStep > 0;
   const canRedo = currentStep < history.length - 1;
-  const selectObject = (id: number) => setSelectedObjectId(id);
-  const clearSelection = () => setSelectedObjectId(null);
+
+  const selectObject = (id: number, toggle = false) => {
+    setSelectedObjectIds((prev) => {
+      if (toggle) {
+        return prev.includes(id)
+          ? prev.filter((objId) => objId !== id)
+          : [...prev, id];
+      } else {
+        return [id];
+      }
+    });
+  };
+
+  const clearSelection = () => setSelectedObjectIds([]);
 
   return (
     <BannerContext.Provider
@@ -103,11 +121,12 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         addObject,
         updateObject,
         deleteObject,
+        deleteMultipleObjects,
         undo,
         redo,
         canUndo,
         canRedo,
-        selectedObjectId,
+        selectedObjectIds,
         selectObject,
         clearSelection,
         clearHistory,
