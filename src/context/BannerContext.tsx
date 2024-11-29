@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { BannerObject } from "../types";
 
 interface BannerContextProps {
@@ -13,6 +13,7 @@ interface BannerContextProps {
   selectedObjectId: number | null;
   selectObject: (id: number) => void;
   clearSelection: () => void;
+  clearHistory: () => void;
 }
 
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
@@ -20,8 +21,16 @@ const BannerContext = createContext<BannerContextProps | undefined>(undefined);
 export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [history, setHistory] = useState<BannerObject[][]>([[]]);
-  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [history, setHistory] = useState<BannerObject[][]>(() => {
+    const savedData = localStorage.getItem("bannerHistory");
+    return savedData ? JSON.parse(savedData) : [[]];
+  });
+
+  const [currentStep, setCurrentStep] = useState<number>(() => {
+    const savedStep = localStorage.getItem("currentStep");
+    return savedStep ? parseInt(savedStep, 10) : 0;
+  });
+
   const [selectedObjectId, setSelectedObjectId] = useState<number | null>(null);
 
   const objects = history[currentStep] || [];
@@ -59,6 +68,21 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     setCurrentStep(newHistory.length - 1);
   };
 
+  const clearHistory = () => {
+    setHistory([[]]);
+    setCurrentStep(0);
+    localStorage.removeItem("bannerHistory");
+    localStorage.removeItem("currentStep");
+  };
+
+  useEffect(() => {
+    localStorage.setItem("bannerHistory", JSON.stringify(history));
+  }, [history]);
+
+  useEffect(() => {
+    localStorage.setItem("currentStep", currentStep.toString());
+  }, [currentStep]);
+
   const undo = () => {
     if (canUndo) setCurrentStep((prev) => prev - 1);
   };
@@ -86,6 +110,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         selectedObjectId,
         selectObject,
         clearSelection,
+        clearHistory,
       }}
     >
       {children}

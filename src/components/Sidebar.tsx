@@ -15,10 +15,11 @@ import {
 } from "@mui/material";
 
 const Sidebar: React.FC = () => {
-  const { addObject, undo, redo, canUndo, canRedo } = useBanner();
+  const { addObject, undo, redo, canUndo, canRedo, clearHistory } = useBanner();
 
   const [isTextDialogOpen, setTextDialogOpen] = useState(false);
   const [isImageDialogOpen, setImageDialogOpen] = useState(false);
+  const [isClearHistoryDialogOpen, setClearHistoryDialogOpen] = useState(false);
   const [textContent, setTextContent] = useState("");
   const [imageSrc, setImageSrc] = useState("");
 
@@ -60,6 +61,14 @@ const Sidebar: React.FC = () => {
     closeImageDialog();
   };
 
+  const openClearHistoryDialog = () => setClearHistoryDialogOpen(true);
+  const closeClearHistoryDialog = () => setClearHistoryDialogOpen(false);
+
+  const handleClearHistory = () => {
+    clearHistory();
+    closeClearHistoryDialog();
+  };
+
   return (
     <Stack spacing={2} className="sidebar">
       <Button variant="contained" color="primary" onClick={openTextDialog}>
@@ -83,6 +92,13 @@ const Sidebar: React.FC = () => {
         disabled={!canRedo}
       >
         Вперед
+      </Button>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={openClearHistoryDialog}
+      >
+        Очистити історію
       </Button>
 
       <Dialog open={isTextDialogOpen} onClose={closeTextDialog}>
@@ -125,6 +141,21 @@ const Sidebar: React.FC = () => {
           </Button>
           <Button onClick={handleAddImage} color="primary">
             Додати
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={isClearHistoryDialogOpen} onClose={closeClearHistoryDialog}>
+        <DialogTitle>Очистити історію</DialogTitle>
+        <DialogContent>
+          Ви впевнені, що хочете очистити історію? Це видалить всі зміни.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeClearHistoryDialog} color="secondary">
+            Ні
+          </Button>
+          <Button onClick={handleClearHistory} color="error">
+            Так
           </Button>
         </DialogActions>
       </Dialog>
