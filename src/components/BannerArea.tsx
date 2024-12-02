@@ -111,6 +111,11 @@ const BannerArea: React.FC = () => {
               style={{
                 fontSize: object.fontSize,
                 color: object.color,
+                fontWeight: object.fontWeight,
+                fontStyle: object.fontStyle,
+                textTransform: object.textTransform,
+                textDecoration: object.textDecoration,
+                textAlign: object.textAlign,
               }}
             >
               {object.content}
