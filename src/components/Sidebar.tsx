@@ -25,6 +25,7 @@ const Sidebar: React.FC = () => {
     objects,
     selectedObjectIds,
     selectObject,
+    groupSelectedObjects,
   } = useBanner();
 
   const [isTextDialogOpen, setTextDialogOpen] = useState(false);
@@ -188,12 +189,29 @@ const Sidebar: React.FC = () => {
           >
             <ListItemText
               primary={
-                obj.type === "text" ? obj.content || "Текст" : "Зображення"
+                obj.type === "text"
+                  ? obj.content || "Текст"
+                  : obj.type === "group"
+                  ? "Група"
+                  : "Зображення"
               }
             />
           </ListItem>
         ))}
       </List>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => groupSelectedObjects()}
+        disabled={
+          selectedObjectIds.length < 2 ||
+          !selectedObjectIds.every(
+            (id) => objects.find((obj) => obj.id === id)?.type === "text"
+          )
+        }
+      >
+        Групувати
+      </Button>
     </Stack>
   );
 };
