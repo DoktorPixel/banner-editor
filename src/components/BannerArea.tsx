@@ -88,54 +88,97 @@ const BannerArea: React.FC = () => {
       onMouseUp={handleMouseUp}
       onClick={() => clearSelection()}
     >
-      {objects.map((object) => (
-        <div
-          key={object.id}
-          style={{
-            position: "absolute",
-            left: object.x,
-            top: object.y,
-            width: object.width || 300,
-            height: object.height || 300,
-            zIndex: object.zIndex || 0,
-            cursor: "move",
-          }}
-          onMouseDown={(e) => handleMouseDown(object.id, e)}
-          onClick={(e) => handleObjectClick(object.id, e)}
-          className={`banner-object ${
-            selectedObjectIds.includes(object.id) ? "selected" : ""
-          }`}
-        >
-          {object.type === "text" ? (
-            <p
-              style={{
-                fontSize: object.fontSize,
-                color: object.color,
-              }}
-            >
-              {object.content}
-            </p>
-          ) : (
-            <img
-              src={object.src}
-              alt="img"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          )}
+      {objects.map((object) => {
+        if (object.type === "group") {
+          const children = object.children?.map((childId) =>
+            objects.find((obj) => obj.id === childId)
+          );
 
+          return (
+            <div
+              key={object.id}
+              style={{
+                position: "absolute",
+                left: object.x,
+                top: object.y,
+                width: object.width || 300,
+                height: object.height || 300,
+                zIndex: object.zIndex || 0,
+                cursor: "move",
+              }}
+              onMouseDown={(e) => handleMouseDown(object.id, e)}
+              onClick={(e) => handleObjectClick(object.id, e)}
+              className={`banner-object ${
+                selectedObjectIds.includes(object.id) ? "selected" : ""
+              }`}
+            >
+              {children?.map((child) =>
+                child?.type === "text" ? (
+                  <p
+                    key={child.id}
+                    style={{
+                      fontSize: child.fontSize,
+                      color: child.color,
+                    }}
+                  >
+                    {child.content}
+                  </p>
+                ) : null
+              )}
+            </div>
+          );
+        }
+
+        // Существующий рендеринг для текстовых и изображений
+        return (
           <div
-            className={`resize-handle bottom-right ${
-              selectedObjectIds[0] === object.id ? "selected" : ""
+            key={object.id}
+            style={{
+              position: "absolute",
+              left: object.x,
+              top: object.y,
+              width: object.width || 300,
+              height: object.height || 300,
+              zIndex: object.zIndex || 0,
+              cursor: "move",
+            }}
+            onMouseDown={(e) => handleMouseDown(object.id, e)}
+            onClick={(e) => handleObjectClick(object.id, e)}
+            className={`banner-object ${
+              selectedObjectIds.includes(object.id) ? "selected" : ""
             }`}
-            onMouseDown={(e) =>
-              handleResizeMouseDown(object.id, "bottom-right", e)
-            }
-          ></div>
-        </div>
-      ))}
+          >
+            {object.type === "text" ? (
+              <p
+                style={{
+                  fontSize: object.fontSize,
+                  color: object.color,
+                }}
+              >
+                {object.content}
+              </p>
+            ) : (
+              <img
+                src={object.src}
+                alt="img"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            )}
+
+            <div
+              className={`resize-handle bottom-right ${
+                selectedObjectIds[0] === object.id ? "selected" : ""
+              }`}
+              onMouseDown={(e) =>
+                handleResizeMouseDown(object.id, "bottom-right", e)
+              }
+            ></div>
+          </div>
+        );
+      })}
     </div>
   );
 };

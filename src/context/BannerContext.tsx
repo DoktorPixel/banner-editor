@@ -15,6 +15,8 @@ interface BannerContextProps {
   selectObject: (id: number, toggle?: boolean) => void;
   clearSelection: () => void;
   clearHistory: () => void;
+  groupObjects: (objectIds: number[]) => void;
+  ungroupObjects: (groupId: number) => void;
 }
 
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
@@ -113,6 +115,53 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const clearSelection = () => setSelectedObjectIds([]);
+  //
+
+  const groupObjects = (objectIds: number[]) => {
+    const objectsToGroup = objects.filter((obj) => objectIds.includes(obj.id));
+
+    // Проверяем, что все объекты — текстовые
+    if (!objectsToGroup.every((obj) => obj.type === "text")) return;
+
+    const minX = Math.min(...objectsToGroup.map((obj) => obj.x));
+    const minY = Math.min(...objectsToGroup.map((obj) => obj.y));
+    const groupId = Date.now(); // Уникальный ID группы
+
+    // Создаем объект группы
+    const group: BannerObject = {
+      id: groupId,
+      type: "group",
+      x: minX,
+      y: minY,
+      children: objectsToGroup.map((obj) => obj.id),
+      zIndex: Math.max(...objectsToGroup.map((obj) => obj.zIndex || 0)) + 1,
+    };
+
+    // Удаляем объединенные объекты и добавляем группу
+    const newObjects = [
+      ...objects.filter((obj) => !objectIds.includes(obj.id)),
+      group,
+    ];
+    updateHistory(newObjects);
+  };
+
+  const ungroupObjects = (groupId: number) => {
+    const group = objects.find(
+      (obj) => obj.id === groupId && obj.type === "group"
+    );
+    if (!group || !group.children) return;
+
+    // Возвращаем дочерние объекты в список объектов
+    const ungroupedObjects = group.children.map((childId) =>
+      objects.find((obj) => obj.id === childId)
+    );
+
+    const newObjects = [
+      ...objects.filter((obj) => obj.id !== groupId), // Удаляем группу
+      ...(ungroupedObjects as BannerObject[]), // Добавляем дочерние объекты
+    ];
+    updateHistory(newObjects);
+  };
 
   return (
     <BannerContext.Provider
@@ -130,6 +179,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         selectObject,
         clearSelection,
         clearHistory,
+        groupObjects,
+        ungroupObjects,
       }}
     >
       {children}
