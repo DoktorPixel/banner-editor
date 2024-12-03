@@ -16,7 +16,6 @@
 //
 .banner-object {
   padding: 1px;
-  // margin: 5px;
   border: 1px solid transparent;
   cursor: pointer;
 }
@@ -25,7 +24,12 @@
   border: 1px solid blue;
 }
 
+.resize-handle {
+  display: none;
+}
+
 .resize-handle.selected {
+  display: block;
   position: absolute;
   width: 8px;
   height: 8px;

@@ -25,6 +25,8 @@ const Sidebar: React.FC = () => {
     objects,
     selectedObjectIds,
     selectObject,
+    groupSelectedObjects,
+    ungroupSelectedObject,
   } = useBanner();
 
   const [isTextDialogOpen, setTextDialogOpen] = useState(false);
@@ -187,13 +189,46 @@ const Sidebar: React.FC = () => {
             }}
           >
             <ListItemText
-              primary={
-                obj.type === "text" ? obj.content || "Текст" : "Зображення"
-              }
+              primary={(() => {
+                const text =
+                  obj.type === "text"
+                    ? obj.content || "Текст"
+                    : obj.type === "group"
+                    ? "Група"
+                    : "Зображення";
+
+                return text.length > 50 ? `${text.slice(0, 30)}...` : text;
+              })()}
             />
           </ListItem>
         ))}
       </List>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => groupSelectedObjects()}
+        disabled={
+          selectedObjectIds.length < 2 ||
+          !selectedObjectIds.every(
+            (id) => objects.find((obj) => obj.id === id)?.type === "text"
+          )
+        }
+      >
+        Групувати
+      </Button>
+
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => ungroupSelectedObject()}
+        disabled={
+          selectedObjectIds.length !== 1 ||
+          objects.find((obj) => obj.id === selectedObjectIds[0])?.type !==
+            "group"
+        }
+      >
+        Розгрупувати
+      </Button>
     </Stack>
   );
 };

@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useBanner } from "../context/BannerContext";
+import { BannerChild } from "../types";
 
 const BannerArea: React.FC = () => {
   const {
@@ -88,59 +89,114 @@ const BannerArea: React.FC = () => {
       onMouseUp={handleMouseUp}
       onClick={() => clearSelection()}
     >
-      {objects.map((object) => (
-        <div
-          key={object.id}
-          style={{
-            position: "absolute",
-            left: object.x,
-            top: object.y,
-            width: object.width || 300,
-            height: object.height || 300,
-            zIndex: object.zIndex || 0,
-            cursor: "move",
-          }}
-          onMouseDown={(e) => handleMouseDown(object.id, e)}
-          onClick={(e) => handleObjectClick(object.id, e)}
-          className={`banner-object ${
-            selectedObjectIds.includes(object.id) ? "selected" : ""
-          }`}
-        >
-          {object.type === "text" ? (
-            <p
+      {objects.map((object) => {
+        if (object.type === "group") {
+          return (
+            <div
+              key={object.id}
               style={{
-                fontSize: object.fontSize,
-                color: object.color,
-                fontWeight: object.fontWeight,
-                fontStyle: object.fontStyle,
-                textTransform: object.textTransform,
-                textDecoration: object.textDecoration,
-                textAlign: object.textAlign,
+                position: "absolute",
+                left: object.x,
+                top: object.y,
+                width: object.width,
+                height: object.height,
+                zIndex: object.zIndex,
+                display: object.display || "flex",
+                flexDirection: object.flexDirection,
+                justifyContent: object.justifyContent,
+                alignItems: object.alignItems,
+                // border: "1px dashed gray",
+                gap: object.gap || "10px",
               }}
+              onMouseDown={(e) => handleMouseDown(object.id, e)}
+              onClick={(e) => handleObjectClick(object.id, e)}
+              className={`banner-object ${
+                selectedObjectIds.includes(object.id) ? "selected" : ""
+              }`}
             >
-              {object.content}
-            </p>
-          ) : (
-            <img
-              src={object.src}
-              alt="img"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          )}
+              {object.children?.map((child: BannerChild, index: number) => (
+                <p
+                  key={child.id || index}
+                  style={{
+                    fontSize: child.fontSize,
+                    color: child.color,
+                    fontWeight: child.fontWeight,
+                    fontStyle: child.fontStyle,
+                    textTransform: child.textTransform,
+                    textDecoration: child.textDecoration,
+                    textAlign: child.textAlign,
+                  }}
+                >
+                  {child.type === "text" ? child.content : null}
+                </p>
+              ))}
 
+              <div
+                className={`resize-handle bottom-right ${
+                  selectedObjectIds[0] === object.id ? "selected" : ""
+                }`}
+                onMouseDown={(e) =>
+                  handleResizeMouseDown(object.id, "bottom-right", e)
+                }
+              ></div>
+            </div>
+          );
+        }
+
+        return (
           <div
-            className={`resize-handle bottom-right ${
-              selectedObjectIds[0] === object.id ? "selected" : ""
+            key={object.id}
+            style={{
+              position: "absolute",
+              left: object.x,
+              top: object.y,
+              width: object.width,
+              height: object.height,
+              zIndex: object.zIndex,
+              cursor: "move",
+            }}
+            onMouseDown={(e) => handleMouseDown(object.id, e)}
+            onClick={(e) => handleObjectClick(object.id, e)}
+            className={`banner-object ${
+              selectedObjectIds.includes(object.id) ? "selected" : ""
             }`}
-            onMouseDown={(e) =>
-              handleResizeMouseDown(object.id, "bottom-right", e)
-            }
-          ></div>
-        </div>
-      ))}
+          >
+            {object.type === "text" ? (
+              <p
+                style={{
+                  fontSize: object.fontSize,
+                  color: object.color,
+                  fontWeight: object.fontWeight,
+                  fontStyle: object.fontStyle,
+                  textTransform: object.textTransform,
+                  textDecoration: object.textDecoration,
+                  textAlign: object.textAlign,
+                }}
+              >
+                {object.content}
+              </p>
+            ) : (
+              <img
+                src={object.src}
+                alt="img"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            )}
+
+            <div
+              className={`resize-handle bottom-right ${
+                selectedObjectIds[0] === object.id ? "selected" : ""
+              }`}
+              onMouseDown={(e) =>
+                handleResizeMouseDown(object.id, "bottom-right", e)
+              }
+            ></div>
+          </div>
+        );
+      })}
     </div>
   );
 };

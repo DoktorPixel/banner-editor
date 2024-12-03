@@ -1,21 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { BannerObject } from "../types";
-
-interface BannerContextProps {
-  objects: BannerObject[];
-  addObject: (object: BannerObject) => void;
-  updateObject: (id: number, updates: Partial<BannerObject>) => void;
-  deleteObject: (id: number) => void;
-  deleteMultipleObjects: (ids: number[]) => void;
-  undo: () => void;
-  redo: () => void;
-  canUndo: boolean;
-  canRedo: boolean;
-  selectedObjectIds: number[];
-  selectObject: (id: number, toggle?: boolean) => void;
-  clearSelection: () => void;
-  clearHistory: () => void;
-}
+import { BannerContextProps } from "../types";
 
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
 
@@ -114,6 +99,90 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const clearSelection = () => setSelectedObjectIds([]);
 
+  //
+
+  const groupSelectedObjects = () => {
+    if (selectedObjectIds.length < 2) {
+      console.warn("Для угруповання потрібно виділити щонайменше два об'єкти.");
+      return;
+    }
+
+    const selectedObjects = objects.filter((obj) =>
+      selectedObjectIds.includes(obj.id)
+    );
+
+    const newGroup: BannerObject = {
+      id: Date.now(),
+      type: "group",
+      x: Math.min(...selectedObjects.map((obj) => obj.x)),
+      y: Math.min(...selectedObjects.map((obj) => obj.y)),
+      width:
+        Math.max(...selectedObjects.map((obj) => obj.x + (obj.width || 0))) -
+        Math.min(...selectedObjects.map((obj) => obj.x)),
+      height:
+        Math.max(...selectedObjects.map((obj) => obj.y + (obj.height || 0))) -
+        Math.min(...selectedObjects.map((obj) => obj.y)),
+      children: selectedObjects
+        .filter((obj) => obj.type === "text")
+        .map((obj) => ({
+          id: obj.id,
+          type: obj.type as "text",
+          x: obj.x - Math.min(...selectedObjects.map((o) => o.x)),
+          y: obj.y - Math.min(...selectedObjects.map((o) => o.y)),
+          width: obj.width,
+          height: obj.height,
+          content: obj.content,
+          src: obj.src,
+          fontSize: obj.fontSize,
+          color: obj.color,
+          fontWeight: obj.fontWeight,
+          fontStyle: obj.fontStyle,
+          textTransform: obj.textTransform,
+          textDecoration: obj.textDecoration,
+          textAlign: obj.textAlign,
+        })),
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+    };
+
+    const newObjects = objects.filter(
+      (obj) => !selectedObjectIds.includes(obj.id)
+    );
+
+    updateHistory([...newObjects, newGroup]);
+    setSelectedObjectIds([newGroup.id]);
+  };
+
+  const ungroupSelectedObject = () => {
+    if (selectedObjectIds.length !== 1) {
+      console.warn("Для розгрупування потрібно виділити лише одну групу.");
+      return;
+    }
+
+    const selectedObject = objects.find(
+      (obj) => obj.id === selectedObjectIds[0]
+    );
+
+    if (!selectedObject || selectedObject.type !== "group") {
+      console.warn("Обраний об'єкт не є групою.");
+      return;
+    }
+
+    const ungroupedObjects = (selectedObject.children || []).map((child) => ({
+      ...child,
+      id: Date.now() + Math.random(),
+      x: (child.x || 0) + selectedObject.x,
+      y: (child.y || 0) + selectedObject.y,
+    }));
+
+    const newObjects = objects.filter((obj) => obj.id !== selectedObject.id);
+    updateHistory([...newObjects, ...ungroupedObjects]);
+
+    setSelectedObjectIds(ungroupedObjects.map((obj) => obj.id));
+  };
+
   return (
     <BannerContext.Provider
       value={{
@@ -130,6 +199,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         selectObject,
         clearSelection,
         clearHistory,
+        groupSelectedObjects,
+        ungroupSelectedObject,
       }}
     >
       {children}
