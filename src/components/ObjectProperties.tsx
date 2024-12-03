@@ -2,6 +2,7 @@ import { Box, Typography, Button } from "@mui/material";
 import { useObjectProperties } from "../utils/hooks";
 import { TextObjectForm } from "./UI/TextObjectForm";
 import { ImageObjectForm } from "./UI/ImageObjectForm";
+import { GroupObjectForm } from "./UI/GroupObjectForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";
 
 const ObjectProperties: React.FC = () => {
@@ -30,6 +31,13 @@ const ObjectProperties: React.FC = () => {
           />
         ) : selectedObject?.type === "image" ? (
           <ImageObjectForm
+            object={selectedObject}
+            onChange={(key, value) =>
+              updateObjectProperty(selectedObject.id, key, value)
+            }
+          />
+        ) : selectedObject?.type === "group" ? (
+          <GroupObjectForm
             object={selectedObject}
             onChange={(key, value) =>
               updateObjectProperty(selectedObject.id, key, value)

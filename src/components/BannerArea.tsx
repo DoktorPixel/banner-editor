@@ -102,11 +102,11 @@ const BannerArea: React.FC = () => {
                 height: object.height,
                 zIndex: object.zIndex,
                 display: object.display || "flex",
-                flexDirection: object.flexDirection || "row",
-                justifyContent: object.justifyContent || "flex-start",
-                alignItems: object.alignItems || "flex-start",
+                flexDirection: object.flexDirection,
+                justifyContent: object.justifyContent,
+                alignItems: object.alignItems,
                 // border: "1px dashed gray",
-                gap: object.gap || "10px",
+                gap: object.gap || "0px",
               }}
               onMouseDown={(e) => handleMouseDown(object.id, e)}
               onClick={(e) => handleObjectClick(object.id, e)}
