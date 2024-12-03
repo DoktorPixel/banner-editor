@@ -56,6 +56,7 @@ export interface BannerContextProps {
   clearSelection: () => void;
   clearHistory: () => void;
   groupSelectedObjects: () => void;
+  ungroupSelectedObject: () => void;
 }
 
 // export interface BannerObject {

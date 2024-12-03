@@ -106,7 +106,7 @@ const BannerArea: React.FC = () => {
                 justifyContent: object.justifyContent,
                 alignItems: object.alignItems,
                 // border: "1px dashed gray",
-                gap: object.gap || "0px",
+                gap: object.gap || "10px",
               }}
               onMouseDown={(e) => handleMouseDown(object.id, e)}
               onClick={(e) => handleObjectClick(object.id, e)}

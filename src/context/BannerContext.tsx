@@ -155,6 +155,34 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedObjectIds([newGroup.id]);
   };
 
+  const ungroupSelectedObject = () => {
+    if (selectedObjectIds.length !== 1) {
+      console.warn("Для розгрупування потрібно виділити лише одну групу.");
+      return;
+    }
+
+    const selectedObject = objects.find(
+      (obj) => obj.id === selectedObjectIds[0]
+    );
+
+    if (!selectedObject || selectedObject.type !== "group") {
+      console.warn("Обраний об'єкт не є групою.");
+      return;
+    }
+
+    const ungroupedObjects = (selectedObject.children || []).map((child) => ({
+      ...child,
+      id: Date.now() + Math.random(),
+      x: (child.x || 0) + selectedObject.x,
+      y: (child.y || 0) + selectedObject.y,
+    }));
+
+    const newObjects = objects.filter((obj) => obj.id !== selectedObject.id);
+    updateHistory([...newObjects, ...ungroupedObjects]);
+
+    setSelectedObjectIds(ungroupedObjects.map((obj) => obj.id));
+  };
+
   return (
     <BannerContext.Provider
       value={{
@@ -172,6 +200,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         clearSelection,
         clearHistory,
         groupSelectedObjects,
+        ungroupSelectedObject,
       }}
     >
       {children}
