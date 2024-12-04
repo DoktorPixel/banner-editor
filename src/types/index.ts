@@ -57,23 +57,14 @@ export interface BannerContextProps {
   clearHistory: () => void;
   groupSelectedObjects: () => void;
   ungroupSelectedObject: () => void;
+  //
+  selectedChildId: { groupId: number; childId: number } | null;
+  selectChild: (groupId: number, childId: number) => void;
+  clearChildSelection: () => void;
+  updateChild: (
+    groupId: number,
+    childId: number,
+    updates: Partial<BannerChild>
+  ) => void;
+  deleteChild: (groupId: number, childId: number) => void;
 }
-
-// export interface BannerObject {
-//   id: number;
-//   type: "text" | "image";
-//   x: number;
-//   y: number;
-//   zIndex?: number | undefined;
-//   content?: string;
-//   fontSize?: number;
-//   fontWeight?: React.CSSProperties["fontWeight"];
-//   fontStyle?: React.CSSProperties["fontStyle"];
-//   textTransform?: React.CSSProperties["textTransform"];
-//   textDecoration?: React.CSSProperties["textDecoration"];
-//   textAlign?: React.CSSProperties["textAlign"];
-//   color?: string;
-//   src?: string;
-//   width?: number;
-//   height?: number;
-// }

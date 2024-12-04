@@ -1,5 +1,5 @@
 import { useBanner } from "../context/BannerContext";
-import { BannerObject } from "../types";
+import { BannerObject, BannerChild } from "../types";
 
 export const useObjectProperties = () => {
   const {
@@ -9,6 +9,7 @@ export const useObjectProperties = () => {
     deleteMultipleObjects,
     selectedObjectIds,
     clearSelection,
+    //
   } = useBanner();
 
   const getObjectById = (id: number) => objects.find((obj) => obj.id === id);
@@ -54,6 +55,8 @@ export const useObjectProperties = () => {
     updateObject(objectId, updates);
   };
 
+  //
+
   return {
     selectedObject,
     selectedObjects,
@@ -63,5 +66,51 @@ export const useObjectProperties = () => {
     handleDeleteAll,
     updateObjectProperty,
     updateObjectMultipleProperties,
+    //
+  };
+};
+
+export const useChildProperties = () => {
+  const {
+    selectedChildId,
+    objects,
+    updateChild,
+    deleteChild,
+    selectChild,
+    clearChildSelection,
+  } = useBanner();
+
+  const selectedChild = selectedChildId
+    ? objects
+        .find((obj) => obj.id === selectedChildId.groupId)
+        ?.children?.find((child) => child.id === selectedChildId.childId) ||
+      null
+    : null;
+
+  const handleChangeChild = (
+    key: keyof BannerChild,
+    value: string | number
+  ) => {
+    if (selectedChildId) {
+      updateChild(selectedChildId.groupId, selectedChildId.childId, {
+        [key]: value,
+      });
+    }
+  };
+
+  const handleDeleteChild = () => {
+    if (selectedChildId) {
+      deleteChild(selectedChildId.groupId, selectedChildId.childId);
+      clearChildSelection();
+    }
+  };
+
+  return {
+    selectedChild,
+    selectedChildId,
+    handleChangeChild,
+    handleDeleteChild,
+    selectChild,
+    clearChildSelection,
   };
 };

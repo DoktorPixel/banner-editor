@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { BannerObject } from "../types";
-import { BannerContextProps } from "../types";
+import { BannerObject, BannerContextProps, BannerChild } from "../types";
 
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
 
@@ -20,6 +19,49 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedObjectIds, setSelectedObjectIds] = useState<number[]>([]);
 
   const objects = history[currentStep] || [];
+
+  const [selectedChildId, setSelectedChildId] = useState<{
+    groupId: number;
+    childId: number;
+  } | null>(null);
+
+  const selectChild = (groupId: number, childId: number) => {
+    setSelectedChildId({ groupId, childId });
+  };
+
+  const clearChildSelection = () => {
+    setSelectedChildId(null);
+  };
+
+  const updateChild = (
+    groupId: number,
+    childId: number,
+    updates: Partial<BannerChild>
+  ) => {
+    const newObjects = objects.map((obj) => {
+      if (obj.id === groupId && obj.children) {
+        const updatedChildren = obj.children.map((child) =>
+          child.id === childId ? { ...child, ...updates } : child
+        );
+        return { ...obj, children: updatedChildren };
+      }
+      return obj;
+    });
+    updateHistory(newObjects);
+  };
+
+  const deleteChild = (groupId: number, childId: number) => {
+    const newObjects = objects.map((obj) => {
+      if (obj.id === groupId && obj.children) {
+        const updatedChildren = obj.children.filter(
+          (child) => child.id !== childId
+        );
+        return { ...obj, children: updatedChildren };
+      }
+      return obj;
+    });
+    updateHistory(newObjects);
+  };
 
   const addObject = (object: BannerObject) => {
     const maxZIndex = objects.reduce(
@@ -201,6 +243,12 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         clearHistory,
         groupSelectedObjects,
         ungroupSelectedObject,
+        //
+        selectedChildId,
+        selectChild,
+        clearChildSelection,
+        updateChild,
+        deleteChild,
       }}
     >
       {children}

@@ -83,7 +83,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
       <TextField
         label="Відступ між елементами (gap, px)"
         type="number"
-        value={object.gap}
+        value={object.gap || 10}
         onChange={(e) => handleInputChange("gap", parseInt(e.target.value))}
         fullWidth
         margin="normal"
