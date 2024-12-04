@@ -84,7 +84,7 @@ const ObjectProperties: React.FC = () => {
       )}
 
       {/* Кнопки удаления */}
-      {selectedObjectIds.length === 1 && (
+      {selectedObjectIds.length === 1 && !selectedChild && (
         <Button
           variant="contained"
           color="error"
