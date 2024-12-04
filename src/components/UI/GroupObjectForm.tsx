@@ -46,13 +46,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
           onChange={(e) => handleInputChange("flexDirection", e.target.value)}
         >
           <MenuItem value="row">По рядках (row)</MenuItem>
-          <MenuItem value="row-reverse">
-            Рядки в зворотному порядку (row-reverse)
-          </MenuItem>
           <MenuItem value="column">По колонках (column)</MenuItem>
-          <MenuItem value="column-reverse">
-            Колонки в зворотному порядку (column-reverse)
-          </MenuItem>
         </Select>
       </FormControl>
 
@@ -64,6 +58,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         >
           <MenuItem value="start">З початку (start)</MenuItem>
           <MenuItem value="center">По центру (center)</MenuItem>
+          <MenuItem value="end">В кінці (end)</MenuItem>
           <MenuItem value="space-between">
             Між елементами (space-between)
           </MenuItem>
@@ -80,8 +75,8 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
           onChange={(e) => handleInputChange("alignItems", e.target.value)}
         >
           <MenuItem value="flex-start">Спочатку (flex-start)</MenuItem>
-          <MenuItem value="flex-end">Вкінці (flex-end)</MenuItem>
           <MenuItem value="center">По центру (center)</MenuItem>
+          <MenuItem value="flex-end">Вкінці (flex-end)</MenuItem>
         </Select>
       </FormControl>
 
