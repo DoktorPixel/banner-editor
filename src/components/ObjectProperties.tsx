@@ -3,6 +3,7 @@ import { useObjectProperties } from "../utils/hooks";
 import { TextObjectForm } from "./UI/TextObjectForm";
 import { ImageObjectForm } from "./UI/ImageObjectForm";
 import { GroupObjectForm } from "./UI/GroupObjectForm";
+import { AutoLayoutForm } from "./UI/AutoLayoutForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";
 
 const ObjectProperties: React.FC = () => {
@@ -13,6 +14,7 @@ const ObjectProperties: React.FC = () => {
     handleDelete,
     handleDeleteAll,
     updateObjectProperty,
+    updateObjectMultipleProperties,
   } = useObjectProperties();
 
   return (
@@ -37,12 +39,24 @@ const ObjectProperties: React.FC = () => {
             }
           />
         ) : selectedObject?.type === "group" ? (
-          <GroupObjectForm
-            object={selectedObject}
-            onChange={(key, value) =>
-              updateObjectProperty(selectedObject.id, key, value)
-            }
-          />
+          <>
+            <GroupObjectForm
+              object={selectedObject}
+              onChange={(key, value) =>
+                updateObjectProperty(selectedObject.id, key, value)
+              }
+            />
+            <AutoLayoutForm
+              flexDirection={
+                (selectedObject.flexDirection as "row" | "column") || "row"
+              }
+              justifyContent={selectedObject.justifyContent || "center"}
+              alignItems={selectedObject.alignItems || "center"}
+              onChange={(changes) =>
+                updateObjectMultipleProperties(selectedObject.id, changes)
+              }
+            />
+          </>
         ) : null
       ) : (
         <SelectedObjectsList objects={selectedObjects} />

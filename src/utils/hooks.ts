@@ -47,6 +47,13 @@ export const useObjectProperties = () => {
     updateObject(objectId, { [key]: value });
   };
 
+  const updateObjectMultipleProperties = (
+    objectId: number,
+    updates: Partial<BannerObject>
+  ) => {
+    updateObject(objectId, updates);
+  };
+
   return {
     selectedObject,
     selectedObjects,
@@ -55,5 +62,6 @@ export const useObjectProperties = () => {
     handleDelete,
     handleDeleteAll,
     updateObjectProperty,
+    updateObjectMultipleProperties,
   };
 };

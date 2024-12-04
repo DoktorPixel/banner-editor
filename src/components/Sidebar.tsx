@@ -47,6 +47,8 @@ const Sidebar: React.FC = () => {
       type: "text",
       x: 50,
       y: 50,
+      width: 200,
+      height: 50,
       content: textContent || "Текст",
       fontSize: 16,
       color: "#000000",
