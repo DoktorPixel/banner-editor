@@ -1,9 +1,10 @@
 import { Box, Typography, Button } from "@mui/material";
-import { useObjectProperties } from "../utils/hooks";
+import { useObjectProperties, useChildProperties } from "../utils/hooks";
 import { TextObjectForm } from "./UI/TextObjectForm";
 import { ImageObjectForm } from "./UI/ImageObjectForm";
 import { GroupObjectForm } from "./UI/GroupObjectForm";
 import { AutoLayoutForm } from "./UI/AutoLayoutForm";
+import { ChildObjectForm } from "./UI/ChildObjectForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";
 
 const ObjectProperties: React.FC = () => {
@@ -15,13 +16,33 @@ const ObjectProperties: React.FC = () => {
     handleDeleteAll,
     updateObjectProperty,
     updateObjectMultipleProperties,
+    //
   } = useObjectProperties();
+
+  const { selectedChild, handleChangeChild, handleDeleteChild } =
+    useChildProperties();
 
   return (
     <Box className="object-properties">
       <Typography variant="h5">Властивості об'єкту</Typography>
 
-      {selectedObjectIds.length === 0 ? (
+      {/* Проверка на выбранного ребенка */}
+      {selectedChild ? (
+        <>
+          <ChildObjectForm
+            object={selectedChild}
+            onChange={(key, value) => handleChangeChild(key, value)}
+          />
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDeleteChild}
+            sx={{ marginTop: "20px" }}
+          >
+            Видалити елемент з групи
+          </Button>
+        </>
+      ) : selectedObjectIds.length === 0 ? (
         <Typography>Виберіть об'єкт для редагування</Typography>
       ) : selectedObjectIds.length === 1 ? (
         selectedObject?.type === "text" ? (
@@ -62,17 +83,16 @@ const ObjectProperties: React.FC = () => {
         <SelectedObjectsList objects={selectedObjects} />
       )}
 
-      {selectedObjectIds.length === 1 && (
-        <>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleDelete}
-            sx={{ marginTop: "20px" }}
-          >
-            Видалити об'єкт
-          </Button>
-        </>
+      {/* Кнопки удаления */}
+      {selectedObjectIds.length === 1 && !selectedChild && (
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleDelete}
+          sx={{ marginTop: "20px" }}
+        >
+          Видалити об'єкт
+        </Button>
       )}
       {selectedObjectIds.length > 1 && (
         <Button

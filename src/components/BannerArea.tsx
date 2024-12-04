@@ -9,6 +9,10 @@ const BannerArea: React.FC = () => {
     selectedObjectIds,
     selectObject,
     clearSelection,
+
+    selectedChildId,
+    selectChild,
+    clearChildSelection,
   } = useBanner();
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [offset, setOffset] = useState<{ x: number; y: number }>({
@@ -18,6 +22,17 @@ const BannerArea: React.FC = () => {
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
+
+  const handleChildClick = (
+    groupId: number,
+    childId: number,
+    event: React.MouseEvent
+  ) => {
+    event.stopPropagation();
+    selectChild(groupId, childId);
+    console.log("childId", childId);
+    console.log("groupId", groupId);
+  };
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
     event.preventDefault();
@@ -87,7 +102,10 @@ const BannerArea: React.FC = () => {
       ref={bannerRef}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      onClick={() => clearSelection()}
+      onClick={() => {
+        clearSelection();
+        clearChildSelection();
+      }}
     >
       {objects.map((object) => {
         if (object.type === "group") {
@@ -109,7 +127,10 @@ const BannerArea: React.FC = () => {
                 gap: object.gap || "10px",
               }}
               onMouseDown={(e) => handleMouseDown(object.id, e)}
-              onClick={(e) => handleObjectClick(object.id, e)}
+              onClick={(e) => {
+                handleObjectClick(object.id, e);
+                clearChildSelection();
+              }}
               className={`banner-object ${
                 selectedObjectIds.includes(object.id) ? "selected" : ""
               }`}
@@ -125,7 +146,18 @@ const BannerArea: React.FC = () => {
                     textTransform: child.textTransform,
                     textDecoration: child.textDecoration,
                     textAlign: child.textAlign,
+                    // width: child.width,
+                    // height: child.height,
+
+                    border:
+                      selectedChildId?.groupId === object.id &&
+                      selectedChildId.childId === child.id
+                        ? "1px solid blue"
+                        : "none",
                   }}
+                  onDoubleClick={(e) =>
+                    handleChildClick(object.id, child.id, e)
+                  }
                 >
                   {child.type === "text" ? child.content : null}
                 </p>
