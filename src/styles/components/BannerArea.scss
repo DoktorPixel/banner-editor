@@ -14,14 +14,26 @@
   cursor: grab;
 }
 //
-.banner-object {
+.banner-object,
+.banner-object-child {
   padding: 1px;
   border: 1px solid transparent;
   cursor: pointer;
 }
+.banner-object:hover {
+  border: 1px solid #ccc;
+}
+
+.banner-object-child:hover {
+  border: 1px solid #ccc !important ;
+}
 
 .banner-object.selected {
   border: 1px solid blue;
+}
+
+.banner-object-child.selected {
+  border: 1px solid blue !important;
 }
 
 .resize-handle {
