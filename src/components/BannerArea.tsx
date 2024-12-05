@@ -2,6 +2,8 @@ import { useState, useRef } from "react";
 import { useBanner } from "../context/BannerContext";
 import { BannerChild } from "../types";
 
+const SNAP_DISTANCE = 15;
+
 const BannerArea: React.FC = () => {
   const {
     objects,
@@ -9,11 +11,11 @@ const BannerArea: React.FC = () => {
     selectedObjectIds,
     selectObject,
     clearSelection,
-
     selectedChildId,
     selectChild,
     clearChildSelection,
   } = useBanner();
+
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [offset, setOffset] = useState<{ x: number; y: number }>({
     x: 0,
@@ -21,6 +23,12 @@ const BannerArea: React.FC = () => {
   });
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
+  const [showHorizontalLine, setShowHorizontalLine] = useState(false);
+  const [showVerticalLine, setShowVerticalLine] = useState(false);
+
+  const [isNearRight, setIsNearRight] = useState(false);
+  const [isNearBottom, setIsNearBottom] = useState(false);
+
   const bannerRef = useRef<HTMLDivElement>(null);
 
   const handleChildClick = (
@@ -30,8 +38,6 @@ const BannerArea: React.FC = () => {
   ) => {
     event.stopPropagation();
     selectChild(groupId, childId);
-    console.log("childId", childId);
-    console.log("groupId", groupId);
   };
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
@@ -52,6 +58,7 @@ const BannerArea: React.FC = () => {
     event: React.MouseEvent
   ) => {
     event.preventDefault();
+    event.stopPropagation();
     setResizingId(id);
     setResizeDirection(direction);
   };
@@ -62,31 +69,115 @@ const BannerArea: React.FC = () => {
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
-    if (draggingId !== null && bannerRef.current) {
-      const rect = bannerRef.current.getBoundingClientRect();
+    const rect = bannerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    if (draggingId !== null) {
       const x = event.clientX - rect.left - offset.x;
       const y = event.clientY - rect.top - offset.y;
 
-      updateObject(draggingId, { x, y });
+      const object = objects.find((obj) => obj.id === draggingId);
+      const objectWidth = object?.width ?? 0;
+      const objectHeight = object?.height ?? 0;
+
+      let snappedX = x;
+      let snappedY = y;
+
+      const isNearLeft = Math.abs(x) <= SNAP_DISTANCE;
+
+      setIsNearRight(Math.abs(x + objectWidth - rect.width) <= SNAP_DISTANCE);
+      setIsNearBottom(
+        Math.abs(y + objectHeight - rect.height) <= SNAP_DISTANCE
+      );
+
+      if (isNearRight) {
+        snappedX = rect.width - objectWidth;
+        setShowVerticalLine(true);
+      }
+      if (isNearBottom) {
+        snappedY = rect.height - objectHeight;
+        setShowHorizontalLine(true);
+      }
+      const isNearTop = Math.abs(y) <= SNAP_DISTANCE;
+
+      if (isNearLeft) snappedX = 0;
+      if (isNearRight) snappedX = rect.width - objectWidth;
+      if (isNearTop) snappedY = 0;
+      if (isNearBottom) snappedY = rect.height - objectHeight;
+
+      setShowVerticalLine(isNearLeft || isNearRight);
+      setShowHorizontalLine(isNearTop || isNearBottom);
+
+      objects.forEach((obj) => {
+        if (obj.id !== draggingId) {
+          if (Math.abs(x - obj.x) <= SNAP_DISTANCE) snappedX = obj.x;
+          if (
+            Math.abs(x + objectWidth - (obj.x + (obj.width ?? 0))) <=
+            SNAP_DISTANCE
+          )
+            snappedX = obj.x + (obj.width ?? 0) - objectWidth;
+          if (Math.abs(y - obj.y) <= SNAP_DISTANCE) snappedY = obj.y;
+          if (
+            Math.abs(y + objectHeight - (obj.y + (obj.height ?? 0))) <=
+            SNAP_DISTANCE
+          )
+            snappedY = obj.y + (obj.height ?? 0) - objectHeight;
+        }
+      });
+
+      updateObject(draggingId, { x: snappedX, y: snappedY });
     }
 
-    if (resizingId !== null && bannerRef.current) {
+    if (resizingId !== null) {
       const object = objects.find((obj) => obj.id === resizingId);
-      if (object) {
-        const rect = bannerRef.current.getBoundingClientRect();
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
+      if (!object) return;
 
-        const updates: Partial<typeof object> = {};
-        if (resizeDirection?.includes("right")) {
-          updates.width = mouseX - object.x;
-        }
-        if (resizeDirection?.includes("bottom")) {
-          updates.height = mouseY - object.y;
-        }
+      const mouseX = event.clientX - rect.left;
+      const mouseY = event.clientY - rect.top;
 
-        updateObject(resizingId, updates);
+      const updates: Partial<typeof object> = {};
+      // const objectWidth = object.width ?? 0;
+      // const objectHeight = object.height ?? 0;
+
+      if (resizeDirection?.includes("right")) {
+        const newWidth = mouseX - object.x;
+        updates.width =
+          Math.abs(newWidth - rect.width) <= SNAP_DISTANCE
+            ? rect.width - object.x
+            : newWidth;
       }
+      if (resizeDirection?.includes("bottom")) {
+        const newHeight = mouseY - object.y;
+        updates.height =
+          Math.abs(newHeight - rect.height) <= SNAP_DISTANCE
+            ? rect.height - object.y
+            : newHeight;
+      }
+
+      objects.forEach((obj) => {
+        if (obj.id !== resizingId) {
+          if (resizeDirection?.includes("right")) {
+            const newWidth = mouseX - object.x;
+            if (Math.abs(newWidth - obj.x) <= SNAP_DISTANCE)
+              updates.width = obj.x - object.x;
+            if (
+              Math.abs(newWidth - (obj.x + (obj.width ?? 0))) <= SNAP_DISTANCE
+            )
+              updates.width = obj.x + (obj.width ?? 0) - object.x;
+          }
+          if (resizeDirection?.includes("bottom")) {
+            const newHeight = mouseY - object.y;
+            if (Math.abs(newHeight - obj.y) <= SNAP_DISTANCE)
+              updates.height = obj.y - object.y;
+            if (
+              Math.abs(newHeight - (obj.y + (obj.height ?? 0))) <= SNAP_DISTANCE
+            )
+              updates.height = obj.y + (obj.height ?? 0) - object.y;
+          }
+        }
+      });
+
+      updateObject(resizingId, updates);
     }
   };
 
@@ -94,6 +185,8 @@ const BannerArea: React.FC = () => {
     setDraggingId(null);
     setResizingId(null);
     setResizeDirection(null);
+    setShowHorizontalLine(false);
+    setShowVerticalLine(false);
   };
 
   return (
@@ -107,6 +200,21 @@ const BannerArea: React.FC = () => {
         clearChildSelection();
       }}
     >
+      {showVerticalLine && (
+        <div
+          className={`banner-anchor-line vertical ${
+            isNearRight ? "right" : ""
+          }`}
+        ></div>
+      )}
+      {showHorizontalLine && (
+        <div
+          className={`banner-anchor-line horizontal ${
+            isNearBottom ? "bottom" : ""
+          }`}
+        ></div>
+      )}
+
       {objects.map((object) => {
         if (object.type === "group") {
           return (
@@ -123,7 +231,6 @@ const BannerArea: React.FC = () => {
                 flexDirection: object.flexDirection,
                 justifyContent: object.justifyContent,
                 alignItems: object.alignItems,
-                // border: "1px dashed gray",
                 gap: object.gap || "10px",
               }}
               onMouseDown={(e) => handleMouseDown(object.id, e)}
@@ -152,9 +259,6 @@ const BannerArea: React.FC = () => {
                     textTransform: child.textTransform,
                     textDecoration: child.textDecoration,
                     textAlign: child.textAlign,
-                    // width: child.width,
-                    // height: child.height,
-
                     border:
                       selectedChildId?.groupId === object.id &&
                       selectedChildId.childId === child.id
