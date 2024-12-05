@@ -137,6 +137,12 @@ const BannerArea: React.FC = () => {
             >
               {object.children?.map((child: BannerChild, index: number) => (
                 <p
+                  className={`banner-object-child ${
+                    selectedChildId?.groupId === object.id &&
+                    selectedChildId.childId === child.id
+                      ? "selected"
+                      : ""
+                  }`}
                   key={child.id || index}
                   style={{
                     fontSize: child.fontSize,
