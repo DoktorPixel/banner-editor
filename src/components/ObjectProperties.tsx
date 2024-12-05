@@ -26,6 +26,7 @@ const ObjectProperties: React.FC = () => {
     <Box className="object-properties">
       <Typography variant="h5">Властивості об'єкту</Typography>
 
+      {/* Проверка на выбранного ребенка */}
       {selectedChild ? (
         <>
           <ChildObjectForm
@@ -82,6 +83,7 @@ const ObjectProperties: React.FC = () => {
         <SelectedObjectsList objects={selectedObjects} />
       )}
 
+      {/* Кнопки удаления */}
       {selectedObjectIds.length === 1 && !selectedChild && (
         <Button
           variant="contained"
