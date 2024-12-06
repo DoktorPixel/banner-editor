@@ -3,6 +3,7 @@ import { useObjectProperties, useChildProperties } from "../utils/hooks";
 import { TextObjectForm } from "./UI/TextObjectForm";
 import { ImageObjectForm } from "./UI/ImageObjectForm";
 import { GroupObjectForm } from "./UI/GroupObjectForm";
+import { FigureObjectForm } from "./UI/FigureObjectForm";
 import { AutoLayoutForm } from "./UI/AutoLayoutForm";
 import { ChildObjectForm } from "./UI/ChildObjectForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";
@@ -53,6 +54,13 @@ const ObjectProperties: React.FC = () => {
           />
         ) : selectedObject?.type === "image" ? (
           <ImageObjectForm
+            object={selectedObject}
+            onChange={(key, value) =>
+              updateObjectProperty(selectedObject.id, key, value)
+            }
+          />
+        ) : selectedObject?.type === "figure" ? (
+          <FigureObjectForm
             object={selectedObject}
             onChange={(key, value) =>
               updateObjectProperty(selectedObject.id, key, value)

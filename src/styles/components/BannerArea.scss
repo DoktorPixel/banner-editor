@@ -77,7 +77,6 @@
   cursor: sw-resize;
 }
 
-/* Новые боковые контроллеры */
 .resize-handle.middle-top,
 .resize-handle.middle-bottom {
   left: 50%;
@@ -110,4 +109,13 @@
 .resize-handle.middle-right {
   right: 0;
   cursor: e-resize;
+}
+
+.banner-figure {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
 }

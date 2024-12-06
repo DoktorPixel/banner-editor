@@ -70,6 +70,18 @@ const Sidebar: React.FC = () => {
     closeDialog("isImageDialogOpen");
   };
 
+  const handleAddFigure = () => {
+    addObject({
+      id: Date.now(),
+      type: "figure",
+      x: 50,
+      y: 50,
+      width: 200,
+      height: 200,
+      backgroundColor: "#f0f0f0",
+    });
+  };
+
   const handleClearHistory = () => {
     clearHistory();
     closeDialog("isClearHistoryDialogOpen");
@@ -86,10 +98,17 @@ const Sidebar: React.FC = () => {
       </Button>
       <Button
         variant="contained"
-        color="secondary"
+        color="primary"
         onClick={() => openDialog("isImageDialogOpen")}
       >
         Додати зображення
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => handleAddFigure()}
+      >
+        Додати фігуру
       </Button>
       <Button
         variant="outlined"
@@ -160,6 +179,8 @@ const Sidebar: React.FC = () => {
                   ? obj.content?.slice(0, 30) || "Текст"
                   : obj.type === "group"
                   ? "Група"
+                  : obj.type === "figure"
+                  ? "Фігура"
                   : "Зображення"
               }
             />

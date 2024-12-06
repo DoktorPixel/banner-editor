@@ -1,6 +1,6 @@
 export interface BannerObject {
   id: number;
-  type: "text" | "image" | "group";
+  type: "text" | "image" | "group" | "figure";
   x: number;
   y: number;
   zIndex?: number | undefined;
@@ -21,6 +21,13 @@ export interface BannerObject {
   justifyContent?: React.CSSProperties["justifyContent"];
   alignItems?: React.CSSProperties["alignItems"];
   gap?: React.CSSProperties["gap"];
+
+  borderStyle?: string;
+  borderColor?: string;
+  borderWidth?: number | string;
+  borderRadius?: React.CSSProperties["borderRadius"];
+  backgroundColor?: string;
+  opacity?: React.CSSProperties["opacity"];
 }
 
 export interface BannerChild {
@@ -58,7 +65,6 @@ export interface BannerContextProps {
   groupSelectedObjects: () => void;
   ungroupSelectedObject: () => void;
 
-  //
   selectedChildId: { groupId: number; childId: number } | null;
   selectChild: (groupId: number, childId: number) => void;
   clearChildSelection: () => void;
@@ -88,10 +94,10 @@ export interface ResizeParams {
 }
 
 export interface ResizeHandlesProps {
-  objectId: number; // Исправлено с string на number
-  selectedObjectId: number | null; // Исправлено с string | null на number | null
+  objectId: number;
+  selectedObjectId: number | null;
   handleResizeMouseDown: (
-    objectId: number, // Исправлено с string на number
+    objectId: number,
     direction: ResizeDirection,
     event: React.MouseEvent
   ) => void;

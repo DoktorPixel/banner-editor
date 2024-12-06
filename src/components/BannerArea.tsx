@@ -276,7 +276,7 @@ const BannerArea: React.FC = () => {
               >
                 {object.content}
               </p>
-            ) : (
+            ) : object.type === "image" ? (
               <img
                 src={object.src}
                 alt="img"
@@ -285,7 +285,19 @@ const BannerArea: React.FC = () => {
                   height: "100%",
                 }}
               />
-            )}
+            ) : object.type === "figure" ? (
+              <div
+                className="banner-figure"
+                style={{
+                  backgroundColor: object.backgroundColor,
+                  borderStyle: object.borderStyle,
+                  borderColor: object.borderColor,
+                  borderWidth: object.borderWidth,
+                  borderRadius: object.borderRadius,
+                  opacity: object.opacity,
+                }}
+              ></div>
+            ) : null}
 
             <ResizeHandles
               objectId={object.id}
