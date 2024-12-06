@@ -3,16 +3,14 @@ import { useBanner } from "../context/BannerContext";
 import {
   Button,
   Stack,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
+  Typography,
   List,
   ListItem,
   ListItemText,
-  Typography,
 } from "@mui/material";
+import TextDialog from "./UI/dialogs/TextDialog";
+import ImageDialog from "./UI/dialogs/ImageDialog";
+import ClearHistoryDialog from "./UI/dialogs/ClearHistoryDialog";
 
 const Sidebar: React.FC = () => {
   const {
@@ -29,17 +27,20 @@ const Sidebar: React.FC = () => {
     ungroupSelectedObject,
   } = useBanner();
 
-  const [isTextDialogOpen, setTextDialogOpen] = useState(false);
-  const [isImageDialogOpen, setImageDialogOpen] = useState(false);
-  const [isClearHistoryDialogOpen, setClearHistoryDialogOpen] = useState(false);
+  const [dialogState, setDialogState] = useState({
+    isTextDialogOpen: false,
+    isImageDialogOpen: false,
+    isClearHistoryDialogOpen: false,
+  });
+
   const [textContent, setTextContent] = useState("");
   const [imageSrc, setImageSrc] = useState("");
 
-  const openTextDialog = () => setTextDialogOpen(true);
-  const closeTextDialog = () => {
-    setTextDialogOpen(false);
-    setTextContent("");
-  };
+  const openDialog = (type: keyof typeof dialogState) =>
+    setDialogState((prev) => ({ ...prev, [type]: true }));
+
+  const closeDialog = (type: keyof typeof dialogState) =>
+    setDialogState((prev) => ({ ...prev, [type]: false }));
 
   const handleAddText = () => {
     addObject({
@@ -53,13 +54,8 @@ const Sidebar: React.FC = () => {
       fontSize: 16,
       color: "#000000",
     });
-    closeTextDialog();
-  };
-
-  const openImageDialog = () => setImageDialogOpen(true);
-  const closeImageDialog = () => {
-    setImageDialogOpen(false);
-    setImageSrc("");
+    setTextContent("");
+    closeDialog("isTextDialogOpen");
   };
 
   const handleAddImage = () => {
@@ -70,23 +66,29 @@ const Sidebar: React.FC = () => {
       y: 50,
       src: imageSrc || "https://via.placeholder.com/300",
     });
-    closeImageDialog();
+    setImageSrc("");
+    closeDialog("isImageDialogOpen");
   };
-
-  const openClearHistoryDialog = () => setClearHistoryDialogOpen(true);
-  const closeClearHistoryDialog = () => setClearHistoryDialogOpen(false);
 
   const handleClearHistory = () => {
     clearHistory();
-    closeClearHistoryDialog();
+    closeDialog("isClearHistoryDialogOpen");
   };
 
   return (
     <Stack spacing={2} className="sidebar">
-      <Button variant="contained" color="primary" onClick={openTextDialog}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => openDialog("isTextDialogOpen")}
+      >
         Додати текст
       </Button>
-      <Button variant="contained" color="secondary" onClick={openImageDialog}>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => openDialog("isImageDialogOpen")}
+      >
         Додати зображення
       </Button>
       <Button
@@ -108,74 +110,36 @@ const Sidebar: React.FC = () => {
       <Button
         variant="contained"
         color="error"
-        onClick={openClearHistoryDialog}
+        onClick={() => openDialog("isClearHistoryDialogOpen")}
       >
         Очистити історію
       </Button>
 
-      <Dialog open={isTextDialogOpen} onClose={closeTextDialog}>
-        <DialogTitle>Додати текст</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Текст"
-            fullWidth
-            value={textContent}
-            onChange={(e) => setTextContent(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeTextDialog} color="secondary">
-            Відмінити
-          </Button>
-          <Button onClick={handleAddText} color="primary">
-            Додати
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <TextDialog
+        open={dialogState.isTextDialogOpen}
+        textContent={textContent}
+        onChange={(e) => setTextContent(e.target.value)}
+        onClose={() => closeDialog("isTextDialogOpen")}
+        onAdd={handleAddText}
+      />
 
-      <Dialog open={isImageDialogOpen} onClose={closeImageDialog}>
-        <DialogTitle>Додати зображення</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="URL зображення"
-            fullWidth
-            value={imageSrc}
-            onChange={(e) => setImageSrc(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeImageDialog} color="secondary">
-            Відмінити
-          </Button>
-          <Button onClick={handleAddImage} color="primary">
-            Додати
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ImageDialog
+        open={dialogState.isImageDialogOpen}
+        imageSrc={imageSrc}
+        onChange={(e) => setImageSrc(e.target.value)}
+        onClose={() => closeDialog("isImageDialogOpen")}
+        onAdd={handleAddImage}
+      />
 
-      <Dialog open={isClearHistoryDialogOpen} onClose={closeClearHistoryDialog}>
-        <DialogTitle>Очистити історію</DialogTitle>
-        <DialogContent>
-          Ви впевнені, що хочете очистити історію? Це видалить всі зміни.
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeClearHistoryDialog} color="secondary">
-            Ні
-          </Button>
-          <Button onClick={handleClearHistory} color="error">
-            Так
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ClearHistoryDialog
+        open={dialogState.isClearHistoryDialogOpen}
+        onClose={() => closeDialog("isClearHistoryDialogOpen")}
+        onClear={handleClearHistory}
+      />
 
       <Typography variant="h6" sx={{ marginTop: "20px" }}>
         Список об'єктів
       </Typography>
-
       <List>
         {objects.map((obj) => (
           <ListItem
@@ -191,16 +155,13 @@ const Sidebar: React.FC = () => {
             }}
           >
             <ListItemText
-              primary={(() => {
-                const text =
-                  obj.type === "text"
-                    ? obj.content || "Текст"
-                    : obj.type === "group"
-                    ? "Група"
-                    : "Зображення";
-
-                return text.length > 50 ? `${text.slice(0, 30)}...` : text;
-              })()}
+              primary={
+                obj.type === "text"
+                  ? obj.content?.slice(0, 30) || "Текст"
+                  : obj.type === "group"
+                  ? "Група"
+                  : "Зображення"
+              }
             />
           </ListItem>
         ))}
@@ -208,7 +169,7 @@ const Sidebar: React.FC = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => groupSelectedObjects()}
+        onClick={groupSelectedObjects}
         disabled={
           selectedObjectIds.length < 2 ||
           !selectedObjectIds.every(
@@ -218,11 +179,10 @@ const Sidebar: React.FC = () => {
       >
         Групувати
       </Button>
-
       <Button
         variant="contained"
         color="secondary"
-        onClick={() => ungroupSelectedObject()}
+        onClick={ungroupSelectedObject}
         disabled={
           selectedObjectIds.length !== 1 ||
           objects.find((obj) => obj.id === selectedObjectIds[0])?.type !==
