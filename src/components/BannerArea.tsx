@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useBanner } from "../context/BannerContext";
 import { BannerObject, BannerChild, ResizeDirection } from "../types";
 import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
@@ -124,6 +124,38 @@ const BannerArea: React.FC = () => {
     setResizeDirection(null);
     setTemporaryUpdates({});
   };
+  //
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (!selectedObjectIds.length) return;
+
+    const increment = event.shiftKey ? 10 : 1;
+    let deltaX = 0;
+    let deltaY = 0;
+
+    if (event.key === "ArrowUp") deltaY = -increment;
+    if (event.key === "ArrowDown") deltaY = increment;
+    if (event.key === "ArrowLeft") deltaX = -increment;
+    if (event.key === "ArrowRight") deltaX = increment;
+
+    if (deltaX !== 0 || deltaY !== 0) {
+      selectedObjectIds.forEach((id) => {
+        const object = objects.find((obj) => obj.id === id);
+        if (object) {
+          updateObject(id, {
+            x: (object.x || 0) + deltaX,
+            y: (object.y || 0) + deltaY,
+          });
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedObjectIds, objects]);
 
   const renderedObjects = objects.map((obj) => ({
     ...obj,
