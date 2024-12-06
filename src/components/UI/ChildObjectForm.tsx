@@ -40,7 +40,6 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         Редагування елементу групи
       </Typography>
 
-      {/*  */}
       <TextField
         label="Текст"
         name="content"

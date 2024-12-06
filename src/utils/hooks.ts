@@ -9,7 +9,6 @@ export const useObjectProperties = () => {
     deleteMultipleObjects,
     selectedObjectIds,
     clearSelection,
-    //
   } = useBanner();
 
   const getObjectById = (id: number) => objects.find((obj) => obj.id === id);
@@ -43,7 +42,7 @@ export const useObjectProperties = () => {
   const updateObjectProperty = (
     objectId: number,
     key: keyof BannerObject,
-    value: string | number
+    value: string | number | undefined
   ) => {
     updateObject(objectId, { [key]: value });
   };
@@ -55,8 +54,6 @@ export const useObjectProperties = () => {
     updateObject(objectId, updates);
   };
 
-  //
-
   return {
     selectedObject,
     selectedObjects,
@@ -66,7 +63,6 @@ export const useObjectProperties = () => {
     handleDeleteAll,
     updateObjectProperty,
     updateObjectMultipleProperties,
-    //
   };
 };
 

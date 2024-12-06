@@ -3,6 +3,7 @@ import { useObjectProperties, useChildProperties } from "../utils/hooks";
 import { TextObjectForm } from "./UI/TextObjectForm";
 import { ImageObjectForm } from "./UI/ImageObjectForm";
 import { GroupObjectForm } from "./UI/GroupObjectForm";
+import { FigureObjectForm } from "./UI/FigureObjectForm";
 import { AutoLayoutForm } from "./UI/AutoLayoutForm";
 import { ChildObjectForm } from "./UI/ChildObjectForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";
@@ -26,7 +27,6 @@ const ObjectProperties: React.FC = () => {
     <Box className="object-properties">
       <Typography variant="h5">Властивості об'єкту</Typography>
 
-      {/* Проверка на выбранного ребенка */}
       {selectedChild ? (
         <>
           <ChildObjectForm
@@ -59,6 +59,13 @@ const ObjectProperties: React.FC = () => {
               updateObjectProperty(selectedObject.id, key, value)
             }
           />
+        ) : selectedObject?.type === "figure" ? (
+          <FigureObjectForm
+            object={selectedObject}
+            onChange={(key, value) =>
+              updateObjectProperty(selectedObject.id, key, value)
+            }
+          />
         ) : selectedObject?.type === "group" ? (
           <>
             <GroupObjectForm
@@ -83,7 +90,6 @@ const ObjectProperties: React.FC = () => {
         <SelectedObjectsList objects={selectedObjects} />
       )}
 
-      {/* Кнопки удаления */}
       {selectedObjectIds.length === 1 && !selectedChild && (
         <Button
           variant="contained"

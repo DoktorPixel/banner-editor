@@ -1,6 +1,6 @@
 export interface BannerObject {
   id: number;
-  type: "text" | "image" | "group";
+  type: "text" | "image" | "group" | "figure";
   x: number;
   y: number;
   zIndex?: number | undefined;
@@ -21,6 +21,13 @@ export interface BannerObject {
   justifyContent?: React.CSSProperties["justifyContent"];
   alignItems?: React.CSSProperties["alignItems"];
   gap?: React.CSSProperties["gap"];
+
+  borderStyle?: string;
+  borderColor?: string;
+  borderWidth?: number | string;
+  borderRadius?: React.CSSProperties["borderRadius"];
+  backgroundColor?: string;
+  opacity?: React.CSSProperties["opacity"];
 }
 
 export interface BannerChild {
@@ -58,7 +65,6 @@ export interface BannerContextProps {
   groupSelectedObjects: () => void;
   ungroupSelectedObject: () => void;
 
-  //
   selectedChildId: { groupId: number; childId: number } | null;
   selectChild: (groupId: number, childId: number) => void;
   clearChildSelection: () => void;
@@ -68,4 +74,31 @@ export interface BannerContextProps {
     updates: Partial<BannerChild>
   ) => void;
   deleteChild: (groupId: number, childId: number) => void;
+}
+
+export type ResizeDirection =
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right"
+  | "middle-top"
+  | "middle-bottom"
+  | "middle-left"
+  | "middle-right";
+
+export interface ResizeParams {
+  resizeDirection: ResizeDirection | null;
+  mouseX: number;
+  mouseY: number;
+  object: { x: number; y: number; width: number; height: number };
+}
+
+export interface ResizeHandlesProps {
+  objectId: number;
+  selectedObjectId: number | null;
+  handleResizeMouseDown: (
+    objectId: number,
+    direction: ResizeDirection,
+    event: React.MouseEvent
+  ) => void;
 }

@@ -1,6 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useBanner } from "../context/BannerContext";
-import { BannerChild } from "../types";
+import { BannerObject, BannerChild, ResizeDirection } from "../types";
+import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
+import ResizeHandles from "./UI/ResizeHandles";
 
 const BannerArea: React.FC = () => {
   const {
@@ -21,6 +23,10 @@ const BannerArea: React.FC = () => {
   });
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
+  const [temporaryUpdates, setTemporaryUpdates] = useState<{
+    [key: number]: Partial<BannerObject>;
+  }>({});
+
   const bannerRef = useRef<HTMLDivElement>(null);
 
   const handleChildClick = (
@@ -30,11 +36,11 @@ const BannerArea: React.FC = () => {
   ) => {
     event.stopPropagation();
     selectChild(groupId, childId);
-    console.log("childId", childId);
-    console.log("groupId", groupId);
   };
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
+    if (resizingId !== null) return;
+
     event.preventDefault();
     const object = objects.find((obj) => obj.id === id);
     if (object && bannerRef.current) {
@@ -62,39 +68,99 @@ const BannerArea: React.FC = () => {
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
-    if (draggingId !== null && bannerRef.current) {
+    if (draggingId !== null && resizingId === null && bannerRef.current) {
       const rect = bannerRef.current.getBoundingClientRect();
       const x = event.clientX - rect.left - offset.x;
       const y = event.clientY - rect.top - offset.y;
 
-      updateObject(draggingId, { x, y });
+      setTemporaryUpdates((prev) => ({
+        ...prev,
+        [draggingId]: { x, y },
+      }));
     }
 
     if (resizingId !== null && bannerRef.current) {
       const object = objects.find((obj) => obj.id === resizingId);
+
       if (object) {
         const rect = bannerRef.current.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
 
-        const updates: Partial<typeof object> = {};
-        if (resizeDirection?.includes("right")) {
-          updates.width = mouseX - object.x;
-        }
-        if (resizeDirection?.includes("bottom")) {
-          updates.height = mouseY - object.y;
-        }
+        const updates = calculateResizeUpdates({
+          resizeDirection: resizeDirection as ResizeDirection,
+          mouseX,
+          mouseY,
+          object: {
+            x: object.x ?? 0,
+            y: object.y ?? 0,
+            width: object.width ?? 0,
+            height: object.height ?? 0,
+          },
+        });
 
-        updateObject(resizingId, updates);
+        setTemporaryUpdates((prev) => ({
+          ...prev,
+          [resizingId]: { ...temporaryUpdates[resizingId], ...updates },
+        }));
       }
     }
   };
 
   const handleMouseUp = () => {
+    if (draggingId !== null) {
+      if (temporaryUpdates[draggingId]) {
+        updateObject(draggingId, temporaryUpdates[draggingId]);
+      }
+    }
+    if (resizingId !== null) {
+      if (temporaryUpdates[resizingId]) {
+        updateObject(resizingId, temporaryUpdates[resizingId]);
+      }
+    }
+
     setDraggingId(null);
     setResizingId(null);
     setResizeDirection(null);
+    setTemporaryUpdates({});
   };
+  //
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (!selectedObjectIds.length) return;
+
+    const increment = event.shiftKey ? 10 : 1;
+    let deltaX = 0;
+    let deltaY = 0;
+
+    if (event.key === "ArrowUp") deltaY = -increment;
+    if (event.key === "ArrowDown") deltaY = increment;
+    if (event.key === "ArrowLeft") deltaX = -increment;
+    if (event.key === "ArrowRight") deltaX = increment;
+
+    if (deltaX !== 0 || deltaY !== 0) {
+      selectedObjectIds.forEach((id) => {
+        const object = objects.find((obj) => obj.id === id);
+        if (object) {
+          updateObject(id, {
+            x: (object.x || 0) + deltaX,
+            y: (object.y || 0) + deltaY,
+          });
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedObjectIds, objects]);
+
+  const renderedObjects = objects.map((obj) => ({
+    ...obj,
+    ...(temporaryUpdates[obj.id] || {}),
+  }));
 
   return (
     <div
@@ -107,7 +173,7 @@ const BannerArea: React.FC = () => {
         clearChildSelection();
       }}
     >
-      {objects.map((object) => {
+      {renderedObjects.map((object) => {
         if (object.type === "group") {
           return (
             <div
@@ -169,14 +235,11 @@ const BannerArea: React.FC = () => {
                 </p>
               ))}
 
-              <div
-                className={`resize-handle bottom-right ${
-                  selectedObjectIds[0] === object.id ? "selected" : ""
-                }`}
-                onMouseDown={(e) =>
-                  handleResizeMouseDown(object.id, "bottom-right", e)
-                }
-              ></div>
+              <ResizeHandles
+                objectId={object.id}
+                selectedObjectId={selectedObjectIds[0]}
+                handleResizeMouseDown={handleResizeMouseDown}
+              />
             </div>
           );
         }
@@ -213,7 +276,7 @@ const BannerArea: React.FC = () => {
               >
                 {object.content}
               </p>
-            ) : (
+            ) : object.type === "image" ? (
               <img
                 src={object.src}
                 alt="img"
@@ -222,16 +285,25 @@ const BannerArea: React.FC = () => {
                   height: "100%",
                 }}
               />
-            )}
+            ) : object.type === "figure" ? (
+              <div
+                className="banner-figure"
+                style={{
+                  backgroundColor: object.backgroundColor,
+                  borderStyle: object.borderStyle,
+                  borderColor: object.borderColor,
+                  borderWidth: object.borderWidth,
+                  borderRadius: object.borderRadius,
+                  opacity: object.opacity,
+                }}
+              ></div>
+            ) : null}
 
-            <div
-              className={`resize-handle bottom-right ${
-                selectedObjectIds[0] === object.id ? "selected" : ""
-              }`}
-              onMouseDown={(e) =>
-                handleResizeMouseDown(object.id, "bottom-right", e)
-              }
-            ></div>
+            <ResizeHandles
+              objectId={object.id}
+              selectedObjectId={selectedObjectIds[0]}
+              handleResizeMouseDown={handleResizeMouseDown}
+            />
           </div>
         );
       })}
