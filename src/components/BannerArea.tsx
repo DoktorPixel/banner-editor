@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { useBanner } from "../context/BannerContext";
-import { BannerObject, BannerChild } from "../types";
+import { BannerObject, BannerChild, ResizeDirection } from "../types";
+import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
+import ResizeHandles from "./UI/ResizeHandles";
 
 const BannerArea: React.FC = () => {
   const {
@@ -79,60 +81,27 @@ const BannerArea: React.FC = () => {
 
     if (resizingId !== null && bannerRef.current) {
       const object = objects.find((obj) => obj.id === resizingId);
+
       if (object) {
         const rect = bannerRef.current.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
 
-        const updates: Partial<BannerObject> = {
-          ...temporaryUpdates[resizingId],
-        };
-
-        const width = object.width ?? 0;
-        const height = object.height ?? 0;
-        const x = object.x ?? 0;
-        const y = object.y ?? 0;
-
-        switch (resizeDirection) {
-          case "top-left":
-            updates.width = Math.max(30, x + width - mouseX);
-            updates.height = Math.max(30, y + height - mouseY);
-            updates.x = mouseX;
-            updates.y = mouseY;
-            break;
-          case "top-right":
-            updates.width = Math.max(30, mouseX - x);
-            updates.height = Math.max(30, y + height - mouseY);
-            updates.y = mouseY;
-            break;
-          case "bottom-left":
-            updates.width = Math.max(30, x + width - mouseX);
-            updates.height = Math.max(30, mouseY - y);
-            updates.x = mouseX;
-            break;
-          case "bottom-right":
-            updates.width = Math.max(30, mouseX - x);
-            updates.height = Math.max(30, mouseY - y);
-            break;
-          case "middle-top":
-            updates.height = Math.max(30, object.y + height - mouseY);
-            updates.y = mouseY;
-            break;
-          case "middle-bottom":
-            updates.height = Math.max(30, mouseY - object.y);
-            break;
-          case "middle-left":
-            updates.width = Math.max(30, object.x + width - mouseX);
-            updates.x = mouseX;
-            break;
-          case "middle-right":
-            updates.width = Math.max(30, mouseX - object.x);
-            break;
-        }
+        const updates = calculateResizeUpdates({
+          resizeDirection: resizeDirection as ResizeDirection,
+          mouseX,
+          mouseY,
+          object: {
+            x: object.x ?? 0,
+            y: object.y ?? 0,
+            width: object.width ?? 0,
+            height: object.height ?? 0,
+          },
+        });
 
         setTemporaryUpdates((prev) => ({
           ...prev,
-          [resizingId]: updates,
+          [resizingId]: { ...temporaryUpdates[resizingId], ...updates },
         }));
       }
     }
@@ -234,71 +203,11 @@ const BannerArea: React.FC = () => {
                 </p>
               ))}
 
-              <div
-                className={`resize-handle bottom-right ${
-                  selectedObjectIds[0] === object.id ? "selected" : ""
-                }`}
-                onMouseDown={(e) =>
-                  handleResizeMouseDown(object.id, "bottom-right", e)
-                }
-              ></div>
-              <div
-                className={`resize-handle top-left ${
-                  selectedObjectIds[0] === object.id ? "selected" : ""
-                }`}
-                onMouseDown={(e) =>
-                  handleResizeMouseDown(object.id, "top-left", e)
-                }
-              ></div>
-              <div
-                className={`resize-handle top-right ${
-                  selectedObjectIds[0] === object.id ? "selected" : ""
-                }`}
-                onMouseDown={(e) =>
-                  handleResizeMouseDown(object.id, "top-right", e)
-                }
-              ></div>
-              <div
-                className={`resize-handle bottom-left ${
-                  selectedObjectIds[0] === object.id ? "selected" : ""
-                }`}
-                onMouseDown={(e) =>
-                  handleResizeMouseDown(object.id, "bottom-left", e)
-                }
-              ></div>
-
-              <div
-                className={`resize-handle middle-top ${
-                  selectedObjectIds[0] === object.id ? "selected" : ""
-                }`}
-                onMouseDown={(e) =>
-                  handleResizeMouseDown(object.id, "middle-top", e)
-                }
-              ></div>
-              <div
-                className={`resize-handle middle-bottom ${
-                  selectedObjectIds[0] === object.id ? "selected" : ""
-                }`}
-                onMouseDown={(e) =>
-                  handleResizeMouseDown(object.id, "middle-bottom", e)
-                }
-              ></div>
-              <div
-                className={`resize-handle middle-left ${
-                  selectedObjectIds[0] === object.id ? "selected" : ""
-                }`}
-                onMouseDown={(e) =>
-                  handleResizeMouseDown(object.id, "middle-left", e)
-                }
-              ></div>
-              <div
-                className={`resize-handle middle-right ${
-                  selectedObjectIds[0] === object.id ? "selected" : ""
-                }`}
-                onMouseDown={(e) =>
-                  handleResizeMouseDown(object.id, "middle-right", e)
-                }
-              ></div>
+              <ResizeHandles
+                objectId={object.id}
+                selectedObjectId={selectedObjectIds[0]}
+                handleResizeMouseDown={handleResizeMouseDown}
+              />
             </div>
           );
         }
@@ -346,71 +255,11 @@ const BannerArea: React.FC = () => {
               />
             )}
 
-            <div
-              className={`resize-handle bottom-right ${
-                selectedObjectIds[0] === object.id ? "selected" : ""
-              }`}
-              onMouseDown={(e) =>
-                handleResizeMouseDown(object.id, "bottom-right", e)
-              }
-            ></div>
-            <div
-              className={`resize-handle top-left ${
-                selectedObjectIds[0] === object.id ? "selected" : ""
-              }`}
-              onMouseDown={(e) =>
-                handleResizeMouseDown(object.id, "top-left", e)
-              }
-            ></div>
-            <div
-              className={`resize-handle top-right ${
-                selectedObjectIds[0] === object.id ? "selected" : ""
-              }`}
-              onMouseDown={(e) =>
-                handleResizeMouseDown(object.id, "top-right", e)
-              }
-            ></div>
-            <div
-              className={`resize-handle bottom-left ${
-                selectedObjectIds[0] === object.id ? "selected" : ""
-              }`}
-              onMouseDown={(e) =>
-                handleResizeMouseDown(object.id, "bottom-left", e)
-              }
-            ></div>
-
-            <div
-              className={`resize-handle middle-top ${
-                selectedObjectIds[0] === object.id ? "selected" : ""
-              }`}
-              onMouseDown={(e) =>
-                handleResizeMouseDown(object.id, "middle-top", e)
-              }
-            ></div>
-            <div
-              className={`resize-handle middle-bottom ${
-                selectedObjectIds[0] === object.id ? "selected" : ""
-              }`}
-              onMouseDown={(e) =>
-                handleResizeMouseDown(object.id, "middle-bottom", e)
-              }
-            ></div>
-            <div
-              className={`resize-handle middle-left ${
-                selectedObjectIds[0] === object.id ? "selected" : ""
-              }`}
-              onMouseDown={(e) =>
-                handleResizeMouseDown(object.id, "middle-left", e)
-              }
-            ></div>
-            <div
-              className={`resize-handle middle-right ${
-                selectedObjectIds[0] === object.id ? "selected" : ""
-              }`}
-              onMouseDown={(e) =>
-                handleResizeMouseDown(object.id, "middle-right", e)
-              }
-            ></div>
+            <ResizeHandles
+              objectId={object.id}
+              selectedObjectId={selectedObjectIds[0]}
+              handleResizeMouseDown={handleResizeMouseDown}
+            />
           </div>
         );
       })}

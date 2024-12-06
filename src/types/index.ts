@@ -69,3 +69,30 @@ export interface BannerContextProps {
   ) => void;
   deleteChild: (groupId: number, childId: number) => void;
 }
+
+export type ResizeDirection =
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right"
+  | "middle-top"
+  | "middle-bottom"
+  | "middle-left"
+  | "middle-right";
+
+export interface ResizeParams {
+  resizeDirection: ResizeDirection | null;
+  mouseX: number;
+  mouseY: number;
+  object: { x: number; y: number; width: number; height: number };
+}
+
+export interface ResizeHandlesProps {
+  objectId: number; // Исправлено с string на number
+  selectedObjectId: number | null; // Исправлено с string | null на number | null
+  handleResizeMouseDown: (
+    objectId: number, // Исправлено с string на number
+    direction: ResizeDirection,
+    event: React.MouseEvent
+  ) => void;
+}
