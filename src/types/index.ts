@@ -21,6 +21,7 @@ export interface BannerObject {
   justifyContent?: React.CSSProperties["justifyContent"];
   alignItems?: React.CSSProperties["alignItems"];
   gap?: React.CSSProperties["gap"];
+  name?: string;
 
   borderStyle?: string;
   borderColor?: string;
