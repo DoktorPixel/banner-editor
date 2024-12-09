@@ -14,6 +14,7 @@ import ClearHistoryDialog from "./UI/dialogs/ClearHistoryDialog";
 import NameDialog from "./UI/dialogs/NameDialog";
 import { BannerObject } from "../types";
 import { useObjectProperties } from "../utils/hooks";
+import GroupListItem from "./UI/GroupListItem";
 
 const Sidebar: React.FC = () => {
   const {
@@ -66,7 +67,7 @@ const Sidebar: React.FC = () => {
       objectId: null,
     });
   };
-
+  //
   const saveName = () => {
     if (nameDialogState.objectId !== null) {
       updateObjectProperty(
@@ -199,36 +200,52 @@ const Sidebar: React.FC = () => {
         Список об'єктів
       </Typography>
       <List>
-        {objects.map((obj) => (
-          <ListItem
-            key={obj.id}
-            component="li"
-            onClick={(e) => selectObject(obj.id, e.ctrlKey || e.metaKey)}
-            onDoubleClick={() => openNameDialog(obj)}
-            sx={{
-              cursor: "pointer",
-              backgroundColor: selectedObjectIds.includes(obj.id)
-                ? "lightgray"
-                : "white",
-              "&:hover": { backgroundColor: "lightblue" },
-            }}
-          >
-            <ListItemText
-              primary={
-                obj.name
-                  ? obj.name
-                  : obj.type === "text"
-                  ? obj.content?.slice(0, 30) || "Текст"
-                  : obj.type === "group"
-                  ? "Група"
-                  : obj.type === "figure"
-                  ? "Фігура"
-                  : "Зображення"
-              }
+        {objects.map((obj) =>
+          obj.type === "group" ? (
+            <GroupListItem
+              key={obj.id}
+              group={obj}
+              selectedObjectIds={selectedObjectIds}
+              selectObject={selectObject}
+              openNameDialog={openNameDialog}
+              // openChildDialog={(child) => {
+              //   setNameDialogState({
+              //     isNameDialogOpen: true,
+              //     currentName: child.name || "",
+              //     objectId: child.id,
+              //   });
+              // }}
             />
-          </ListItem>
-        ))}
+          ) : (
+            <ListItem
+              key={obj.id}
+              component="li"
+              onClick={(e) => selectObject(obj.id, e.ctrlKey || e.metaKey)}
+              onDoubleClick={() => openNameDialog(obj)}
+              sx={{
+                cursor: "pointer",
+                backgroundColor: selectedObjectIds.includes(obj.id)
+                  ? "lightgray"
+                  : "white",
+                "&:hover": { backgroundColor: "lightblue" },
+              }}
+            >
+              <ListItemText
+                primary={
+                  obj.name
+                    ? obj.name?.slice(0, 30)
+                    : obj.type === "text"
+                    ? obj.content?.slice(0, 30) || "Текст"
+                    : obj.type === "figure"
+                    ? "Фігура"
+                    : "Зображення"
+                }
+              />
+            </ListItem>
+          )
+        )}
       </List>
+
       <NameDialog
         open={nameDialogState.isNameDialogOpen}
         name={nameDialogState.currentName}
