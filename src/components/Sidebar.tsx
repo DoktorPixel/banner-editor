@@ -11,6 +11,9 @@ import {
 import TextDialog from "./UI/dialogs/TextDialog";
 import ImageDialog from "./UI/dialogs/ImageDialog";
 import ClearHistoryDialog from "./UI/dialogs/ClearHistoryDialog";
+import NameDialog from "./UI/dialogs/NameDialog";
+import { BannerObject } from "../types";
+import { useObjectProperties } from "../utils/hooks";
 
 const Sidebar: React.FC = () => {
   const {
@@ -26,6 +29,7 @@ const Sidebar: React.FC = () => {
     groupSelectedObjects,
     ungroupSelectedObject,
   } = useBanner();
+  const { updateObjectProperty } = useObjectProperties();
 
   const [dialogState, setDialogState] = useState({
     isTextDialogOpen: false,
@@ -35,12 +39,44 @@ const Sidebar: React.FC = () => {
 
   const [textContent, setTextContent] = useState("");
   const [imageSrc, setImageSrc] = useState("");
+  const [nameDialogState, setNameDialogState] = useState({
+    isNameDialogOpen: false,
+    currentName: "",
+    objectId: null as number | null,
+  });
 
   const openDialog = (type: keyof typeof dialogState) =>
     setDialogState((prev) => ({ ...prev, [type]: true }));
 
   const closeDialog = (type: keyof typeof dialogState) =>
     setDialogState((prev) => ({ ...prev, [type]: false }));
+
+  const openNameDialog = (object: BannerObject) => {
+    setNameDialogState({
+      isNameDialogOpen: true,
+      currentName: object.name || "",
+      objectId: object.id,
+    });
+  };
+
+  const closeNameDialog = () => {
+    setNameDialogState({
+      isNameDialogOpen: false,
+      currentName: "",
+      objectId: null,
+    });
+  };
+
+  const saveName = () => {
+    if (nameDialogState.objectId !== null) {
+      updateObjectProperty(
+        nameDialogState.objectId,
+        "name",
+        nameDialogState.currentName
+      );
+    }
+    closeNameDialog();
+  };
 
   const handleAddText = () => {
     addObject({
@@ -53,6 +89,7 @@ const Sidebar: React.FC = () => {
       content: textContent || "Текст",
       fontSize: 16,
       color: "#000000",
+      name: "",
     });
     setTextContent("");
     closeDialog("isTextDialogOpen");
@@ -65,6 +102,7 @@ const Sidebar: React.FC = () => {
       x: 50,
       y: 50,
       src: imageSrc || "https://via.placeholder.com/300",
+      name: "",
     });
     setImageSrc("");
     closeDialog("isImageDialogOpen");
@@ -79,6 +117,7 @@ const Sidebar: React.FC = () => {
       width: 200,
       height: 200,
       backgroundColor: "#f0f0f0",
+      name: "",
     });
   };
 
@@ -165,6 +204,7 @@ const Sidebar: React.FC = () => {
             key={obj.id}
             component="li"
             onClick={(e) => selectObject(obj.id, e.ctrlKey || e.metaKey)}
+            onDoubleClick={() => openNameDialog(obj)}
             sx={{
               cursor: "pointer",
               backgroundColor: selectedObjectIds.includes(obj.id)
@@ -175,7 +215,9 @@ const Sidebar: React.FC = () => {
           >
             <ListItemText
               primary={
-                obj.type === "text"
+                obj.name
+                  ? obj.name
+                  : obj.type === "text"
                   ? obj.content?.slice(0, 30) || "Текст"
                   : obj.type === "group"
                   ? "Група"
@@ -187,6 +229,19 @@ const Sidebar: React.FC = () => {
           </ListItem>
         ))}
       </List>
+      <NameDialog
+        open={nameDialogState.isNameDialogOpen}
+        name={nameDialogState.currentName}
+        onChange={(e) =>
+          setNameDialogState((prev) => ({
+            ...prev,
+            currentName: e.target.value,
+          }))
+        }
+        onClose={closeNameDialog}
+        onSave={saveName}
+      />
+
       <Button
         variant="contained"
         color="primary"
