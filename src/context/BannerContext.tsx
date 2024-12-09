@@ -182,6 +182,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
           textTransform: obj.textTransform,
           textDecoration: obj.textDecoration,
           textAlign: obj.textAlign,
+          name: obj.name,
         })),
       display: "flex",
       flexDirection: "row",

@@ -47,6 +47,7 @@ export interface BannerChild {
   width?: number;
   height?: number;
   src?: string;
+  name?: string;
 }
 
 export interface BannerContextProps {
