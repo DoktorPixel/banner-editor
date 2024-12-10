@@ -22,6 +22,7 @@ export interface BannerObject {
   alignItems?: React.CSSProperties["alignItems"];
   gap?: React.CSSProperties["gap"];
   name?: string;
+  objectFit?: React.CSSProperties["objectFit"];
 
   maxLines?: number;
   autoWidth?: boolean;
