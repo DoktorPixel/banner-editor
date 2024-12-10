@@ -104,12 +104,10 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           label="Максимальна кількість рядків"
           type="number"
           value={object.maxLines || ""}
-          onChange={(e) =>
-            handleInputChange(
-              "maxLines",
-              e.target.value ? parseInt(e.target.value, 10) : 0
-            )
-          }
+          onChange={(e) => {
+            const value = parseInt(e.target.value, 10);
+            handleInputChange("maxLines", value >= 0 ? value : 0);
+          }}
           fullWidth
           margin="normal"
         />

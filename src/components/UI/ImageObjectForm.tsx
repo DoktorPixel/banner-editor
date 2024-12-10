@@ -1,5 +1,11 @@
 import { BannerObject } from "../../types";
-import { TextField } from "@mui/material";
+import {
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 
 interface ImageObjectFormProps {
   object: BannerObject;
@@ -29,9 +35,9 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
       <TextField
         label="Ширина (px)"
         type="number"
-        value={object.width || 300}
+        value={Math.round(object.width || 300)}
         onChange={(e) =>
-          handleInputChange("width", parseInt(e.target.value, 10))
+          handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
         }
         fullWidth
         margin="normal"
@@ -46,6 +52,19 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
+      <FormControl fullWidth margin="normal">
+        <InputLabel>Object Fit</InputLabel>
+        <Select
+          value={object.objectFit || "fill"}
+          onChange={(e) => handleInputChange("objectFit", e.target.value)}
+        >
+          <MenuItem value="fill">Заповнити (fill)</MenuItem>
+          <MenuItem value="contain">Вписати (contain)</MenuItem>
+          <MenuItem value="cover">Накрити (cover)</MenuItem>
+          <MenuItem value="none">Без змін (none)</MenuItem>
+          <MenuItem value="scale-down">Зменшити (scale-down)</MenuItem>
+        </Select>
+      </FormControl>
       <TextField
         label="Номер шару (z-Index)"
         type="number"
