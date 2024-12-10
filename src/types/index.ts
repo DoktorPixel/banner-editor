@@ -23,6 +23,9 @@ export interface BannerObject {
   gap?: React.CSSProperties["gap"];
   name?: string;
 
+  maxLines?: number;
+  autoWidth?: boolean;
+
   borderStyle?: string;
   borderColor?: string;
   borderWidth?: number | string;
