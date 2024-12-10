@@ -10,7 +10,7 @@ import {
 
 interface TextObjectFormProps {
   object: BannerObject;
-  onChange: (key: keyof BannerObject, value: string | number) => void;
+  onChange: (key: keyof BannerObject, value: string | number | boolean) => void;
 }
 
 export const TextObjectForm: React.FC<TextObjectFormProps> = ({
@@ -19,7 +19,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
 }) => {
   const handleInputChange = (
     key: keyof BannerObject,
-    value: string | number
+    value: string | number | boolean
   ) => {
     onChange(key, value);
   };
@@ -53,7 +53,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-      <TextField
+      {/* <TextField
         label="Ширина блоку (px)"
         type="number"
         value={object.width || 300}
@@ -62,7 +62,19 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         }
         fullWidth
         margin="normal"
-      />
+      /> */}
+      {!object.autoWidth && (
+        <TextField
+          label="Фіксована ширина (px)"
+          type="number"
+          value={Math.round(object.width || 300)}
+          onChange={(e) =>
+            handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
+          }
+          fullWidth
+          margin="normal"
+        />
+      )}
       <TextField
         label="Висота блоку (px)"
         type="number"
@@ -73,6 +85,37 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
+      {/*  */}
+      <FormControl fullWidth margin="normal">
+        <InputLabel>Ширина блоку</InputLabel>
+        <Select
+          value={object.autoWidth ? "auto" : "fixed"}
+          onChange={(e) =>
+            handleInputChange("autoWidth", e.target.value === "auto")
+          }
+        >
+          <MenuItem value="auto">Автоматична (Auto)</MenuItem>
+          <MenuItem value="fixed">Фіксована (Fixed)</MenuItem>
+        </Select>
+      </FormControl>
+
+      {!object.autoWidth && (
+        <TextField
+          label="Максимальна кількість рядків"
+          type="number"
+          value={object.maxLines || ""}
+          onChange={(e) =>
+            handleInputChange(
+              "maxLines",
+              e.target.value ? parseInt(e.target.value, 10) : 0
+            )
+          }
+          fullWidth
+          margin="normal"
+        />
+      )}
+
+      {/*  */}
       <TextField
         label="Рівень шару (z-Index)"
         type="number"

@@ -42,7 +42,7 @@ export const useObjectProperties = () => {
   const updateObjectProperty = (
     objectId: number,
     key: keyof BannerObject,
-    value: string | number | undefined
+    value: string | number | undefined | boolean
   ) => {
     updateObject(objectId, { [key]: value });
   };

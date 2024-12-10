@@ -189,7 +189,6 @@ const BannerArea: React.FC = () => {
                 flexDirection: object.flexDirection,
                 justifyContent: object.justifyContent,
                 alignItems: object.alignItems,
-                // border: "1px dashed gray",
                 gap: object.gap || "10px",
               }}
               onMouseDown={(e) => handleMouseDown(object.id, e)}
@@ -251,10 +250,11 @@ const BannerArea: React.FC = () => {
               position: "absolute",
               left: object.x,
               top: object.y,
-              width: object.width,
+              width: object.autoWidth ? "auto" : object.width, //
               height: object.height,
               zIndex: object.zIndex,
               cursor: "move",
+              overflow: object.autoWidth ? "visible" : "hidden", //
             }}
             onMouseDown={(e) => handleMouseDown(object.id, e)}
             onClick={(e) => handleObjectClick(object.id, e)}
@@ -272,6 +272,12 @@ const BannerArea: React.FC = () => {
                   textTransform: object.textTransform,
                   textDecoration: object.textDecoration,
                   textAlign: object.textAlign,
+                  //
+                  display: object.maxLines ? "-webkit-box" : "block",
+                  WebkitLineClamp: object.maxLines,
+                  WebkitBoxOrient: object.maxLines ? "vertical" : undefined,
+                  overflow: object.maxLines ? "hidden" : undefined,
+                  whiteSpace: object.autoWidth ? "nowrap" : "normal",
                 }}
               >
                 {object.content}
