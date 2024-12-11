@@ -33,7 +33,8 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
         multiline
-        maxRows={5}
+        rows={4}
+        // maxRows={5}
       />
       <TextField
         label="Розмір шрифту (px)"
