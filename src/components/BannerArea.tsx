@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useBanner } from "../context/BannerContext";
+import { useMode } from "../context/ModeContext";
 import { BannerObject, BannerChild, ResizeDirection } from "../types";
 import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
 import ResizeHandles from "./UI/ResizeHandles";
+import Switch from "@mui/material/Switch";
 
 const BannerArea: React.FC = () => {
   const {
@@ -16,6 +18,7 @@ const BannerArea: React.FC = () => {
     selectChild,
     clearChildSelection,
   } = useBanner();
+  const { mode, toggleMode } = useMode();
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [offset, setOffset] = useState<{ x: number; y: number }>({
     x: 0,
@@ -39,7 +42,7 @@ const BannerArea: React.FC = () => {
   };
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
-    if (resizingId !== null) return;
+    if (mode === "test" || resizingId !== null) return; //
 
     event.preventDefault();
     const object = objects.find((obj) => obj.id === id);
@@ -57,17 +60,20 @@ const BannerArea: React.FC = () => {
     direction: string,
     event: React.MouseEvent
   ) => {
+    if (mode === "test") return; //test
     event.preventDefault();
     setResizingId(id);
     setResizeDirection(direction);
   };
 
   const handleObjectClick = (id: number, event: React.MouseEvent) => {
+    if (mode === "test") return; //test
     event.stopPropagation();
     selectObject(id, event.ctrlKey || event.metaKey);
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
+    if (mode === "test") return; //test
     if (draggingId !== null && resizingId === null && bannerRef.current) {
       const rect = bannerRef.current.getBoundingClientRect();
       const x = event.clientX - rect.left - offset.x;
@@ -108,6 +114,8 @@ const BannerArea: React.FC = () => {
   };
 
   const handleMouseUp = () => {
+    if (mode === "test") return; //test
+
     if (draggingId !== null) {
       if (temporaryUpdates[draggingId]) {
         updateObject(draggingId, temporaryUpdates[draggingId]);
@@ -126,7 +134,7 @@ const BannerArea: React.FC = () => {
   };
   //
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (!selectedObjectIds.length) return;
+    if (mode === "test" || !selectedObjectIds.length) return; //test
 
     const increment = event.shiftKey ? 10 : 1;
     let deltaX = 0;
@@ -314,6 +322,14 @@ const BannerArea: React.FC = () => {
           </div>
         );
       })}
+      <div className="mode-switch-wrapper">
+        <Switch
+          className="mode-switch"
+          checked={mode === "test"}
+          onChange={toggleMode}
+          inputProps={{ "aria-label": "Mode switch" }}
+        />
+      </div>
     </div>
   );
 };
