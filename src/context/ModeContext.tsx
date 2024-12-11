@@ -1,4 +1,3 @@
-// ModeContext.tsx
 import { createContext, useContext, useState } from "react";
 
 type Mode = "dev" | "test";
