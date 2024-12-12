@@ -19,7 +19,12 @@ export const ModeProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <ModeContext.Provider value={{ mode, toggleMode }}>
+    <ModeContext.Provider
+      value={{
+        mode,
+        toggleMode,
+      }}
+    >
       {children}
     </ModeContext.Provider>
   );
@@ -27,8 +32,10 @@ export const ModeProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useMode = (): ModeContextProps => {
   const context = useContext(ModeContext);
+
   if (!context) {
     throw new Error("useMode must be used within a ModeProvider");
   }
+
   return context;
 };

@@ -13,7 +13,7 @@ const App: React.FC = () => {
     <BannerProvider>
       <div className="app">
         {mode === "dev" ? <Sidebar /> : <Instructions />}
-        <BannerArea />
+        <BannerArea key={mode} />
         {mode === "dev" ? <ObjectProperties /> : <InsertingProps />}
       </div>
     </BannerProvider>
