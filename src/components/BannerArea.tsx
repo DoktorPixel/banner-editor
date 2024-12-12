@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useBanner } from "../context/BannerContext";
 import { useMode } from "../context/ModeContext";
-import { BannerObject, BannerChild, ResizeDirection } from "../types";
+import { BannerChild, ResizeDirection } from "../types";
 import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
 import ResizeHandles from "./UI/ResizeHandles";
 import Switch from "@mui/material/Switch";
@@ -17,6 +17,10 @@ const BannerArea: React.FC = () => {
     selectedChildId,
     selectChild,
     clearChildSelection,
+    //
+    temporaryUpdates,
+    setTemporaryUpdates,
+    renderedObjects,
   } = useBanner();
   const { mode, toggleMode } = useMode();
   const [draggingId, setDraggingId] = useState<number | null>(null);
@@ -26,9 +30,9 @@ const BannerArea: React.FC = () => {
   });
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
-  const [temporaryUpdates, setTemporaryUpdates] = useState<{
-    [key: number]: Partial<BannerObject>;
-  }>({});
+  // const [temporaryUpdates, setTemporaryUpdates] = useState<{
+  //   [key: number]: Partial<BannerObject>;
+  // }>({});
 
   const bannerRef = useRef<HTMLDivElement>(null);
 
@@ -133,6 +137,12 @@ const BannerArea: React.FC = () => {
     setTemporaryUpdates({});
   };
   //
+  useEffect(() => {
+    if (mode === "dev") {
+      setTemporaryUpdates({});
+    }
+  }, [mode]);
+  //
   const handleKeyDown = (event: KeyboardEvent) => {
     if (mode === "test" || !selectedObjectIds.length) return; //test
 
@@ -165,10 +175,10 @@ const BannerArea: React.FC = () => {
     };
   }, [selectedObjectIds, objects]);
 
-  const renderedObjects = objects.map((obj) => ({
-    ...obj,
-    ...(temporaryUpdates[obj.id] || {}),
-  }));
+  // const renderedObjects = objects.map((obj) => ({
+  //   ...obj,
+  //   ...(temporaryUpdates[obj.id] || {}),
+  // }));
 
   return (
     <div

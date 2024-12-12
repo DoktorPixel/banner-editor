@@ -208,6 +208,7 @@ const Sidebar: React.FC = () => {
               selectedObjectIds={selectedObjectIds}
               selectObject={selectObject}
               openNameDialog={openNameDialog}
+
               // openChildDialog={(child) => {
               //   setNameDialogState({
               //     isNameDialogOpen: true,

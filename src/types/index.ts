@@ -80,6 +80,12 @@ export interface BannerContextProps {
     updates: Partial<BannerChild>
   ) => void;
   deleteChild: (groupId: number, childId: number) => void;
+  //
+  temporaryUpdates: { [key: number]: Partial<BannerObject> };
+  setTemporaryUpdates: React.Dispatch<
+    React.SetStateAction<{ [key: number]: Partial<BannerObject> }>
+  >;
+  renderedObjects: BannerObject[];
 }
 
 export type ResizeDirection =

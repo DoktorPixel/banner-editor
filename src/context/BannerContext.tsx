@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { BannerObject, BannerContextProps, BannerChild } from "../types";
 
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
@@ -18,7 +18,19 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [selectedObjectIds, setSelectedObjectIds] = useState<number[]>([]);
 
+  //
+  const [temporaryUpdates, setTemporaryUpdates] = useState<{
+    [key: number]: Partial<BannerObject>;
+  }>({});
+
   const objects = history[currentStep] || [];
+
+  const renderedObjects = useMemo(() => {
+    return objects.map((obj) => ({
+      ...obj,
+      ...(temporaryUpdates[obj.id] || {}),
+    }));
+  }, [objects, temporaryUpdates]);
 
   const [selectedChildId, setSelectedChildId] = useState<{
     groupId: number;
@@ -250,6 +262,11 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         clearChildSelection,
         updateChild,
         deleteChild,
+
+        //
+        temporaryUpdates,
+        setTemporaryUpdates,
+        renderedObjects,
       }}
     >
       {children}
