@@ -13,7 +13,6 @@ const BannerArea: React.FC = () => {
     selectedObjectIds,
     selectObject,
     clearSelection,
-
     selectedChildId,
     selectChild,
     clearChildSelection,
@@ -30,9 +29,6 @@ const BannerArea: React.FC = () => {
   });
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
-  // const [temporaryUpdates, setTemporaryUpdates] = useState<{
-  //   [key: number]: Partial<BannerObject>;
-  // }>({});
 
   const bannerRef = useRef<HTMLDivElement>(null);
 
@@ -46,7 +42,7 @@ const BannerArea: React.FC = () => {
   };
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
-    if (mode === "test" || resizingId !== null) return; //
+    if (mode === "test" || resizingId !== null) return;
 
     event.preventDefault();
     const object = objects.find((obj) => obj.id === id);
@@ -64,20 +60,20 @@ const BannerArea: React.FC = () => {
     direction: string,
     event: React.MouseEvent
   ) => {
-    if (mode === "test") return; //test
+    if (mode === "test") return;
     event.preventDefault();
     setResizingId(id);
     setResizeDirection(direction);
   };
 
   const handleObjectClick = (id: number, event: React.MouseEvent) => {
-    if (mode === "test") return; //test
+    if (mode === "test") return;
     event.stopPropagation();
     selectObject(id, event.ctrlKey || event.metaKey);
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
-    if (mode === "test") return; //test
+    if (mode === "test") return;
     if (draggingId !== null && resizingId === null && bannerRef.current) {
       const rect = bannerRef.current.getBoundingClientRect();
       const x = event.clientX - rect.left - offset.x;
@@ -118,7 +114,7 @@ const BannerArea: React.FC = () => {
   };
 
   const handleMouseUp = () => {
-    if (mode === "test") return; //test
+    if (mode === "test") return;
 
     if (draggingId !== null) {
       if (temporaryUpdates[draggingId]) {
@@ -144,7 +140,7 @@ const BannerArea: React.FC = () => {
   }, [mode]);
   //
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (mode === "test" || !selectedObjectIds.length) return; //test
+    if (mode === "test" || !selectedObjectIds.length) return;
 
     const increment = event.shiftKey ? 10 : 1;
     let deltaX = 0;
@@ -174,11 +170,6 @@ const BannerArea: React.FC = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedObjectIds, objects]);
-
-  // const renderedObjects = objects.map((obj) => ({
-  //   ...obj,
-  //   ...(temporaryUpdates[obj.id] || {}),
-  // }));
 
   return (
     <div
@@ -235,9 +226,6 @@ const BannerArea: React.FC = () => {
                     textTransform: child.textTransform,
                     textDecoration: child.textDecoration,
                     textAlign: child.textAlign,
-                    // width: child.width,
-                    // height: child.height,
-
                     border:
                       selectedChildId?.groupId === object.id &&
                       selectedChildId.childId === child.id
@@ -268,11 +256,11 @@ const BannerArea: React.FC = () => {
               position: "absolute",
               left: object.x,
               top: object.y,
-              width: object.autoWidth ? "auto" : object.width, //
+              width: object.autoWidth ? "auto" : object.width,
               height: object.height,
               zIndex: object.zIndex,
               cursor: "move",
-              overflow: object.autoWidth ? "visible" : "hidden", //
+              overflow: object.autoWidth ? "visible" : "hidden",
             }}
             onMouseDown={(e) => handleMouseDown(object.id, e)}
             onClick={(e) => handleObjectClick(object.id, e)}
