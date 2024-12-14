@@ -5,6 +5,8 @@ import { BannerChild, ResizeDirection } from "../types";
 import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
 import ResizeHandles from "./UI/ResizeHandles";
 import Switch from "@mui/material/Switch";
+import ContextMenu from "./UI/ContextMenu";
+import { BannerObject } from "../types";
 
 const BannerArea: React.FC = () => {
   const {
@@ -31,6 +33,35 @@ const BannerArea: React.FC = () => {
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
 
   const bannerRef = useRef<HTMLDivElement>(null);
+
+  //
+  const [contextMenu, setContextMenu] = useState<{
+    x: number;
+    y: number;
+    object: BannerObject | null;
+  } | null>(null);
+
+  const handleContextMenu = (
+    // id: number,
+    event: React.MouseEvent,
+    object: BannerObject
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (bannerRef.current) {
+      setContextMenu({
+        x: event.clientX,
+        y: event.clientY,
+        object: object,
+      });
+    }
+  };
+
+  const handleCloseContextMenu = () => {
+    setContextMenu(null);
+  };
+  //
 
   const handleChildClick = (
     groupId: number,
@@ -180,6 +211,7 @@ const BannerArea: React.FC = () => {
       onClick={() => {
         clearSelection();
         clearChildSelection();
+        setContextMenu(null);
       }}
     >
       {renderedObjects.map((object) => {
@@ -205,6 +237,7 @@ const BannerArea: React.FC = () => {
                 handleObjectClick(object.id, e);
                 clearChildSelection();
               }}
+              onContextMenu={(e) => handleContextMenu(e, object)}
               className={`banner-object ${
                 selectedObjectIds.includes(object.id) ? "selected" : ""
               }`}
@@ -245,6 +278,18 @@ const BannerArea: React.FC = () => {
                 selectedObjectId={selectedObjectIds[0]}
                 handleResizeMouseDown={handleResizeMouseDown}
               />
+
+              {contextMenu &&
+                contextMenu.object?.id === object.id && ( // Проверка, привязано ли меню к текущему объекту
+                  <ContextMenu
+                    x={contextMenu.x}
+                    y={contextMenu.y}
+                    object={contextMenu.object}
+                    onClose={handleCloseContextMenu}
+                    objects={objects}
+                    updateObject={updateObject}
+                  />
+                )}
             </div>
           );
         }
@@ -264,6 +309,7 @@ const BannerArea: React.FC = () => {
             }}
             onMouseDown={(e) => handleMouseDown(object.id, e)}
             onClick={(e) => handleObjectClick(object.id, e)}
+            onContextMenu={(e) => handleContextMenu(e, object)}
             className={`banner-object ${
               selectedObjectIds.includes(object.id) ? "selected" : ""
             }`}
@@ -317,6 +363,17 @@ const BannerArea: React.FC = () => {
               selectedObjectId={selectedObjectIds[0]}
               handleResizeMouseDown={handleResizeMouseDown}
             />
+            {contextMenu &&
+              contextMenu.object?.id === object.id && ( // Проверка, привязано ли меню к текущему объекту
+                <ContextMenu
+                  x={contextMenu.x}
+                  y={contextMenu.y}
+                  object={contextMenu.object}
+                  onClose={handleCloseContextMenu}
+                  objects={objects}
+                  updateObject={updateObject}
+                />
+              )}
           </div>
         );
       })}
