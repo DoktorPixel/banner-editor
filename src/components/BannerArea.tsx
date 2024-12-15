@@ -248,10 +248,11 @@ const BannerArea: React.FC = () => {
                   }`}
                   key={child.id || index}
                   style={{
-                    // width: object.width,
-                    // height: object.height,
+                    // width: child.width,
+                    // height: child.height,
                     fontSize: child.fontSize,
                     color: child.color,
+                    fontFamily: child.fontFamily, //
                     fontWeight: child.fontWeight,
                     fontStyle: child.fontStyle,
                     // textTransform: child.textTransform,
@@ -317,6 +318,7 @@ const BannerArea: React.FC = () => {
                 style={{
                   fontSize: object.fontSize,
                   color: object.color,
+                  fontFamily: object.fontFamily || "Poppins, sans-serif", //
                   fontWeight: object.fontWeight,
                   fontStyle: object.fontStyle,
                   // textTransform: object.textTransform,
@@ -361,17 +363,16 @@ const BannerArea: React.FC = () => {
               selectedObjectId={selectedObjectIds[0]}
               handleResizeMouseDown={handleResizeMouseDown}
             />
-            {contextMenu &&
-              contextMenu.object?.id === object.id && ( // Проверка, привязано ли меню к текущему объекту
-                <ContextMenu
-                  x={contextMenu.x}
-                  y={contextMenu.y}
-                  object={contextMenu.object}
-                  onClose={handleCloseContextMenu}
-                  objects={objects}
-                  updateObject={updateObject}
-                />
-              )}
+            {contextMenu && contextMenu.object?.id === object.id && (
+              <ContextMenu
+                x={contextMenu.x}
+                y={contextMenu.y}
+                object={contextMenu.object}
+                onClose={handleCloseContextMenu}
+                objects={objects}
+                updateObject={updateObject}
+              />
+            )}
           </div>
         );
       })}

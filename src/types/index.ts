@@ -6,6 +6,7 @@ export interface BannerObject {
   zIndex?: number | undefined;
   content?: string;
   fontSize?: number;
+  fontFamily?: string;
   fontWeight?: React.CSSProperties["fontWeight"];
   fontStyle?: React.CSSProperties["fontStyle"];
   textTransform?: React.CSSProperties["textTransform"];
@@ -40,6 +41,7 @@ export interface BannerChild {
   type: "text" | "image";
   content?: string;
   fontSize?: number;
+  fontFamily?: string;
   fontWeight?: React.CSSProperties["fontWeight"];
   fontStyle?: React.CSSProperties["fontStyle"];
   textTransform?: React.CSSProperties["textTransform"];

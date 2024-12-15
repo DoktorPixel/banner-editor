@@ -18,12 +18,14 @@
     "react": "^18.3.1",
     "react-color": "^2.19.3",
     "react-dom": "^18.3.1",
-    "sass": "^1.81.0"
+    "sass": "^1.81.0",
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@types/webfontloader": "^1.6.38",
     "@vitejs/plugin-react": "^4.3.3",
     "eslint": "^9.13.0",
     "eslint-plugin-react-hooks": "^5.0.0",

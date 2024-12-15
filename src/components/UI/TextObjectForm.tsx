@@ -7,6 +7,7 @@ import {
   MenuItem,
   Box,
 } from "@mui/material";
+import FontSelector from "./FontSelector";
 
 interface TextObjectFormProps {
   object: BannerObject;
@@ -73,6 +74,10 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         multiline
         rows={4}
         // maxRows={5}
+      />
+      <FontSelector
+        value={object.fontFamily || "Poppins"}
+        onChange={(font) => handleInputChange("fontFamily", font)}
       />
       <TextField
         label="Розмір шрифту (px)"
@@ -145,19 +150,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           <MenuItem value="italic">Курсив (Italic)</MenuItem>
         </Select>
       </FormControl>
-
-      {/* <FormControl fullWidth margin="normal">
-        <InputLabel>Трансформація тексту</InputLabel>
-        <Select
-          value={object.textTransform || "none"}
-          onChange={(e) => handleInputChange("textTransform", e.target.value)}
-        >
-          <MenuItem value="none">Без змін (None)</MenuItem>
-          <MenuItem value="capitalize">Початкова велика (Capitalize)</MenuItem>
-          <MenuItem value="uppercase">Великі літери (Uppercase)</MenuItem>
-          <MenuItem value="lowercase">Малі літери (Lowercase)</MenuItem>
-        </Select>
-      </FormControl> */}
 
       <FormControl fullWidth margin="normal">
         <InputLabel>Декорація тексту (Text Decoration)</InputLabel>
