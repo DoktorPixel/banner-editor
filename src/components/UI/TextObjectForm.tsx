@@ -7,6 +7,7 @@ import {
   MenuItem,
   Box,
 } from "@mui/material";
+import FontSelector from "./FontSelector";
 
 interface TextObjectFormProps {
   object: BannerObject;
@@ -26,44 +27,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
 
   return (
     <Box>
-      <TextField
-        label="Текст"
-        value={object.content || ""}
-        onChange={(e) => handleInputChange("content", e.target.value)}
-        fullWidth
-        margin="normal"
-        multiline
-        rows={4}
-        // maxRows={5}
-      />
-      <TextField
-        label="Розмір шрифту (px)"
-        type="number"
-        value={object.fontSize || 16}
-        onChange={(e) =>
-          handleInputChange("fontSize", parseInt(e.target.value, 10))
-        }
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Колір тексту"
-        type="color"
-        value={object.color || "#000000"}
-        onChange={(e) => handleInputChange("color", e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      {/* <TextField
-        label="Ширина блоку (px)"
-        type="number"
-        value={object.width || 300}
-        onChange={(e) =>
-          handleInputChange("width", parseInt(e.target.value, 10))
-        }
-        fullWidth
-        margin="normal"
-      /> */}
       {!object.autoWidth && (
         <TextField
           label="Фіксована ширина (px)"
@@ -86,7 +49,54 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-      {/*  */}
+      <TextField
+        label="Координата X"
+        type="number"
+        value={object.x || 0}
+        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Координата Y"
+        type="number"
+        value={object.y || 0}
+        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Текст"
+        value={object.content || ""}
+        onChange={(e) => handleInputChange("content", e.target.value)}
+        fullWidth
+        margin="normal"
+        multiline
+        rows={4}
+        // maxRows={5}
+      />
+      <FontSelector
+        value={object.fontFamily || "Poppins"}
+        onChange={(font) => handleInputChange("fontFamily", font)}
+      />
+      <TextField
+        label="Розмір шрифту (px)"
+        type="number"
+        value={object.fontSize || 16}
+        onChange={(e) =>
+          handleInputChange("fontSize", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Колір тексту"
+        type="color"
+        value={object.color || "#000000"}
+        onChange={(e) => handleInputChange("color", e.target.value)}
+        fullWidth
+        margin="normal"
+      />
       <FormControl fullWidth margin="normal">
         <InputLabel>Ширина блоку</InputLabel>
         <Select
@@ -114,17 +124,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         />
       )}
 
-      {/*  */}
-      <TextField
-        label="Рівень шару (z-Index)"
-        type="number"
-        value={object.zIndex || 0}
-        onChange={(e) =>
-          handleInputChange("zIndex", parseInt(e.target.value, 10))
-        }
-        fullWidth
-        margin="normal"
-      />
       <FormControl fullWidth margin="normal">
         <InputLabel>Товщина тексту</InputLabel>
         <Select
@@ -149,19 +148,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         >
           <MenuItem value="normal">Звичайний (Normal)</MenuItem>
           <MenuItem value="italic">Курсив (Italic)</MenuItem>
-        </Select>
-      </FormControl>
-
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Трансформація тексту</InputLabel>
-        <Select
-          value={object.textTransform || "none"}
-          onChange={(e) => handleInputChange("textTransform", e.target.value)}
-        >
-          <MenuItem value="none">Без змін (None)</MenuItem>
-          <MenuItem value="capitalize">Початкова велика (Capitalize)</MenuItem>
-          <MenuItem value="uppercase">Великі літери (Uppercase)</MenuItem>
-          <MenuItem value="lowercase">Малі літери (Lowercase)</MenuItem>
         </Select>
       </FormControl>
 
@@ -191,18 +177,12 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
       </FormControl>
 
       <TextField
-        label="Координата X"
+        label="Рівень шару (z-Index)"
         type="number"
-        value={object.x || 0}
-        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата Y"
-        type="number"
-        value={object.y || 0}
-        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
+        value={object.zIndex || 0}
+        onChange={(e) =>
+          handleInputChange("zIndex", parseInt(e.target.value, 10))
+        }
         fullWidth
         margin="normal"
       />

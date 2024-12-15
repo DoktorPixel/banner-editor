@@ -9,6 +9,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { BannerChild } from "../../types";
+import ChildFontSelector from "./ChildFontSelector";
 
 interface ChildObjectFormProps {
   object: BannerChild;
@@ -50,6 +51,10 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         multiline
         maxRows={5}
       />
+      <ChildFontSelector
+        value={object.fontFamily || "Poppins"}
+        onChange={(font) => onChange("fontFamily", font)}
+      />
       <TextField
         label="Розмір шрифту (px)"
         type="number"
@@ -68,24 +73,6 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-      {/* <TextField
-        label="Ширина блоку (px)"
-        name="width"
-        type="number"
-        value={object.width || ""}
-        onChange={handleInputChange}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Висота блоку (px)"
-        name="height"
-        type="number"
-        value={object.height || ""}
-        onChange={handleInputChange}
-        fullWidth
-        margin="normal"
-      /> */}
 
       <FormControl fullWidth margin="normal">
         <InputLabel>Товщина тексту</InputLabel>
@@ -117,20 +104,6 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
       </FormControl>
 
       <FormControl fullWidth margin="normal">
-        <InputLabel>Трансформація тексту</InputLabel>
-        <Select
-          name="textTransform"
-          value={String(object.textTransform || "none")}
-          onChange={handleSelectChange}
-        >
-          <MenuItem value="none">Без змін (None)</MenuItem>
-          <MenuItem value="capitalize">Початкова велика (Capitalize)</MenuItem>
-          <MenuItem value="uppercase">Великі літери (Uppercase)</MenuItem>
-          <MenuItem value="lowercase">Малі літери (Lowercase)</MenuItem>
-        </Select>
-      </FormControl>
-
-      <FormControl fullWidth margin="normal">
         <InputLabel>Декорація тексту (Text Decoration)</InputLabel>
         <Select
           name="textDecoration"
@@ -143,7 +116,38 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
           <MenuItem value="line-through">Закреслення (Line-Through)</MenuItem>
         </Select>
       </FormControl>
-
+      {/* 
+      <FormControl fullWidth margin="normal">
+        <InputLabel>Трансформація тексту</InputLabel>
+        <Select
+          name="textTransform"
+          value={String(object.textTransform || "none")}
+          onChange={handleSelectChange}
+        >
+          <MenuItem value="none">Без змін (None)</MenuItem>
+          <MenuItem value="capitalize">Початкова велика (Capitalize)</MenuItem>
+          <MenuItem value="uppercase">Великі літери (Uppercase)</MenuItem>
+          <MenuItem value="lowercase">Малі літери (Lowercase)</MenuItem>
+        </Select>
+      </FormControl> */}
+      {/* <TextField
+        label="Ширина блоку (px)"
+        name="width"
+        type="number"
+        value={Math.round(object.width || 300)}
+        onChange={handleInputChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Висота блоку (px)"
+        name="height"
+        type="number"
+        value={object.height || ""}
+        onChange={handleInputChange}
+        fullWidth
+        margin="normal"
+      /> */}
       {/* <FormControl fullWidth margin="normal">
         <InputLabel>Вирівнювання тексту (Text Align)</InputLabel>
         <Select

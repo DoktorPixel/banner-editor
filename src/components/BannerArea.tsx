@@ -41,11 +41,7 @@ const BannerArea: React.FC = () => {
     object: BannerObject | null;
   } | null>(null);
 
-  const handleContextMenu = (
-    // id: number,
-    event: React.MouseEvent,
-    object: BannerObject
-  ) => {
+  const handleContextMenu = (event: React.MouseEvent, object: BannerObject) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -252,11 +248,14 @@ const BannerArea: React.FC = () => {
                   }`}
                   key={child.id || index}
                   style={{
+                    // width: child.width,
+                    // height: child.height,
                     fontSize: child.fontSize,
                     color: child.color,
+                    fontFamily: child.fontFamily, //
                     fontWeight: child.fontWeight,
                     fontStyle: child.fontStyle,
-                    textTransform: child.textTransform,
+                    // textTransform: child.textTransform,
                     textDecoration: child.textDecoration,
                     textAlign: child.textAlign,
                     border:
@@ -319,9 +318,10 @@ const BannerArea: React.FC = () => {
                 style={{
                   fontSize: object.fontSize,
                   color: object.color,
+                  fontFamily: object.fontFamily || "Poppins, sans-serif", //
                   fontWeight: object.fontWeight,
                   fontStyle: object.fontStyle,
-                  textTransform: object.textTransform,
+                  // textTransform: object.textTransform,
                   textDecoration: object.textDecoration,
                   textAlign: object.textAlign,
                   //
@@ -363,17 +363,16 @@ const BannerArea: React.FC = () => {
               selectedObjectId={selectedObjectIds[0]}
               handleResizeMouseDown={handleResizeMouseDown}
             />
-            {contextMenu &&
-              contextMenu.object?.id === object.id && ( // Проверка, привязано ли меню к текущему объекту
-                <ContextMenu
-                  x={contextMenu.x}
-                  y={contextMenu.y}
-                  object={contextMenu.object}
-                  onClose={handleCloseContextMenu}
-                  objects={objects}
-                  updateObject={updateObject}
-                />
-              )}
+            {contextMenu && contextMenu.object?.id === object.id && (
+              <ContextMenu
+                x={contextMenu.x}
+                y={contextMenu.y}
+                object={contextMenu.object}
+                onClose={handleCloseContextMenu}
+                objects={objects}
+                updateObject={updateObject}
+              />
+            )}
           </div>
         );
       })}

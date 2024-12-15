@@ -27,7 +27,42 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
   return (
     <Box>
       <Typography variant="h6">Налаштування групи</Typography>
-
+      <TextField
+        label="Ширина блоку (px)"
+        type="number"
+        value={Math.round(object.width || 300)}
+        onChange={(e) =>
+          handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
+        }
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Висота блоку (px)"
+        type="number"
+        value={object.height || 50}
+        onChange={(e) =>
+          handleInputChange("height", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Координата X"
+        type="number"
+        value={object.x || 0}
+        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Координата Y"
+        type="number"
+        value={object.y || 0}
+        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
       <FormControl fullWidth margin="normal">
         <InputLabel>Тип відображення (Display)</InputLabel>
         <Select

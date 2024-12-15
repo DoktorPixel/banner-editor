@@ -26,13 +26,6 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
   return (
     <>
       <TextField
-        label="URL изображения"
-        value={object.src || ""}
-        onChange={(e) => handleInputChange("src", e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
         label="Ширина (px)"
         type="number"
         value={Math.round(object.width || 300)}
@@ -52,8 +45,31 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
+      <TextField
+        label="Координата X"
+        type="number"
+        value={object.x}
+        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Координата Y"
+        type="number"
+        value={object.y}
+        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="URL изображения"
+        value={object.src || ""}
+        onChange={(e) => handleInputChange("src", e.target.value)}
+        fullWidth
+        margin="normal"
+      />
       <FormControl fullWidth margin="normal">
-        <InputLabel>Object Fit</InputLabel>
+        <InputLabel>Підгонка картинки (Object Fit)</InputLabel>
         <Select
           value={object.objectFit || "fill"}
           onChange={(e) => handleInputChange("objectFit", e.target.value)}
@@ -72,22 +88,6 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         onChange={(e) =>
           handleInputChange("zIndex", parseInt(e.target.value, 10))
         }
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата X"
-        type="number"
-        value={object.x}
-        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата Y"
-        type="number"
-        value={object.y}
-        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
