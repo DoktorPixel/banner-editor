@@ -41,11 +41,7 @@ const BannerArea: React.FC = () => {
     object: BannerObject | null;
   } | null>(null);
 
-  const handleContextMenu = (
-    // id: number,
-    event: React.MouseEvent,
-    object: BannerObject
-  ) => {
+  const handleContextMenu = (event: React.MouseEvent, object: BannerObject) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -252,11 +248,13 @@ const BannerArea: React.FC = () => {
                   }`}
                   key={child.id || index}
                   style={{
+                    // width: object.width,
+                    // height: object.height,
                     fontSize: child.fontSize,
                     color: child.color,
                     fontWeight: child.fontWeight,
                     fontStyle: child.fontStyle,
-                    textTransform: child.textTransform,
+                    // textTransform: child.textTransform,
                     textDecoration: child.textDecoration,
                     textAlign: child.textAlign,
                     border:
@@ -321,7 +319,7 @@ const BannerArea: React.FC = () => {
                   color: object.color,
                   fontWeight: object.fontWeight,
                   fontStyle: object.fontStyle,
-                  textTransform: object.textTransform,
+                  // textTransform: object.textTransform,
                   textDecoration: object.textDecoration,
                   textAlign: object.textAlign,
                   //

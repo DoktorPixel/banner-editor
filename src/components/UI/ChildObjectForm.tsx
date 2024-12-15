@@ -39,6 +39,24 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
       <Typography variant="h6" gutterBottom>
         Редагування елементу групи
       </Typography>
+      {/* <TextField
+        label="Ширина блоку (px)"
+        name="width"
+        type="number"
+        value={Math.round(object.width || 300)}
+        onChange={handleInputChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Висота блоку (px)"
+        name="height"
+        type="number"
+        value={object.height || ""}
+        onChange={handleInputChange}
+        fullWidth
+        margin="normal"
+      /> */}
 
       <TextField
         label="Текст"
@@ -68,24 +86,6 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-      {/* <TextField
-        label="Ширина блоку (px)"
-        name="width"
-        type="number"
-        value={object.width || ""}
-        onChange={handleInputChange}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Висота блоку (px)"
-        name="height"
-        type="number"
-        value={object.height || ""}
-        onChange={handleInputChange}
-        fullWidth
-        margin="normal"
-      /> */}
 
       <FormControl fullWidth margin="normal">
         <InputLabel>Товщина тексту</InputLabel>
@@ -115,7 +115,7 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
           <MenuItem value="italic">Курсив (Italic)</MenuItem>
         </Select>
       </FormControl>
-
+      {/* 
       <FormControl fullWidth margin="normal">
         <InputLabel>Трансформація тексту</InputLabel>
         <Select
@@ -128,7 +128,7 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
           <MenuItem value="uppercase">Великі літери (Uppercase)</MenuItem>
           <MenuItem value="lowercase">Малі літери (Lowercase)</MenuItem>
         </Select>
-      </FormControl>
+      </FormControl> */}
 
       <FormControl fullWidth margin="normal">
         <InputLabel>Декорація тексту (Text Decoration)</InputLabel>

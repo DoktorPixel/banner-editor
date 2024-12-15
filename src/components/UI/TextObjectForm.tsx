@@ -26,6 +26,44 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
 
   return (
     <Box>
+      {!object.autoWidth && (
+        <TextField
+          label="Фіксована ширина (px)"
+          type="number"
+          value={Math.round(object.width || 300)}
+          onChange={(e) =>
+            handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
+          }
+          fullWidth
+          margin="normal"
+        />
+      )}
+      <TextField
+        label="Висота блоку (px)"
+        type="number"
+        value={object.height || 50}
+        onChange={(e) =>
+          handleInputChange("height", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Координата X"
+        type="number"
+        value={object.x || 0}
+        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Координата Y"
+        type="number"
+        value={object.y || 0}
+        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
       <TextField
         label="Текст"
         value={object.content || ""}
@@ -54,39 +92,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-      {/* <TextField
-        label="Ширина блоку (px)"
-        type="number"
-        value={object.width || 300}
-        onChange={(e) =>
-          handleInputChange("width", parseInt(e.target.value, 10))
-        }
-        fullWidth
-        margin="normal"
-      /> */}
-      {!object.autoWidth && (
-        <TextField
-          label="Фіксована ширина (px)"
-          type="number"
-          value={Math.round(object.width || 300)}
-          onChange={(e) =>
-            handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
-          }
-          fullWidth
-          margin="normal"
-        />
-      )}
-      <TextField
-        label="Висота блоку (px)"
-        type="number"
-        value={object.height || 50}
-        onChange={(e) =>
-          handleInputChange("height", parseInt(e.target.value, 10))
-        }
-        fullWidth
-        margin="normal"
-      />
-      {/*  */}
       <FormControl fullWidth margin="normal">
         <InputLabel>Ширина блоку</InputLabel>
         <Select
@@ -114,17 +119,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         />
       )}
 
-      {/*  */}
-      <TextField
-        label="Рівень шару (z-Index)"
-        type="number"
-        value={object.zIndex || 0}
-        onChange={(e) =>
-          handleInputChange("zIndex", parseInt(e.target.value, 10))
-        }
-        fullWidth
-        margin="normal"
-      />
       <FormControl fullWidth margin="normal">
         <InputLabel>Товщина тексту</InputLabel>
         <Select
@@ -152,7 +146,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         </Select>
       </FormControl>
 
-      <FormControl fullWidth margin="normal">
+      {/* <FormControl fullWidth margin="normal">
         <InputLabel>Трансформація тексту</InputLabel>
         <Select
           value={object.textTransform || "none"}
@@ -163,7 +157,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           <MenuItem value="uppercase">Великі літери (Uppercase)</MenuItem>
           <MenuItem value="lowercase">Малі літери (Lowercase)</MenuItem>
         </Select>
-      </FormControl>
+      </FormControl> */}
 
       <FormControl fullWidth margin="normal">
         <InputLabel>Декорація тексту (Text Decoration)</InputLabel>
@@ -191,18 +185,12 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
       </FormControl>
 
       <TextField
-        label="Координата X"
+        label="Рівень шару (z-Index)"
         type="number"
-        value={object.x || 0}
-        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата Y"
-        type="number"
-        value={object.y || 0}
-        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
+        value={object.zIndex || 0}
+        onChange={(e) =>
+          handleInputChange("zIndex", parseInt(e.target.value, 10))
+        }
         fullWidth
         margin="normal"
       />

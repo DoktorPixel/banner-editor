@@ -72,9 +72,9 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
       <TextField
         label="Ширина блоку (px)"
         type="number"
-        value={object.width || 300}
+        value={Math.round(object.width || 300)}
         onChange={(e) =>
-          handleInputChange("width", parseInt(e.target.value, 10))
+          handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
         }
         fullWidth
         margin="normal"
@@ -86,6 +86,22 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         onChange={(e) =>
           handleInputChange("height", parseInt(e.target.value, 10))
         }
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Координата X"
+        type="number"
+        value={object.x || 0}
+        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Координата Y"
+        type="number"
+        value={object.y || 0}
+        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -108,16 +124,6 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         value={object.opacity || 1}
         onChange={(e) =>
           handleInputChange("opacity", parseFloat(e.target.value))
-        }
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Рівень шару (z-Index)"
-        type="number"
-        value={object.zIndex || 0}
-        onChange={(e) =>
-          handleInputChange("zIndex", parseInt(e.target.value, 10))
         }
         fullWidth
         margin="normal"
@@ -213,6 +219,18 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
           </Box>
         </Box>
       )}
+
+      <TextField
+        label="Рівень шару (z-Index)"
+        type="number"
+        value={object.zIndex || 0}
+        onChange={(e) =>
+          handleInputChange("zIndex", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        // margin="normal"
+        style={{ marginTop: "20px" }}
+      />
     </Box>
   );
 };
