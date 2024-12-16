@@ -167,7 +167,16 @@ const BannerArea: React.FC = () => {
   }, [mode]);
   //
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (mode === "test" || !selectedObjectIds.length) return;
+    if (
+      mode === "test" ||
+      !selectedObjectIds.length ||
+      (event.target instanceof HTMLElement &&
+        ["input", "textarea", "select"].includes(
+          event.target.tagName.toLowerCase()
+        ))
+    ) {
+      return; //test
+    }
 
     const increment = event.shiftKey ? 10 : 1;
     let deltaX = 0;
