@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { BannerChild } from "../../types";
 import ChildFontSelector from "./ChildFontSelector";
+import TextDecorationSelector from "./button-groups/TextDecorationSelector";
+import FontStyleSelector from "./button-groups/FontStyleSelector";
 
 interface ChildObjectFormProps {
   object: BannerChild;
@@ -55,6 +57,22 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         value={object.fontFamily || "Poppins"}
         onChange={(font) => onChange("fontFamily", font)}
       />
+      <FormControl fullWidth margin="normal">
+        <InputLabel>Товщина тексту</InputLabel>
+        <Select
+          name="fontWeight"
+          value={String(object.fontWeight || "400")}
+          onChange={handleSelectChange}
+        >
+          <MenuItem value="300">Дуже тонкий (300)</MenuItem>
+          <MenuItem value="400">Нормальний (400)</MenuItem>
+          <MenuItem value="500">Середній (500)</MenuItem>
+          <MenuItem value="600">Товстий (600)</MenuItem>
+          <MenuItem value="700">Жирний (700)</MenuItem>
+          <MenuItem value="800">Дуже жирний (800)</MenuItem>
+          <MenuItem value="900">Найжирніший (900)</MenuItem>
+        </Select>
+      </FormControl>
       <TextField
         label="Розмір шрифту (px)"
         type="number"
@@ -74,48 +92,15 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         margin="normal"
       />
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Товщина тексту</InputLabel>
-        <Select
-          name="fontWeight"
-          value={String(object.fontWeight || "400")}
-          onChange={handleSelectChange}
-        >
-          <MenuItem value="300">Дуже тонкий (300)</MenuItem>
-          <MenuItem value="400">Нормальний (400)</MenuItem>
-          <MenuItem value="500">Середній (500)</MenuItem>
-          <MenuItem value="600">Товстий (600)</MenuItem>
-          <MenuItem value="700">Жирний (700)</MenuItem>
-          <MenuItem value="800">Дуже жирний (800)</MenuItem>
-          <MenuItem value="900">Найжирніший (900)</MenuItem>
-        </Select>
-      </FormControl>
+      <FontStyleSelector
+        value={object.fontStyle || "normal"}
+        onChange={(value) => onChange("fontStyle", value)}
+      />
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Стиль тексту</InputLabel>
-        <Select
-          name="fontStyle"
-          value={object.fontStyle || "normal"}
-          onChange={handleSelectChange}
-        >
-          <MenuItem value="normal">Звичайний (Normal)</MenuItem>
-          <MenuItem value="italic">Курсив (Italic)</MenuItem>
-        </Select>
-      </FormControl>
-
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Декорація тексту (Text Decoration)</InputLabel>
-        <Select
-          name="textDecoration"
-          value={String(object.textDecoration || "none")}
-          onChange={handleSelectChange}
-        >
-          <MenuItem value="none">Без декорації (None)</MenuItem>
-          <MenuItem value="underline">Підкреслення (Underline)</MenuItem>
-          <MenuItem value="overline">Над текстом (Overline)</MenuItem>
-          <MenuItem value="line-through">Закреслення (Line-Through)</MenuItem>
-        </Select>
-      </FormControl>
+      <TextDecorationSelector
+        value={String(object.textDecoration || "none")}
+        onChange={(value) => onChange("textDecoration", value)}
+      />
       {/* 
       <FormControl fullWidth margin="normal">
         <InputLabel>Трансформація тексту</InputLabel>

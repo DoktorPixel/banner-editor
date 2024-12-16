@@ -4,7 +4,7 @@ import { TextObjectForm } from "./UI/TextObjectForm";
 import { ImageObjectForm } from "./UI/ImageObjectForm";
 import { GroupObjectForm } from "./UI/GroupObjectForm";
 import { FigureObjectForm } from "./UI/FigureObjectForm";
-import { AutoLayoutForm } from "./UI/AutoLayoutForm";
+import { AutoLayoutForm } from "./UI/button-groups/AutoLayoutForm";
 import { ChildObjectForm } from "./UI/ChildObjectForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";
 

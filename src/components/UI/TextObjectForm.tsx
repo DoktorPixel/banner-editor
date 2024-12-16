@@ -8,6 +8,9 @@ import {
   Box,
 } from "@mui/material";
 import FontSelector from "./FontSelector";
+import TextAlignSelector from "./button-groups/TextAlignSelector";
+import TextDecorationSelector from "./button-groups/TextDecorationSelector";
+import FontStyleSelector from "./button-groups/FontStyleSelector";
 
 interface TextObjectFormProps {
   object: BannerObject;
@@ -79,6 +82,22 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         value={object.fontFamily || "Poppins"}
         onChange={(font) => handleInputChange("fontFamily", font)}
       />
+      <FormControl fullWidth margin="normal">
+        <InputLabel>Товщина тексту</InputLabel>
+        <Select
+          value={object.fontWeight || "400"}
+          onChange={(e) => handleInputChange("fontWeight", e.target.value)}
+        >
+          <MenuItem value="300">Дуже тонкий (300)</MenuItem>
+          <MenuItem value="400">Нормальний (400)</MenuItem>
+          <MenuItem value="500">Середній (500)</MenuItem>
+          <MenuItem value="600">Товстий (600)</MenuItem>
+          <MenuItem value="700">Жирний (700)</MenuItem>
+          <MenuItem value="800">Дуже жирний (800)</MenuItem>
+          <MenuItem value="900">Найжирніший (900)</MenuItem>
+        </Select>
+      </FormControl>
+
       <TextField
         label="Розмір шрифту (px)"
         type="number"
@@ -109,7 +128,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           <MenuItem value="fixed">Фіксована (Fixed)</MenuItem>
         </Select>
       </FormControl>
-
       {!object.autoWidth && (
         <TextField
           label="Максимальна кількість рядків"
@@ -124,23 +142,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         />
       )}
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Товщина тексту</InputLabel>
-        <Select
-          value={object.fontWeight || "400"}
-          onChange={(e) => handleInputChange("fontWeight", e.target.value)}
-        >
-          <MenuItem value="300">Дуже тонкий (300)</MenuItem>
-          <MenuItem value="400">Нормальний (400)</MenuItem>
-          <MenuItem value="500">Середній (500)</MenuItem>
-          <MenuItem value="600">Товстий (600)</MenuItem>
-          <MenuItem value="700">Жирний (700)</MenuItem>
-          <MenuItem value="800">Дуже жирний (800)</MenuItem>
-          <MenuItem value="900">Найжирніший (900)</MenuItem>
-        </Select>
-      </FormControl>
-
-      <FormControl fullWidth margin="normal">
+      {/* <FormControl fullWidth margin="normal">
         <InputLabel>Стиль тексту</InputLabel>
         <Select
           value={object.fontStyle || "normal"}
@@ -149,9 +151,12 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           <MenuItem value="normal">Звичайний (Normal)</MenuItem>
           <MenuItem value="italic">Курсив (Italic)</MenuItem>
         </Select>
-      </FormControl>
-
-      <FormControl fullWidth margin="normal">
+      </FormControl> */}
+      <FontStyleSelector
+        value={object.fontStyle || "normal"}
+        onChange={(value) => handleInputChange("fontStyle", value)}
+      />
+      {/* <FormControl fullWidth margin="normal">
         <InputLabel>Декорація тексту (Text Decoration)</InputLabel>
         <Select
           value={object.textDecoration || "none"}
@@ -162,9 +167,13 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           <MenuItem value="overline">Над текстом (Overline)</MenuItem>
           <MenuItem value="line-through">Закреслення (Line-Through)</MenuItem>
         </Select>
-      </FormControl>
+      </FormControl> */}
+      <TextDecorationSelector
+        value={(object.textDecoration || "none").toString()}
+        onChange={(value) => handleInputChange("textDecoration", value)}
+      />
 
-      <FormControl fullWidth margin="normal">
+      {/* <FormControl fullWidth margin="normal">
         <InputLabel>Вирівнювання тексту (Text Align)</InputLabel>
         <Select
           value={object.textAlign || "left"}
@@ -174,8 +183,11 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           <MenuItem value="center">По центру (Center)</MenuItem>
           <MenuItem value="right">По правому краю (Right)</MenuItem>
         </Select>
-      </FormControl>
-
+      </FormControl> */}
+      <TextAlignSelector
+        value={object.textAlign || "left"}
+        onChange={(value) => handleInputChange("textAlign", value)}
+      />
       <TextField
         label="Рівень шару (z-Index)"
         type="number"
