@@ -57,6 +57,22 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         value={object.fontFamily || "Poppins"}
         onChange={(font) => onChange("fontFamily", font)}
       />
+      <FormControl fullWidth margin="normal">
+        <InputLabel>Товщина тексту</InputLabel>
+        <Select
+          name="fontWeight"
+          value={String(object.fontWeight || "400")}
+          onChange={handleSelectChange}
+        >
+          <MenuItem value="300">Дуже тонкий (300)</MenuItem>
+          <MenuItem value="400">Нормальний (400)</MenuItem>
+          <MenuItem value="500">Середній (500)</MenuItem>
+          <MenuItem value="600">Товстий (600)</MenuItem>
+          <MenuItem value="700">Жирний (700)</MenuItem>
+          <MenuItem value="800">Дуже жирний (800)</MenuItem>
+          <MenuItem value="900">Найжирніший (900)</MenuItem>
+        </Select>
+      </FormControl>
       <TextField
         label="Розмір шрифту (px)"
         type="number"
@@ -75,23 +91,6 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Товщина тексту</InputLabel>
-        <Select
-          name="fontWeight"
-          value={String(object.fontWeight || "400")}
-          onChange={handleSelectChange}
-        >
-          <MenuItem value="300">Дуже тонкий (300)</MenuItem>
-          <MenuItem value="400">Нормальний (400)</MenuItem>
-          <MenuItem value="500">Середній (500)</MenuItem>
-          <MenuItem value="600">Товстий (600)</MenuItem>
-          <MenuItem value="700">Жирний (700)</MenuItem>
-          <MenuItem value="800">Дуже жирний (800)</MenuItem>
-          <MenuItem value="900">Найжирніший (900)</MenuItem>
-        </Select>
-      </FormControl>
 
       <FontStyleSelector
         value={object.fontStyle || "normal"}

@@ -97,6 +97,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           <MenuItem value="900">Найжирніший (900)</MenuItem>
         </Select>
       </FormControl>
+
       <TextField
         label="Розмір шрифту (px)"
         type="number"
