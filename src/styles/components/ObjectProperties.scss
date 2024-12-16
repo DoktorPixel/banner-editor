@@ -8,3 +8,23 @@
     flex-direction: column;
   }
 }
+
+.text-align {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+
+  .title {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 1rem;
+    font-family: "Roboto", sans-serif;
+  }
+}
+
+.text-decoration {
+  margin-bottom: 10px;
+}
+
+.font-style {
+  margin-bottom: 10px;
+}

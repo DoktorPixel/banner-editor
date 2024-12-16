@@ -37,6 +37,11 @@
   border: 1px solid blue !important;
 }
 
+.banner-object .banner-object-child,
+.banner-object p {
+  padding: 1px;
+}
+
 .resize-handle {
   display: none;
 }

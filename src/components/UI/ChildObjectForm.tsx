@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { BannerChild } from "../../types";
 import ChildFontSelector from "./ChildFontSelector";
+import TextDecorationSelector from "./button-groups/TextDecorationSelector";
+import FontStyleSelector from "./button-groups/FontStyleSelector";
 
 interface ChildObjectFormProps {
   object: BannerChild;
@@ -91,31 +93,15 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         </Select>
       </FormControl>
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Стиль тексту</InputLabel>
-        <Select
-          name="fontStyle"
-          value={object.fontStyle || "normal"}
-          onChange={handleSelectChange}
-        >
-          <MenuItem value="normal">Звичайний (Normal)</MenuItem>
-          <MenuItem value="italic">Курсив (Italic)</MenuItem>
-        </Select>
-      </FormControl>
+      <FontStyleSelector
+        value={object.fontStyle || "normal"}
+        onChange={(value) => onChange("fontStyle", value)}
+      />
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Декорація тексту (Text Decoration)</InputLabel>
-        <Select
-          name="textDecoration"
-          value={String(object.textDecoration || "none")}
-          onChange={handleSelectChange}
-        >
-          <MenuItem value="none">Без декорації (None)</MenuItem>
-          <MenuItem value="underline">Підкреслення (Underline)</MenuItem>
-          <MenuItem value="overline">Над текстом (Overline)</MenuItem>
-          <MenuItem value="line-through">Закреслення (Line-Through)</MenuItem>
-        </Select>
-      </FormControl>
+      <TextDecorationSelector
+        value={String(object.textDecoration || "none")}
+        onChange={(value) => onChange("textDecoration", value)}
+      />
       {/* 
       <FormControl fullWidth margin="normal">
         <InputLabel>Трансформація тексту</InputLabel>
