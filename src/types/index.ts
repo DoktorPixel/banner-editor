@@ -40,11 +40,11 @@ export interface BannerObject {
   borderBottomColor?: string;
   borderBottomWidth?: number | string;
 
-  borderLeftStyle: React.CSSProperties["borderTopStyle"];
+  borderLeftStyle?: React.CSSProperties["borderTopStyle"];
   borderLeftColor?: string;
   borderLeftWidth?: number | string;
 
-  borderRightStyle: React.CSSProperties["borderTopStyle"];
+  borderRightStyle?: React.CSSProperties["borderTopStyle"];
   borderRightColor?: string;
   borderRightWidth?: number | string;
 }
