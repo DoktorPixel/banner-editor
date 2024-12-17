@@ -261,7 +261,7 @@ const BannerArea: React.FC = () => {
                     // height: child.height,
                     fontSize: child.fontSize,
                     color: child.color,
-                    fontFamily: child.fontFamily, //
+                    fontFamily: child.fontFamily,
                     fontWeight: child.fontWeight,
                     fontStyle: child.fontStyle,
                     // textTransform: child.textTransform,
@@ -287,17 +287,16 @@ const BannerArea: React.FC = () => {
                 handleResizeMouseDown={handleResizeMouseDown}
               />
 
-              {contextMenu &&
-                contextMenu.object?.id === object.id && ( // Проверка, привязано ли меню к текущему объекту
-                  <ContextMenu
-                    x={contextMenu.x}
-                    y={contextMenu.y}
-                    object={contextMenu.object}
-                    onClose={handleCloseContextMenu}
-                    objects={objects}
-                    updateObject={updateObject}
-                  />
-                )}
+              {contextMenu && contextMenu.object?.id === object.id && (
+                <ContextMenu
+                  x={contextMenu.x}
+                  y={contextMenu.y}
+                  object={contextMenu.object}
+                  onClose={handleCloseContextMenu}
+                  objects={objects}
+                  updateObject={updateObject}
+                />
+              )}
             </div>
           );
         }
@@ -327,13 +326,13 @@ const BannerArea: React.FC = () => {
                 style={{
                   fontSize: object.fontSize,
                   color: object.color,
-                  fontFamily: object.fontFamily || "Poppins, sans-serif", //
+                  fontFamily: object.fontFamily || "Poppins, sans-serif",
                   fontWeight: object.fontWeight,
                   fontStyle: object.fontStyle,
                   // textTransform: object.textTransform,
                   textDecoration: object.textDecoration,
                   textAlign: object.textAlign,
-                  //
+
                   display: object.maxLines ? "-webkit-box" : "block",
                   WebkitLineClamp: object.maxLines,
                   WebkitBoxOrient: object.maxLines ? "vertical" : undefined,
@@ -358,16 +357,24 @@ const BannerArea: React.FC = () => {
                 className="banner-figure"
                 style={{
                   backgroundColor: object.backgroundColor,
-                  borderStyle: object.borderStyle,
-                  borderColor: object.borderColor,
-                  borderWidth: object.borderWidth,
                   borderRadius: object.borderRadius,
                   opacity: object.opacity,
-                  //
-                  borderTop: object.borderTop,
-                  borderBottom: object.borderBottom,
-                  borderLeft: object.borderLeft,
-                  borderRight: object.borderRight,
+
+                  borderTopStyle: object.borderTopStyle,
+                  borderTopColor: object.borderTopColor,
+                  borderTopWidth: object.borderTopWidth,
+
+                  borderBottomStyle: object.borderBottomStyle,
+                  borderBottomColor: object.borderBottomColor,
+                  borderBottomWidth: object.borderBottomWidth,
+
+                  borderLeftStyle: object.borderLeftStyle,
+                  borderLeftColor: object.borderLeftColor,
+                  borderLeftWidth: object.borderLeftWidth,
+
+                  borderRightStyle: object.borderRightStyle,
+                  borderRightColor: object.borderRightColor,
+                  borderRightWidth: object.borderRightWidth,
                 }}
               ></div>
             ) : null}
