@@ -363,6 +363,11 @@ const BannerArea: React.FC = () => {
                   borderWidth: object.borderWidth,
                   borderRadius: object.borderRadius,
                   opacity: object.opacity,
+                  //
+                  borderTop: object.borderTop,
+                  borderBottom: object.borderBottom,
+                  borderLeft: object.borderLeft,
+                  borderRight: object.borderRight,
                 }}
               ></div>
             ) : null}

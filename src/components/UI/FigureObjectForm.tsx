@@ -6,9 +6,16 @@ import {
   MenuItem,
   Select,
   Typography,
+  ButtonGroup,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useObjectProperties } from "../../utils/hooks";
+import {
+  BorderBottom,
+  BorderLeft,
+  BorderRight,
+  BorderTop,
+} from "../../assets/icons";
 
 interface FigureObjectFormProps {
   object: BannerObject;
@@ -24,7 +31,24 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
 }) => {
   const [isBorderEditing, setIsBorderEditing] = useState<boolean>(false);
   const { updateObjectMultipleProperties } = useObjectProperties();
+  const [borderSides, setBorderSides] = useState({
+    top: true,
+    bottom: true,
+    left: true,
+    right: true,
+  });
 
+  const toggleBorderSide = (side: keyof typeof borderSides) => {
+    const updatedBorders = { ...borderSides, [side]: !borderSides[side] };
+    setBorderSides(updatedBorders);
+
+    const propertyKey = `border${side.charAt(0).toUpperCase()}${side.slice(
+      1
+    )}` as keyof BannerObject;
+    onChange(propertyKey, updatedBorders[side] ? "solid" : "none");
+  };
+
+  //
   useEffect(() => {
     const hasBorder =
       object.borderStyle || object.borderColor || object.borderWidth;
@@ -216,6 +240,50 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
                 fullWidth
               />
             </Box>
+
+            <div className="border-selectors">
+              {/* Верх и низ */}
+
+              <ButtonGroup>
+                <Button
+                  variant={borderSides.top ? "contained" : "outlined"}
+                  // color={borderSides.top ? "primary" : "default"}
+                  onClick={() => toggleBorderSide("top")}
+                  sx={{ padding: "4px 10px" }}
+                >
+                  <BorderTop width="24px" height="24px" />
+                </Button>
+                <Button
+                  variant={borderSides.bottom ? "contained" : "outlined"}
+                  // color={borderSides.bottom ? "primary" : "default"}
+                  onClick={() => toggleBorderSide("bottom")}
+                  sx={{ padding: "4px 10px" }}
+                >
+                  <BorderBottom width="24px" height="24px" />
+                </Button>
+              </ButtonGroup>
+
+              {/* Лево и право */}
+
+              <ButtonGroup>
+                <Button
+                  variant={borderSides.left ? "contained" : "outlined"}
+                  // color={borderSides.left ? "primary" : "default"}
+                  onClick={() => toggleBorderSide("left")}
+                  sx={{ padding: "4px 10px" }}
+                >
+                  <BorderLeft width="24px" height="24px" />
+                </Button>
+                <Button
+                  variant={borderSides.right ? "contained" : "outlined"}
+                  // color={borderSides.right ? "primary" : "default"}
+                  onClick={() => toggleBorderSide("right")}
+                  sx={{ padding: "4px 10px" }}
+                >
+                  <BorderRight width="24px" height="24px" />
+                </Button>
+              </ButtonGroup>
+            </div>
           </Box>
         </Box>
       )}
