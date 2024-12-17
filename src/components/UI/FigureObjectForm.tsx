@@ -31,6 +31,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
 }) => {
   const [isBorderEditing, setIsBorderEditing] = useState<boolean>(false);
   const { updateObjectMultipleProperties } = useObjectProperties();
+
   const [borderSides, setBorderSides] = useState({
     top: true,
     bottom: true,
@@ -38,22 +39,31 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
     right: true,
   });
 
-  const toggleBorderSide = (side: keyof typeof borderSides) => {
-    const updatedBorders = { ...borderSides, [side]: !borderSides[side] };
-    setBorderSides(updatedBorders);
+  const toggleBorderSide = (side: "top" | "bottom" | "left" | "right") => {
+    const isActive = borderSides[side];
 
-    const propertyKey = `border${side.charAt(0).toUpperCase()}${side.slice(
-      1
-    )}` as keyof BannerObject;
-    onChange(propertyKey, updatedBorders[side] ? "solid" : "none");
+    setBorderSides((prev) => ({
+      ...prev,
+      [side]: !isActive,
+    }));
+
+    if (isActive) {
+      updateObjectMultipleProperties(object.id, {
+        [`border${capitalize(side)}Style`]: undefined,
+        [`border${capitalize(side)}Color`]: undefined,
+        [`border${capitalize(side)}Width`]: undefined,
+      });
+    } else {
+      updateObjectMultipleProperties(object.id, {
+        [`border${capitalize(side)}Style`]: "solid",
+        [`border${capitalize(side)}Color`]: "#000000",
+        [`border${capitalize(side)}Width`]: 1,
+      });
+    }
   };
 
-  //
-  useEffect(() => {
-    const hasBorder =
-      object.borderStyle || object.borderColor || object.borderWidth;
-    setIsBorderEditing(!!hasBorder);
-  }, [object]);
+  const capitalize = (str: string) =>
+    str.charAt(0).toUpperCase() + str.slice(1);
 
   const handleInputChange = (
     key: keyof BannerObject,
@@ -66,9 +76,18 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
     setIsBorderEditing(isEditing);
     if (!isEditing) {
       updateObjectMultipleProperties(object.id, {
-        borderStyle: undefined,
-        borderColor: undefined,
-        borderWidth: undefined,
+        borderTopStyle: undefined,
+        borderTopColor: undefined,
+        borderTopWidth: undefined,
+        borderBottomStyle: undefined,
+        borderBottomColor: undefined,
+        borderBottomWidth: undefined,
+        borderLeftStyle: undefined,
+        borderLeftColor: undefined,
+        borderLeftWidth: undefined,
+        borderRightStyle: undefined,
+        borderRightColor: undefined,
+        borderRightWidth: undefined,
       });
     }
   };
@@ -76,20 +95,59 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
   const handleAddBorder = () => {
     handleBorderToggle(true);
     updateObjectMultipleProperties(object.id, {
-      borderStyle: "solid",
-      borderColor: "#000000",
-      borderWidth: 1,
+      borderTopStyle: "solid",
+      borderTopColor: "#000000",
+      borderTopWidth: 1,
+      borderBottomStyle: "solid",
+      borderBottomColor: "#000000",
+      borderBottomWidth: 1,
+      borderLeftStyle: "solid",
+      borderLeftColor: "#000000",
+      borderLeftWidth: 1,
+      borderRightStyle: "solid",
+      borderRightColor: "#000000",
+      borderRightWidth: 1,
     });
   };
 
-  const handleRemoveBorder = () => {
-    handleBorderToggle(false);
+  const handleBorderChange = (
+    property: string,
+    value: string | number | undefined
+  ) => {
     updateObjectMultipleProperties(object.id, {
-      borderStyle: undefined,
-      borderColor: undefined,
-      borderWidth: undefined,
+      [`borderTop${property}`]: value,
+      [`borderBottom${property}`]: value,
+      [`borderLeft${property}`]: value,
+      [`borderRight${property}`]: value,
     });
   };
+
+  useEffect(() => {
+    const hasBorder =
+      object.borderTopStyle ||
+      object.borderTopColor ||
+      object.borderTopWidth ||
+      object.borderBottomStyle ||
+      object.borderBottomColor ||
+      object.borderBottomWidth ||
+      object.borderLeftStyle ||
+      object.borderLeftColor ||
+      object.borderLeftWidth ||
+      object.borderRightStyle ||
+      object.borderRightColor ||
+      object.borderRightWidth;
+
+    setIsBorderEditing(!!hasBorder);
+  }, [object]);
+
+  useEffect(() => {
+    setBorderSides({
+      top: !!object.borderTopStyle,
+      bottom: !!object.borderBottomStyle,
+      left: !!object.borderLeftStyle,
+      right: !!object.borderRightStyle,
+    });
+  }, [object]);
 
   return (
     <Box>
@@ -184,11 +242,11 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
           + Додати бордер
         </Button>
       ) : (
-        <Box>
+        <Box className="border-editor">
           <Button
             variant="outlined"
             color="error"
-            onClick={handleRemoveBorder}
+            onClick={() => handleBorderToggle(false)}
             style={{ marginBottom: "10px" }}
           >
             Видалити бордер
@@ -199,16 +257,15 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
                 Стиль рамки (border-style)
               </Typography>
               <Select
-                value={object.borderStyle || "solid"}
-                onChange={(e) =>
-                  handleInputChange("borderStyle", e.target.value)
-                }
+                value={object.borderTopStyle || "solid"}
+                onChange={(e) => handleBorderChange("Style", e.target.value)}
                 fullWidth
               >
                 <MenuItem value="solid">Solid</MenuItem>
                 <MenuItem value="dotted">Dotted</MenuItem>
                 <MenuItem value="dashed">Dashed</MenuItem>
                 <MenuItem value="double">Double</MenuItem>
+                <MenuItem value="none">None</MenuItem>
               </Select>
             </Box>
             <Box>
@@ -217,10 +274,8 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
               </Typography>
               <TextField
                 type="color"
-                value={object.borderColor || "#000000"}
-                onChange={(e) =>
-                  handleInputChange("borderColor", e.target.value)
-                }
+                value={object.borderTopColor || "#000000"}
+                onChange={(e) => handleBorderChange("Color", e.target.value)}
                 fullWidth
               />
             </Box>
@@ -230,10 +285,10 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
               </Typography>
               <TextField
                 type="number"
-                value={object.borderWidth || 0}
+                value={object.borderTopWidth || 1}
                 onChange={(e) =>
-                  handleInputChange(
-                    "borderWidth",
+                  handleBorderChange(
+                    "Width",
                     parseInt(e.target.value, 10) || undefined
                   )
                 }
@@ -242,12 +297,9 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
             </Box>
 
             <div className="border-selectors">
-              {/* Верх и низ */}
-
               <ButtonGroup>
                 <Button
                   variant={borderSides.top ? "contained" : "outlined"}
-                  // color={borderSides.top ? "primary" : "default"}
                   onClick={() => toggleBorderSide("top")}
                   sx={{ padding: "4px 10px" }}
                 >
@@ -255,7 +307,6 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
                 </Button>
                 <Button
                   variant={borderSides.bottom ? "contained" : "outlined"}
-                  // color={borderSides.bottom ? "primary" : "default"}
                   onClick={() => toggleBorderSide("bottom")}
                   sx={{ padding: "4px 10px" }}
                 >
@@ -263,12 +314,9 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
                 </Button>
               </ButtonGroup>
 
-              {/* Лево и право */}
-
               <ButtonGroup>
                 <Button
                   variant={borderSides.left ? "contained" : "outlined"}
-                  // color={borderSides.left ? "primary" : "default"}
                   onClick={() => toggleBorderSide("left")}
                   sx={{ padding: "4px 10px" }}
                 >
@@ -276,7 +324,6 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
                 </Button>
                 <Button
                   variant={borderSides.right ? "contained" : "outlined"}
-                  // color={borderSides.right ? "primary" : "default"}
                   onClick={() => toggleBorderSide("right")}
                   sx={{ padding: "4px 10px" }}
                 >
@@ -296,7 +343,6 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
           handleInputChange("zIndex", parseInt(e.target.value, 10))
         }
         fullWidth
-        // margin="normal"
         style={{ marginTop: "20px" }}
       />
     </Box>

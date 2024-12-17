@@ -27,17 +27,26 @@ export interface BannerObject {
 
   maxLines?: number;
   autoWidth?: boolean;
-
-  borderStyle?: string;
-  borderColor?: string;
-  borderWidth?: number | string;
   borderRadius?: React.CSSProperties["borderRadius"];
   backgroundColor?: string;
   opacity?: React.CSSProperties["opacity"];
-  borderTop?: string;
-  borderBottom?: string;
-  borderLeft?: string;
-  borderRight?: string;
+
+  // borders
+  borderTopStyle?: React.CSSProperties["borderTopStyle"];
+  borderTopColor?: string;
+  borderTopWidth?: number | string;
+
+  borderBottomStyle?: React.CSSProperties["borderTopStyle"];
+  borderBottomColor?: string;
+  borderBottomWidth?: number | string;
+
+  borderLeftStyle: React.CSSProperties["borderTopStyle"];
+  borderLeftColor?: string;
+  borderLeftWidth?: number | string;
+
+  borderRightStyle: React.CSSProperties["borderTopStyle"];
+  borderRightColor?: string;
+  borderRightWidth?: number | string;
 }
 
 export interface BannerChild {
