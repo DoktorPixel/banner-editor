@@ -34,6 +34,10 @@ export interface BannerObject {
   borderRadius?: React.CSSProperties["borderRadius"];
   backgroundColor?: string;
   opacity?: React.CSSProperties["opacity"];
+  borderTop?: string;
+  borderBottom?: string;
+  borderLeft?: string;
+  borderRight?: string;
 }
 
 export interface BannerChild {

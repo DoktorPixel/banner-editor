@@ -167,7 +167,16 @@ const BannerArea: React.FC = () => {
   }, [mode]);
   //
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (mode === "test" || !selectedObjectIds.length) return;
+    if (
+      mode === "test" ||
+      !selectedObjectIds.length ||
+      (event.target instanceof HTMLElement &&
+        ["input", "textarea", "select"].includes(
+          event.target.tagName.toLowerCase()
+        ))
+    ) {
+      return; //test
+    }
 
     const increment = event.shiftKey ? 10 : 1;
     let deltaX = 0;
@@ -354,6 +363,11 @@ const BannerArea: React.FC = () => {
                   borderWidth: object.borderWidth,
                   borderRadius: object.borderRadius,
                   opacity: object.opacity,
+                  //
+                  borderTop: object.borderTop,
+                  borderBottom: object.borderBottom,
+                  borderLeft: object.borderLeft,
+                  borderRight: object.borderRight,
                 }}
               ></div>
             ) : null}

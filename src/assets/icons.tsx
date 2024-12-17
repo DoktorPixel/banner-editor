@@ -246,3 +246,127 @@ export const TextItalic: React.FC<SVGProps> = ({
     </svg>
   );
 };
+//
+export const BorderBottom: React.FC<SVGProps> = ({
+  width = "24px",
+  height = "24px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M20 20H4M16 4H16.01M16 12H16.01M12 4H12.01M12 8H12.01M12 12H12.01M12 16H12.01M8 4H8.01M8 12H8.01M4 4H4.01M4 8H4.01M4 12H4.01M4 16H4.01M20 4H20.01M20 8H20.01M20 12H20.01M20 16H20.01"
+        stroke="#000000"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const BorderLeft: React.FC<SVGProps> = ({
+  width = "24px",
+  height = "24px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M16 4H16.01M16 12H16.01M12 4H12.01M12 8H12.01M12 12H12.01M12 16H12.01M12 20H12.01M16 20H16.01M8 4H8.01M8 12H8.01M8 20H8.01M20 4H20.01M20 8H20.01M20 12H20.01M20 16H20.01M20 20H20.01M4 4V20"
+        stroke="#000000"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const BorderRight: React.FC<SVGProps> = ({
+  width = "24px",
+  height = "24px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="16" cy="20" r="1" fill="#000000" />
+      <circle cx="8" cy="20" r="1" fill="#000000" />
+      <circle cx="16" cy="12" r="1" fill="#000000" />
+      <circle cx="16" cy="4" r="1" fill="#000000" />
+      <circle cx="12" cy="12" r="1" fill="#000000" />
+      <circle cx="12" cy="4" r="1" fill="#000000" />
+      <circle cx="12" cy="20" r="1" fill="#000000" />
+      <circle cx="8" cy="12" r="1" fill="#000000" />
+      <circle cx="8" cy="4" r="1" fill="#000000" />
+      <circle cx="12" cy="8" r="1" fill="#000000" />
+      <circle cx="4" cy="12" r="1" fill="#000000" />
+      <circle cx="4" cy="4" r="1" fill="#000000" />
+      <circle cx="4" cy="20" r="1" fill="#000000" />
+      <circle cx="4" cy="8" r="1" fill="#000000" />
+      <circle cx="4" cy="16" r="1" fill="#000000" />
+      <circle cx="12" cy="16" r="1" fill="#000000" />
+      <path
+        d="M20 4L20 20"
+        stroke="#000000"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const BorderTop: React.FC<SVGProps> = ({
+  width = "24px",
+  height = "24px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="20" cy="16" r="1" fill="#000000" />
+      <circle cx="20" cy="20" r="1" fill="#000000" />
+      <circle cx="16" cy="20" r="1" fill="#000000" />
+      <circle cx="20" cy="8" r="1" fill="#000000" />
+      <circle cx="8" cy="20" r="1" fill="#000000" />
+      <circle cx="20" cy="12" r="1" fill="#000000" />
+      <circle cx="16" cy="12" r="1" fill="#000000" />
+      <circle cx="12" cy="12" r="1" fill="#000000" />
+      <circle cx="12" cy="20" r="1" fill="#000000" />
+      <circle cx="8" cy="12" r="1" fill="#000000" />
+      <circle cx="12" cy="8" r="1" fill="#000000" />
+      <path
+        d="M4 4H20"
+        stroke="#000000"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <circle cx="4" cy="12" r="1" fill="#000000" />
+      <circle cx="4" cy="20" r="1" fill="#000000" />
+      <circle cx="4" cy="8" r="1" fill="#000000" />
+      <circle cx="4" cy="16" r="1" fill="#000000" />
+      <circle cx="12" cy="16" r="1" fill="#000000" />
+    </svg>
+  );
+};
