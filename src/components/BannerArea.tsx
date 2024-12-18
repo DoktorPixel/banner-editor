@@ -313,6 +313,8 @@ const BannerArea: React.FC = () => {
               zIndex: object.zIndex,
               cursor: "move",
               overflow: object.autoWidth ? "visible" : "hidden",
+              // clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
+              // transform: "rotate(-45deg)",
             }}
             onMouseDown={(e) => handleMouseDown(object.id, e)}
             onClick={(e) => handleObjectClick(object.id, e)}
