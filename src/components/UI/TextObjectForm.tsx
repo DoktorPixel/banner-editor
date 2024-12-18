@@ -114,6 +114,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         format="hex"
         value={object.color || "#000000"}
         onChange={(newColor: string) => handleInputChange("color", newColor)}
+        fullWidth
         sx={{ margin: "16px 0 10px 0" }}
       />
 
