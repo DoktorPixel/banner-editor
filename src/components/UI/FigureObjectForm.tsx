@@ -188,11 +188,14 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
+
       <MuiColorInput
         label="Колір фону"
         format="hex"
-        value={object.color || "#000000"}
-        onChange={(newColor: string) => handleInputChange("color", newColor)}
+        value={object.backgroundColor || "#000000"}
+        onChange={(newColor: string) =>
+          handleInputChange("backgroundColor", newColor)
+        }
         fullWidth
         sx={{ margin: "16px 0 10px 0" }}
       />
@@ -268,18 +271,18 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
                 <MenuItem value="double">Подвійна (Double)</MenuItem>
               </Select>
             </Box>
-            <Box>
-              <MuiColorInput
-                label="Колір рамки (border-color)"
-                format="hex"
-                value={object.color || "#000000"}
-                onChange={(newColor: string) =>
-                  handleInputChange("color", newColor)
-                }
-                fullWidth
-                sx={{ margin: "16px 0 10px 0" }}
-              />
-            </Box>
+
+            <MuiColorInput
+              label="Колір рамки (border-color)"
+              format="hex"
+              value={object.borderTopColor || "#000000"}
+              onChange={(newColor: string) =>
+                handleBorderChange("Color", newColor)
+              }
+              fullWidth
+              sx={{ margin: "16px 0 10px 0" }}
+            />
+
             <Box>
               <TextField
                 label="Ширина рамки (border-width, px)"
