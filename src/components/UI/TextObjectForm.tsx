@@ -191,6 +191,16 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         onChange={(value) => handleInputChange("textAlign", value)}
       />
       <TextField
+        label="Поворот (градусів)"
+        type="number"
+        value={object.rotate || 0}
+        onChange={(e) =>
+          handleInputChange("rotate", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        margin="normal"
+      />
+      <TextField
         label="Рівень шару (z-Index)"
         type="number"
         value={object.zIndex || 0}

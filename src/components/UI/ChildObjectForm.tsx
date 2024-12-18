@@ -8,6 +8,7 @@ import {
   InputLabel,
   SelectChangeEvent,
 } from "@mui/material";
+import { MuiColorInput } from "mui-color-input";
 import { BannerChild } from "../../types";
 import ChildFontSelector from "./ChildFontSelector";
 import TextDecorationSelector from "./button-groups/TextDecorationSelector";
@@ -82,14 +83,13 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-      <TextField
+      <MuiColorInput
         label="Колір тексту"
-        type="color"
-        name="color"
-        value={object.color || ""}
-        onChange={handleInputChange}
+        format="hex"
+        value={object.color || "#000000"}
+        onChange={(newColor: string) => onChange("color", newColor)}
         fullWidth
-        margin="normal"
+        sx={{ margin: "16px 0 10px 0" }}
       />
 
       <FontStyleSelector

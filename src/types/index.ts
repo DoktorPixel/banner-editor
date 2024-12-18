@@ -24,7 +24,7 @@ export interface BannerObject {
   gap?: React.CSSProperties["gap"];
   name?: string;
   objectFit?: React.CSSProperties["objectFit"];
-
+  rotate?: number;
   maxLines?: number;
   autoWidth?: boolean;
   borderRadius?: React.CSSProperties["borderRadius"];

@@ -8,6 +8,7 @@ import {
   Typography,
   ButtonGroup,
 } from "@mui/material";
+import { MuiColorInput } from "mui-color-input";
 import { useState, useEffect } from "react";
 import { useObjectProperties } from "../../utils/hooks";
 import {
@@ -187,13 +188,16 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-      <TextField
+
+      <MuiColorInput
         label="Колір фону"
-        type="color"
-        value={object.backgroundColor || "#FFFFFF"}
-        onChange={(e) => handleInputChange("backgroundColor", e.target.value)}
+        format="hex"
+        value={object.backgroundColor || "#000000"}
+        onChange={(newColor: string) =>
+          handleInputChange("backgroundColor", newColor)
+        }
         fullWidth
-        margin="normal"
+        sx={{ margin: "16px 0 10px 0" }}
       />
       <TextField
         label="Прозорість (opacity, від 0 до 1)"
@@ -261,29 +265,27 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
                 onChange={(e) => handleBorderChange("Style", e.target.value)}
                 fullWidth
               >
-                <MenuItem value="solid">Solid</MenuItem>
-                <MenuItem value="dotted">Dotted</MenuItem>
-                <MenuItem value="dashed">Dashed</MenuItem>
-                <MenuItem value="double">Double</MenuItem>
-                <MenuItem value="none">None</MenuItem>
+                <MenuItem value="solid">Суцільна (Solid)</MenuItem>
+                <MenuItem value="dotted">Крапками (Dotted)</MenuItem>
+                <MenuItem value="dashed">Штрихова (Dashed)</MenuItem>
+                <MenuItem value="double">Подвійна (Double)</MenuItem>
               </Select>
             </Box>
+
+            <MuiColorInput
+              label="Колір рамки (border-color)"
+              format="hex"
+              value={object.borderTopColor || "#000000"}
+              onChange={(newColor: string) =>
+                handleBorderChange("Color", newColor)
+              }
+              fullWidth
+              sx={{ margin: "16px 0 10px 0" }}
+            />
+
             <Box>
-              <Typography variant="body2">
-                Колір рамки (border-color)
-              </Typography>
               <TextField
-                type="color"
-                value={object.borderTopColor || "#000000"}
-                onChange={(e) => handleBorderChange("Color", e.target.value)}
-                fullWidth
-              />
-            </Box>
-            <Box>
-              <Typography variant="body2">
-                Ширина рамки (border-width, px)
-              </Typography>
-              <TextField
+                label="Ширина рамки (border-width, px)"
                 type="number"
                 value={object.borderTopWidth || 1}
                 onChange={(e) =>
@@ -336,6 +338,16 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
       )}
 
       <TextField
+        label="Поворот (градусів)"
+        type="number"
+        value={object.rotate || 0}
+        onChange={(e) =>
+          handleInputChange("rotate", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        style={{ marginTop: "22px" }}
+      />
+      <TextField
         label="Рівень шару (z-Index)"
         type="number"
         value={object.zIndex || 0}
@@ -343,7 +355,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
           handleInputChange("zIndex", parseInt(e.target.value, 10))
         }
         fullWidth
-        style={{ marginTop: "20px" }}
+        style={{ marginTop: "22px" }}
       />
     </Box>
   );
