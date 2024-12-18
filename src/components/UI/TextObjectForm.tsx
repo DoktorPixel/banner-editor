@@ -11,6 +11,7 @@ import FontSelector from "./FontSelector";
 import TextAlignSelector from "./button-groups/TextAlignSelector";
 import TextDecorationSelector from "./button-groups/TextDecorationSelector";
 import FontStyleSelector from "./button-groups/FontStyleSelector";
+import { MuiColorInput } from "mui-color-input";
 
 interface TextObjectFormProps {
   object: BannerObject;
@@ -108,14 +109,14 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-      <TextField
+      <MuiColorInput
         label="Колір тексту"
-        type="color"
+        format="hex"
         value={object.color || "#000000"}
-        onChange={(e) => handleInputChange("color", e.target.value)}
-        fullWidth
-        margin="normal"
+        onChange={(newColor: string) => handleInputChange("color", newColor)}
+        sx={{ margin: "16px 0 10px 0" }}
       />
+
       <FormControl fullWidth margin="normal">
         <InputLabel>Ширина блоку</InputLabel>
         <Select
