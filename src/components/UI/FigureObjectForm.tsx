@@ -338,6 +338,16 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
       )}
 
       <TextField
+        label="Поворот (градусів)"
+        type="number"
+        value={object.rotate || 0}
+        onChange={(e) =>
+          handleInputChange("rotate", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        style={{ marginTop: "22px" }}
+      />
+      <TextField
         label="Рівень шару (z-Index)"
         type="number"
         value={object.zIndex || 0}
@@ -345,7 +355,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
           handleInputChange("zIndex", parseInt(e.target.value, 10))
         }
         fullWidth
-        style={{ marginTop: "20px" }}
+        style={{ marginTop: "22px" }}
       />
     </Box>
   );

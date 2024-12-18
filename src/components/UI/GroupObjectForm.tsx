@@ -123,6 +123,16 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
+      <TextField
+        label="Поворот (градусів)"
+        type="number"
+        value={object.rotate || 0}
+        onChange={(e) =>
+          handleInputChange("rotate", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        margin="normal"
+      />
 
       <TextField
         label="Номер шару (z-Index)"

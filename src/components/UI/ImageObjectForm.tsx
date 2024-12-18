@@ -82,6 +82,16 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         </Select>
       </FormControl>
       <TextField
+        label="Поворот (градусів)"
+        type="number"
+        value={object.rotate || 0}
+        onChange={(e) =>
+          handleInputChange("rotate", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        margin="normal"
+      />
+      <TextField
         label="Номер шару (z-Index)"
         type="number"
         value={object.zIndex || 0}
