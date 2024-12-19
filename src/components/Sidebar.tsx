@@ -15,6 +15,8 @@ import NameDialog from "./UI/dialogs/NameDialog";
 import { BannerObject } from "../types";
 import { useObjectProperties } from "../utils/hooks";
 import GroupListItem from "./UI/GroupListItem";
+import ExportToServer from "./UI/ExportToServer";
+import ExportBanner from "./UI/ExportBanner";
 
 const Sidebar: React.FC = () => {
   const {
@@ -285,6 +287,9 @@ const Sidebar: React.FC = () => {
       >
         Розгрупувати
       </Button>
+
+      <ExportToServer />
+      <ExportBanner />
     </Stack>
   );
 };
