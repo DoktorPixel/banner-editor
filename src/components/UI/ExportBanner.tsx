@@ -58,6 +58,13 @@ const ExportBanner: React.FC = () => {
       `;
 
     try {
+      await navigator.clipboard.writeText(fullHTML);
+      console.log("HTML скопійований у буфер обміну!");
+    } catch (clipboardError) {
+      console.error("Помилка при копіюванні в буфер обміну:", clipboardError);
+    }
+
+    try {
       const response = await axios.post(
         "https://example.com/api/upload",
         fullHTML,

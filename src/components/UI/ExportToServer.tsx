@@ -10,6 +10,17 @@ const ExportToServer: React.FC = () => {
 
   const handleExport = async () => {
     setIsLoading(true);
+
+    try {
+      //
+      const objectsJSON = JSON.stringify(objects, null, 2);
+      await navigator.clipboard.writeText(objectsJSON);
+      console.log("HTML скопійований у буфер обміну!");
+    } catch (clipboardError) {
+      console.error("Помилка при копіюванні в буфер обміну:", clipboardError);
+    }
+
+    //
     try {
       const exportData = {
         step: objects,
