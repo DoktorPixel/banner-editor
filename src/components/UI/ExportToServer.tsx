@@ -1,11 +1,15 @@
 import { useBanner } from "../../context/BannerContext";
 import axios from "axios";
-import Button from "@mui/material/Button";
+import { useState } from "react";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SendIcon from "@mui/icons-material/Send";
 
 const ExportToServer: React.FC = () => {
-  const { objects } = useBanner();
+  const { objects, clearSelection, clearChildSelection } = useBanner();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleExport = async () => {
+    setIsLoading(true);
     try {
       const exportData = {
         step: objects,
@@ -21,18 +25,30 @@ const ExportToServer: React.FC = () => {
     } catch (error) {
       console.error("Error sending data:", error);
       alert("There was an error sending data.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <Button
-      onClick={handleExport}
-      className="export-button"
+    <LoadingButton
+      onClick={() => {
+        clearSelection();
+        clearChildSelection();
+        handleExport();
+      }}
       variant="contained"
       color="primary"
+      loading={isLoading}
     >
-      Надіслати JSON на сервер
-    </Button>
+      {isLoading ? (
+        "Отправка..."
+      ) : (
+        <>
+          Надіслати JSON <SendIcon sx={{ marginLeft: "10px" }} />
+        </>
+      )}
+    </LoadingButton>
   );
 };
 
