@@ -12,6 +12,7 @@ import { useObjectProperties } from "../utils/hooks";
 import ExportToServer from "./UI/ExportToServer";
 import ExportBanner from "./UI/ExportBanner";
 import SidebarObjectList from "./UI/SidebarObjectList";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 const Sidebar: React.FC = () => {
   const {
@@ -255,7 +256,7 @@ const Sidebar: React.FC = () => {
         color="primary"
         onClick={() => openDialog("isJsonDialogOpen")}
       >
-        Завантажити JSON
+        Завантажити JSON <CloudUploadIcon sx={{ marginLeft: "10px" }} />
       </Button>
     </Stack>
   );
