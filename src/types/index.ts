@@ -101,6 +101,7 @@ export interface BannerContextProps {
     React.SetStateAction<{ [key: number]: Partial<BannerObject> }>
   >;
   renderedObjects: BannerObject[];
+  addJson: (jsonData: BannerObject[]) => void;
 }
 
 export type ResizeDirection =

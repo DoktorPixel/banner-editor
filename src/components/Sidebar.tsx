@@ -12,6 +12,7 @@ import TextDialog from "./UI/dialogs/TextDialog";
 import ImageDialog from "./UI/dialogs/ImageDialog";
 import ClearHistoryDialog from "./UI/dialogs/ClearHistoryDialog";
 import NameDialog from "./UI/dialogs/NameDialog";
+import JSONDialog from "./UI/dialogs/JSONDialog";
 import { BannerObject } from "../types";
 import { useObjectProperties } from "../utils/hooks";
 import GroupListItem from "./UI/GroupListItem";
@@ -31,6 +32,7 @@ const Sidebar: React.FC = () => {
     selectObject,
     groupSelectedObjects,
     ungroupSelectedObject,
+    addJson,
   } = useBanner();
   const { updateObjectProperty } = useObjectProperties();
 
@@ -38,6 +40,7 @@ const Sidebar: React.FC = () => {
     isTextDialogOpen: false,
     isImageDialogOpen: false,
     isClearHistoryDialogOpen: false,
+    isJsonDialogOpen: false,
   });
 
   const [textContent, setTextContent] = useState("");
@@ -79,6 +82,10 @@ const Sidebar: React.FC = () => {
       );
     }
     closeNameDialog();
+  };
+
+  const handleLoadJson = (jsonData: BannerObject[]) => {
+    addJson(jsonData);
   };
 
   const handleAddText = () => {
@@ -198,6 +205,12 @@ const Sidebar: React.FC = () => {
         onClear={handleClearHistory}
       />
 
+      <JSONDialog
+        open={dialogState.isJsonDialogOpen}
+        onClose={() => closeDialog("isJsonDialogOpen")}
+        onLoad={handleLoadJson}
+      />
+
       <Typography variant="h6" sx={{ marginTop: "20px" }}>
         Список об'єктів
       </Typography>
@@ -290,6 +303,13 @@ const Sidebar: React.FC = () => {
 
       <ExportToServer />
       <ExportBanner />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => openDialog("isJsonDialogOpen")}
+      >
+        Завантажити JSON
+      </Button>
     </Stack>
   );
 };
