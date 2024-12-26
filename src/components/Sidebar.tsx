@@ -217,7 +217,7 @@ const Sidebar: React.FC = () => {
             ),
           },
           {
-            label: "Динамічні пропси",
+            label: "Змінні",
             content: <DynamicProps />,
           },
         ]}

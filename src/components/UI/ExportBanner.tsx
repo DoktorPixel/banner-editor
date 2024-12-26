@@ -33,13 +33,19 @@ const ExportBanner: React.FC = () => {
 
     const styleSheets = Array.from(document.styleSheets);
     let styles = "";
+
     styleSheets.forEach((styleSheet) => {
       try {
-        if (styleSheet.cssRules) {
-          Array.from(styleSheet.cssRules).forEach((rule) => {
+        const rules = styleSheet.cssRules || [];
+        Array.from(rules).forEach((rule) => {
+          if (
+            rule instanceof CSSStyleRule &&
+            (bannerAreaElement.matches(rule.selectorText) ||
+              bannerAreaElement.querySelector(rule.selectorText))
+          ) {
             styles += rule.cssText;
-          });
-        }
+          }
+        });
       } catch (error) {
         console.warn("Could not access stylesheet rules: ", error);
       }
