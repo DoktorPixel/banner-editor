@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { useBanner } from "../context/BannerContext";
-import {
-  Button,
-  Stack,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-} from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import TextDialog from "./UI/dialogs/TextDialog";
 import ImageDialog from "./UI/dialogs/ImageDialog";
 import ClearHistoryDialog from "./UI/dialogs/ClearHistoryDialog";
@@ -15,9 +8,13 @@ import NameDialog from "./UI/dialogs/NameDialog";
 import JSONDialog from "./UI/dialogs/JSONDialog";
 import { BannerObject } from "../types";
 import { useObjectProperties } from "../utils/hooks";
-import GroupListItem from "./UI/GroupListItem";
+
 import ExportToServer from "./UI/ExportToServer";
 import ExportBanner from "./UI/ExportBanner";
+import SidebarObjectList from "./UI/SidebarObjectList";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import DynamicProps from "./UI/DynamicProps";
+import TabPanelComponent from "./UI/TabPanelComponent";
 
 const Sidebar: React.FC = () => {
   const {
@@ -182,7 +179,6 @@ const Sidebar: React.FC = () => {
       >
         Очистити історію
       </Button>
-
       <TextDialog
         open={dialogState.isTextDialogOpen}
         textContent={textContent}
@@ -190,7 +186,6 @@ const Sidebar: React.FC = () => {
         onClose={() => closeDialog("isTextDialogOpen")}
         onAdd={handleAddText}
       />
-
       <ImageDialog
         open={dialogState.isImageDialogOpen}
         imageSrc={imageSrc}
@@ -198,69 +193,37 @@ const Sidebar: React.FC = () => {
         onClose={() => closeDialog("isImageDialogOpen")}
         onAdd={handleAddImage}
       />
-
       <ClearHistoryDialog
         open={dialogState.isClearHistoryDialogOpen}
         onClose={() => closeDialog("isClearHistoryDialogOpen")}
         onClear={handleClearHistory}
       />
-
       <JSONDialog
         open={dialogState.isJsonDialogOpen}
         onClose={() => closeDialog("isJsonDialogOpen")}
         onLoad={handleLoadJson}
       />
-
-      <Typography variant="h6" sx={{ marginTop: "20px" }}>
-        Список об'єктів
-      </Typography>
-      <List>
-        {objects.map((obj) =>
-          obj.type === "group" ? (
-            <GroupListItem
-              key={obj.id}
-              group={obj}
-              selectedObjectIds={selectedObjectIds}
-              selectObject={selectObject}
-              openNameDialog={openNameDialog}
-
-              // openChildDialog={(child) => {
-              //   setNameDialogState({
-              //     isNameDialogOpen: true,
-              //     currentName: child.name || "",
-              //     objectId: child.id,
-              //   });
-              // }}
-            />
-          ) : (
-            <ListItem
-              key={obj.id}
-              component="li"
-              onClick={(e) => selectObject(obj.id, e.ctrlKey || e.metaKey)}
-              onDoubleClick={() => openNameDialog(obj)}
-              sx={{
-                cursor: "pointer",
-                backgroundColor: selectedObjectIds.includes(obj.id)
-                  ? "lightgray"
-                  : "white",
-                "&:hover": { backgroundColor: "lightblue" },
-              }}
-            >
-              <ListItemText
-                primary={
-                  obj.name
-                    ? obj.name?.slice(0, 30)
-                    : obj.type === "text"
-                    ? obj.content?.slice(0, 30) || "Текст"
-                    : obj.type === "figure"
-                    ? "Фігура"
-                    : "Зображення"
-                }
+      <TabPanelComponent
+        tabs={[
+          {
+            label: "Список об'єктів",
+            content: (
+              <SidebarObjectList
+                objects={objects}
+                selectedObjectIds={selectedObjectIds}
+                selectObject={selectObject}
+                openNameDialog={openNameDialog}
               />
-            </ListItem>
-          )
-        )}
-      </List>
+            ),
+          },
+          {
+            label: "Динамічні пропси",
+            content: <DynamicProps />,
+          },
+        ]}
+      />
+
+      {/*  */}
 
       <NameDialog
         open={nameDialogState.isNameDialogOpen}
@@ -274,7 +237,6 @@ const Sidebar: React.FC = () => {
         onClose={closeNameDialog}
         onSave={saveName}
       />
-
       <Button
         variant="contained"
         color="primary"
@@ -300,7 +262,6 @@ const Sidebar: React.FC = () => {
       >
         Розгрупувати
       </Button>
-
       <ExportToServer />
       <ExportBanner />
       <Button
@@ -308,7 +269,7 @@ const Sidebar: React.FC = () => {
         color="primary"
         onClick={() => openDialog("isJsonDialogOpen")}
       >
-        Завантажити JSON
+        Завантажити JSON <CloudUploadIcon sx={{ marginLeft: "10px" }} />
       </Button>
     </Stack>
   );
