@@ -174,6 +174,10 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     const selectedObjects = objects.filter((obj) =>
       selectedObjectIds.includes(obj.id)
     );
+    const maxZIndex = objects.reduce(
+      (max, obj) => Math.max(max, obj.zIndex ?? 0),
+      0
+    );
 
     const newGroup: BannerObject = {
       id: Date.now(),
@@ -186,6 +190,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
       height:
         Math.max(...selectedObjects.map((obj) => obj.y + (obj.height || 0))) -
         Math.min(...selectedObjects.map((obj) => obj.y)),
+      zIndex: maxZIndex + 1,
       children: selectedObjects
         .filter((obj) => obj.type === "text")
         .map((obj) => ({
