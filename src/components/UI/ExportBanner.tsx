@@ -1,12 +1,14 @@
 import { useBanner } from "../../context/BannerContext";
 import { useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
+import Typography from "@mui/material/Typography";
 
 const ExportBanner: React.FC = () => {
   const { clearSelection, clearChildSelection } = useBanner();
   const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
 
   const exportBannerToHTML = async () => {
     setIsLoading(true);
@@ -24,8 +26,8 @@ const ExportBanner: React.FC = () => {
       modeSwitchWrapper.remove();
     }
 
-    // const resizeHandles = bannerClone.querySelectorAll(".resize-handle");
-    // resizeHandles.forEach((handle) => handle.remove());
+    const resizeHandles = bannerClone.querySelectorAll(".resize-handle");
+    resizeHandles.forEach((handle) => handle.remove());
 
     const bannerHTML = bannerClone.outerHTML;
 
@@ -43,6 +45,13 @@ const ExportBanner: React.FC = () => {
       }
     });
 
+    // Add script content
+    // const scriptContent = `
+    //   <script>
+    //   </script>
+    // ${scriptContent}
+    // `;
+
     const fullHTML = `
         <!DOCTYPE html>
         <html lang="en">
@@ -52,7 +61,9 @@ const ExportBanner: React.FC = () => {
           <title>Exported Banner</title>
           <style>${styles}</style>
         </head>
-        <body>${bannerHTML}</body>
+        <body>
+        ${bannerHTML}       
+        </body>
         </html>
 
       `;
@@ -60,56 +71,71 @@ const ExportBanner: React.FC = () => {
     try {
       await navigator.clipboard.writeText(fullHTML);
       console.log("HTML скопійований у буфер обміну!");
+      setNotification("Дані успішно скопійовані в буфер обміну!");
     } catch (clipboardError) {
       console.error("Помилка при копіюванні в буфер обміну:", clipboardError);
-    }
-
-    try {
-      const response = await axios.post(
-        "https://example.com/api/upload",
-        fullHTML,
-        {
-          headers: {
-            "Content-Type": "text/html",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        console.log("Banner successfully exported!");
-      } else {
-        console.error(
-          "Failed to export banner. Server response:",
-          response.statusText
-        );
-      }
-    } catch (error) {
-      console.error("Error while exporting banner:", error);
-      alert("There was an error sending data.");
+      setNotification("Помилка при копіюванні в буфер обміну.");
     } finally {
+      setTimeout(() => setNotification(null), 2000);
       setIsLoading(false);
     }
+
+    // try {
+    //   const response = await axios.post(
+    //     "https://example.com/api/upload",
+    //     fullHTML,
+    //     {
+    //       headers: {
+    //         "Content-Type": "text/html",
+    //       },
+    //     }
+    //   );
+
+    //   if (response.status === 200) {
+    //     console.log("Banner successfully exported!");
+    //   } else {
+    //     console.error(
+    //       "Failed to export banner. Server response:",
+    //       response.statusText
+    //     );
+    //   }
+    // } catch (error) {
+    //   console.error("Error while exporting banner:", error);
+    //   alert("There was an error sending data.");
+    // }
   };
 
   return (
-    <LoadingButton
-      onClick={() => {
-        clearSelection();
-        clearChildSelection();
-        exportBannerToHTML();
-      }}
-      variant="contained"
-      color="primary"
-      loading={isLoading}
-    >
-      {isLoading ? (
-        "Отправка..."
-      ) : (
-        <>
-          Надіслати HTML <SendIcon sx={{ marginLeft: "10px" }} />
-        </>
+    <>
+      <LoadingButton
+        onClick={() => {
+          clearSelection();
+          clearChildSelection();
+          exportBannerToHTML();
+        }}
+        variant="contained"
+        color="primary"
+        loading={isLoading}
+      >
+        {isLoading ? (
+          "Отправка..."
+        ) : (
+          <>
+            Надіслати HTML <SendIcon sx={{ marginLeft: "10px" }} />
+          </>
+        )}
+      </LoadingButton>
+
+      {notification && (
+        <Typography
+          variant="body2"
+          color="success.main"
+          sx={{ fontWeight: "bold" }}
+        >
+          {notification}
+        </Typography>
       )}
-    </LoadingButton>
+    </>
   );
 };
 
