@@ -37,12 +37,17 @@ const TabPanelComponent: React.FC<TabPanelComponentProps> = ({ tabs }) => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Tabs value={activeTab} onChange={handleChange} sx={{ padding: "0px" }}>
+      <Tabs
+        value={activeTab}
+        onChange={handleChange}
+        centered
+        sx={{ padding: "0px" }}
+      >
         {tabs.map((tab, index) => (
           <Tab
             key={index}
             label={tab.label}
-            sx={{ padding: "0px 6px", fontSize: "12px" }}
+            sx={{ padding: "0px 6px", fontSize: "14px" }}
           />
         ))}
       </Tabs>

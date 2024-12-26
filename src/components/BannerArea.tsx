@@ -251,7 +251,7 @@ const BannerArea: React.FC = () => {
               >
                 {object.children?.map((child: BannerChild, index: number) => (
                   <p
-                    className={`banner-object-child ${
+                    className={`text-field banner-object-child ${
                       selectedChildId?.groupId === object.id &&
                       selectedChildId.childId === child.id
                         ? "selected"
@@ -328,6 +328,7 @@ const BannerArea: React.FC = () => {
             >
               {object.type === "text" ? (
                 <p
+                  className="text-field"
                   style={{
                     fontSize: object.fontSize,
                     color: object.color,
