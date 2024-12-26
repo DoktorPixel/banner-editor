@@ -37,6 +37,16 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     childId: number;
   } | null>(null);
 
+  //
+
+  const addJson = (jsonData: BannerObject[]) => {
+    if (!Array.isArray(jsonData)) {
+      console.error("Переданий JSON має бути масивом об'єктів.");
+      return;
+    }
+    updateHistory(jsonData);
+  };
+
   const selectChild = (groupId: number, childId: number) => {
     setSelectedChildId({ groupId, childId });
   };
@@ -267,6 +277,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         temporaryUpdates,
         setTemporaryUpdates,
         renderedObjects,
+        addJson,
       }}
     >
       {children}
