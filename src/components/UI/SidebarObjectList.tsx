@@ -16,7 +16,7 @@ const SidebarObjectList: React.FC<ObjectListProps> = ({
   openNameDialog,
 }) => {
   return (
-    <List>
+    <List sx={{ padding: "0px" }}>
       {objects.map((obj) =>
         obj.type === "group" ? (
           <GroupListItem

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useBanner } from "../context/BannerContext";
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import TextDialog from "./UI/dialogs/TextDialog";
 import ImageDialog from "./UI/dialogs/ImageDialog";
 import ClearHistoryDialog from "./UI/dialogs/ClearHistoryDialog";
@@ -13,6 +13,8 @@ import ExportToServer from "./UI/ExportToServer";
 import ExportBanner from "./UI/ExportBanner";
 import SidebarObjectList from "./UI/SidebarObjectList";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import DynamicProps from "./UI/DynamicProps";
+import TabPanelComponent from "./UI/TabPanelComponent";
 
 const Sidebar: React.FC = () => {
   const {
@@ -201,16 +203,27 @@ const Sidebar: React.FC = () => {
         onClose={() => closeDialog("isJsonDialogOpen")}
         onLoad={handleLoadJson}
       />
-
-      <Typography variant="h6" sx={{ marginTop: "20px" }}>
-        Список об'єктів
-      </Typography>
-      <SidebarObjectList
-        objects={objects}
-        selectedObjectIds={selectedObjectIds}
-        selectObject={selectObject}
-        openNameDialog={openNameDialog}
+      <TabPanelComponent
+        tabs={[
+          {
+            label: "Список об'єктів",
+            content: (
+              <SidebarObjectList
+                objects={objects}
+                selectedObjectIds={selectedObjectIds}
+                selectObject={selectObject}
+                openNameDialog={openNameDialog}
+              />
+            ),
+          },
+          {
+            label: "Динамічні пропси",
+            content: <DynamicProps />,
+          },
+        ]}
       />
+
+      {/*  */}
 
       <NameDialog
         open={nameDialogState.isNameDialogOpen}
