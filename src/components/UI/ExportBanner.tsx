@@ -1,5 +1,6 @@
-import { useBanner } from "../../context/BannerContext";
 import { useState } from "react";
+import { useBanner } from "../../context/BannerContext";
+import { useConfig } from "../../context/ConfigContext";
 // import axios from "axios";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
@@ -7,6 +8,7 @@ import Typography from "@mui/material/Typography";
 
 const ExportBanner: React.FC = () => {
   const { clearSelection, clearChildSelection } = useBanner();
+  const { config } = useConfig();
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
 
@@ -43,10 +45,17 @@ const ExportBanner: React.FC = () => {
         const matches = innerHTML.match(/{{(.*?)}}/);
         if (matches) {
           const variableName = matches[1];
+
+          const mappedValue =
+            config.find((item) => item.key === variableName)?.value ||
+            variableName;
+
           textField.innerHTML = innerHTML.replace(
             matches[0],
-            `<span class="${variableName}">${matches[0]}</span>`
+            `{{${mappedValue}}}`
           );
+          textField.classList.remove(variableName);
+          textField.classList.add(mappedValue);
         }
       });
 
@@ -76,44 +85,81 @@ const ExportBanner: React.FC = () => {
       }
     });
 
-    // Add script content
+    // script
     const scriptContent = `
-      <script>
-        window.onload = function () {
+    <script>
+      window.onload = function () {
 
-        const name = document.querySelector(".title");
-        if (props.title) {
+        const name = document.querySelector(".${
+          config.find((item) => item.key === "title")?.value || "undefined"
+        }");
+        if (props.${
+          config.find((item) => item.key === "title")?.value || "undefined"
+        }) {
           const maxLength = 60;
           const trimmedTitle =
-            props.title.length > maxLength
-              ? props.title.substring(0, maxLength) + "…"
-              : props.title;
+            props.${
+              config.find((item) => item.key === "title")?.value || "undefined"
+            }.length > maxLength
+              ? props.${
+                config.find((item) => item.key === "title")?.value ||
+                "undefined"
+              }.substring(0, maxLength) + "…"
+              : props.${
+                config.find((item) => item.key === "title")?.value ||
+                "undefined"
+              };
           name.textContent = trimmedTitle;
         }
-
-        let price = Math.floor(parseFloat(props.price.replace(" UAH", "")));
-        if (props.sale_price) {
-          let newPrice = Math.floor(
-            parseFloat(props.sale_price.replace(" UAH", ""))
+  
+        if (props.${
+          config.find((item) => item.key === "price")?.value || "undefined"
+        }) {
+          let price = Math.floor(
+            parseFloat(
+              props.${
+                config.find((item) => item.key === "price")?.value ||
+                "undefined"
+              }.replace(" UAH", "")
+            )
           );
-          let discount = Math.floor((newPrice / price - 1) * 100);
-
-          document.querySelector(".discount").textContent = discount + "%";
-          document.querySelector(".sale_price").textContent =
-            newPrice.toLocaleString("ru") + " грн";
-          document.querySelector(".price").textContent =
-            price.toLocaleString("ru") + " грн";
-        } else {
-          document.querySelector(".discount").style.display = "none";
-          document.querySelector(".price").style.display = "none";
-          document.querySelector(".sale_price").textContent =
-            price.toLocaleString("ru") + " грн";
+  
+          if (props.${
+            config.find((item) => item.key === "sale_price")?.value ||
+            "undefined"
+          }) {
+            let newPrice = Math.floor(
+              parseFloat(
+                props.${
+                  config.find((item) => item.key === "sale_price")?.value ||
+                  "undefined"
+                }.replace(" UAH", "")
+              )
+            );
+            let discount = Math.floor((newPrice / price - 1) * 100);
+  
+            document.querySelector(".discount").textContent = discount + "%";
+            document.querySelector(".${
+              config.find((item) => item.key === "sale_price")?.value ||
+              "undefined"
+            }").textContent = newPrice.toLocaleString("ru") + " грн";
+            document.querySelector(".${
+              config.find((item) => item.key === "price")?.value || "undefined"
+            }").textContent = price.toLocaleString("ru") + " грн";
+          } else {
+            document.querySelector(".discount").style.display = "none";
+            document.querySelector(".${
+              config.find((item) => item.key === "price")?.value || "undefined"
+            }").style.display = "none";
+            document.querySelector(".${
+              config.find((item) => item.key === "sale_price")?.value ||
+              "undefined"
+            }").textContent = price.toLocaleString("ru") + " грн";
+          }
         }
-
-       };
-      </script>
-
-    `;
+      };
+    </script>
+  `;
 
     const fullHTML = `
         <!DOCTYPE html>
@@ -125,8 +171,8 @@ const ExportBanner: React.FC = () => {
           <style>${styles}</style>
         </head>
         <body>
-        ${updatedHTML}  
-        ${scriptContent}     
+          ${updatedHTML}  
+          ${scriptContent}     
         </body>
         </html>
 
