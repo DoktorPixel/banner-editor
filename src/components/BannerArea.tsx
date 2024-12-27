@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import { useBanner } from "../context/BannerContext";
 import { useMode } from "../context/ModeContext";
 import { BannerChild, ResizeDirection } from "../types";
@@ -222,9 +222,8 @@ const BannerArea: React.FC = () => {
       {renderedObjects.map((object) => {
         if (object.type === "group") {
           return (
-            <>
+            <Fragment key={object.id}>
               <div
-                key={object.id}
                 style={{
                   position: "absolute",
                   left: object.x,
@@ -300,12 +299,12 @@ const BannerArea: React.FC = () => {
                   updateObject={updateObject}
                 />
               )}
-            </>
+            </Fragment>
           );
         }
 
         return (
-          <>
+          <Fragment key={object.id}>
             <div
               key={object.id}
               style={{
@@ -401,7 +400,7 @@ const BannerArea: React.FC = () => {
                 updateObject={updateObject}
               />
             )}
-          </>
+          </Fragment>
         );
       })}
       <div className="mode-switch-wrapper">

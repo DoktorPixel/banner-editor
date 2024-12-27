@@ -31,6 +31,31 @@ const ExportBanner: React.FC = () => {
 
     const bannerHTML = bannerClone.outerHTML;
 
+    const processTextFields = (html: string): string => {
+      const container = document.createElement("div");
+      container.innerHTML = html;
+
+      const textFields = container.querySelectorAll(".text-field");
+
+      textFields.forEach((textField) => {
+        const innerHTML = textField.innerHTML.trim();
+
+        const matches = innerHTML.match(/{{(.*?)}}/);
+        if (matches) {
+          const variableName = matches[1];
+          textField.innerHTML = innerHTML.replace(
+            matches[0],
+            `<span class="${variableName}">${matches[0]}</span>`
+          );
+        }
+      });
+
+      return container.innerHTML;
+    };
+
+    const updatedHTML = processTextFields(bannerHTML);
+
+    // styles
     const styleSheets = Array.from(document.styleSheets);
     let styles = "";
 
@@ -52,11 +77,43 @@ const ExportBanner: React.FC = () => {
     });
 
     // Add script content
-    // const scriptContent = `
-    //   <script>
-    //   </script>
-    // ${scriptContent}
-    // `;
+    const scriptContent = `
+      <script>
+        window.onload = function () {
+
+        const name = document.querySelector(".title");
+        if (props.title) {
+          const maxLength = 60;
+          const trimmedTitle =
+            props.title.length > maxLength
+              ? props.title.substring(0, maxLength) + "…"
+              : props.title;
+          name.textContent = trimmedTitle;
+        }
+
+        let price = Math.floor(parseFloat(props.price.replace(" UAH", "")));
+        if (props.sale_price) {
+          let newPrice = Math.floor(
+            parseFloat(props.sale_price.replace(" UAH", ""))
+          );
+          let discount = Math.floor((newPrice / price - 1) * 100);
+
+          document.querySelector(".discount").textContent = discount + "%";
+          document.querySelector(".sale_price").textContent =
+            newPrice.toLocaleString("ru") + " грн";
+          document.querySelector(".price").textContent =
+            price.toLocaleString("ru") + " грн";
+        } else {
+          document.querySelector(".discount").style.display = "none";
+          document.querySelector(".price").style.display = "none";
+          document.querySelector(".sale_price").textContent =
+            price.toLocaleString("ru") + " грн";
+        }
+
+       };
+      </script>
+
+    `;
 
     const fullHTML = `
         <!DOCTYPE html>
@@ -68,7 +125,8 @@ const ExportBanner: React.FC = () => {
           <style>${styles}</style>
         </head>
         <body>
-        ${bannerHTML}       
+        ${updatedHTML}  
+        ${scriptContent}     
         </body>
         </html>
 
