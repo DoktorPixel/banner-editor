@@ -1,4 +1,5 @@
 import { BannerProvider } from "./context/BannerContext";
+import { ConfigProvider } from "./context/ConfigContext";
 
 import Sidebar from "./components/Sidebar";
 import BannerArea from "./components/BannerArea";
@@ -11,11 +12,13 @@ const App: React.FC = () => {
   const { mode } = useMode();
   return (
     <BannerProvider>
-      <div className="app">
-        {mode === "dev" ? <Sidebar /> : <Instructions />}
-        <BannerArea key={mode} />
-        {mode === "dev" ? <ObjectProperties /> : <InsertingProps />}
-      </div>
+      <ConfigProvider>
+        <div className="app">
+          {mode === "dev" ? <Sidebar /> : <Instructions />}
+          <BannerArea key={mode} />
+          {mode === "dev" ? <ObjectProperties /> : <InsertingProps />}
+        </div>
+      </ConfigProvider>
     </BannerProvider>
   );
 };
