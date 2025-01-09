@@ -237,6 +237,26 @@ const BannerArea: React.FC = () => {
                   alignItems: object.alignItems,
                   gap: object.gap || "10px",
                   transform: `rotate(${object.rotate || 0}deg)`,
+                  //
+                  backgroundColor: object.backgroundColor,
+                  borderRadius: object.borderRadius,
+                  opacity: object.opacity,
+
+                  borderTopStyle: object.borderTopStyle,
+                  borderTopColor: object.borderTopColor,
+                  borderTopWidth: object.borderTopWidth,
+
+                  borderBottomStyle: object.borderBottomStyle,
+                  borderBottomColor: object.borderBottomColor,
+                  borderBottomWidth: object.borderBottomWidth,
+
+                  borderLeftStyle: object.borderLeftStyle,
+                  borderLeftColor: object.borderLeftColor,
+                  borderLeftWidth: object.borderLeftWidth,
+
+                  borderRightStyle: object.borderRightStyle,
+                  borderRightColor: object.borderRightColor,
+                  borderRightWidth: object.borderRightWidth,
                 }}
                 onMouseDown={(e) => handleMouseDown(object.id, e)}
                 onClick={(e) => {
