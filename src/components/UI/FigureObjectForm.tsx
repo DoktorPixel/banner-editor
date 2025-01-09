@@ -215,28 +215,13 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         margin="normal"
       />
       <TextField
-        label="Координата X"
-        type="number"
-        value={object.x || 0}
-        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата Y"
-        type="number"
-        value={object.y || 0}
-        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
         label="заокруглення (border-radius)"
         type="number"
         value={object.borderRadius || 0}
-        onChange={(e) =>
-          handleInputChange("borderRadius", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => {
+          const value = parseInt(e.target.value, 10);
+          handleInputChange("borderRadius", value >= 0 ? value : 0);
+        }}
         fullWidth
         margin="normal"
       />
