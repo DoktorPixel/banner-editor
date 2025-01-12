@@ -37,6 +37,7 @@ const DynamicProps: React.FC = () => {
           />
         </Box>
       ))}
+
       <Button variant="outlined" onClick={addNewProp}>
         додати змінну
       </Button>
