@@ -189,7 +189,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         margin="normal"
       />
       <FormControl fullWidth margin="normal">
-        <InputLabel>Тип відображення (Display)</InputLabel>
+        <InputLabel sx={{ top: "-7px" }}>Тип відображення (Display)</InputLabel>
         <Select
           value={object.display || "flex"}
           onChange={(e) => handleInputChange("display", e.target.value)}
@@ -200,7 +200,9 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
       </FormControl>
 
       <FormControl fullWidth margin="normal">
-        <InputLabel>Напрямок елементів (flexDirection)</InputLabel>
+        <InputLabel sx={{ top: "-7px" }}>
+          Напрямок елементів (flexDirection)
+        </InputLabel>
         <Select
           value={object.flexDirection || "row"}
           onChange={(e) => handleInputChange("flexDirection", e.target.value)}
@@ -211,7 +213,9 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
       </FormControl>
 
       <FormControl fullWidth margin="normal">
-        <InputLabel>Вирівнювання по горизонталі (justifyContent)</InputLabel>
+        <InputLabel sx={{ top: "-7px" }}>
+          Вирівнювання по горизонталі (justifyContent)
+        </InputLabel>
         <Select
           value={object.justifyContent || "center"}
           onChange={(e) => handleInputChange("justifyContent", e.target.value)}
@@ -229,7 +233,9 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
       </FormControl>
 
       <FormControl fullWidth margin="normal">
-        <InputLabel>Вирівнювання по вертикалі (alignItems)</InputLabel>
+        <InputLabel sx={{ top: "-7px" }}>
+          Вирівнювання по вертикалі (alignItems)
+        </InputLabel>
         <Select
           value={object.alignItems || "center"}
           onChange={(e) => handleInputChange("alignItems", e.target.value)}

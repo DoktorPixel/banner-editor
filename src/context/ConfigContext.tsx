@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from "react";
 interface ConfigItem {
   key: string;
   value: string;
+  function: string;
 }
 
 interface ConfigContextType {
@@ -16,9 +17,9 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [config, setConfig] = useState<ConfigItem[]>([
-    { key: "title", value: "title" },
-    { key: "sale_price", value: "sale_price" },
-    { key: "price", value: "price" },
+    { key: "price", value: "price", function: "price" },
+    { key: "sale_price", value: "sale_price", function: "sale_price" },
+    { key: "discount", value: "discount", function: "discount" },
   ]);
 
   return (

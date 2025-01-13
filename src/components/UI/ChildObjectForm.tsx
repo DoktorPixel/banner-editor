@@ -59,7 +59,7 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
         onChange={(font) => onChange("fontFamily", font)}
       />
       <FormControl fullWidth margin="normal">
-        <InputLabel>Товщина тексту</InputLabel>
+        <InputLabel sx={{ top: "-7px" }}>Товщина тексту</InputLabel>
         <Select
           name="fontWeight"
           value={String(object.fontWeight || "400")}
