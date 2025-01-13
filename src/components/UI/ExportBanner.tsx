@@ -45,7 +45,6 @@ const ExportBanner: React.FC = () => {
         const matches = innerHTML.match(/{{(.*?)}}/);
         if (matches) {
           const variableName = matches[1];
-
           const mappedValue =
             config.find((item) => item.key === variableName)?.value ||
             variableName;
@@ -89,74 +88,46 @@ const ExportBanner: React.FC = () => {
     const scriptContent = `
     <script>
       window.onload = function () {
+        const props = window.props || {};
+  
+        ${config
+          .map((item) => {
+            if (item.function === "price") {
+              return `
+                const priceElement = document.querySelector(".${item.value}");
+                if (props.${item.value}) {
+                  const price = Math.floor(parseFloat(props.${item.value}.replace(" UAH", "")));
+                  priceElement.textContent = price.toLocaleString("ru") + " грн";
+                }
+              `;
+            }
 
-        const name = document.querySelector(".${
-          config.find((item) => item.key === "title")?.value || "undefined"
-        }");
-        if (props.${
-          config.find((item) => item.key === "title")?.value || "undefined"
-        }) {
-          const maxLength = 60;
-          const trimmedTitle =
-            props.${
-              config.find((item) => item.key === "title")?.value || "undefined"
-            }.length > maxLength
-              ? props.${
-                config.find((item) => item.key === "title")?.value ||
-                "undefined"
-              }.substring(0, maxLength) + "…"
-              : props.${
-                config.find((item) => item.key === "title")?.value ||
-                "undefined"
-              };
-          name.textContent = trimmedTitle;
-        }
+            if (item.function === "sale_price") {
+              return `
+                const salePriceElement = document.querySelector(".${item.value}");
+                if (props.${item.value}) {
+                  const salePrice = Math.floor(parseFloat(props.${item.value}.replace(" UAH", "")));
+                  salePriceElement.textContent = salePrice.toLocaleString("ru") + " грн";
+                }
+              `;
+            }
+
+            if (item.function === "discount") {
+              return `
+                const discountElement = document.querySelector(".${item.value}");
+                const priceValue = props.price ? Math.floor(parseFloat(props.price.replace(" UAH", ""))) : null;
+                const salePriceValue = props.sale_price ? Math.floor(parseFloat(props.sale_price.replace(" UAH", ""))) : null;
   
-        if (props.${
-          config.find((item) => item.key === "price")?.value || "undefined"
-        }) {
-          let price = Math.floor(
-            parseFloat(
-              props.${
-                config.find((item) => item.key === "price")?.value ||
-                "undefined"
-              }.replace(" UAH", "")
-            )
-          );
-  
-          if (props.${
-            config.find((item) => item.key === "sale_price")?.value ||
-            "undefined"
-          }) {
-            let newPrice = Math.floor(
-              parseFloat(
-                props.${
-                  config.find((item) => item.key === "sale_price")?.value ||
-                  "undefined"
-                }.replace(" UAH", "")
-              )
-            );
-            let discount = Math.floor((newPrice / price - 1) * 100);
-  
-            document.querySelector(".discount").textContent = discount + "%";
-            document.querySelector(".${
-              config.find((item) => item.key === "sale_price")?.value ||
-              "undefined"
-            }").textContent = newPrice.toLocaleString("ru") + " грн";
-            document.querySelector(".${
-              config.find((item) => item.key === "price")?.value || "undefined"
-            }").textContent = price.toLocaleString("ru") + " грн";
-          } else {
-            document.querySelector(".discount").style.display = "none";
-            document.querySelector(".${
-              config.find((item) => item.key === "price")?.value || "undefined"
-            }").style.display = "none";
-            document.querySelector(".${
-              config.find((item) => item.key === "sale_price")?.value ||
-              "undefined"
-            }").textContent = price.toLocaleString("ru") + " грн";
-          }
-        }
+                if (priceValue && salePriceValue) {
+                  const discount = Math.floor(((priceValue - salePriceValue) / priceValue) * 100);
+                  discountElement.textContent = discount + "%";
+                }
+              `;
+            }
+
+            return "";
+          })
+          .join("\n")}
       };
     </script>
   `;

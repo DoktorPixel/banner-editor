@@ -84,7 +84,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         onChange={(font) => handleInputChange("fontFamily", font)}
       />
       <FormControl fullWidth margin="normal">
-        <InputLabel>Товщина тексту</InputLabel>
+        <InputLabel sx={{ top: "-7px" }}>Товщина тексту</InputLabel>
         <Select
           value={object.fontWeight || "400"}
           onChange={(e) => handleInputChange("fontWeight", e.target.value)}
@@ -119,7 +119,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
       />
 
       <FormControl fullWidth margin="normal">
-        <InputLabel>Ширина блоку</InputLabel>
+        <InputLabel sx={{ top: "-7px" }}>Ширина блоку</InputLabel>
         <Select
           value={object.autoWidth ? "auto" : "fixed"}
           onChange={(e) =>

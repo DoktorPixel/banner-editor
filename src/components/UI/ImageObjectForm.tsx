@@ -69,7 +69,9 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         margin="normal"
       />
       <FormControl fullWidth margin="normal">
-        <InputLabel>Підгонка картинки (Object Fit)</InputLabel>
+        <InputLabel sx={{ top: "-7px" }}>
+          Підгонка картинки (Object Fit)
+        </InputLabel>
         <Select
           value={object.objectFit || "fill"}
           onChange={(e) => handleInputChange("objectFit", e.target.value)}
