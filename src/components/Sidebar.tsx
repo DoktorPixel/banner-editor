@@ -108,10 +108,10 @@ const Sidebar: React.FC = () => {
       type: "image",
       x: 50,
       y: 50,
-      src, // Используем переданный src вместо imageSrc
+      src,
       name: "",
     });
-    setImageSrc(""); // Сбрасываем imageSrc
+    setImageSrc("");
     closeDialog("isImageDialogOpen");
   };
 
@@ -191,7 +191,7 @@ const Sidebar: React.FC = () => {
         imageSrc={imageSrc}
         onChange={(e) => setImageSrc(e.target.value)}
         onClose={() => closeDialog("isImageDialogOpen")}
-        onAdd={(src) => handleAddImage(src)} // Передаем значение src в handleAddImage
+        onAdd={(src) => handleAddImage(src)}
       />
 
       <ClearHistoryDialog

@@ -28,11 +28,23 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   const sendToBack = () => {
     const minZIndex = Math.min(...objects.map((obj) => obj.zIndex || 0));
     // zIndex>0
-    const newZIndex = Math.max(minZIndex - 1, 0);
+    // const newZIndex = Math.max(minZIndex - 1, 0);
+    const newZIndex = minZIndex - 1;
     updateObject(object.id, { zIndex: newZIndex });
     onClose();
   };
 
+  const stepForward = () => {
+    const currentZIndex = object.zIndex || 0;
+    updateObject(object.id, { zIndex: currentZIndex + 1 });
+    onClose();
+  };
+
+  const stepBackward = () => {
+    const currentZIndex = object.zIndex || 0;
+    updateObject(object.id, { zIndex: currentZIndex - 1 });
+    onClose();
+  };
   return (
     <div
       className="context-menu"
@@ -45,13 +57,25 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         onClick={sendToBack}
         style={{ padding: "4px 6px", fontSize: "14px" }}
       >
-        Вивести назад
+        на задній план
+      </Button>
+      <Button
+        onClick={stepBackward}
+        style={{ padding: "4px 6px", fontSize: "14px" }}
+      >
+        назад на один шар
+      </Button>
+      <Button
+        onClick={stepForward}
+        style={{ padding: "4px 6px", fontSize: "14px" }}
+      >
+        вперед на один шар
       </Button>
       <Button
         onClick={bringToFront}
         style={{ padding: "4px 6px", fontSize: "14px" }}
       >
-        Вивести вперед
+        на передній план
       </Button>
     </div>
   );

@@ -80,7 +80,6 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
           <MenuItem value="contain">Вписати (contain)</MenuItem>
           <MenuItem value="cover">Накрити (cover)</MenuItem>
           <MenuItem value="none">Без змін (none)</MenuItem>
-          <MenuItem value="scale-down">Зменшити (scale-down)</MenuItem>
         </Select>
       </FormControl>
       <TextField

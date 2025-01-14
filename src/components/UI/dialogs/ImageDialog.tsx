@@ -124,7 +124,14 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
             </IconButton>
           )}
         </Box>
-        <Box mt={2} sx={{ width: "98%" }}>
+        <Box
+          mt={2}
+          sx={{
+            width: "98%",
+            opacity: file ? 0.5 : 1,
+            pointerEvents: file ? "none" : "auto",
+          }}
+        >
           <Typography gutterBottom>
             Максимальна ширина (пікселі): {maxWidthOrHeight}
           </Typography>
