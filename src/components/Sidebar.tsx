@@ -102,16 +102,16 @@ const Sidebar: React.FC = () => {
     closeDialog("isTextDialogOpen");
   };
 
-  const handleAddImage = () => {
+  const handleAddImage = (src: string) => {
     addObject({
       id: Date.now(),
       type: "image",
       x: 50,
       y: 50,
-      src: imageSrc || "https://via.placeholder.com/300",
+      src, // Используем переданный src вместо imageSrc
       name: "",
     });
-    setImageSrc("");
+    setImageSrc(""); // Сбрасываем imageSrc
     closeDialog("isImageDialogOpen");
   };
 
@@ -191,8 +191,9 @@ const Sidebar: React.FC = () => {
         imageSrc={imageSrc}
         onChange={(e) => setImageSrc(e.target.value)}
         onClose={() => closeDialog("isImageDialogOpen")}
-        onAdd={handleAddImage}
+        onAdd={(src) => handleAddImage(src)} // Передаем значение src в handleAddImage
       />
+
       <ClearHistoryDialog
         open={dialogState.isClearHistoryDialogOpen}
         onClose={() => closeDialog("isClearHistoryDialogOpen")}

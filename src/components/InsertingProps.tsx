@@ -19,7 +19,7 @@ const InsertingProps: React.FC = () => {
       ? JSON.parse(savedPairs)
       : [
           { key: "title", value: "Назва продукту" },
-          { key: "img", value: "https://via.placeholder.com/300" },
+          { key: "img", value: "https://placehold.co/300" },
           { key: "price", value: "1000" },
         ];
   });
