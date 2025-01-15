@@ -6,6 +6,7 @@ import BannerArea from "./components/BannerArea";
 import ObjectProperties from "./components/ObjectProperties";
 import Instructions from "./components/Instructions";
 import InsertingProps from "./components/InsertingProps";
+import Header from "./components/Header";
 import { useMode } from "./context/ModeContext";
 
 const App: React.FC = () => {
@@ -13,6 +14,7 @@ const App: React.FC = () => {
   return (
     <BannerProvider>
       <ConfigProvider>
+        <Header />
         <div className="app">
           {mode === "dev" ? <Sidebar /> : <Instructions />}
           <BannerArea key={mode} />
