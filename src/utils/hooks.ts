@@ -110,3 +110,61 @@ export const useChildProperties = () => {
     clearChildSelection,
   };
 };
+
+// ZIndex Collision
+
+export const isCollision = (
+  objA: BannerObject,
+  objB: BannerObject
+): boolean => {
+  const objAWidth = objA.width ?? 0;
+  const objAHeight = objA.height ?? 0;
+  const objBWidth = objB.width ?? 0;
+  const objBHeight = objB.height ?? 0;
+
+  return !(
+    objA.x + objAWidth <= objB.x ||
+    objA.x >= objB.x + objBWidth ||
+    objA.y + objAHeight <= objB.y ||
+    objA.y >= objB.y + objBHeight
+  );
+};
+
+export const findCollidingObjects = (
+  currentObject: BannerObject,
+  allObjects: BannerObject[]
+): BannerObject[] => {
+  return allObjects.filter(
+    (obj) => obj.id !== currentObject.id && isCollision(currentObject, obj)
+  );
+};
+
+export const stepForwardWithCollision = (
+  object: BannerObject,
+  allObjects: BannerObject[],
+  updateObject: (id: number, updates: Partial<BannerObject>) => void
+) => {
+  const collidingObjects = findCollidingObjects(object, allObjects);
+
+  const maxZIndex = collidingObjects.reduce(
+    (max, obj) => (obj.zIndex ? Math.max(max, obj.zIndex) : max),
+    object.zIndex || 0
+  );
+
+  updateObject(object.id, { zIndex: maxZIndex + 1 });
+};
+
+export const stepBackwardWithCollision = (
+  object: BannerObject,
+  allObjects: BannerObject[],
+  updateObject: (id: number, updates: Partial<BannerObject>) => void
+) => {
+  const collidingObjects = findCollidingObjects(object, allObjects);
+
+  const minZIndex = collidingObjects.reduce(
+    (min, obj) => (obj.zIndex !== undefined ? Math.min(min, obj.zIndex) : min),
+    object.zIndex !== undefined ? object.zIndex : 0
+  );
+
+  updateObject(object.id, { zIndex: minZIndex - 1 });
+};
