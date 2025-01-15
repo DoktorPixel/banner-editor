@@ -1,6 +1,10 @@
 import { BannerObject } from "../../types";
 import "../../styles/components/ContextMenu.scss";
 import { Button } from "@mui/material";
+import {
+  stepForwardWithCollision,
+  stepBackwardWithCollision,
+} from "../../utils/hooks";
 
 interface ContextMenuProps {
   x: number;
@@ -34,17 +38,28 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
     onClose();
   };
 
+  // const stepForward = () => {
+  //   const currentZIndex = object.zIndex || 0;
+  //   updateObject(object.id, { zIndex: currentZIndex + 1 });
+  //   onClose();
+  // };
+
   const stepForward = () => {
-    const currentZIndex = object.zIndex || 0;
-    updateObject(object.id, { zIndex: currentZIndex + 1 });
+    stepForwardWithCollision(object, objects, updateObject);
     onClose();
   };
 
+  // const stepBackward = () => {
+  //   const currentZIndex = object.zIndex || 0;
+  //   updateObject(object.id, { zIndex: currentZIndex - 1 });
+  //   onClose();
+  // };
+
   const stepBackward = () => {
-    const currentZIndex = object.zIndex || 0;
-    updateObject(object.id, { zIndex: currentZIndex - 1 });
+    stepBackwardWithCollision(object, objects, updateObject);
     onClose();
   };
+
   return (
     <div
       className="context-menu"
@@ -54,28 +69,31 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
       }}
     >
       <Button
-        onClick={sendToBack}
-        style={{ padding: "4px 6px", fontSize: "14px" }}
-      >
-        на задній план
-      </Button>
-      <Button
-        onClick={stepBackward}
-        style={{ padding: "4px 6px", fontSize: "14px" }}
-      >
-        назад на один шар
-      </Button>
-      <Button
         onClick={stepForward}
         style={{ padding: "4px 6px", fontSize: "14px" }}
       >
-        вперед на один шар
+        перенести вперед
       </Button>
+
       <Button
         onClick={bringToFront}
         style={{ padding: "4px 6px", fontSize: "14px" }}
       >
         на передній план
+      </Button>
+
+      <Button
+        onClick={stepBackward}
+        style={{ padding: "4px 6px", fontSize: "14px" }}
+      >
+        перенести назад
+      </Button>
+
+      <Button
+        onClick={sendToBack}
+        style={{ padding: "4px 6px", fontSize: "14px" }}
+      >
+        на задній план
       </Button>
     </div>
   );
