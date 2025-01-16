@@ -77,7 +77,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 20px;
   height: 50px;
   position: relative;
   z-index: -106;
+}
+.project-name h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
 }

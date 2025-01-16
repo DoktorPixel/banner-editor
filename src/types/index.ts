@@ -102,6 +102,9 @@ export interface BannerContextProps {
   >;
   renderedObjects: BannerObject[];
   addJson: (jsonData: BannerObject[]) => void;
+  //
+  currentProjectName: string | null;
+  setCurrentProjectName: (name: string) => void;
 }
 
 export type ResizeDirection =

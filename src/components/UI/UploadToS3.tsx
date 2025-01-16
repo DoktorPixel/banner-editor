@@ -4,13 +4,20 @@ import { uploadToS3 } from "../../S3/s3Storage";
 import { useBanner } from "../../context/BannerContext";
 
 const UploadToS3Button: React.FC = () => {
-  const { objects } = useBanner();
+  const { objects, currentProjectName } = useBanner();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUpload = async () => {
-    const key = `banner-objects-${Date.now()}.json`;
+    if (!currentProjectName) {
+      alert(
+        "Назва проекту не задана! Спочатку створіть або завантажте проект."
+      );
+      return;
+    }
 
+    const key = `projects/${currentProjectName}.json`;
     setIsLoading(true);
+
     try {
       await uploadToS3(key, objects);
       alert(`Дані успішно завантажені в S3 під ключ: ${key}`);

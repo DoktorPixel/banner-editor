@@ -1,20 +1,25 @@
 import { BannerProvider } from "./context/BannerContext";
 import { ConfigProvider } from "./context/ConfigContext";
-
+import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import BannerArea from "./components/BannerArea";
 import ObjectProperties from "./components/ObjectProperties";
 import Instructions from "./components/Instructions";
 import InsertingProps from "./components/InsertingProps";
-import Header from "./components/Header";
 import { useMode } from "./context/ModeContext";
+import ProjectDialog from "./components/UI/dialogs/ProjectDialog";
 
 const App: React.FC = () => {
   const { mode } = useMode();
+  const [dialogOpen, setDialogOpen] = useState(true);
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
   return (
     <BannerProvider>
       <ConfigProvider>
-        <Header />
+        {dialogOpen && <ProjectDialog onClose={handleCloseDialog} />}
         <div className="app">
           {mode === "dev" ? <Sidebar /> : <Instructions />}
           <BannerArea key={mode} />
