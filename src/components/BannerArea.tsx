@@ -4,9 +4,9 @@ import { useMode } from "../context/ModeContext";
 import { BannerChild, ResizeDirection } from "../types";
 import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
 import ResizeHandles from "./UI/ResizeHandles";
-import Switch from "@mui/material/Switch";
 import ContextMenu from "./UI/ContextMenu";
 import { BannerObject } from "../types";
+import Header from "./Header";
 
 const BannerArea: React.FC = () => {
   const {
@@ -23,7 +23,7 @@ const BannerArea: React.FC = () => {
     setTemporaryUpdates,
     renderedObjects,
   } = useBanner();
-  const { mode, toggleMode } = useMode();
+  const { mode } = useMode();
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [offset, setOffset] = useState<{ x: number; y: number }>({
     x: 0,
@@ -208,179 +208,38 @@ const BannerArea: React.FC = () => {
   }, [selectedObjectIds, objects]);
 
   return (
-    <div
-      className="banner-area"
-      ref={bannerRef}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onClick={() => {
-        clearSelection();
-        clearChildSelection();
-        setContextMenu(null);
-      }}
-    >
-      {renderedObjects.map((object) => {
-        if (object.type === "group") {
-          return (
-            <Fragment key={object.id}>
-              <div
-                style={{
-                  position: "absolute",
-                  left: object.x,
-                  top: object.y,
-                  width: object.width,
-                  height: object.height,
-                  zIndex: object.zIndex,
-                  display: object.display || "flex",
-                  flexDirection: object.flexDirection,
-                  justifyContent: object.justifyContent,
-                  alignItems: object.alignItems,
-                  gap: object.gap || "10px",
-                  transform: `rotate(${object.rotate || 0}deg)`,
-                  //
-                  backgroundColor: object.backgroundColor,
-                  borderRadius: object.borderRadius,
-                  opacity: object.opacity,
-
-                  borderTopStyle: object.borderTopStyle,
-                  borderTopColor: object.borderTopColor,
-                  borderTopWidth: object.borderTopWidth,
-
-                  borderBottomStyle: object.borderBottomStyle,
-                  borderBottomColor: object.borderBottomColor,
-                  borderBottomWidth: object.borderBottomWidth,
-
-                  borderLeftStyle: object.borderLeftStyle,
-                  borderLeftColor: object.borderLeftColor,
-                  borderLeftWidth: object.borderLeftWidth,
-
-                  borderRightStyle: object.borderRightStyle,
-                  borderRightColor: object.borderRightColor,
-                  borderRightWidth: object.borderRightWidth,
-                }}
-                onMouseDown={(e) => handleMouseDown(object.id, e)}
-                onClick={(e) => {
-                  handleObjectClick(object.id, e);
-                  clearChildSelection();
-                }}
-                onContextMenu={(e) => handleContextMenu(e, object)}
-                className={`banner-object ${
-                  selectedObjectIds.includes(object.id) ? "selected" : ""
-                }`}
-              >
-                {object.children?.map((child: BannerChild, index: number) => (
-                  <p
-                    className={`text-field banner-object-child ${
-                      selectedChildId?.groupId === object.id &&
-                      selectedChildId.childId === child.id
-                        ? "selected"
-                        : ""
-                    }`}
-                    key={child.id || index}
-                    style={{
-                      // width: child.width,
-                      // height: child.height,
-                      fontSize: child.fontSize,
-                      color: child.color,
-                      fontFamily: child.fontFamily,
-                      fontWeight: child.fontWeight,
-                      fontStyle: child.fontStyle,
-                      // textTransform: child.textTransform,
-                      textDecoration: child.textDecoration,
-                      textAlign: child.textAlign,
-                      border:
-                        selectedChildId?.groupId === object.id &&
-                        selectedChildId.childId === child.id
-                          ? "1px solid blue"
-                          : "none",
-                    }}
-                    onDoubleClick={(e) =>
-                      handleChildClick(object.id, child.id, e)
-                    }
-                  >
-                    {child.type === "text" ? child.content : null}
-                  </p>
-                ))}
-
-                <ResizeHandles
-                  objectId={object.id}
-                  selectedObjectId={selectedObjectIds[0]}
-                  handleResizeMouseDown={handleResizeMouseDown}
-                />
-              </div>
-
-              {contextMenu && contextMenu.object?.id === object.id && (
-                <ContextMenu
-                  x={contextMenu.x}
-                  y={contextMenu.y}
-                  object={contextMenu.object}
-                  onClose={handleCloseContextMenu}
-                  objects={objects}
-                  updateObject={updateObject}
-                />
-              )}
-            </Fragment>
-          );
-        }
-
-        return (
-          <Fragment key={object.id}>
-            <div
-              key={object.id}
-              style={{
-                position: "absolute",
-                left: object.x,
-                top: object.y,
-                width: object.autoWidth ? "auto" : object.width,
-                height: object.height,
-                zIndex: object.zIndex,
-                cursor: "move",
-                overflow: object.autoWidth ? "visible" : "hidden",
-                transform: `rotate(${object.rotate || 0}deg)`,
-              }}
-              onMouseDown={(e) => handleMouseDown(object.id, e)}
-              onClick={(e) => handleObjectClick(object.id, e)}
-              onContextMenu={(e) => handleContextMenu(e, object)}
-              className={`banner-object ${
-                selectedObjectIds.includes(object.id) ? "selected" : ""
-              }`}
-            >
-              {object.type === "text" ? (
-                <p
-                  className="text-field"
-                  style={{
-                    fontSize: object.fontSize,
-                    color: object.color,
-                    fontFamily: object.fontFamily || "Poppins, sans-serif",
-                    fontWeight: object.fontWeight,
-                    fontStyle: object.fontStyle,
-                    // textTransform: object.textTransform,
-                    textDecoration: object.textDecoration,
-                    textAlign: object.textAlign,
-
-                    display: object.maxLines ? "-webkit-box" : "block",
-                    WebkitLineClamp: object.maxLines,
-                    WebkitBoxOrient: object.maxLines ? "vertical" : undefined,
-                    overflow: object.maxLines ? "hidden" : undefined,
-                    whiteSpace: object.autoWidth ? "nowrap" : "normal",
-                  }}
-                >
-                  {object.content}
-                </p>
-              ) : object.type === "image" ? (
-                <img
-                  src={object.src}
-                  alt="img"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: object.objectFit,
-                  }}
-                />
-              ) : object.type === "figure" ? (
+    <div className="banner-area-container">
+      <Header />
+      <div
+        className="banner-area"
+        ref={bannerRef}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onClick={() => {
+          clearSelection();
+          clearChildSelection();
+          setContextMenu(null);
+        }}
+      >
+        {renderedObjects.map((object) => {
+          if (object.type === "group") {
+            return (
+              <Fragment key={object.id}>
                 <div
-                  className="banner-figure"
                   style={{
+                    position: "absolute",
+                    left: object.x,
+                    top: object.y,
+                    width: object.width,
+                    height: object.height,
+                    zIndex: object.zIndex,
+                    display: object.display || "flex",
+                    flexDirection: object.flexDirection,
+                    justifyContent: object.justifyContent,
+                    alignItems: object.alignItems,
+                    gap: object.gap || "10px",
+                    transform: `rotate(${object.rotate || 0}deg)`,
+                    //
                     backgroundColor: object.backgroundColor,
                     borderRadius: object.borderRadius,
                     opacity: object.opacity,
@@ -401,35 +260,171 @@ const BannerArea: React.FC = () => {
                     borderRightColor: object.borderRightColor,
                     borderRightWidth: object.borderRightWidth,
                   }}
-                ></div>
-              ) : null}
+                  onMouseDown={(e) => handleMouseDown(object.id, e)}
+                  onClick={(e) => {
+                    handleObjectClick(object.id, e);
+                    clearChildSelection();
+                  }}
+                  onContextMenu={(e) => handleContextMenu(e, object)}
+                  className={`banner-object ${
+                    selectedObjectIds.includes(object.id) ? "selected" : ""
+                  }`}
+                >
+                  {object.children?.map((child: BannerChild, index: number) => (
+                    <p
+                      className={`text-field banner-object-child ${
+                        selectedChildId?.groupId === object.id &&
+                        selectedChildId.childId === child.id
+                          ? "selected"
+                          : ""
+                      }`}
+                      key={child.id || index}
+                      style={{
+                        // width: child.width,
+                        // height: child.height,
+                        fontSize: child.fontSize,
+                        color: child.color,
+                        fontFamily: child.fontFamily,
+                        fontWeight: child.fontWeight,
+                        fontStyle: child.fontStyle,
+                        // textTransform: child.textTransform,
+                        textDecoration: child.textDecoration,
+                        textAlign: child.textAlign,
+                        border:
+                          selectedChildId?.groupId === object.id &&
+                          selectedChildId.childId === child.id
+                            ? "1px solid blue"
+                            : "none",
+                      }}
+                      onDoubleClick={(e) =>
+                        handleChildClick(object.id, child.id, e)
+                      }
+                    >
+                      {child.type === "text" ? child.content : null}
+                    </p>
+                  ))}
 
-              <ResizeHandles
-                objectId={object.id}
-                selectedObjectId={selectedObjectIds[0]}
-                handleResizeMouseDown={handleResizeMouseDown}
-              />
-            </div>
-            {contextMenu && contextMenu.object?.id === object.id && (
-              <ContextMenu
-                x={contextMenu.x}
-                y={contextMenu.y}
-                object={contextMenu.object}
-                onClose={handleCloseContextMenu}
-                objects={objects}
-                updateObject={updateObject}
-              />
-            )}
-          </Fragment>
-        );
-      })}
-      <div className="mode-switch-wrapper">
-        <Switch
-          className="mode-switch"
-          checked={mode === "test"}
-          onChange={toggleMode}
-          inputProps={{ "aria-label": "Mode switch" }}
-        />
+                  <ResizeHandles
+                    objectId={object.id}
+                    selectedObjectId={selectedObjectIds[0]}
+                    handleResizeMouseDown={handleResizeMouseDown}
+                  />
+                </div>
+
+                {contextMenu && contextMenu.object?.id === object.id && (
+                  <ContextMenu
+                    x={contextMenu.x}
+                    y={contextMenu.y}
+                    object={contextMenu.object}
+                    onClose={handleCloseContextMenu}
+                    objects={objects}
+                    updateObject={updateObject}
+                  />
+                )}
+              </Fragment>
+            );
+          }
+
+          return (
+            <Fragment key={object.id}>
+              <div
+                key={object.id}
+                style={{
+                  position: "absolute",
+                  left: object.x,
+                  top: object.y,
+                  width: object.autoWidth ? "auto" : object.width,
+                  height: object.height,
+                  zIndex: object.zIndex,
+                  cursor: "move",
+                  overflow: object.autoWidth ? "visible" : "hidden",
+                  transform: `rotate(${object.rotate || 0}deg)`,
+                }}
+                onMouseDown={(e) => handleMouseDown(object.id, e)}
+                onClick={(e) => handleObjectClick(object.id, e)}
+                onContextMenu={(e) => handleContextMenu(e, object)}
+                className={`banner-object ${
+                  selectedObjectIds.includes(object.id) ? "selected" : ""
+                }`}
+              >
+                {object.type === "text" ? (
+                  <p
+                    className="text-field"
+                    style={{
+                      fontSize: object.fontSize,
+                      color: object.color,
+                      fontFamily: object.fontFamily || "Poppins, sans-serif",
+                      fontWeight: object.fontWeight,
+                      fontStyle: object.fontStyle,
+                      // textTransform: object.textTransform,
+                      textDecoration: object.textDecoration,
+                      textAlign: object.textAlign,
+
+                      display: object.maxLines ? "-webkit-box" : "block",
+                      WebkitLineClamp: object.maxLines,
+                      WebkitBoxOrient: object.maxLines ? "vertical" : undefined,
+                      overflow: object.maxLines ? "hidden" : undefined,
+                      whiteSpace: object.autoWidth ? "nowrap" : "normal",
+                    }}
+                  >
+                    {object.content}
+                  </p>
+                ) : object.type === "image" ? (
+                  <img
+                    src={object.src}
+                    alt="img"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: object.objectFit,
+                    }}
+                  />
+                ) : object.type === "figure" ? (
+                  <div
+                    className="banner-figure"
+                    style={{
+                      backgroundColor: object.backgroundColor,
+                      borderRadius: object.borderRadius,
+                      opacity: object.opacity,
+
+                      borderTopStyle: object.borderTopStyle,
+                      borderTopColor: object.borderTopColor,
+                      borderTopWidth: object.borderTopWidth,
+
+                      borderBottomStyle: object.borderBottomStyle,
+                      borderBottomColor: object.borderBottomColor,
+                      borderBottomWidth: object.borderBottomWidth,
+
+                      borderLeftStyle: object.borderLeftStyle,
+                      borderLeftColor: object.borderLeftColor,
+                      borderLeftWidth: object.borderLeftWidth,
+
+                      borderRightStyle: object.borderRightStyle,
+                      borderRightColor: object.borderRightColor,
+                      borderRightWidth: object.borderRightWidth,
+                    }}
+                  ></div>
+                ) : null}
+
+                <ResizeHandles
+                  objectId={object.id}
+                  selectedObjectId={selectedObjectIds[0]}
+                  handleResizeMouseDown={handleResizeMouseDown}
+                />
+              </div>
+              {contextMenu && contextMenu.object?.id === object.id && (
+                <ContextMenu
+                  x={contextMenu.x}
+                  y={contextMenu.y}
+                  object={contextMenu.object}
+                  onClose={handleCloseContextMenu}
+                  objects={objects}
+                  updateObject={updateObject}
+                />
+              )}
+            </Fragment>
+          );
+        })}
       </div>
     </div>
   );

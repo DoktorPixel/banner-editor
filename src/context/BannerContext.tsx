@@ -47,6 +47,12 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     updateHistory(jsonData);
   };
 
+  const [currentProjectName, setCurrentProjectName] = useState<string | null>(
+    () => {
+      return localStorage.getItem("currentProjectName") || null;
+    }
+  );
+
   const selectChild = (groupId: number, childId: number) => {
     setSelectedChildId({ groupId, childId });
   };
@@ -137,6 +143,14 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     localStorage.setItem("currentStep", currentStep.toString());
   }, [currentStep]);
+
+  useEffect(() => {
+    if (currentProjectName) {
+      localStorage.setItem("currentProjectName", currentProjectName);
+    } else {
+      localStorage.removeItem("currentProjectName");
+    }
+  }, [currentProjectName]);
 
   const undo = () => {
     if (canUndo) setCurrentStep((prev) => prev - 1);
@@ -283,6 +297,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         setTemporaryUpdates,
         renderedObjects,
         addJson,
+        currentProjectName,
+        setCurrentProjectName,
       }}
     >
       {children}

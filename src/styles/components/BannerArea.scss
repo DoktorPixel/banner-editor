@@ -9,6 +9,10 @@
   min-height: 1080px;
   z-index: -100;
 }
+.banner-area-container {
+  position: relative;
+  z-index: -100;
+}
 
 .object {
   position: absolute;
@@ -131,6 +135,6 @@
 .mode-switch-wrapper {
   z-index: 1000;
   position: absolute;
-  top: 0px;
+  top: 6px;
   right: 0px;
 }
