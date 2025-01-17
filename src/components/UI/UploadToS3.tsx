@@ -20,7 +20,7 @@ const UploadToS3Button: React.FC = () => {
 
     try {
       await uploadToS3(key, objects);
-      alert(`Дані успішно завантажені в S3 під ключ: ${key}`);
+      alert(`Дані ${currentProjectName} успішно завантажені в S3`);
     } catch (error) {
       console.error("Ошибка завантаження в S3:", error);
       alert("Ошибка завантаження даних в S3");

@@ -2,6 +2,7 @@ import {
   PutObjectCommand,
   GetObjectCommand,
   DeleteObjectCommand,
+  S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { s3Client } from "./s3Client";
 import { BannerObject } from "../types";
@@ -38,7 +39,11 @@ export const downloadFromS3 = async (
     const response = await s3Client.send(command);
     const body = await response.Body?.transformToString();
     return body ? JSON.parse(body) : null;
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof S3ServiceException && error.name === "NoSuchKey") {
+      return null;
+    }
+
     console.error("Помилка завантаження даних у S3:", error);
     return null;
   }
