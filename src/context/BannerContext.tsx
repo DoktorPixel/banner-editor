@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { BannerObject, BannerContextProps, BannerChild } from "../types";
 
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
@@ -129,11 +130,16 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     setCurrentStep(newHistory.length - 1);
   };
 
+  const navigate = useNavigate();
+
   const clearHistory = () => {
     setHistory([[]]);
     setCurrentStep(0);
+    setCurrentProjectName(null);
     localStorage.removeItem("bannerHistory");
     localStorage.removeItem("currentStep");
+    localStorage.removeItem("currentProjectName");
+    navigate("/");
   };
 
   useEffect(() => {
