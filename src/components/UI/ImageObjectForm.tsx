@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BannerObject } from "../../types";
 import {
   TextField,
@@ -5,7 +6,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Button,
 } from "@mui/material";
+import UpdateImageDialog from "./dialogs/UpdateImageDialog";
 
 interface ImageObjectFormProps {
   object: BannerObject;
@@ -16,6 +19,20 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
   object,
   onChange,
 }) => {
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleUpdateUrl = (newUrl: string) => {
+    onChange("src", newUrl);
+  };
+
   const handleInputChange = (
     key: keyof BannerObject,
     value: string | number
@@ -61,13 +78,32 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-      <TextField
-        label="URL изображения"
-        value={object.src || ""}
-        onChange={(e) => handleInputChange("src", e.target.value)}
-        fullWidth
-        margin="normal"
-      />
+      <div className="update-image-wrapper">
+        <TextField
+          label="URL изображения"
+          value={object.src || ""}
+          onChange={(e) => handleInputChange("src", e.target.value)}
+          fullWidth
+          margin="normal"
+          disabled
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleDialogOpen}
+          fullWidth
+          style={{
+            padding: "2px 8px",
+            fontSize: "11px",
+            height: "32px",
+            top: "3px",
+            lineHeight: "1.2",
+          }}
+        >
+          Оновити зображення
+        </Button>
+      </div>
+
       <FormControl fullWidth margin="normal">
         <InputLabel sx={{ top: "-7px" }}>
           Підгонка картинки (Object Fit)
@@ -101,6 +137,13 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         }
         fullWidth
         margin="normal"
+      />
+
+      <UpdateImageDialog
+        open={isDialogOpen}
+        initialUrl={object.src || ""}
+        onClose={handleDialogClose}
+        onUpdate={handleUpdateUrl}
       />
     </>
   );

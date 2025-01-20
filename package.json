@@ -25,6 +25,7 @@
     "react": "^18.3.1",
     "react-color": "^2.19.3",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^7.1.3",
     "sass": "^1.81.0",
     "webfontloader": "^1.6.28"
   },
