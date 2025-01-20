@@ -1,17 +1,24 @@
 import { useState } from "react";
-import { CircularProgress, Button } from "@mui/material";
+import { CircularProgress, Button, Snackbar, Alert } from "@mui/material";
 import { uploadToS3 } from "../../S3/s3Storage";
 import { useBanner } from "../../context/BannerContext";
 
 const UploadToS3Button: React.FC = () => {
   const { objects, currentProjectName } = useBanner();
   const [isLoading, setIsLoading] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >("info");
 
   const handleUpload = async () => {
     if (!currentProjectName) {
-      alert(
+      setSnackbarMessage(
         "Назва проекту не задана! Спочатку створіть або завантажте проект."
       );
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
       return;
     }
 
@@ -20,25 +27,51 @@ const UploadToS3Button: React.FC = () => {
 
     try {
       await uploadToS3(key, objects);
-      alert(`Дані ${currentProjectName} успішно завантажені в S3`);
+      setSnackbarMessage(`Дані ${currentProjectName} успішно завантажені в S3`);
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
     } catch (error) {
       console.error("Ошибка завантаження в S3:", error);
-      alert("Ошибка завантаження даних в S3");
+      setSnackbarMessage("Ошибка завантаження даних в S3");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   return (
-    <Button
-      onClick={handleUpload}
-      color="primary"
-      variant="contained"
-      disabled={isLoading}
-      startIcon={isLoading && <CircularProgress size={20} />}
-    >
-      {isLoading ? "Загрузка..." : "Відправити дані в S3"}
-    </Button>
+    <>
+      <Button
+        onClick={handleUpload}
+        color="primary"
+        variant="contained"
+        disabled={isLoading}
+        startIcon={isLoading && <CircularProgress size={20} />}
+      >
+        {isLoading ? "Загрузка..." : "Відправити дані в S3"}
+      </Button>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={300000}
+        onClose={handleCloseSnackbar}
+        sx={{
+          position: "absolute",
+          top: "23px!important",
+          left: "370px!important",
+          width: "500px",
+          textAlign: "center",
+        }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
