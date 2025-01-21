@@ -124,8 +124,8 @@ const UpdateImageDialog: React.FC<UpdateImageDialogProps> = ({
           mt={2}
           sx={{
             width: "98%",
-            opacity: file ? 0.5 : 1,
-            pointerEvents: file ? "none" : "auto",
+            opacity: file || preview ? 0.5 : 1,
+            pointerEvents: file || preview ? "none" : "auto",
           }}
         >
           <Typography gutterBottom>
