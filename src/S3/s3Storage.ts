@@ -17,6 +17,7 @@ export const uploadToS3 = async (key: string, data: object) => {
       Key: key,
       Body: JSON.stringify(data),
       ContentType: "application/json",
+      CacheControl: "no-cache",
     };
 
     await s3Client.send(new PutObjectCommand(params));
@@ -33,10 +34,12 @@ export const downloadFromS3 = async (
     const params = {
       Bucket: BUCKET_NAME,
       Key: key,
+      CacheControl: "no-cache",
     };
 
     const command = new GetObjectCommand(params);
     const response = await s3Client.send(command);
+
     const body = await response.Body?.transformToString();
     return body ? JSON.parse(body) : null;
   } catch (error: unknown) {
