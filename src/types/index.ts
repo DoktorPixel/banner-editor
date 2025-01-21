@@ -83,6 +83,7 @@ export interface BannerContextProps {
   selectObject: (id: number, toggle?: boolean) => void;
   clearSelection: () => void;
   clearHistory: () => void;
+  clearProject: () => void;
   groupSelectedObjects: () => void;
   ungroupSelectedObject: () => void;
 

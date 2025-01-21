@@ -57,7 +57,7 @@ const UploadToS3Button: React.FC = () => {
       </Button>
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={300000}
+        autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         sx={{
           position: "absolute",
