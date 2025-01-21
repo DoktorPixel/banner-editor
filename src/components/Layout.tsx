@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBanner } from "../context/BannerContext";
 import { useMode } from "../context/ModeContext";
@@ -12,7 +12,7 @@ import ProjectDialog from "./UI/dialogs/ProjectDialog";
 const Layout: React.FC = () => {
   const { mode } = useMode();
   const { currentProjectName } = useBanner();
-  const [dialogOpen, setDialogOpen] = useState(true);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,13 +24,9 @@ const Layout: React.FC = () => {
     }
   }, [currentProjectName, navigate]);
 
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-  };
-
   return (
     <>
-      {dialogOpen && <ProjectDialog onClose={handleCloseDialog} />}
+      {!currentProjectName && <ProjectDialog onClose={() => {}} />}
 
       <div className="app">
         {mode === "dev" ? <Sidebar /> : <Instructions />}

@@ -8,9 +8,8 @@ const App: React.FC = () => {
     <BannerProvider>
       <ConfigProvider>
         <Routes>
-          {/* Основной маршрут с параметром projectName */}
           <Route path="/project/:projectName" element={<Layout />} />
-          {/* Резервный маршрут */}
+
           <Route path="/" element={<Layout />} />
         </Routes>
       </ConfigProvider>

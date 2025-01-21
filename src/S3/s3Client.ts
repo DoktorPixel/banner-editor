@@ -1,9 +1,4 @@
 import { S3Client } from "@aws-sdk/client-s3";
-// import * as dotenv from "dotenv";
-// dotenv.config();
-// const REGION = process.env.AWS_REGION || "default-region";
-// const ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || "";
-// const SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY || "";
 
 const REGION = import.meta.env.VITE_AWS_REGION;
 const ACCESS_KEY_ID = import.meta.env.VITE_AWS_ACCESS_KEY_ID;

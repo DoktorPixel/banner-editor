@@ -135,6 +135,13 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const clearHistory = () => {
     setHistory([[]]);
     setCurrentStep(0);
+    localStorage.removeItem("bannerHistory");
+    localStorage.removeItem("currentStep");
+  };
+
+  const clearProject = () => {
+    setHistory([[]]);
+    setCurrentStep(0);
     setCurrentProjectName(null);
     localStorage.removeItem("bannerHistory");
     localStorage.removeItem("currentStep");
@@ -289,6 +296,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         selectObject,
         clearSelection,
         clearHistory,
+        clearProject,
         groupSelectedObjects,
         ungroupSelectedObject,
         //
