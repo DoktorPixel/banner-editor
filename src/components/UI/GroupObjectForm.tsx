@@ -9,6 +9,8 @@ import {
   TextField,
   Button,
   ButtonGroup,
+  FormControlLabel,
+  Switch,
 } from "@mui/material";
 import { BannerObject } from "../../types";
 import { MuiColorInput } from "mui-color-input";
@@ -22,7 +24,10 @@ import {
 
 interface TextObjectFormProps {
   object: BannerObject;
-  onChange: (key: keyof BannerObject, value: string | number) => void;
+  onChange: (
+    key: keyof BannerObject,
+    value: string | number | undefined
+  ) => void;
 }
 
 export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
@@ -31,7 +36,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
 }) => {
   const handleInputChange = (
     key: keyof BannerObject,
-    value: string | number
+    value: string | number | undefined | "auto"
   ) => {
     onChange(key, value);
   };
@@ -45,6 +50,15 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
     left: true,
     right: true,
   });
+
+  const [isAutoWidth, setIsAutoWidth] = useState(false);
+
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const autoWidth = event.target.checked;
+    setIsAutoWidth(autoWidth);
+
+    onChange("width", autoWidth ? "auto" : 300);
+  };
 
   const toggleBorderSide = (side: "top" | "bottom" | "left" | "right") => {
     const isActive = borderSides[side];
@@ -149,19 +163,42 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
     });
   }, [object]);
 
+  useEffect(() => {
+    if (typeof object.width === "string") {
+      setIsAutoWidth(object.width === "auto");
+    } else {
+      setIsAutoWidth(false);
+    }
+  }, [object.width]);
+
   return (
     <Box>
       <Typography variant="h6">Налаштування групи</Typography>
-      <TextField
-        label="Ширина блоку (px)"
-        type="number"
-        value={Math.round(object.width || 300)}
-        onChange={(e) =>
-          handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
-        }
-        fullWidth
-        margin="normal"
-      />
+
+      <div className="auto-width">
+        <TextField
+          label="Ширина блоку (px)"
+          type="number"
+          value={isAutoWidth ? "" : Math.round(object.width as number)}
+          onChange={(e) =>
+            handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
+          }
+          fullWidth
+          margin="normal"
+          disabled={isAutoWidth}
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={isAutoWidth}
+              onChange={handleSwitchChange}
+              color="primary"
+            />
+          }
+          label="auto"
+        />
+      </div>
+
       <TextField
         label="Висота блоку (px)"
         type="number"
@@ -199,61 +236,69 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         </Select>
       </FormControl>
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel sx={{ top: "-7px" }}>
-          Напрямок елементів (flexDirection)
-        </InputLabel>
-        <Select
-          value={object.flexDirection || "row"}
-          onChange={(e) => handleInputChange("flexDirection", e.target.value)}
-        >
-          <MenuItem value="row">По рядках (row)</MenuItem>
-          <MenuItem value="column">По колонках (column)</MenuItem>
-        </Select>
-      </FormControl>
+      {object.display !== "block" && (
+        <>
+          <FormControl fullWidth margin="normal">
+            <InputLabel sx={{ top: "-7px" }}>
+              Напрямок елементів (flexDirection)
+            </InputLabel>
+            <Select
+              value={object.flexDirection || "row"}
+              onChange={(e) =>
+                handleInputChange("flexDirection", e.target.value)
+              }
+            >
+              <MenuItem value="row">По рядках (row)</MenuItem>
+              <MenuItem value="column">По колонках (column)</MenuItem>
+            </Select>
+          </FormControl>
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel sx={{ top: "-7px" }}>
-          Вирівнювання по горизонталі (justifyContent)
-        </InputLabel>
-        <Select
-          value={object.justifyContent || "center"}
-          onChange={(e) => handleInputChange("justifyContent", e.target.value)}
-        >
-          <MenuItem value="start">З початку (start)</MenuItem>
-          <MenuItem value="center">По центру (center)</MenuItem>
-          <MenuItem value="end">В кінці (end)</MenuItem>
-          <MenuItem value="space-between">
-            Між елементами (space-between)
-          </MenuItem>
-          <MenuItem value="space-around">
-            Рівномірно навколо (space-around)
-          </MenuItem>
-        </Select>
-      </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel sx={{ top: "-7px" }}>
+              Вирівнювання по горизонталі (justifyContent)
+            </InputLabel>
+            <Select
+              value={object.justifyContent || "center"}
+              onChange={(e) =>
+                handleInputChange("justifyContent", e.target.value)
+              }
+            >
+              <MenuItem value="start">З початку (start)</MenuItem>
+              <MenuItem value="center">По центру (center)</MenuItem>
+              <MenuItem value="end">В кінці (end)</MenuItem>
+              <MenuItem value="space-between">
+                Між елементами (space-between)
+              </MenuItem>
+              <MenuItem value="space-around">
+                Рівномірно навколо (space-around)
+              </MenuItem>
+            </Select>
+          </FormControl>
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel sx={{ top: "-7px" }}>
-          Вирівнювання по вертикалі (alignItems)
-        </InputLabel>
-        <Select
-          value={object.alignItems || "center"}
-          onChange={(e) => handleInputChange("alignItems", e.target.value)}
-        >
-          <MenuItem value="flex-start">Спочатку (flex-start)</MenuItem>
-          <MenuItem value="center">По центру (center)</MenuItem>
-          <MenuItem value="flex-end">Вкінці (flex-end)</MenuItem>
-        </Select>
-      </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel sx={{ top: "-7px" }}>
+              Вирівнювання по вертикалі (alignItems)
+            </InputLabel>
+            <Select
+              value={object.alignItems || "center"}
+              onChange={(e) => handleInputChange("alignItems", e.target.value)}
+            >
+              <MenuItem value="flex-start">Спочатку (flex-start)</MenuItem>
+              <MenuItem value="center">По центру (center)</MenuItem>
+              <MenuItem value="flex-end">Вкінці (flex-end)</MenuItem>
+            </Select>
+          </FormControl>
 
-      <TextField
-        label="Відступ між елементами (gap, px)"
-        type="number"
-        value={object.gap || 10}
-        onChange={(e) => handleInputChange("gap", parseInt(e.target.value))}
-        fullWidth
-        margin="normal"
-      />
+          <TextField
+            label="Відступ між елементами (gap, px)"
+            type="number"
+            value={object.gap || 10}
+            onChange={(e) => handleInputChange("gap", parseInt(e.target.value))}
+            fullWidth
+            margin="normal"
+          />
+        </>
+      )}
 
       {/* фігура */}
       <MuiColorInput
