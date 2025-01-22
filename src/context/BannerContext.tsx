@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { BannerObject, BannerContextProps, BannerChild } from "../types";
+import { BannerObject, BannerContextProps, BannerChild, Brand } from "../types";
 
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
 
@@ -37,6 +37,34 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     groupId: number;
     childId: number;
   } | null>(null);
+
+  //
+
+  const [brands, setBrands] = useState<Brand[]>([]);
+
+  const addBrand = (brand: Brand) => {
+    setBrands((prev) => {
+      // Проверяем, существует ли уже бренд с таким же именем и логотипом
+      const exists = prev.some(
+        (b) => b.name === brand.name && b.logoUrl === brand.logoUrl
+      );
+      return exists ? prev : [...prev, brand];
+    });
+  };
+
+  // Обновление бренда
+  const updateBrand = (oldName: string, updates: Partial<Brand>) => {
+    setBrands((prev) =>
+      prev.map((brand) =>
+        brand.name === oldName ? { ...brand, ...updates } : brand
+      )
+    );
+  };
+
+  // Удаление бренда
+  const deleteBrand = (name: string) => {
+    setBrands((prev) => prev.filter((brand) => brand.name !== name));
+  };
 
   //
 
@@ -313,6 +341,11 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         addJson,
         currentProjectName,
         setCurrentProjectName,
+        //
+        brands,
+        addBrand,
+        updateBrand,
+        deleteBrand,
       }}
     >
       {children}

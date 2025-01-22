@@ -106,6 +106,21 @@ export interface BannerContextProps {
   //
   currentProjectName: string | null;
   setCurrentProjectName: (name: string) => void;
+  //
+  brands?: Brand[];
+  addBrand?: (brand: Brand) => void;
+  updateBrand?: (oldName: string, updates: Partial<Brand>) => void;
+  deleteBrand?: (name: string) => void;
+}
+
+export interface Brand {
+  name?: string;
+  logoUrl?: string;
+}
+
+export interface ProjectData {
+  objects: BannerObject[];
+  brands?: Record<string, string>;
 }
 
 export type ResizeDirection =

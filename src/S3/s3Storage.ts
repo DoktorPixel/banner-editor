@@ -5,12 +5,12 @@ import {
   S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { s3Client } from "./s3Client";
-import { BannerObject } from "../types";
+import { ProjectData } from "../types";
 
 const BUCKET_NAME = "my-banner-editor-bucket";
 
 // Загрузка данных в S3
-export const uploadToS3 = async (key: string, data: object) => {
+export const uploadToS3 = async (key: string, data: ProjectData) => {
   try {
     const params = {
       Bucket: BUCKET_NAME,
@@ -21,15 +21,16 @@ export const uploadToS3 = async (key: string, data: object) => {
     };
 
     await s3Client.send(new PutObjectCommand(params));
+    console.log(`Данные успешно загружены в S3: ${key}`);
   } catch (error) {
-    console.error("Помилка завантаження даних у S3:", error);
+    console.error("Ошибка загрузки данных в S3:", error);
   }
 };
 
 // Загрузка данных из S3
 export const downloadFromS3 = async (
   key: string
-): Promise<BannerObject | null> => {
+): Promise<ProjectData | null> => {
   try {
     const params = {
       Bucket: BUCKET_NAME,
@@ -44,10 +45,11 @@ export const downloadFromS3 = async (
     return body ? JSON.parse(body) : null;
   } catch (error: unknown) {
     if (error instanceof S3ServiceException && error.name === "NoSuchKey") {
+      console.warn(`Файл не найден в S3: ${key}`);
       return null;
     }
 
-    console.error("Помилка завантаження даних у S3:", error);
+    console.error("Ошибка загрузки данных из S3:", error);
     return null;
   }
 };
@@ -61,7 +63,48 @@ export const deleteFromS3 = async (key: string) => {
     };
 
     await s3Client.send(new DeleteObjectCommand(params));
+    console.log(`Файл успешно удалён из S3: ${key}`);
   } catch (error) {
-    console.error("Помилка завантаження даних у S3:", error);
+    console.error("Ошибка удаления данных из S3:", error);
   }
 };
+
+// Добавление или обновление массива объектов `brands` в проекте
+export const updateBrandsInProject = async (
+  projectId: string,
+  brands: Record<string, string>
+) => {
+  const key = `projects/${projectId}.json`;
+  const project = await downloadFromS3(key);
+
+  if (!project) {
+    throw new Error("Проект не найден.");
+  }
+
+  const updatedProject: ProjectData = {
+    ...project,
+    brands: {
+      ...project.brands,
+      ...brands, // Обновление или добавление новых брендов
+    },
+  };
+
+  await uploadToS3(key, updatedProject);
+  console.log("Бренды успешно обновлены в проекте.");
+};
+
+// Пример использования
+// const exampleUsage = async () => {
+//   const projectId = "banner1";
+//   const newBrands = {
+//     Nike: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
+//     Adidas: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
+//   };
+
+//   try {
+//     await updateBrandsInProject(projectId, newBrands);
+//     console.log("Бренды добавлены в проект.");
+//   } catch (error) {
+//     console.error("Ошибка обновления брендов в проекте:", error);
+//   }
+// };
