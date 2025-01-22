@@ -74,16 +74,21 @@ const ObjectProperties: React.FC = () => {
                 updateObjectProperty(selectedObject.id, key, value)
               }
             />
-            <AutoLayoutForm
-              flexDirection={
-                (selectedObject.flexDirection as "row" | "column") || "row"
-              }
-              justifyContent={selectedObject.justifyContent || "center"}
-              alignItems={selectedObject.alignItems || "center"}
-              onChange={(changes) =>
-                updateObjectMultipleProperties(selectedObject.id, changes)
-              }
-            />
+
+            {selectedObject.display !== "block" && (
+              <>
+                <AutoLayoutForm
+                  flexDirection={
+                    (selectedObject.flexDirection as "row" | "column") || "row"
+                  }
+                  justifyContent={selectedObject.justifyContent || "center"}
+                  alignItems={selectedObject.alignItems || "center"}
+                  onChange={(changes) =>
+                    updateObjectMultipleProperties(selectedObject.id, changes)
+                  }
+                />
+              </>
+            )}
           </>
         ) : null
       ) : (
