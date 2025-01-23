@@ -5,7 +5,7 @@ import {
   S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { s3Client } from "./s3Client";
-import { ProjectData, Brand } from "../types";
+import { ProjectData, DynamicImg } from "../types";
 
 const BUCKET_NAME = "my-banner-editor-bucket";
 
@@ -69,9 +69,9 @@ export const deleteFromS3 = async (key: string) => {
   }
 };
 
-export const updateBrandsInProject = async (
+export const updateDynamicImgsInProject = async (
   projectId: string | null,
-  newBrands: Brand[]
+  newDynamicImgs: DynamicImg[]
 ) => {
   const key = `projects/${projectId}.json`;
   const project = await downloadFromS3(key);
@@ -81,20 +81,21 @@ export const updateBrandsInProject = async (
   }
 
   // Обновляем список брендов
-  const updatedBrands = [
-    ...(project.brands || []),
-    ...newBrands.filter(
-      (newBrand) =>
-        !project.brands?.some(
-          (brand) =>
-            brand.name === newBrand.name && brand.logoUrl === newBrand.logoUrl
+  const updatedDynamicImgs = [
+    ...(project.dynamicImgs || []),
+    ...newDynamicImgs.filter(
+      (newDynamicImg) =>
+        !project.dynamicImgs?.some(
+          (dynamicImg) =>
+            dynamicImg.name === newDynamicImg.name &&
+            dynamicImg.logoUrl === newDynamicImg.logoUrl
         )
     ),
   ];
 
   const updatedProject: ProjectData = {
     ...project,
-    brands: updatedBrands,
+    dynamicImgs: updatedDynamicImgs,
   };
 
   await uploadToS3(key, updatedProject);

@@ -5,22 +5,22 @@ import { useBanner } from "../../context/BannerContext";
 import { ProjectData } from "../../types";
 
 const UploadToS3Button: React.FC = () => {
-  const { objects, brands, currentProjectName } = useBanner();
+  const { objects, dynamicImgs, currentProjectName } = useBanner();
   const [isLoading, setIsLoading] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<
     "success" | "error" | "info" | "warning"
   >("info");
-  const [initialData, setInitialData] = useState({ objects, brands });
+  const [initialData, setInitialData] = useState({ objects, dynamicImgs });
 
   useEffect(() => {
-    setInitialData({ objects, brands });
+    setInitialData({ objects, dynamicImgs });
   }, [currentProjectName]);
 
   const hasChanges =
     JSON.stringify(objects) !== JSON.stringify(initialData.objects) ||
-    JSON.stringify(brands) !== JSON.stringify(initialData.brands);
+    JSON.stringify(dynamicImgs) !== JSON.stringify(initialData.dynamicImgs);
 
   const handleUpload = async () => {
     if (!currentProjectName) {
@@ -34,7 +34,7 @@ const UploadToS3Button: React.FC = () => {
 
     const key = `projects/${currentProjectName}.json`;
 
-    const projectData: ProjectData = { objects, brands };
+    const projectData: ProjectData = { objects, dynamicImgs };
 
     setIsLoading(true);
 
@@ -43,7 +43,7 @@ const UploadToS3Button: React.FC = () => {
       setSnackbarMessage(`Дані ${currentProjectName} успішно завантажені в S3`);
       setSnackbarSeverity("success");
       setOpenSnackbar(true);
-      setInitialData({ objects, brands });
+      setInitialData({ objects, dynamicImgs });
     } catch (error) {
       console.error("Ошибка завантаження в S3:", error);
       setSnackbarMessage("Ошибка завантаження даних в S3");

@@ -107,20 +107,20 @@ export interface BannerContextProps {
   currentProjectName: string | null;
   setCurrentProjectName: (name: string) => void;
   //
-  brands?: Brand[];
-  addBrand?: (brand: Brand) => void;
-  updateBrand?: (oldName: string, updates: Partial<Brand>) => void;
-  deleteBrand?: (name: string) => void;
+  dynamicImgs?: DynamicImg[];
+  addDynamicImg?: (dynamicImg: DynamicImg) => void;
+  updateDynamicImg?: (oldName: string, updates: Partial<DynamicImg>) => void;
+  deleteDynamicImg?: (name: string) => void;
 }
 
-export interface Brand {
+export interface DynamicImg {
   name?: string;
   logoUrl?: string;
 }
 
 export interface ProjectData {
   objects: BannerObject[];
-  brands?: Brand[];
+  dynamicImgs?: DynamicImg[];
 }
 
 export type ResizeDirection =

@@ -15,32 +15,37 @@ import {
   downloadFromS3,
   uploadToS3,
   //   deleteFromS3,
-  updateBrandsInProject,
+  updateDynamicImgsInProject,
 } from "../../../S3/s3Storage";
-import { Brand } from "../../../types";
+import { DynamicImg } from "../../../types";
 
-interface ManageBrandsModalProps {
+interface ManageDynamicImgsModalProps {
   open: boolean;
   onClose: () => void;
   projectId: string | null;
 }
 
-const ManageBrandsModal: React.FC<ManageBrandsModalProps> = ({
+const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
   open,
   onClose,
   projectId,
 }) => {
-  const [newBrand, setNewBrand] = useState<Brand>({ name: "", logoUrl: "" });
-  const [currentBrands, setCurrentBrands] = useState<Brand[]>([]);
+  const [newDynamicImg, setNewDynamicImg] = useState<DynamicImg>({
+    name: "",
+    logoUrl: "",
+  });
+  const [currentDynamicImgs, setCurrentDynamicImgs] = useState<DynamicImg[]>(
+    []
+  );
   const [loading, setLoading] = useState(false);
 
   // Загрузка брендов из S3 при открытии модального окна
   useEffect(() => {
-    const fetchBrands = async () => {
+    const fetchDynamicImgs = async () => {
       setLoading(true);
       try {
         const projectData = await downloadFromS3(`projects/${projectId}.json`);
-        setCurrentBrands(projectData?.brands || []);
+        setCurrentDynamicImgs(projectData?.dynamicImgs || []);
       } catch (error) {
         console.error("Ошибка при загрузке брендов:", error);
       } finally {
@@ -49,18 +54,18 @@ const ManageBrandsModal: React.FC<ManageBrandsModalProps> = ({
     };
 
     if (open) {
-      fetchBrands();
+      fetchDynamicImgs();
     }
   }, [open, projectId]);
 
-  const handleAddBrand = async () => {
-    if (newBrand.name && newBrand.logoUrl) {
-      const updatedBrands = [...currentBrands, newBrand];
-      setCurrentBrands(updatedBrands);
-      setNewBrand({ name: "", logoUrl: "" });
+  const handleAddDynamicImg = async () => {
+    if (newDynamicImg.name && newDynamicImg.logoUrl) {
+      const updatedDynamicImgs = [...currentDynamicImgs, newDynamicImg];
+      setCurrentDynamicImgs(updatedDynamicImgs);
+      setNewDynamicImg({ name: "", logoUrl: "" });
 
       try {
-        await updateBrandsInProject(projectId, [newBrand]);
+        await updateDynamicImgsInProject(projectId, [newDynamicImg]);
         console.log("Бренд успешно добавлен.");
       } catch (error) {
         console.error("Ошибка при добавлении бренда:", error);
@@ -68,10 +73,10 @@ const ManageBrandsModal: React.FC<ManageBrandsModalProps> = ({
     }
   };
 
-  const handleDeleteBrand = async (index: number) => {
-    // const brandToDelete = currentBrands[index];
-    const updatedBrands = currentBrands.filter((_, i) => i !== index);
-    setCurrentBrands(updatedBrands);
+  const handleDeleteDynamicImg = async (index: number) => {
+    // const dynamicImgToDelete = currentDynamicImgs[index];
+    const updatedDynamicImgs = currentDynamicImgs.filter((_, i) => i !== index);
+    setCurrentDynamicImgs(updatedDynamicImgs);
 
     try {
       // Обновляем список брендов в S3
@@ -79,7 +84,7 @@ const ManageBrandsModal: React.FC<ManageBrandsModalProps> = ({
       const projectData = await downloadFromS3(key);
 
       if (projectData) {
-        projectData.brands = updatedBrands;
+        projectData.dynamicImgs = updatedDynamicImgs;
         await uploadToS3(key, projectData);
         console.log("Бренд успешно удалён.");
       }
@@ -112,7 +117,7 @@ const ManageBrandsModal: React.FC<ManageBrandsModalProps> = ({
           <>
             <Box>
               <Grid container spacing={2}>
-                {currentBrands.map((brand, index) => (
+                {currentDynamicImgs.map((dynamicImg, index) => (
                   <Grid item xs={12} sm={6} md={4} key={index}>
                     <Box
                       sx={{
@@ -123,16 +128,16 @@ const ManageBrandsModal: React.FC<ManageBrandsModalProps> = ({
                       }}
                     >
                       <Avatar
-                        src={brand.logoUrl}
-                        alt={brand.name}
+                        src={dynamicImg.logoUrl}
+                        alt={dynamicImg.name}
                         sx={{ width: 80, height: 80 }}
                       />
                       <Typography variant="body2" noWrap>
-                        {brand.name}
+                        {dynamicImg.name}
                       </Typography>
                       <IconButton
                         color="error"
-                        onClick={() => handleDeleteBrand(index)}
+                        onClick={() => handleDeleteDynamicImg(index)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -153,17 +158,20 @@ const ManageBrandsModal: React.FC<ManageBrandsModalProps> = ({
               >
                 <TextField
                   label="Название бренда"
-                  value={newBrand.name}
+                  value={newDynamicImg.name}
                   onChange={(e) =>
-                    setNewBrand((prev) => ({ ...prev, name: e.target.value }))
+                    setNewDynamicImg((prev) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))
                   }
                   fullWidth
                 />
                 <TextField
                   label="URL логотипа"
-                  value={newBrand.logoUrl}
+                  value={newDynamicImg.logoUrl}
                   onChange={(e) =>
-                    setNewBrand((prev) => ({
+                    setNewDynamicImg((prev) => ({
                       ...prev,
                       logoUrl: e.target.value,
                     }))
@@ -172,8 +180,8 @@ const ManageBrandsModal: React.FC<ManageBrandsModalProps> = ({
                 />
                 <IconButton
                   color="primary"
-                  onClick={handleAddBrand}
-                  disabled={!newBrand.name || !newBrand.logoUrl}
+                  onClick={handleAddDynamicImg}
+                  disabled={!newDynamicImg.name || !newDynamicImg.logoUrl}
                 >
                   <AddCircleIcon />
                 </IconButton>
@@ -198,4 +206,4 @@ const ManageBrandsModal: React.FC<ManageBrandsModalProps> = ({
   );
 };
 
-export default ManageBrandsModal;
+export default ManageDynamicImgsModal;
