@@ -44,7 +44,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addBrand = (brand: Brand) => {
     setBrands((prev) => {
-      // Проверяем, существует ли уже бренд с таким же именем и логотипом
       const exists = prev.some(
         (b) => b.name === brand.name && b.logoUrl === brand.logoUrl
       );
@@ -52,7 +51,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  // Обновление бренда
   const updateBrand = (oldName: string, updates: Partial<Brand>) => {
     setBrands((prev) =>
       prev.map((brand) =>
@@ -61,7 +59,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
-  // Удаление бренда
   const deleteBrand = (name: string) => {
     setBrands((prev) => prev.filter((brand) => brand.name !== name));
   };

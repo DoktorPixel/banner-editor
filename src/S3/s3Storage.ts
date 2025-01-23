@@ -5,7 +5,7 @@ import {
   S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { s3Client } from "./s3Client";
-import { ProjectData } from "../types";
+import { ProjectData, Brand } from "../types";
 
 const BUCKET_NAME = "my-banner-editor-bucket";
 
@@ -42,7 +42,7 @@ export const downloadFromS3 = async (
     const response = await s3Client.send(command);
 
     const body = await response.Body?.transformToString();
-    return body ? JSON.parse(body) : null;
+    return body ? (JSON.parse(body) as ProjectData) : null;
   } catch (error: unknown) {
     if (error instanceof S3ServiceException && error.name === "NoSuchKey") {
       console.warn(`Файл не найден в S3: ${key}`);
@@ -69,10 +69,9 @@ export const deleteFromS3 = async (key: string) => {
   }
 };
 
-// Добавление или обновление массива объектов `brands` в проекте
 export const updateBrandsInProject = async (
   projectId: string,
-  brands: Record<string, string>
+  newBrands: Brand[]
 ) => {
   const key = `projects/${projectId}.json`;
   const project = await downloadFromS3(key);
@@ -81,30 +80,23 @@ export const updateBrandsInProject = async (
     throw new Error("Проект не найден.");
   }
 
+  // Обновляем список брендов
+  const updatedBrands = [
+    ...(project.brands || []),
+    ...newBrands.filter(
+      (newBrand) =>
+        !project.brands?.some(
+          (brand) =>
+            brand.name === newBrand.name && brand.logoUrl === newBrand.logoUrl
+        )
+    ),
+  ];
+
   const updatedProject: ProjectData = {
     ...project,
-    brands: {
-      ...project.brands,
-      ...brands, // Обновление или добавление новых брендов
-    },
+    brands: updatedBrands,
   };
 
   await uploadToS3(key, updatedProject);
   console.log("Бренды успешно обновлены в проекте.");
 };
-
-// Пример использования
-// const exampleUsage = async () => {
-//   const projectId = "banner1";
-//   const newBrands = {
-//     Nike: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
-//     Adidas: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
-//   };
-
-//   try {
-//     await updateBrandsInProject(projectId, newBrands);
-//     console.log("Бренды добавлены в проект.");
-//   } catch (error) {
-//     console.error("Ошибка обновления брендов в проекте:", error);
-//   }
-// };

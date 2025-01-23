@@ -5,7 +5,7 @@ import { useBanner } from "../../context/BannerContext";
 import { ProjectData } from "../../types";
 
 const UploadToS3Button: React.FC = () => {
-  const { objects, brands, currentProjectName } = useBanner(); // Предполагается, что brands теперь доступен из контекста
+  const { objects, brands, currentProjectName } = useBanner();
   const [isLoading, setIsLoading] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -34,16 +34,8 @@ const UploadToS3Button: React.FC = () => {
 
     const key = `projects/${currentProjectName}.json`;
 
-    const formattedBrands: Record<string, string> = brands
-      ? brands.reduce((acc, brand) => {
-          if (brand.name && brand.logoUrl) {
-            acc[brand.name] = brand.logoUrl; // Ключ — имя бренда, значение — URL логотипа
-          }
-          return acc;
-        }, {} as Record<string, string>)
-      : {};
+    const projectData: ProjectData = { objects, brands };
 
-    const projectData: ProjectData = { objects, brands: formattedBrands };
     setIsLoading(true);
 
     try {
@@ -51,7 +43,7 @@ const UploadToS3Button: React.FC = () => {
       setSnackbarMessage(`Дані ${currentProjectName} успішно завантажені в S3`);
       setSnackbarSeverity("success");
       setOpenSnackbar(true);
-      setInitialData({ objects, brands }); // Обновляем начальные данные
+      setInitialData({ objects, brands });
     } catch (error) {
       console.error("Ошибка завантаження в S3:", error);
       setSnackbarMessage("Ошибка завантаження даних в S3");

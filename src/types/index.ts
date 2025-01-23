@@ -120,7 +120,7 @@ export interface Brand {
 
 export interface ProjectData {
   objects: BannerObject[];
-  brands?: Record<string, string>;
+  brands?: Brand[];
 }
 
 export type ResizeDirection =

@@ -149,12 +149,16 @@ const Sidebar: React.FC = () => {
       >
         Додати зображення
       </Button>
+
       <Button
         variant="contained"
         color="primary"
         onClick={() => handleAddFigure()}
       >
         Додати фігуру
+      </Button>
+      <Button variant="contained" color="primary">
+        Завантажити динамічні лого
       </Button>
       <Button
         variant="outlined"
