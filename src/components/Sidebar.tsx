@@ -15,6 +15,7 @@ import SidebarObjectList from "./UI/SidebarObjectList";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DynamicProps from "./UI/DynamicProps";
 import TabPanelComponent from "./UI/TabPanelComponent";
+import ManageBrandsModal from "./UI/dialogs/ManageBrandsModal";
 
 const Sidebar: React.FC = () => {
   const {
@@ -30,8 +31,11 @@ const Sidebar: React.FC = () => {
     groupSelectedObjects,
     ungroupSelectedObject,
     addJson,
+    currentProjectName,
   } = useBanner();
   const { updateObjectProperty } = useObjectProperties();
+
+  const [isBrandsModalOpen, setIsBrandsModalOpen] = useState(false);
 
   const [dialogState, setDialogState] = useState({
     isTextDialogOpen: false,
@@ -157,7 +161,11 @@ const Sidebar: React.FC = () => {
       >
         Додати фігуру
       </Button>
-      <Button variant="contained" color="primary">
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setIsBrandsModalOpen(true)}
+      >
         Завантажити динамічні лого
       </Button>
       <Button
@@ -269,6 +277,11 @@ const Sidebar: React.FC = () => {
       </Button>
       <ExportToServer />
       <ExportBanner />
+      <ManageBrandsModal
+        open={isBrandsModalOpen}
+        onClose={() => setIsBrandsModalOpen(false)}
+        projectId={currentProjectName}
+      />
       <Button
         variant="contained"
         color="primary"

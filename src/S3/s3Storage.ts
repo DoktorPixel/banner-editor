@@ -70,7 +70,7 @@ export const deleteFromS3 = async (key: string) => {
 };
 
 export const updateBrandsInProject = async (
-  projectId: string,
+  projectId: string | null,
   newBrands: Brand[]
 ) => {
   const key = `projects/${projectId}.json`;
