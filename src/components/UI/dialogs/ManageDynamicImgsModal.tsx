@@ -39,7 +39,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
   );
   const [loading, setLoading] = useState(false);
 
-  // Загрузка брендов из S3 при открытии модального окна
+  // Загрузка картинок из S3 при открытии модального окна
   useEffect(() => {
     const fetchDynamicImgs = async () => {
       setLoading(true);
@@ -47,7 +47,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
         const projectData = await downloadFromS3(`projects/${projectId}.json`);
         setCurrentDynamicImgs(projectData?.dynamicImgs || []);
       } catch (error) {
-        console.error("Ошибка при загрузке брендов:", error);
+        console.error("Помилка під час завантаження зображень:", error);
       } finally {
         setLoading(false);
       }
@@ -66,9 +66,9 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
 
       try {
         await updateDynamicImgsInProject(projectId, [newDynamicImg]);
-        console.log("Бренд успешно добавлен.");
+        console.log("Зображення успішно додано.");
       } catch (error) {
-        console.error("Ошибка при добавлении бренда:", error);
+        console.error("Помилка при додаванні зображення:", error);
       }
     }
   };
@@ -79,17 +79,17 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
     setCurrentDynamicImgs(updatedDynamicImgs);
 
     try {
-      // Обновляем список брендов в S3
+      // Оновлюємо список зображень у S3
       const key = `projects/${projectId}.json`;
       const projectData = await downloadFromS3(key);
 
       if (projectData) {
         projectData.dynamicImgs = updatedDynamicImgs;
         await uploadToS3(key, projectData);
-        console.log("Бренд успешно удалён.");
+        console.log("Зображення успішно видалено.");
       }
     } catch (error) {
-      console.error("Ошибка при удалении бренда:", error);
+      console.error("Помилка при видаленні зображення:", error);
     }
   };
 
@@ -109,7 +109,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
         }}
       >
         <Typography variant="h6" gutterBottom>
-          Управління брендами
+          Управління зображеннями
         </Typography>
         {loading ? (
           <Typography>Загрузка...</Typography>
@@ -147,7 +147,9 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
               </Grid>
             </Box>
             <Box sx={{ mt: 4 }}>
-              <Typography variant="subtitle1">Додати новий бренд</Typography>
+              <Typography variant="subtitle1">
+                Додати нове зображення
+              </Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -157,7 +159,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
                 }}
               >
                 <TextField
-                  label="Название бренда"
+                  label="Название зображення"
                   value={newDynamicImg.name}
                   onChange={(e) =>
                     setNewDynamicImg((prev) => ({

@@ -80,7 +80,7 @@ export const updateDynamicImgsInProject = async (
     throw new Error("Проект не найден.");
   }
 
-  // Обновляем список брендов
+  // Обновляем список изображений
   const updatedDynamicImgs = [
     ...(project.dynamicImgs || []),
     ...newDynamicImgs.filter(
