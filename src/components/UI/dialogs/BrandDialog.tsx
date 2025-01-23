@@ -7,22 +7,26 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { Brand } from "../../../types";
+import { DynamicImg } from "../../../types";
 
-interface BrandDialogProps {
+interface DynamicImgDialogProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (brand: Brand) => void;
+  onAdd: (dynamicImg: DynamicImg) => void;
 }
 
-const BrandDialog: React.FC<BrandDialogProps> = ({ open, onClose, onAdd }) => {
-  const [brandName, setBrandName] = useState("");
+const DynamicImgDialog: React.FC<DynamicImgDialogProps> = ({
+  open,
+  onClose,
+  onAdd,
+}) => {
+  const [dynamicImgName, setDynamicImgName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
 
   const handleAdd = () => {
-    if (brandName && logoUrl) {
-      onAdd({ name: brandName, logoUrl });
-      setBrandName("");
+    if (dynamicImgName && logoUrl) {
+      onAdd({ name: dynamicImgName, logoUrl });
+      setDynamicImgName("");
       setLogoUrl("");
     }
   };
@@ -34,8 +38,8 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ open, onClose, onAdd }) => {
         <TextField
           fullWidth
           label="Назва бренду"
-          value={brandName}
-          onChange={(e) => setBrandName(e.target.value)}
+          value={dynamicImgName}
+          onChange={(e) => setDynamicImgName(e.target.value)}
           margin="normal"
         />
         <TextField
@@ -53,7 +57,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ open, onClose, onAdd }) => {
         <Button
           onClick={handleAdd}
           color="primary"
-          disabled={!brandName || !logoUrl}
+          disabled={!dynamicImgName || !logoUrl}
         >
           Додати
         </Button>
@@ -62,4 +66,4 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ open, onClose, onAdd }) => {
   );
 };
 
-export default BrandDialog;
+export default DynamicImgDialog;

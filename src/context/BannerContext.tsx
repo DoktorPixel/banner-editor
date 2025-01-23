@@ -1,6 +1,11 @@
 import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { BannerObject, BannerContextProps, BannerChild, Brand } from "../types";
+import {
+  BannerObject,
+  BannerContextProps,
+  BannerChild,
+  DynamicImg,
+} from "../types";
 
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
 
@@ -40,27 +45,29 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   //
 
-  const [brands, setBrands] = useState<Brand[]>([]);
+  const [dynamicImgs, setDynamicImgs] = useState<DynamicImg[]>([]);
 
-  const addBrand = (brand: Brand) => {
-    setBrands((prev) => {
+  const addDynamicImg = (dynamicImg: DynamicImg) => {
+    setDynamicImgs((prev) => {
       const exists = prev.some(
-        (b) => b.name === brand.name && b.logoUrl === brand.logoUrl
+        (b) => b.name === dynamicImg.name && b.logoUrl === dynamicImg.logoUrl
       );
-      return exists ? prev : [...prev, brand];
+      return exists ? prev : [...prev, dynamicImg];
     });
   };
 
-  const updateBrand = (oldName: string, updates: Partial<Brand>) => {
-    setBrands((prev) =>
-      prev.map((brand) =>
-        brand.name === oldName ? { ...brand, ...updates } : brand
+  const updateDynamicImg = (oldName: string, updates: Partial<DynamicImg>) => {
+    setDynamicImgs((prev) =>
+      prev.map((dynamicImg) =>
+        dynamicImg.name === oldName ? { ...dynamicImg, ...updates } : dynamicImg
       )
     );
   };
 
-  const deleteBrand = (name: string) => {
-    setBrands((prev) => prev.filter((brand) => brand.name !== name));
+  const deleteDynamicImg = (name: string) => {
+    setDynamicImgs((prev) =>
+      prev.filter((dynamicImg) => dynamicImg.name !== name)
+    );
   };
 
   //
@@ -339,10 +346,10 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         currentProjectName,
         setCurrentProjectName,
         //
-        brands,
-        addBrand,
-        updateBrand,
-        deleteBrand,
+        dynamicImgs,
+        addDynamicImg,
+        updateDynamicImg,
+        deleteDynamicImg,
       }}
     >
       {children}
