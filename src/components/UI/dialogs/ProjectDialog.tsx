@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { uploadToS3, downloadFromS3 } from "../../../S3/s3Storage";
 import { useBanner } from "../../../context/BannerContext";
-import { BannerObject } from "../../../types";
+import { ProjectData } from "../../../types";
 
 const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [projectName, setProjectName] = useState("");
@@ -62,7 +62,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         return;
       }
 
-      const initialData: BannerObject[] = [];
+      const initialData: ProjectData = { objects: [] };
       await uploadToS3(key, initialData);
       setCurrentProjectName(projectName);
       clearHistory();
@@ -90,8 +90,8 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       const key = `projects/${projectName}.json`;
       const data = await downloadFromS3(key);
 
-      if (Array.isArray(data)) {
-        addJson(data);
+      if (data && typeof data === "object" && Array.isArray(data.objects)) {
+        addJson(data.objects);
         setCurrentProjectName(projectName);
         setSnackbar({
           open: true,
