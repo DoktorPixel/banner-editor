@@ -99,5 +99,5 @@ export const updateDynamicImgsInProject = async (
   };
 
   await uploadToS3(key, updatedProject);
-  console.log("Бренды успешно обновлены в проекте.");
+  console.log("Зображення успішно оновлено у проекті.");
 };
