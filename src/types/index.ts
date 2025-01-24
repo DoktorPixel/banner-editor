@@ -30,6 +30,10 @@ export interface BannerObject {
   borderRadius?: React.CSSProperties["borderRadius"];
   backgroundColor?: string;
   opacity?: React.CSSProperties["opacity"];
+  paddingTop?: number | string;
+  paddingBottom?: number | string;
+  paddingLeft?: number | string;
+  paddingRight?: number | string;
 
   // borders
   borderTopStyle?: React.CSSProperties["borderTopStyle"];
