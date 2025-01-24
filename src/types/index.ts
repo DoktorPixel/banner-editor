@@ -30,6 +30,10 @@ export interface BannerObject {
   borderRadius?: React.CSSProperties["borderRadius"];
   backgroundColor?: string;
   opacity?: React.CSSProperties["opacity"];
+  paddingTop?: number | string;
+  paddingBottom?: number | string;
+  paddingLeft?: number | string;
+  paddingRight?: number | string;
 
   // borders
   borderTopStyle?: React.CSSProperties["borderTopStyle"];
@@ -108,6 +112,7 @@ export interface BannerContextProps {
   setCurrentProjectName: (name: string) => void;
   //
   dynamicImgs?: DynamicImg[];
+  setDynamicImgs?: React.Dispatch<React.SetStateAction<DynamicImg[]>>;
   addDynamicImg?: (dynamicImg: DynamicImg) => void;
   updateDynamicImg?: (oldName: string, updates: Partial<DynamicImg>) => void;
   deleteDynamicImg?: (name: string) => void;

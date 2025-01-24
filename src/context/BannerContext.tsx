@@ -65,9 +65,10 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const deleteDynamicImg = (name: string) => {
-    setDynamicImgs((prev) =>
-      prev.filter((dynamicImg) => dynamicImg.name !== name)
-    );
+    setDynamicImgs((prevImgs) => {
+      const updatedImgs = prevImgs.filter((img) => img.name !== name);
+      return updatedImgs;
+    });
   };
 
   //
@@ -347,6 +348,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         setCurrentProjectName,
         //
         dynamicImgs,
+        setDynamicImgs,
         addDynamicImg,
         updateDynamicImg,
         deleteDynamicImg,

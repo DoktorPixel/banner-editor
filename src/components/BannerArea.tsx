@@ -259,6 +259,12 @@ const BannerArea: React.FC = () => {
                     borderRightStyle: object.borderRightStyle,
                     borderRightColor: object.borderRightColor,
                     borderRightWidth: object.borderRightWidth,
+                    //
+                    paddingTop: object.paddingTop,
+                    paddingBottom: object.paddingBottom,
+                    paddingLeft: object.paddingLeft,
+                    paddingRight: object.paddingRight,
+                    //
                   }}
                   onMouseDown={(e) => handleMouseDown(object.id, e)}
                   onClick={(e) => {

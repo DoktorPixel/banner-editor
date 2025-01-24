@@ -326,6 +326,63 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
+
+      <div>
+        <InputLabel sx={{ marginBottom: "10px" }}>
+          Відступи (padding):
+        </InputLabel>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <TextField
+            label="Left"
+            type="number"
+            value={object.paddingLeft}
+            onChange={(e) =>
+              handleInputChange(
+                "paddingLeft",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Right"
+            type="number"
+            value={object.paddingRight}
+            onChange={(e) =>
+              handleInputChange(
+                "paddingRight",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Top"
+            type="number"
+            value={object.paddingTop}
+            onChange={(e) =>
+              handleInputChange(
+                "paddingTop",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Bottom"
+            type="number"
+            value={object.paddingBottom}
+            onChange={(e) =>
+              handleInputChange(
+                "paddingBottom",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+        </div>
+      </div>
+
       <TextField
         label="заокруглення (border-radius)"
         type="number"

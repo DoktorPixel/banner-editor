@@ -7,17 +7,17 @@ import {
   TextField,
   Grid,
   IconButton,
-  Avatar,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {
   downloadFromS3,
-  uploadToS3,
-  //   deleteFromS3,
   updateDynamicImgsInProject,
 } from "../../../S3/s3Storage";
+import { useBanner } from "../../../context/BannerContext";
 import { DynamicImg } from "../../../types";
+import DragAndDropFileInput2 from "./DragAndDropFileInput2";
+import ImageCompression from "browser-image-compression";
 
 interface ManageDynamicImgsModalProps {
   open: boolean;
@@ -30,24 +30,24 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
   onClose,
   projectId,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [newDynamicImg, setNewDynamicImg] = useState<DynamicImg>({
     name: "",
     logoUrl: "",
   });
-  const [currentDynamicImgs, setCurrentDynamicImgs] = useState<DynamicImg[]>(
-    []
-  );
-  const [loading, setLoading] = useState(false);
 
-  // Загрузка брендов из S3 при открытии модального окна
+  const { dynamicImgs, setDynamicImgs, addDynamicImg } = useBanner();
+
   useEffect(() => {
     const fetchDynamicImgs = async () => {
+      if (!projectId) return;
+
       setLoading(true);
       try {
         const projectData = await downloadFromS3(`projects/${projectId}.json`);
-        setCurrentDynamicImgs(projectData?.dynamicImgs || []);
+        setDynamicImgs?.(projectData?.dynamicImgs || []);
       } catch (error) {
-        console.error("Ошибка при загрузке брендов:", error);
+        console.error("Ошибка при загрузке изображений из S3:", error);
       } finally {
         setLoading(false);
       }
@@ -56,40 +56,57 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
     if (open) {
       fetchDynamicImgs();
     }
-  }, [open, projectId]);
+  }, [open, projectId, setDynamicImgs]);
 
   const handleAddDynamicImg = async () => {
-    if (newDynamicImg.name && newDynamicImg.logoUrl) {
-      const updatedDynamicImgs = [...currentDynamicImgs, newDynamicImg];
-      setCurrentDynamicImgs(updatedDynamicImgs);
-      setNewDynamicImg({ name: "", logoUrl: "" });
+    if (!projectId || !newDynamicImg.name || !newDynamicImg.logoUrl) return;
 
-      try {
-        await updateDynamicImgsInProject(projectId, [newDynamicImg]);
-        console.log("Бренд успешно добавлен.");
-      } catch (error) {
-        console.error("Ошибка при добавлении бренда:", error);
-      }
+    try {
+      await updateDynamicImgsInProject(projectId, [newDynamicImg]);
+      addDynamicImg?.(newDynamicImg);
+      setNewDynamicImg({ name: "", logoUrl: "" });
+    } catch (error) {
+      console.error("Ошибка при добавлении изображения:", error);
     }
   };
 
   const handleDeleteDynamicImg = async (index: number) => {
-    // const dynamicImgToDelete = currentDynamicImgs[index];
-    const updatedDynamicImgs = currentDynamicImgs.filter((_, i) => i !== index);
-    setCurrentDynamicImgs(updatedDynamicImgs);
+    if (!projectId) return;
+    let updatedDynamicImgs: DynamicImg[] = [];
+    if (dynamicImgs) {
+      updatedDynamicImgs = dynamicImgs.filter((_, i) => i !== index);
+    }
 
     try {
-      // Обновляем список брендов в S3
-      const key = `projects/${projectId}.json`;
-      const projectData = await downloadFromS3(key);
-
-      if (projectData) {
-        projectData.dynamicImgs = updatedDynamicImgs;
-        await uploadToS3(key, projectData);
-        console.log("Бренд успешно удалён.");
-      }
+      await updateDynamicImgsInProject(projectId, updatedDynamicImgs);
+      setDynamicImgs?.(updatedDynamicImgs);
     } catch (error) {
-      console.error("Ошибка при удалении бренда:", error);
+      console.error("Ошибка при удалении изображения:", error);
+    }
+  };
+
+  const handleFileChange = async (file: File | null) => {
+    if (file) {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 600,
+        useWebWorker: true,
+      };
+
+      try {
+        const compressedFile = await ImageCompression(file, options);
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          const base64 = reader.result as string;
+          setNewDynamicImg((prev) => ({ ...prev, logoUrl: base64 }));
+        };
+        reader.readAsDataURL(compressedFile);
+      } catch (error) {
+        console.error("Помилка при стисканні зображення:", error);
+      }
+    } else {
+      setNewDynamicImg((prev) => ({ ...prev, logoUrl: "" }));
     }
   };
 
@@ -101,15 +118,17 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 600,
+          width: 800,
           bgcolor: "background.paper",
           boxShadow: 24,
           p: 4,
           borderRadius: 2,
+          overflow: "auto",
+          maxHeight: "90vh",
         }}
       >
         <Typography variant="h6" gutterBottom>
-          Управління брендами
+          Управління зображеннями
         </Typography>
         {loading ? (
           <Typography>Загрузка...</Typography>
@@ -117,7 +136,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
           <>
             <Box>
               <Grid container spacing={2}>
-                {currentDynamicImgs.map((dynamicImg, index) => (
+                {dynamicImgs?.map((dynamicImg, index) => (
                   <Grid item xs={12} sm={6} md={4} key={index}>
                     <Box
                       sx={{
@@ -127,10 +146,14 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
                         gap: 1,
                       }}
                     >
-                      <Avatar
+                      <img
                         src={dynamicImg.logoUrl}
                         alt={dynamicImg.name}
-                        sx={{ width: 80, height: 80 }}
+                        style={{
+                          width: 100,
+                          height: 100,
+                          objectFit: "contain",
+                        }}
                       />
                       <Typography variant="body2" noWrap>
                         {dynamicImg.name}
@@ -147,7 +170,9 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
               </Grid>
             </Box>
             <Box sx={{ mt: 4 }}>
-              <Typography variant="subtitle1">Додати новий бренд</Typography>
+              <Typography variant="subtitle1">
+                Додати нове зображення
+              </Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -157,7 +182,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
                 }}
               >
                 <TextField
-                  label="Название бренда"
+                  label="Назва зображення"
                   value={newDynamicImg.name}
                   onChange={(e) =>
                     setNewDynamicImg((prev) => ({
@@ -168,7 +193,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
                   fullWidth
                 />
                 <TextField
-                  label="URL логотипа"
+                  label="URL логотипу"
                   value={newDynamicImg.logoUrl}
                   onChange={(e) =>
                     setNewDynamicImg((prev) => ({
@@ -178,6 +203,12 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
                   }
                   fullWidth
                 />
+                <DragAndDropFileInput2
+                  value={null}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                />
+
                 <IconButton
                   color="primary"
                   onClick={handleAddDynamicImg}
@@ -196,7 +227,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
               }}
             >
               <Button variant="outlined" onClick={onClose}>
-                Отмена
+                Закрити
               </Button>
             </Box>
           </>

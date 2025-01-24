@@ -80,7 +80,7 @@ export const updateDynamicImgsInProject = async (
     throw new Error("Проект не найден.");
   }
 
-  // Обновляем список брендов
+  // Обновляем список изображений
   const updatedDynamicImgs = [
     ...(project.dynamicImgs || []),
     ...newDynamicImgs.filter(
@@ -99,5 +99,5 @@ export const updateDynamicImgsInProject = async (
   };
 
   await uploadToS3(key, updatedProject);
-  console.log("Бренды успешно обновлены в проекте.");
+  console.log("Зображення успішно оновлено у проекті.");
 };
