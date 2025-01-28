@@ -16,11 +16,7 @@ const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
 export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [config, setConfig] = useState<ConfigItem[]>([
-    { key: "price", value: "price", function: "price" },
-    { key: "sale_price", value: "sale_price", function: "sale_price" },
-    { key: "discount", value: "discount", function: "discount" },
-  ]);
+  const [config, setConfig] = useState<ConfigItem[]>([]);
 
   return (
     <ConfigContext.Provider value={{ config, setConfig }}>

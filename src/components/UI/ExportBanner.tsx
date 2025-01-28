@@ -5,9 +5,10 @@ import { useConfig } from "../../context/ConfigContext";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
 import Typography from "@mui/material/Typography";
+import { DynamicImg } from "../../types";
 
 const ExportBanner: React.FC = () => {
-  const { clearSelection, clearChildSelection } = useBanner();
+  const { clearSelection, clearChildSelection, dynamicImgs } = useBanner();
   const { config } = useConfig();
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
@@ -33,12 +34,12 @@ const ExportBanner: React.FC = () => {
 
     const bannerHTML = bannerClone.outerHTML;
 
-    const processTextFields = (html: string): string => {
+    const processFields = (html: string): string => {
       const container = document.createElement("div");
       container.innerHTML = html;
 
+      // Text-field processing
       const textFields = container.querySelectorAll(".text-field");
-
       textFields.forEach((textField) => {
         const innerHTML = textField.innerHTML.trim();
 
@@ -58,10 +59,28 @@ const ExportBanner: React.FC = () => {
         }
       });
 
+      // Image-field processing
+      const imageFields = container.querySelectorAll(".image-field");
+      imageFields.forEach((imageField) => {
+        const src = imageField.getAttribute("src") || "";
+
+        const matches = src.match(/{{(.*?)}}/);
+        if (matches) {
+          const variableName = matches[1];
+          const mappedValue =
+            config.find((item) => item.key === variableName)?.value ||
+            variableName;
+
+          imageField.setAttribute("src", `{{${mappedValue}}}`);
+          imageField.classList.remove(variableName);
+          imageField.classList.add(mappedValue);
+        }
+      });
+
       return container.innerHTML;
     };
 
-    const updatedHTML = processTextFields(bannerHTML);
+    const updatedHTML = processFields(bannerHTML);
 
     // styles
     const styleSheets = Array.from(document.styleSheets);
@@ -84,9 +103,29 @@ const ExportBanner: React.FC = () => {
       }
     });
 
+    // Generate dynamicImgs object with dynamic name
+
+    function convertToDynamicImgsObject(
+      dynamicImgs: DynamicImg[]
+    ): Record<string, string> {
+      return dynamicImgs.reduce((acc, img) => {
+        if (img.name && img.logoUrl) {
+          acc[img.name] = img.logoUrl;
+        } else {
+          console.warn("Пропущено елемент із неприпустимими даними:", img);
+        }
+        return acc;
+      }, {} as Record<string, string>);
+    }
+
+    const dynamicImgsObject = convertToDynamicImgsObject(dynamicImgs || []);
+
     // script
     const scriptContent = `
     <script>
+
+      const dynamicImgsObject = ${JSON.stringify(dynamicImgsObject)};
+
       window.onload = function () {
         const props = window.props || {};
   
@@ -125,6 +164,17 @@ const ExportBanner: React.FC = () => {
               `;
             }
 
+            if (item.function === "dynamicImgs") {
+              return `
+                const ${item.value} = props.${item.value};
+                  if (${item.value}) {
+                    const imageElement = document.querySelector(".${item.value}");
+
+                    imageElement.src = dynamicImgsObject[${item.value}];
+                  }
+              `;
+            }
+
             return "";
           })
           .join("\n")}
@@ -151,7 +201,6 @@ const ExportBanner: React.FC = () => {
 
     try {
       await navigator.clipboard.writeText(fullHTML);
-      console.log("HTML скопійований у буфер обміну!");
       setNotification("Дані успішно скопійовані в буфер обміну!");
     } catch (clipboardError) {
       console.error("Помилка при копіюванні в буфер обміну:", clipboardError);

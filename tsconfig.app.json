@@ -8,7 +8,8 @@
     "jsx": "react-jsx",
     "incremental": true,
     "tsBuildInfoFile": "./.tsbuildinfo",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]

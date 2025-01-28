@@ -21,9 +21,8 @@ export const uploadToS3 = async (key: string, data: ProjectData) => {
     };
 
     await s3Client.send(new PutObjectCommand(params));
-    console.log(`Данные успешно загружены в S3: ${key}`);
   } catch (error) {
-    console.error("Ошибка загрузки данных в S3:", error);
+    console.error("Помилка завантаження даних S3:", error);
   }
 };
 
@@ -45,11 +44,11 @@ export const downloadFromS3 = async (
     return body ? (JSON.parse(body) as ProjectData) : null;
   } catch (error: unknown) {
     if (error instanceof S3ServiceException && error.name === "NoSuchKey") {
-      console.warn(`Файл не найден в S3: ${key}`);
+      console.warn(`Файл не знайдено в S3: ${key}`);
       return null;
     }
 
-    console.error("Ошибка загрузки данных из S3:", error);
+    console.error("Помилка завантаження даних із S3:", error);
     return null;
   }
 };
@@ -63,7 +62,6 @@ export const deleteFromS3 = async (key: string) => {
     };
 
     await s3Client.send(new DeleteObjectCommand(params));
-    console.log(`Файл успешно удалён из S3: ${key}`);
   } catch (error) {
     console.error("Ошибка удаления данных из S3:", error);
   }

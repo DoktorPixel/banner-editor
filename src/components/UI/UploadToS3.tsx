@@ -3,24 +3,31 @@ import { CircularProgress, Button, Snackbar, Alert } from "@mui/material";
 import { uploadToS3 } from "../../S3/s3Storage";
 import { useBanner } from "../../context/BannerContext";
 import { ProjectData } from "../../types";
+import { useConfig } from "../../context/ConfigContext";
 
 const UploadToS3Button: React.FC = () => {
   const { objects, dynamicImgs, currentProjectName } = useBanner();
+  const { config } = useConfig();
   const [isLoading, setIsLoading] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<
     "success" | "error" | "info" | "warning"
   >("info");
-  const [initialData, setInitialData] = useState({ objects, dynamicImgs });
+  const [initialData, setInitialData] = useState({
+    objects,
+    dynamicImgs,
+    config,
+  });
 
   useEffect(() => {
-    setInitialData({ objects, dynamicImgs });
+    setInitialData({ objects, dynamicImgs, config });
   }, [currentProjectName]);
 
   const hasChanges =
     JSON.stringify(objects) !== JSON.stringify(initialData.objects) ||
-    JSON.stringify(dynamicImgs) !== JSON.stringify(initialData.dynamicImgs);
+    JSON.stringify(dynamicImgs) !== JSON.stringify(initialData.dynamicImgs) ||
+    JSON.stringify(config) !== JSON.stringify(initialData.config);
 
   const handleUpload = async () => {
     if (!currentProjectName) {
@@ -34,7 +41,7 @@ const UploadToS3Button: React.FC = () => {
 
     const key = `projects/${currentProjectName}.json`;
 
-    const projectData: ProjectData = { objects, dynamicImgs };
+    const projectData: ProjectData = { objects, dynamicImgs, config };
 
     setIsLoading(true);
 
@@ -43,7 +50,7 @@ const UploadToS3Button: React.FC = () => {
       setSnackbarMessage(`Дані ${currentProjectName} успішно завантажені в S3`);
       setSnackbarSeverity("success");
       setOpenSnackbar(true);
-      setInitialData({ objects, dynamicImgs });
+      setInitialData({ objects, dynamicImgs, config });
     } catch (error) {
       console.error("Ошибка завантаження в S3:", error);
       setSnackbarMessage("Ошибка завантаження даних в S3");
