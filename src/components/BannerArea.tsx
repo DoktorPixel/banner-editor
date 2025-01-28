@@ -377,6 +377,7 @@ const BannerArea: React.FC = () => {
                   </p>
                 ) : object.type === "image" ? (
                   <img
+                    className="image-field"
                     src={object.src}
                     alt="img"
                     style={{

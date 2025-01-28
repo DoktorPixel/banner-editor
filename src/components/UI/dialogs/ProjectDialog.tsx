@@ -12,9 +12,11 @@ import {
 import { uploadToS3, downloadFromS3 } from "../../../S3/s3Storage";
 import { useBanner } from "../../../context/BannerContext";
 import { ProjectData } from "../../../types";
+import { useConfig } from "../../../context/ConfigContext";
 
 const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [projectName, setProjectName] = useState("");
+  const { setConfig } = useConfig();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [snackbar, setSnackbar] = useState<{
@@ -93,6 +95,9 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       if (data && typeof data === "object" && Array.isArray(data.objects)) {
         addJson(data.objects);
         setCurrentProjectName(projectName);
+        setConfig(
+          data.config || [{ key: "price", value: "price", function: "price" }]
+        );
         setSnackbar({
           open: true,
           message: "Проект завантажено успішно!",

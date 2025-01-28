@@ -126,6 +126,13 @@ export interface DynamicImg {
 export interface ProjectData {
   objects: BannerObject[];
   dynamicImgs?: DynamicImg[];
+  config?: ConfigItem[];
+}
+
+export interface ConfigItem {
+  key: string;
+  value: string;
+  function: string;
 }
 
 export type ResizeDirection =

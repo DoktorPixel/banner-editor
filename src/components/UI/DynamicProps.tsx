@@ -123,6 +123,14 @@ const DynamicProps: React.FC = () => {
                   <span>Discount</span>
                 </Tooltip>
               </MenuItem>
+              <MenuItem value="dynamicImgs">
+                <Tooltip
+                  title="додавання функції динамічних зображень"
+                  placement="right"
+                >
+                  <span>Dynamic Imgs</span>
+                </Tooltip>
+              </MenuItem>
             </Select>
           </FormControl>
           <TextField
