@@ -65,6 +65,22 @@ const UploadToS3Button: React.FC = () => {
     setOpenSnackbar(false);
   };
 
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (hasChanges) {
+        event.preventDefault();
+        event.returnValue =
+          "У вас є незбережені зміни. Ви впевнені, що хочете залишити сторінку?";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [hasChanges]);
+
   return (
     <>
       <Button

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { createContext, useContext, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   BannerObject,
@@ -12,19 +12,9 @@ const BannerContext = createContext<BannerContextProps | undefined>(undefined);
 export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [history, setHistory] = useState<BannerObject[][]>(() => {
-    const savedData = localStorage.getItem("bannerHistory");
-    return savedData ? JSON.parse(savedData) : [[]];
-  });
-
-  const [currentStep, setCurrentStep] = useState<number>(() => {
-    const savedStep = localStorage.getItem("currentStep");
-    return savedStep ? parseInt(savedStep, 10) : 0;
-  });
-
+  const [history, setHistory] = useState<BannerObject[][]>([[]]);
+  const [currentStep, setCurrentStep] = useState<number>(0);
   const [selectedObjectIds, setSelectedObjectIds] = useState<number[]>([]);
-
-  //
   const [temporaryUpdates, setTemporaryUpdates] = useState<{
     [key: number]: Partial<BannerObject>;
   }>({});
@@ -82,9 +72,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const [currentProjectName, setCurrentProjectName] = useState<string | null>(
-    () => {
-      return localStorage.getItem("currentProjectName") || null;
-    }
+    null
   );
 
   const selectChild = (groupId: number, childId: number) => {
@@ -168,35 +156,14 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const clearHistory = () => {
     setHistory([[]]);
     setCurrentStep(0);
-    localStorage.removeItem("bannerHistory");
-    localStorage.removeItem("currentStep");
   };
 
   const clearProject = () => {
     setHistory([[]]);
     setCurrentStep(0);
     setCurrentProjectName(null);
-    localStorage.removeItem("bannerHistory");
-    localStorage.removeItem("currentStep");
-    localStorage.removeItem("currentProjectName");
     navigate("/");
   };
-
-  useEffect(() => {
-    localStorage.setItem("bannerHistory", JSON.stringify(history));
-  }, [history]);
-
-  useEffect(() => {
-    localStorage.setItem("currentStep", currentStep.toString());
-  }, [currentStep]);
-
-  useEffect(() => {
-    if (currentProjectName) {
-      localStorage.setItem("currentProjectName", currentProjectName);
-    } else {
-      localStorage.removeItem("currentProjectName");
-    }
-  }, [currentProjectName]);
 
   const undo = () => {
     if (canUndo) setCurrentStep((prev) => prev - 1);
