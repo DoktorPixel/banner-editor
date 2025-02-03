@@ -159,7 +159,7 @@ const ExportBanner: React.FC = () => {
   
                 if (priceValue && salePriceValue) {
                   const discount = Math.floor(((priceValue - salePriceValue) / priceValue) * 100);
-                  discountElement.textContent = discount + "%";
+                  discountElement.textContent ="-" + discount + "%";
                 }
               `;
             }
