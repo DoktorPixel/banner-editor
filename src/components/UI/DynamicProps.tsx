@@ -27,9 +27,15 @@ const DynamicProps: React.FC = () => {
     setConfig(updatedConfig);
   };
 
-  const handleValueChange = (index: number, newValue: string) => {
+  const handleValue1Change = (index: number, newValue: string) => {
     const updatedConfig = [...config];
-    updatedConfig[index].value = newValue;
+    updatedConfig[index].value1 = newValue;
+    setConfig(updatedConfig);
+  };
+
+  const handleValue2Change = (index: number, newValue: string) => {
+    const updatedConfig = [...config];
+    updatedConfig[index].value2 = newValue;
     setConfig(updatedConfig);
   };
 
@@ -40,10 +46,7 @@ const DynamicProps: React.FC = () => {
   };
 
   const addNewProp = () => {
-    setConfig((prevConfig) => [
-      ...prevConfig,
-      { key: "", value: "", function: "" },
-    ]);
+    setConfig((prevConfig) => [...prevConfig, { key: "", function: "" }]);
   };
 
   const removeProp = (index: number) => {
@@ -82,13 +85,6 @@ const DynamicProps: React.FC = () => {
           >
             <CloseIcon />
           </IconButton>
-          <TextField
-            label="Key"
-            value={item.key}
-            onChange={(e) => handleKeyChange(index, e.target.value)}
-            // disabled
-            size="small"
-          />
           <FormControl fullWidth>
             <InputLabel>Function</InputLabel>
             <Select
@@ -100,32 +96,17 @@ const DynamicProps: React.FC = () => {
             >
               <MenuItem value="price">
                 <Tooltip
-                  title="додавання функції динамічного Price"
+                  title="Функція динамічних цін, 
+                  Key — ціна, Value 1 — ціна зі знижкою, Value 2 — знижка %"
                   placement="right"
                 >
                   <span>Price</span>
                 </Tooltip>
               </MenuItem>
-              <MenuItem value="sale_price">
-                <Tooltip
-                  title="додавання функції динамічного Sale price"
-                  placement="right"
-                >
-                  <span>Sale price</span>
-                </Tooltip>
-              </MenuItem>
 
-              <MenuItem value="discount">
-                <Tooltip
-                  title="додавання функції динамічного  Discount"
-                  placement="right"
-                >
-                  <span>Discount</span>
-                </Tooltip>
-              </MenuItem>
               <MenuItem value="dynamicImgs">
                 <Tooltip
-                  title="додавання функції динамічних зображень"
+                  title="Додавання функції динамічних зображень"
                   placement="right"
                 >
                   <span>Dynamic Imgs</span>
@@ -133,12 +114,32 @@ const DynamicProps: React.FC = () => {
               </MenuItem>
             </Select>
           </FormControl>
+
           <TextField
-            label="Value"
-            value={item.value}
-            onChange={(e) => handleValueChange(index, e.target.value)}
+            label="Key"
+            value={item.key}
+            onChange={(e) => handleKeyChange(index, e.target.value)}
+            // disabled
             size="small"
           />
+
+          {item.function === "price" && (
+            <TextField
+              label="Value 1"
+              value={item.value1}
+              onChange={(e) => handleValue1Change(index, e.target.value)}
+              size="small"
+            />
+          )}
+
+          {item.function === "price" && (
+            <TextField
+              label="Value 2"
+              value={item.value2 || ""}
+              onChange={(e) => handleValue2Change(index, e.target.value)}
+              size="small"
+            />
+          )}
         </Box>
       ))}
       <Button variant="outlined" onClick={addNewProp}>

@@ -1,10 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
-interface ConfigItem {
-  key: string;
-  value: string;
-  function: string;
-}
+import { ConfigItem } from "../types";
 
 interface ConfigContextType {
   config: ConfigItem[];
