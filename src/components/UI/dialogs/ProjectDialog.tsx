@@ -96,7 +96,14 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         addJson(data.objects);
         setCurrentProjectName(projectName);
         setConfig(
-          data.config || [{ key: "price", value: "price", function: "price" }]
+          data.config || [
+            {
+              function: "price",
+              key: "price",
+              value1: "sale_price",
+              value2: "discount",
+            },
+          ]
         );
         setSnackbar({
           open: true,
