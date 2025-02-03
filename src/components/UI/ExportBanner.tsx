@@ -34,46 +34,34 @@ const ExportBanner: React.FC = () => {
 
     const bannerHTML = bannerClone.outerHTML;
 
+    // text-field processing
     const processFields = (html: string): string => {
       const container = document.createElement("div");
       container.innerHTML = html;
 
-      // Text-field processing
       const textFields = container.querySelectorAll(".text-field");
-      textFields.forEach((textField) => {
-        const innerHTML = textField.innerHTML.trim();
 
-        const matches = innerHTML.match(/{{(.*?)}}/);
-        if (matches) {
-          const variableName = matches[1];
-          const mappedValue =
-            config.find((item) => item.key === variableName)?.value ||
-            variableName;
+      textFields.forEach((field) => {
+        if (field instanceof HTMLElement) {
+          const match = field.textContent?.match(/\{\{(\w+)\}\}/);
 
-          textField.innerHTML = innerHTML.replace(
-            matches[0],
-            `{{${mappedValue}}}`
-          );
-          textField.classList.remove(variableName);
-          textField.classList.add(mappedValue);
+          if (match) {
+            const dynamicClass = match[1];
+            field.classList.add(dynamicClass);
+          }
         }
       });
 
       // Image-field processing
       const imageFields = container.querySelectorAll(".image-field");
-      imageFields.forEach((imageField) => {
-        const src = imageField.getAttribute("src") || "";
+      imageFields.forEach((img) => {
+        if (img instanceof HTMLImageElement) {
+          const match = img.getAttribute("src")?.match(/\{\{(\w+)\}\}/);
 
-        const matches = src.match(/{{(.*?)}}/);
-        if (matches) {
-          const variableName = matches[1];
-          const mappedValue =
-            config.find((item) => item.key === variableName)?.value ||
-            variableName;
-
-          imageField.setAttribute("src", `{{${mappedValue}}}`);
-          imageField.classList.remove(variableName);
-          imageField.classList.add(mappedValue);
+          if (match) {
+            const dynamicClass = match[1];
+            img.classList.add(dynamicClass);
+          }
         }
       });
 
@@ -123,62 +111,78 @@ const ExportBanner: React.FC = () => {
     // script
     const scriptContent = `
     <script>
-
       const dynamicImgsObject = ${JSON.stringify(dynamicImgsObject)};
-
-      window.onload = function () {
+  
+      document.addEventListener("DOMContentLoaded", function () {
         const props = window.props || {};
+  
+        let price = 0;
+        let salePrice = 0;
   
         ${config
           .map((item) => {
-            if (item.function === "price") {
+            if (item.function === "price" && item.key) {
               return `
-                const priceElement = document.querySelector(".${item.value}");
-                if (props.${item.value}) {
-                  const price = Math.floor(parseFloat(props.${item.value}.replace(" UAH", "")));
+                const priceElement = document.querySelector(".${item.key}");
+                if (priceElement && props.${item.key}) {
+                  price = Math.floor(parseFloat(props.${
+                    item.key
+                  }.replace(" UAH", "")));
                   priceElement.textContent = price.toLocaleString("ru") + " грн";
                 }
-              `;
-            }
-
-            if (item.function === "sale_price") {
-              return `
-                const salePriceElement = document.querySelector(".${item.value}");
-                if (props.${item.value}) {
-                  const salePrice = Math.floor(parseFloat(props.${item.value}.replace(" UAH", "")));
-                  salePriceElement.textContent = salePrice.toLocaleString("ru") + " грн";
-                }
-              `;
-            }
-
-            if (item.function === "discount") {
-              return `
-                const discountElement = document.querySelector(".${item.value}");
-                const priceValue = props.price ? Math.floor(parseFloat(props.price.replace(" UAH", ""))) : null;
-                const salePriceValue = props.sale_price ? Math.floor(parseFloat(props.sale_price.replace(" UAH", ""))) : null;
   
-                if (priceValue && salePriceValue) {
-                  const discount = Math.floor(((priceValue - salePriceValue) / priceValue) * 100);
-                  discountElement.textContent ="-" + discount + "%";
+                ${
+                  item.value1
+                    ? `
+                  const salePriceElement = document.querySelector(".${item.value1}");
+                  if (salePriceElement && props.${item.value1}) {
+                    salePrice = Math.floor(parseFloat(props.${item.value1}.replace(" UAH", "")));
+                    salePriceElement.textContent = salePrice.toLocaleString("ru") + " грн";
+                  }`
+                    : ""
+                }
+  
+                ${
+                  item.value1 && item.value2
+                    ? `
+                  const discountElement = document.querySelector(".${item.value2}");
+                  if (discountElement && price > 0 && salePrice > 0) {
+                    const discount = Math.floor(((price - salePrice) / price) * 100);
+                    discountElement.textContent = "-" + discount + "%";
+                  }`
+                    : ""
                 }
               `;
             }
 
-            if (item.function === "dynamicImgs") {
+            if (item.function === "dynamicImgs" && item.key) {
               return `
-                const ${item.value} = props.${item.value};
-                  if (${item.value}) {
-                    const imageElement = document.querySelector(".${item.value}");
-
-                    imageElement.src = dynamicImgsObject[${item.value}];
-                  }
+              const brandName = props.${item.key};
+              if (brandName && dynamicImgsObject[brandName]) {
+                const imageElement = document.querySelector(".${item.key}");
+                if (imageElement) {
+                  imageElement.src = dynamicImgsObject[brandName];
+                }
+              }
               `;
             }
-
             return "";
+
+            // if (item.function === "dynamicImgs") {
+            //   return
+            //     const ${item.key} = props.${item.key};
+            //       if (${item.key}) {
+            //         const imageElement = document.querySelector(".${item.key}");
+
+            //         imageElement.src = dynamicImgsObject[${item.key}];
+            //       }
+            //   ;
+            // }
+
+            // return "";
           })
           .join("\n")}
-      };
+      });
     </script>
   `;
 

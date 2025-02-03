@@ -131,7 +131,8 @@ export interface ProjectData {
 
 export interface ConfigItem {
   key: string;
-  value: string;
+  value1?: string;
+  value2?: string;
   function: string;
 }
 
