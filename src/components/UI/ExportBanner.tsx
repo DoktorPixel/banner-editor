@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useBanner } from "../../context/BannerContext";
 import { useConfig } from "../../context/ConfigContext";
-// import axios from "axios";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
 import Typography from "@mui/material/Typography";
@@ -14,7 +13,10 @@ const ExportBanner: React.FC = () => {
   const [notification, setNotification] = useState<string | null>(null);
 
   const exportBannerToHTML = async () => {
+    await clearSelection();
+    await clearChildSelection();
     setIsLoading(true);
+
     const bannerAreaElement = document.querySelector(".banner-area");
     if (!bannerAreaElement) {
       console.error("BannerArea element not found.");
@@ -115,42 +117,43 @@ const ExportBanner: React.FC = () => {
   
       document.addEventListener("DOMContentLoaded", function () {
         const props = window.props || {};
-  
-        let price = 0;
-        let salePrice = 0;
-  
+
         ${config
           .map((item) => {
-            if (item.function === "price" && item.key) {
+            if (item.function === "format" && item.key) {
               return `
-                const priceElement = document.querySelector(".${item.key}");
-                if (priceElement && props.${item.key}) {
-                  price = Math.floor(parseFloat(props.${
-                    item.key
-                  }.replace(" UAH", "")));
-                  priceElement.textContent = price.toLocaleString("ru") + " грн";
+                const format_${item.key}= document.querySelector(".${item.key}");
+                if (format_${item.key} && props.${item.key}) {
+                  valueToFormat = Math.floor(parseFloat(props.${item.key}.replace(" UAH", "")));
+                  format_${item.key}.textContent = valueToFormat.toLocaleString("ru") + " грн";
                 }
+              `;
+            }
+
+            if (
+              item.function === "discount" &&
+              item.key &&
+              item.value1 &&
+              item.value2
+            ) {
+              return `
+                const priceElement = document.querySelector(".${item.value1}");
+                const salePriceElement = document.querySelector(".${item.value2}");
+                const discountElement = document.querySelector(".${item.key}");
+                const extractNumber = (str) => {
+                  const match = str.match(/[\\d\\s,.]+/); 
+                  if (!match) return NaN;
+                  return parseFloat(match[0].replace(/\\s/g, "").replace(",", ".")); 
+                };
+
+                if (priceElement && salePriceElement && discountElement) {
+              const price = extractNumber(priceElement.textContent);
+              const salePrice = extractNumber(salePriceElement.textContent);
   
-                ${
-                  item.value1
-                    ? `
-                  const salePriceElement = document.querySelector(".${item.value1}");
-                  if (salePriceElement && props.${item.value1}) {
-                    salePrice = Math.floor(parseFloat(props.${item.value1}.replace(" UAH", "")));
-                    salePriceElement.textContent = salePrice.toLocaleString("ru") + " грн";
-                  }`
-                    : ""
-                }
-  
-                ${
-                  item.value1 && item.value2
-                    ? `
-                  const discountElement = document.querySelector(".${item.value2}");
-                  if (discountElement && price > 0 && salePrice > 0) {
+                  if (!isNaN(price) && !isNaN(salePrice) && price > 0) {
                     const discount = Math.floor(((price - salePrice) / price) * 100);
                     discountElement.textContent = "-" + discount + "%";
-                  }`
-                    : ""
+                  }
                 }
               `;
             }
@@ -166,20 +169,41 @@ const ExportBanner: React.FC = () => {
               }
               `;
             }
-            return "";
 
-            // if (item.function === "dynamicImgs") {
-            //   return
-            //     const ${item.key} = props.${item.key};
-            //       if (${item.key}) {
-            //         const imageElement = document.querySelector(".${item.key}");
+            // if (item.function === "discount" && item.key) {
+            //   return `
+            //     const priceElement = document.querySelector(".${item.key}");
+            //     if (priceElement && props.${item.key}) {
+            //       price = Math.floor(parseFloat(props.${
+            //         item.key
+            //       }.replace(" UAH", "")));
+            //       priceElement.textContent = price.toLocaleString("ru") + " грн";
+            //     }
 
-            //         imageElement.src = dynamicImgsObject[${item.key}];
-            //       }
-            //   ;
+            //     ${
+            //       item.value1
+            //         ? `
+            //       const salePriceElement = document.querySelector(".${item.value1}");
+            //       if (salePriceElement && props.${item.value1}) {
+            //         salePrice = Math.floor(parseFloat(props.${item.value1}.replace(" UAH", "")));
+            //         salePriceElement.textContent = salePrice.toLocaleString("ru") + " грн";
+            //       }`
+            //         : ""
+            //     }
+
+            //     ${
+            //       item.value1 && item.value2
+            //         ? `
+            //       const discountElement = document.querySelector(".${item.value2}");
+            //       if (discountElement && price > 0 && salePrice > 0) {
+            //         const discount = Math.floor(((price - salePrice) / price) * 100);
+            //         discountElement.textContent = "-" + discount + "%";
+            //       }`
+            //         : ""
+            //     }
+            //   `;
             // }
-
-            // return "";
+            return "";
           })
           .join("\n")}
       });
@@ -213,30 +237,6 @@ const ExportBanner: React.FC = () => {
       setTimeout(() => setNotification(null), 2000);
       setIsLoading(false);
     }
-
-    // try {
-    //   const response = await axios.post(
-    //     "https://example.com/api/upload",
-    //     fullHTML,
-    //     {
-    //       headers: {
-    //         "Content-Type": "text/html",
-    //       },
-    //     }
-    //   );
-
-    //   if (response.status === 200) {
-    //     console.log("Banner successfully exported!");
-    //   } else {
-    //     console.error(
-    //       "Failed to export banner. Server response:",
-    //       response.statusText
-    //     );
-    //   }
-    // } catch (error) {
-    //   console.error("Error while exporting banner:", error);
-    //   alert("There was an error sending data.");
-    // }
   };
 
   return (

@@ -94,19 +94,23 @@ const DynamicProps: React.FC = () => {
               size="small"
               fullWidth
             >
-              <MenuItem value="price">
+              <MenuItem value="discount">
                 <Tooltip
-                  title="Функція динамічних цін, 
-                  Key — ціна, Value 1 — ціна зі знижкою, Value 2 — знижка %"
+                  title="Функція розрахунку знижки (discount)"
                   placement="right"
                 >
-                  <span>Price</span>
+                  <span>Discount</span>
+                </Tooltip>
+              </MenuItem>
+              <MenuItem value="format">
+                <Tooltip title="Функція форматування ціни" placement="right">
+                  <span>Format</span>
                 </Tooltip>
               </MenuItem>
 
               <MenuItem value="dynamicImgs">
                 <Tooltip
-                  title="Додавання функції динамічних зображень"
+                  title="Функція додавання динамічних зображень"
                   placement="right"
                 >
                   <span>Dynamic Imgs</span>
@@ -123,18 +127,18 @@ const DynamicProps: React.FC = () => {
             size="small"
           />
 
-          {item.function === "price" && (
+          {item.function === "discount" && (
             <TextField
-              label="Value 1"
+              label="price"
               value={item.value1}
               onChange={(e) => handleValue1Change(index, e.target.value)}
               size="small"
             />
           )}
 
-          {item.function === "price" && (
+          {item.function === "discount" && (
             <TextField
-              label="Value 2"
+              label="sale_price"
               value={item.value2 || ""}
               onChange={(e) => handleValue2Change(index, e.target.value)}
               size="small"
