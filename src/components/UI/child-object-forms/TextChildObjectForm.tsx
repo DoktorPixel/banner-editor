@@ -9,17 +9,17 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
-import { BannerChild } from "../../types";
-import ChildFontSelector from "./ChildFontSelector";
-import TextDecorationSelector from "./button-groups/TextDecorationSelector";
-import FontStyleSelector from "./button-groups/FontStyleSelector";
+import { BannerChild } from "../../../types";
+import ChildFontSelector from "../ChildFontSelector";
+import TextDecorationSelector from "../button-groups/TextDecorationSelector";
+import FontStyleSelector from "../button-groups/FontStyleSelector";
 
-interface ChildObjectFormProps {
+interface TextChildObjectFormProps {
   object: BannerChild;
   onChange: (key: keyof BannerChild, value: string | number) => void;
 }
 
-export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
+export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
   object,
   onChange,
 }) => {
@@ -105,4 +105,4 @@ export const ChildObjectForm: React.FC<ChildObjectFormProps> = ({
   );
 };
 
-export default ChildObjectForm;
+export default TextChildObjectForm;

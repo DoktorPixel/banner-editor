@@ -55,7 +55,7 @@ export interface BannerObject {
 
 export interface BannerChild {
   id: number;
-  type: "text" | "image";
+  type: "text" | "image" | "group" | "figure";
   content?: string;
   fontSize?: number;
   fontFamily?: string;
@@ -71,6 +71,7 @@ export interface BannerChild {
   height?: number;
   src?: string;
   name?: string;
+  children?: BannerChild[]; // for groups
 }
 
 export interface BannerContextProps {
