@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, Fragment } from "react";
 import { useBanner } from "../context/BannerContext";
 import { useMode } from "../context/ModeContext";
-import { BannerChild, ResizeDirection } from "../types";
+import { ResizeDirection } from "../types";
 import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
 import ResizeHandles from "./UI/ResizeHandles";
 import ContextMenu from "./UI/ContextMenu";
@@ -276,39 +276,119 @@ const BannerArea: React.FC = () => {
                     selectedObjectIds.includes(object.id) ? "selected" : ""
                   }`}
                 >
-                  {object.children?.map((child: BannerChild, index: number) => (
-                    <p
-                      className={`text-field banner-object-child ${
-                        selectedChildId?.groupId === object.id &&
-                        selectedChildId.childId === child.id
-                          ? "selected"
-                          : ""
-                      }`}
-                      key={child.id || index}
-                      style={{
-                        // width: child.width,
-                        // height: child.height,
-                        fontSize: child.fontSize,
-                        color: child.color,
-                        fontFamily: child.fontFamily,
-                        fontWeight: child.fontWeight,
-                        fontStyle: child.fontStyle,
-                        // textTransform: child.textTransform,
-                        textDecoration: child.textDecoration,
-                        textAlign: child.textAlign,
-                        border:
-                          selectedChildId?.groupId === object.id &&
-                          selectedChildId.childId === child.id
-                            ? "1px solid blue"
-                            : "none",
-                      }}
-                      onDoubleClick={(e) =>
-                        handleChildClick(object.id, child.id, e)
-                      }
-                    >
-                      {child.type === "text" ? child.content : null}
-                    </p>
-                  ))}
+                  {object.children?.map((child) => {
+                    if (child.type === "text") {
+                      return (
+                        <p
+                          key={child.id}
+                          className={`text-field banner-object-child ${
+                            selectedChildId?.groupId === object.id &&
+                            selectedChildId.childId === child.id
+                              ? "selected"
+                              : ""
+                          }`}
+                          style={{
+                            fontSize: child.fontSize,
+                            color: child.color,
+                            fontFamily: child.fontFamily,
+                            fontWeight: child.fontWeight,
+                            fontStyle: child.fontStyle,
+                            textDecoration: child.textDecoration,
+                            textAlign: child.textAlign,
+                            border:
+                              selectedChildId?.groupId === object.id &&
+                              selectedChildId.childId === child.id
+                                ? "1px solid blue"
+                                : "none",
+                          }}
+                          onDoubleClick={(e) =>
+                            handleChildClick(object.id, child.id, e)
+                          }
+                        >
+                          {child.content}
+                        </p>
+                      );
+                    } else if (child.type === "image") {
+                      return (
+                        <img
+                          key={child.id}
+                          src={child.src}
+                          alt={child.name || "image"}
+                          style={{
+                            width: child.width,
+                            height: child.height,
+                          }}
+                          onDoubleClick={(e) =>
+                            handleChildClick(object.id, child.id, e)
+                          }
+                          className={`banner-object-child ${
+                            selectedChildId?.groupId === object.id &&
+                            selectedChildId.childId === child.id
+                              ? "selected"
+                              : ""
+                          }`}
+                        />
+                      );
+                    } else if (child.type === "group") {
+                      const { id, children, ...groupStyles } = child;
+                      return (
+                        <div
+                          key={id}
+                          style={{ position: "relative", ...groupStyles }}
+                          onDoubleClick={(e) =>
+                            handleChildClick(object.id, child.id, e)
+                          }
+                          className={`banner-object-child ${
+                            selectedChildId?.groupId === object.id &&
+                            selectedChildId.childId === child.id
+                              ? "selected"
+                              : ""
+                          }`}
+                        >
+                          {children?.map((nestedChild) => {
+                            const {
+                              id: nestedId,
+                              content,
+                              ...nestedStyles
+                            } = nestedChild;
+
+                            return (
+                              <p key={nestedId} style={nestedStyles}>
+                                {content}
+                              </p>
+                            );
+                          })}
+                        </div>
+                      );
+                    } else if (child.type === "figure") {
+                      const { id, x, y, width, height, ...figureStyles } =
+                        child;
+
+                      return (
+                        <div
+                          key={id}
+                          style={{
+                            position: "relative",
+                            left: x,
+                            top: y,
+                            width: width ?? "100px", // Указываем fallback-значения
+                            height: height ?? "100px",
+                            ...figureStyles, // Передаем оставшиеся стили
+                          }}
+                          onDoubleClick={(e) =>
+                            handleChildClick(object.id, child.id, e)
+                          }
+                          className={`banner-object-child ${
+                            selectedChildId?.groupId === object.id &&
+                            selectedChildId.childId === child.id
+                              ? "selected"
+                              : ""
+                          }`}
+                        ></div>
+                      );
+                    }
+                    return null;
+                  })}
 
                   <ResizeHandles
                     objectId={object.id}

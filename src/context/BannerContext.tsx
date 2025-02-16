@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useMemo } from "react";
+import { createContext, useContext, useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   BannerObject,
@@ -194,13 +194,17 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const groupSelectedObjects = () => {
     if (selectedObjectIds.length < 2) {
-      console.warn("Для угруповання потрібно виділити щонайменше два об'єкти.");
+      console.warn("Для группировки нужно выделить как минимум два объекта.");
       return;
     }
 
     const selectedObjects = objects.filter((obj) =>
       selectedObjectIds.includes(obj.id)
     );
+
+    const minX = Math.min(...selectedObjects.map((o) => o.x ?? 0));
+    const minY = Math.min(...selectedObjects.map((o) => o.y ?? 0));
+
     const maxZIndex = objects.reduce(
       (max, obj) => Math.max(max, obj.zIndex ?? 0),
       0
@@ -209,35 +213,24 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     const newGroup: BannerObject = {
       id: Date.now(),
       type: "group",
-      x: Math.min(...selectedObjects.map((obj) => obj.x)),
-      y: Math.min(...selectedObjects.map((obj) => obj.y)),
+      x: minX,
+      y: minY,
       width:
-        Math.max(...selectedObjects.map((obj) => obj.x + (obj.width || 0))) -
-        Math.min(...selectedObjects.map((obj) => obj.x)),
+        Math.max(...selectedObjects.map((o) => (o.x ?? 0) + (o.width ?? 100))) -
+        minX,
       height:
-        Math.max(...selectedObjects.map((obj) => obj.y + (obj.height || 0))) -
-        Math.min(...selectedObjects.map((obj) => obj.y)),
+        Math.max(
+          ...selectedObjects.map((o) => (o.y ?? 0) + (o.height ?? 100))
+        ) - minY,
       zIndex: maxZIndex + 1,
-      children: selectedObjects
-        .filter((obj) => obj.type === "text")
-        .map((obj) => ({
-          id: obj.id,
-          type: obj.type as "text",
-          x: obj.x - Math.min(...selectedObjects.map((o) => o.x)),
-          y: obj.y - Math.min(...selectedObjects.map((o) => o.y)),
-          width: obj.width,
-          height: obj.height,
-          content: obj.content,
-          src: obj.src,
-          fontSize: obj.fontSize,
-          color: obj.color,
-          fontWeight: obj.fontWeight,
-          fontStyle: obj.fontStyle,
-          textTransform: obj.textTransform,
-          textDecoration: obj.textDecoration,
-          textAlign: obj.textAlign,
-          name: obj.name,
-        })),
+      children: selectedObjects.map(({ id, x, y, children = [], ...rest }) => ({
+        id,
+        x: (x ?? 0) - minX, // Относительное позиционирование внутри группы
+        y: (y ?? 0) - minY,
+        children:
+          children.length > 0 ? children.map((child) => ({ ...child })) : [],
+        ...rest, // Перенос всех стилей и свойств
+      })),
       display: "flex",
       flexDirection: "row",
       justifyContent: "center",
@@ -270,8 +263,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     const ungroupedObjects = (selectedObject.children || []).map((child) => ({
       ...child,
       id: Date.now() + Math.random(),
-      x: (child.x || 0) + selectedObject.x,
-      y: (child.y || 0) + selectedObject.y,
+      x: (child.x ?? 0) + selectedObject.x,
+      y: (child.y ?? 0) + selectedObject.y,
     }));
 
     const newObjects = objects.filter((obj) => obj.id !== selectedObject.id);
@@ -279,6 +272,10 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setSelectedObjectIds(ungroupedObjects.map((obj) => obj.id));
   };
+
+  useEffect(() => {
+    console.log("objects:", objects);
+  }, [groupSelectedObjects]);
 
   return (
     <BannerContext.Provider

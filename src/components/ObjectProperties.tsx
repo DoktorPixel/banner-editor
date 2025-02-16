@@ -5,8 +5,14 @@ import { ImageObjectForm } from "./UI/ImageObjectForm";
 import { GroupObjectForm } from "./UI/GroupObjectForm";
 import { FigureObjectForm } from "./UI/FigureObjectForm";
 import { AutoLayoutForm } from "./UI/button-groups/AutoLayoutForm";
-import { ChildObjectForm } from "./UI/ChildObjectForm";
+// import { ChildObjectForm } from "./UI/ChildObjectForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";
+
+//
+import { TextChildObjectForm } from "./UI/child-object-forms/TextChildObjectForm";
+import { ImageChildObjectForm } from "./UI/child-object-forms/ImageChildObjectForm";
+import { FigureChildObjectForm } from "./UI/child-object-forms/FigureChildObjectForm";
+import { GroupChildObjectForm } from "./UI/child-object-forms/GroupChildObjectForm";
 
 const ObjectProperties: React.FC = () => {
   const {
@@ -29,10 +35,30 @@ const ObjectProperties: React.FC = () => {
 
       {selectedChild ? (
         <>
-          <ChildObjectForm
-            object={selectedChild}
-            onChange={(key, value) => handleChangeChild(key, value)}
-          />
+          {selectedChild.type === "text" && (
+            <TextChildObjectForm
+              object={selectedChild}
+              onChange={handleChangeChild}
+            />
+          )}
+          {selectedChild.type === "image" && (
+            <ImageChildObjectForm
+              object={selectedChild}
+              onChange={handleChangeChild}
+            />
+          )}
+          {selectedChild.type === "figure" && (
+            <FigureChildObjectForm
+              object={selectedChild}
+              onChange={handleChangeChild}
+            />
+          )}
+          {selectedChild.type === "group" && (
+            <GroupChildObjectForm
+              object={selectedChild}
+              onChange={handleChangeChild}
+            />
+          )}
           <Button
             variant="contained"
             color="error"

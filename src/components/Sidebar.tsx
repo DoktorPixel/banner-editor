@@ -254,12 +254,7 @@ const Sidebar: React.FC = () => {
         variant="contained"
         color="primary"
         onClick={groupSelectedObjects}
-        disabled={
-          selectedObjectIds.length < 2 ||
-          !selectedObjectIds.every(
-            (id) => objects.find((obj) => obj.id === id)?.type === "text"
-          )
-        }
+        disabled={selectedObjectIds.length < 2}
       >
         Групувати
       </Button>
