@@ -7,33 +7,24 @@ import {
   IconButton,
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { BannerObject, BannerChild } from "../../types";
+import { BannerChild } from "../../types";
 import { useChildProperties, getObjectTypeLabel } from "../../utils/hooks";
-import ChildGroupListItem from "./ChildGroupListItem";
 
-interface GroupListItemProps {
-  group: BannerObject;
-  selectedObjectIds: number[];
-  selectObject: (id: number, ctrlKey: boolean) => void;
-  openNameDialog: (object: BannerObject) => void;
+interface ChildGroupListItemProps {
+  groupId: number;
+  child: BannerChild;
 }
 
-const GroupListItem: React.FC<GroupListItemProps> = ({
-  group,
-  selectedObjectIds,
-  selectObject,
-  openNameDialog,
+const ChildGroupListItem: React.FC<ChildGroupListItemProps> = ({
+  groupId,
+  child,
 }) => {
   const [open, setOpen] = useState(false);
   const { selectChild, selectedChildId } = useChildProperties();
 
   const handleToggle = () => setOpen(!open);
 
-  const handleChildClick = (
-    groupId: number,
-    child: BannerChild,
-    event: React.MouseEvent
-  ) => {
+  const handleChildClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     selectChild(groupId, child.id);
   };
@@ -41,22 +32,19 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
   return (
     <>
       <ListItem
-        key={group.id}
         component="li"
-        onClick={(e) => selectObject(group.id, e.ctrlKey || e.metaKey)}
-        onDoubleClick={() => openNameDialog(group)}
+        onClick={handleChildClick}
         sx={{
+          pl: 4,
           cursor: "pointer",
-          backgroundColor: selectedObjectIds.includes(group.id)
-            ? "lightgray"
-            : "white",
+          backgroundColor:
+            selectedChildId?.childId === child.id ? "lightgray" : "white",
           "&:hover": { backgroundColor: "lightblue" },
+          border:
+            selectedChildId?.childId === child.id ? "1px solid blue" : "none",
         }}
       >
-        <ListItemText
-          primary={group.name || "Група"}
-          sx={{ fontWeight: "bold" }}
-        />
+        <ListItemText primary={child.name || getObjectTypeLabel(child.type)} />
         <IconButton size="small" edge="end" onClick={handleToggle}>
           {open ? <ExpandLess /> : <ExpandMore />}
         </IconButton>
@@ -68,34 +56,37 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
           className="group-list-item"
           sx={{ borderLeft: "5px solid lightgray" }}
         >
-          {group.children?.map((child) =>
-            child.type === "group" ? (
+          {child.children?.map((subChild) =>
+            subChild.type === "group" ? (
               <ChildGroupListItem
-                key={child.id}
-                groupId={group.id}
-                child={child}
+                key={subChild.id}
+                groupId={child.id}
+                child={subChild}
               />
             ) : (
               <ListItem
-                key={child.id}
+                key={subChild.id}
                 component="li"
-                onClick={(e) => handleChildClick(group.id, child, e)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  selectChild(child.id, subChild.id);
+                }}
                 sx={{
-                  pl: 4,
+                  pl: 6,
                   cursor: "pointer",
                   backgroundColor:
-                    selectedChildId?.childId === child.id
+                    selectedChildId?.childId === subChild.id
                       ? "lightgray"
                       : "white",
                   "&:hover": { backgroundColor: "lightblue" },
                   border:
-                    selectedChildId?.childId === child.id
+                    selectedChildId?.childId === subChild.id
                       ? "1px solid blue"
                       : "none",
                 }}
               >
                 <ListItemText
-                  primary={child.name || getObjectTypeLabel(child.type)}
+                  primary={subChild.name || getObjectTypeLabel(subChild.type)}
                 />
               </ListItem>
             )
@@ -106,4 +97,4 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
   );
 };
 
-export default GroupListItem;
+export default ChildGroupListItem;

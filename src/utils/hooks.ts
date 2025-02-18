@@ -177,3 +177,18 @@ export const stepBackwardWithCollision = (
 
   updateObject(object.id, { zIndex: minZIndex - 1 });
 };
+
+export const getObjectTypeLabel = (type: BannerObject["type"]) => {
+  switch (type) {
+    case "text":
+      return "Текст";
+    case "image":
+      return "Зображення";
+    case "figure":
+      return "Фігура";
+    case "group":
+      return "Група";
+    default:
+      return "Об'єкт";
+  }
+};
