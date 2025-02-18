@@ -300,6 +300,7 @@ const BannerArea: React.FC = () => {
                               selectedChildId.childId === child.id
                                 ? "1px solid blue"
                                 : "none",
+                            transform: `rotate(${child.rotate || 0}deg)`,
                           }}
                           onDoubleClick={(e) =>
                             handleChildClick(object.id, child.id, e)
@@ -317,6 +318,8 @@ const BannerArea: React.FC = () => {
                           style={{
                             width: child.width,
                             height: child.height,
+                            objectFit: child.objectFit,
+                            transform: `rotate(${child.rotate || 0}deg)`,
                           }}
                           onDoubleClick={(e) =>
                             handleChildClick(object.id, child.id, e)
@@ -330,14 +333,65 @@ const BannerArea: React.FC = () => {
                         />
                       );
                     } else if (child.type === "group") {
-                      const { id, children, ...groupStyles } = child;
+                      const { id, children, rotate, ...groupStyles } = child;
                       return (
                         <div
-                          key={id}
-                          style={{ position: "relative", ...groupStyles }}
-                          onDoubleClick={(e) =>
-                            handleChildClick(object.id, child.id, e)
-                          }
+                          className={`banner-object-child ${
+                            selectedChildId?.groupId === object.id &&
+                            selectedChildId.childId === child.id
+                              ? "selected"
+                              : ""
+                          }`}
+                          style={{
+                            transform: `rotate(${rotate ?? 0}deg)`,
+                          }}
+                        >
+                          <div
+                            key={id}
+                            style={{
+                              width: "auto",
+                              position: "relative",
+                              // transform: `rotate(${rotate ?? 0}deg)`,
+                              ...groupStyles,
+                            }}
+                            onDoubleClick={(e) =>
+                              handleChildClick(object.id, child.id, e)
+                            }
+                          >
+                            {children?.map((nestedChild) => {
+                              const {
+                                id: nestedId,
+                                content,
+                                rotate,
+                                ...nestedStyles
+                              } = nestedChild;
+
+                              return (
+                                <p
+                                  key={nestedId}
+                                  style={{
+                                    ...nestedStyles,
+                                    transform: `rotate(${rotate ?? 0}deg)`,
+                                    position: "relative",
+                                    width: "auto",
+                                    height: "auto",
+                                  }}
+                                >
+                                  {content}
+                                </p>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    } else if (child.type === "figure") {
+                      const { id, width, height, rotate, ...figureStyles } =
+                        child;
+                      return (
+                        <div
+                          style={{
+                            transform: `rotate(${rotate ?? 0}deg)`,
+                          }}
                           className={`banner-object-child ${
                             selectedChildId?.groupId === object.id &&
                             selectedChildId.childId === child.id
@@ -345,46 +399,20 @@ const BannerArea: React.FC = () => {
                               : ""
                           }`}
                         >
-                          {children?.map((nestedChild) => {
-                            const {
-                              id: nestedId,
-                              content,
-                              ...nestedStyles
-                            } = nestedChild;
-
-                            return (
-                              <p key={nestedId} style={nestedStyles}>
-                                {content}
-                              </p>
-                            );
-                          })}
+                          <div
+                            key={id}
+                            style={{
+                              position: "relative",
+                              width: width ?? "100px",
+                              height: height ?? "100px",
+                              // transform: `rotate(${rotate ?? 0}deg)`,
+                              ...figureStyles,
+                            }}
+                            onDoubleClick={(e) =>
+                              handleChildClick(object.id, child.id, e)
+                            }
+                          ></div>
                         </div>
-                      );
-                    } else if (child.type === "figure") {
-                      const { id, x, y, width, height, ...figureStyles } =
-                        child;
-
-                      return (
-                        <div
-                          key={id}
-                          style={{
-                            position: "relative",
-                            left: x,
-                            top: y,
-                            width: width ?? "100px", // Указываем fallback-значения
-                            height: height ?? "100px",
-                            ...figureStyles, // Передаем оставшиеся стили
-                          }}
-                          onDoubleClick={(e) =>
-                            handleChildClick(object.id, child.id, e)
-                          }
-                          className={`banner-object-child ${
-                            selectedChildId?.groupId === object.id &&
-                            selectedChildId.childId === child.id
-                              ? "selected"
-                              : ""
-                          }`}
-                        ></div>
                       );
                     }
                     return null;
@@ -427,7 +455,10 @@ const BannerArea: React.FC = () => {
                   transform: `rotate(${object.rotate || 0}deg)`,
                 }}
                 onMouseDown={(e) => handleMouseDown(object.id, e)}
-                onClick={(e) => handleObjectClick(object.id, e)}
+                onClick={(e) => {
+                  handleObjectClick(object.id, e);
+                  clearChildSelection();
+                }}
                 onContextMenu={(e) => handleContextMenu(e, object)}
                 className={`banner-object ${
                   selectedObjectIds.includes(object.id) ? "selected" : ""

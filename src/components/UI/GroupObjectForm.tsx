@@ -395,6 +395,28 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         margin="normal"
       />
 
+      <TextField
+        label="Поворот (градусів)"
+        type="number"
+        value={object.rotate || 0}
+        onChange={(e) =>
+          handleInputChange("rotate", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        margin="normal"
+      />
+
+      <TextField
+        label="Номер шару (z-Index)"
+        type="number"
+        value={object.zIndex || 0}
+        onChange={(e) =>
+          handleInputChange("zIndex", parseInt(e.target.value, 10))
+        }
+        fullWidth
+        margin="normal"
+      />
+
       {!isBorderEditing ? (
         <Button variant="outlined" onClick={handleAddBorder}>
           + Додати бордер
@@ -490,29 +512,6 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
           </Box>
         </Box>
       )}
-
-      {/*  */}
-      <TextField
-        label="Поворот (градусів)"
-        type="number"
-        value={object.rotate || 0}
-        onChange={(e) =>
-          handleInputChange("rotate", parseInt(e.target.value, 10))
-        }
-        fullWidth
-        margin="normal"
-      />
-
-      <TextField
-        label="Номер шару (z-Index)"
-        type="number"
-        value={object.zIndex || 0}
-        onChange={(e) =>
-          handleInputChange("zIndex", parseInt(e.target.value, 10))
-        }
-        fullWidth
-        margin="normal"
-      />
     </Box>
   );
 };
