@@ -41,7 +41,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
   return (
     <Box className="child-object-form">
       <Typography variant="h6" gutterBottom>
-        Редагування елементу групи
+        Налаштування елементу групи
       </Typography>
 
       <TextField
@@ -100,6 +100,16 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
       <TextDecorationSelector
         value={String(object.textDecoration || "none")}
         onChange={(value) => onChange("textDecoration", value)}
+      />
+
+      <TextField
+        label="Поворот (градусів)"
+        type="number"
+        name="rotate"
+        value={object.rotate || 0}
+        onChange={handleInputChange}
+        fullWidth
+        margin="normal"
       />
     </Box>
   );

@@ -85,12 +85,20 @@ export const useChildProperties = () => {
 
   const handleChangeChild = (
     key: keyof BannerChild,
-    value: string | number
+    value: string | number | undefined
   ) => {
     if (selectedChildId) {
       updateChild(selectedChildId.groupId, selectedChildId.childId, {
         [key]: value,
       });
+    }
+  };
+
+  const handleChangeMultipleChildProperties = (
+    updates: Partial<BannerChild>
+  ) => {
+    if (selectedChildId) {
+      updateChild(selectedChildId.groupId, selectedChildId.childId, updates);
     }
   };
 
@@ -105,6 +113,7 @@ export const useChildProperties = () => {
     selectedChild,
     selectedChildId,
     handleChangeChild,
+    handleChangeMultipleChildProperties,
     handleDeleteChild,
     selectChild,
     clearChildSelection,

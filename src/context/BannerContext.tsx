@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useMemo, useEffect } from "react";
+import { createContext, useContext, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   BannerObject,
@@ -272,10 +272,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setSelectedObjectIds(ungroupedObjects.map((obj) => obj.id));
   };
-
-  useEffect(() => {
-    console.log("objects:", objects);
-  }, [groupSelectedObjects]);
 
   return (
     <BannerContext.Provider

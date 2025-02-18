@@ -24,7 +24,7 @@ export interface BannerObject {
   gap?: React.CSSProperties["gap"];
   name?: string;
   objectFit?: React.CSSProperties["objectFit"];
-  rotate?: number;
+  rotate?: number | undefined;
   maxLines?: number;
   autoWidth?: boolean;
   borderRadius?: React.CSSProperties["borderRadius"];
@@ -71,7 +71,40 @@ export interface BannerChild {
   height?: number;
   src?: string;
   name?: string;
+  objectFit?: React.CSSProperties["objectFit"];
+  rotate?: number | undefined;
+  display?: React.CSSProperties["display"];
+  flexDirection?: React.CSSProperties["flexDirection"];
+  justifyContent?: React.CSSProperties["justifyContent"];
+  alignItems?: React.CSSProperties["alignItems"];
+  gap?: React.CSSProperties["gap"];
   children?: BannerChild[]; // for groups
+  maxLines?: number;
+  autoWidth?: boolean;
+  borderRadius?: React.CSSProperties["borderRadius"];
+  backgroundColor?: string;
+  opacity?: React.CSSProperties["opacity"];
+  paddingTop?: number | string;
+  paddingBottom?: number | string;
+  paddingLeft?: number | string;
+  paddingRight?: number | string;
+
+  // borders
+  borderTopStyle?: React.CSSProperties["borderTopStyle"];
+  borderTopColor?: string;
+  borderTopWidth?: number | string;
+
+  borderBottomStyle?: React.CSSProperties["borderTopStyle"];
+  borderBottomColor?: string;
+  borderBottomWidth?: number | string;
+
+  borderLeftStyle?: React.CSSProperties["borderTopStyle"];
+  borderLeftColor?: string;
+  borderLeftWidth?: number | string;
+
+  borderRightStyle?: React.CSSProperties["borderTopStyle"];
+  borderRightColor?: string;
+  borderRightWidth?: number | string;
 }
 
 export interface BannerContextProps {

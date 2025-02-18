@@ -7,7 +7,6 @@ import { FigureObjectForm } from "./UI/FigureObjectForm";
 import { AutoLayoutForm } from "./UI/button-groups/AutoLayoutForm";
 // import { ChildObjectForm } from "./UI/ChildObjectForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";
-
 //
 import { TextChildObjectForm } from "./UI/child-object-forms/TextChildObjectForm";
 import { ImageChildObjectForm } from "./UI/child-object-forms/ImageChildObjectForm";
@@ -26,8 +25,12 @@ const ObjectProperties: React.FC = () => {
     //
   } = useObjectProperties();
 
-  const { selectedChild, handleChangeChild, handleDeleteChild } =
-    useChildProperties();
+  const {
+    selectedChild,
+    handleChangeChild,
+    handleDeleteChild,
+    handleChangeMultipleChildProperties,
+  } = useChildProperties();
 
   return (
     <Box className="object-properties">
@@ -51,13 +54,32 @@ const ObjectProperties: React.FC = () => {
             <FigureChildObjectForm
               object={selectedChild}
               onChange={handleChangeChild}
+              onChangeMultiple={handleChangeMultipleChildProperties}
             />
           )}
-          {selectedChild.type === "group" && (
-            <GroupChildObjectForm
-              object={selectedChild}
-              onChange={handleChangeChild}
-            />
+          {selectedChild?.type === "group" && (
+            <>
+              <GroupChildObjectForm
+                object={selectedChild}
+                onChange={handleChangeChild}
+                onChangeMultiple={handleChangeMultipleChildProperties}
+              />
+
+              {selectedChild.display !== "block" && (
+                <>
+                  <AutoLayoutForm
+                    flexDirection={
+                      (selectedChild.flexDirection as "row" | "column") || "row"
+                    }
+                    justifyContent={selectedChild.justifyContent || "center"}
+                    alignItems={selectedChild.alignItems || "center"}
+                    onChange={(changes) =>
+                      handleChangeMultipleChildProperties(changes)
+                    }
+                  />
+                </>
+              )}
+            </>
           )}
           <Button
             variant="contained"
