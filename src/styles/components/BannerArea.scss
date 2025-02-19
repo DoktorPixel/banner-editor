@@ -26,7 +26,7 @@
   cursor: pointer;
 }
 .banner-object:hover {
-  border: 1px solid #ccc;
+  border: 1px solid #ccc !important;
 }
 
 .banner-object-child:hover {
@@ -34,7 +34,7 @@
 }
 
 .banner-object.selected {
-  border: 1px solid blue;
+  border: 1px solid blue !important;
 }
 
 .banner-object-child.selected {
