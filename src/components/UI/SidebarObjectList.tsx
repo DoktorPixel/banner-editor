@@ -1,6 +1,7 @@
 import { List, ListItem, ListItemText } from "@mui/material";
 import GroupListItem from "./GroupListItem";
 import { BannerObject } from "../../types";
+import { getObjectTypeLabel } from "../../utils/hooks";
 
 interface ObjectListProps {
   objects: BannerObject[];
@@ -43,21 +44,14 @@ const SidebarObjectList: React.FC<ObjectListProps> = ({
             sx={{
               cursor: "pointer",
               backgroundColor: selectedObjectIds.includes(obj.id)
-                ? "lightgray"
+                ? "#f0f0f0"
                 : "white",
               "&:hover": { backgroundColor: "lightblue" },
             }}
           >
             <ListItemText
-              primary={
-                obj.name
-                  ? obj.name?.slice(0, 30)
-                  : obj.type === "text"
-                  ? obj.content?.slice(0, 30) || "Текст"
-                  : obj.type === "figure"
-                  ? "Фігура"
-                  : "Зображення"
-              }
+              primary={obj.name || getObjectTypeLabel(obj.type)}
+              sx={{ marginLeft: "10px" }}
             />
           </ListItem>
         )

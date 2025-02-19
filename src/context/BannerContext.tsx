@@ -79,6 +79,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedChildId({ groupId, childId });
   };
 
+  console.log("selectedChildId", selectedChildId);
+
   const clearChildSelection = () => {
     setSelectedChildId(null);
   };

@@ -243,19 +243,15 @@ const BannerArea: React.FC = () => {
                     backgroundColor: object.backgroundColor,
                     borderRadius: object.borderRadius,
                     opacity: object.opacity,
-
                     borderTopStyle: object.borderTopStyle,
                     borderTopColor: object.borderTopColor,
                     borderTopWidth: object.borderTopWidth,
-
                     borderBottomStyle: object.borderBottomStyle,
                     borderBottomColor: object.borderBottomColor,
                     borderBottomWidth: object.borderBottomWidth,
-
                     borderLeftStyle: object.borderLeftStyle,
                     borderLeftColor: object.borderLeftColor,
                     borderLeftWidth: object.borderLeftWidth,
-
                     borderRightStyle: object.borderRightStyle,
                     borderRightColor: object.borderRightColor,
                     borderRightWidth: object.borderRightWidth,
@@ -264,7 +260,6 @@ const BannerArea: React.FC = () => {
                     paddingBottom: object.paddingBottom,
                     paddingLeft: object.paddingLeft,
                     paddingRight: object.paddingRight,
-                    //
                   }}
                   onMouseDown={(e) => handleMouseDown(object.id, e)}
                   onClick={(e) => {
@@ -332,58 +327,6 @@ const BannerArea: React.FC = () => {
                           }`}
                         />
                       );
-                    } else if (child.type === "group") {
-                      const { id, children, rotate, ...groupStyles } = child;
-                      return (
-                        <div
-                          className={`banner-object-child ${
-                            selectedChildId?.groupId === object.id &&
-                            selectedChildId.childId === child.id
-                              ? "selected"
-                              : ""
-                          }`}
-                          style={{
-                            transform: `rotate(${rotate ?? 0}deg)`,
-                          }}
-                        >
-                          <div
-                            key={id}
-                            style={{
-                              width: "auto",
-                              position: "relative",
-                              // transform: `rotate(${rotate ?? 0}deg)`,
-                              ...groupStyles,
-                            }}
-                            onDoubleClick={(e) =>
-                              handleChildClick(object.id, child.id, e)
-                            }
-                          >
-                            {children?.map((nestedChild) => {
-                              const {
-                                id: nestedId,
-                                content,
-                                rotate,
-                                ...nestedStyles
-                              } = nestedChild;
-
-                              return (
-                                <p
-                                  key={nestedId}
-                                  style={{
-                                    ...nestedStyles,
-                                    transform: `rotate(${rotate ?? 0}deg)`,
-                                    position: "relative",
-                                    width: "auto",
-                                    height: "auto",
-                                  }}
-                                >
-                                  {content}
-                                </p>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      );
                     } else if (child.type === "figure") {
                       const { id, width, height, rotate, ...figureStyles } =
                         child;
@@ -405,7 +348,6 @@ const BannerArea: React.FC = () => {
                               position: "relative",
                               width: width ?? "100px",
                               height: height ?? "100px",
-                              // transform: `rotate(${rotate ?? 0}deg)`,
                               ...figureStyles,
                             }}
                             onDoubleClick={(e) =>
@@ -414,10 +356,89 @@ const BannerArea: React.FC = () => {
                           ></div>
                         </div>
                       );
+                    } else if (child.type === "group") {
+                      const { id, children, rotate, ...groupStyles } = child;
+                      return (
+                        <div
+                          className={`banner-object-child ${
+                            selectedChildId?.groupId === object.id &&
+                            selectedChildId.childId === child.id
+                              ? "selected"
+                              : ""
+                          }`}
+                          style={{
+                            transform: `rotate(${rotate ?? 0}deg)`,
+                          }}
+                        >
+                          <div
+                            key={id}
+                            style={{
+                              width: "auto",
+                              position: "relative",
+                              ...groupStyles,
+                            }}
+                            onDoubleClick={(e) =>
+                              handleChildClick(object.id, child.id, e)
+                            }
+                          >
+                            {children?.map((nestedChild) => {
+                              const {
+                                id: nestedId,
+                                content,
+                                rotate,
+                                src,
+                                ...nestedStyles
+                              } = nestedChild;
+                              if (nestedChild.type === "image") {
+                                return (
+                                  <img
+                                    key={nestedId}
+                                    src={src}
+                                    alt={"image"}
+                                    style={{
+                                      ...nestedStyles,
+                                    }}
+                                  />
+                                );
+                              } else if (nestedChild.type === "text") {
+                                return (
+                                  <p
+                                    key={nestedId}
+                                    style={{
+                                      ...nestedStyles,
+                                      transform: `rotate(${rotate ?? 0}deg)`,
+                                      position: "relative",
+                                      width: "auto",
+                                      height: "auto",
+                                    }}
+                                  >
+                                    {content}
+                                  </p>
+                                );
+                              }
+                              // else if (nestedChild.type === "figure") {
+                              //   return (
+                              //   )
+                              // }
+                              return (
+                                <p
+                                  key={nestedId}
+                                  style={{
+                                    ...nestedStyles,
+                                    transform: `rotate(${rotate ?? 0}deg)`,
+                                    position: "relative",
+                                  }}
+                                >
+                                  {content}
+                                </p>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
                     }
                     return null;
                   })}
-
                   <ResizeHandles
                     objectId={object.id}
                     selectedObjectId={selectedObjectIds[0]}
@@ -504,19 +525,15 @@ const BannerArea: React.FC = () => {
                       backgroundColor: object.backgroundColor,
                       borderRadius: object.borderRadius,
                       opacity: object.opacity,
-
                       borderTopStyle: object.borderTopStyle,
                       borderTopColor: object.borderTopColor,
                       borderTopWidth: object.borderTopWidth,
-
                       borderBottomStyle: object.borderBottomStyle,
                       borderBottomColor: object.borderBottomColor,
                       borderBottomWidth: object.borderBottomWidth,
-
                       borderLeftStyle: object.borderLeftStyle,
                       borderLeftColor: object.borderLeftColor,
                       borderLeftWidth: object.borderLeftWidth,
-
                       borderRightStyle: object.borderRightStyle,
                       borderRightColor: object.borderRightColor,
                       borderRightWidth: object.borderRightWidth,
