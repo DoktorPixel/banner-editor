@@ -274,7 +274,7 @@ const BannerArea: React.FC = () => {
                   {object.children?.map((child) => {
                     if (child.type === "text") {
                       return (
-                        <p
+                        <div
                           key={child.id}
                           className={`text-field banner-object-child ${
                             selectedChildId?.groupId === object.id &&
@@ -302,7 +302,7 @@ const BannerArea: React.FC = () => {
                           }
                         >
                           {child.content}
-                        </p>
+                        </div>
                       );
                     } else if (child.type === "image") {
                       return (
@@ -402,7 +402,7 @@ const BannerArea: React.FC = () => {
                                 );
                               } else if (nestedChild.type === "text") {
                                 return (
-                                  <p
+                                  <div
                                     key={nestedId}
                                     style={{
                                       ...nestedStyles,
@@ -413,7 +413,7 @@ const BannerArea: React.FC = () => {
                                     }}
                                   >
                                     {content}
-                                  </p>
+                                  </div>
                                 );
                               }
                               // else if (nestedChild.type === "figure") {
@@ -486,7 +486,7 @@ const BannerArea: React.FC = () => {
                 }`}
               >
                 {object.type === "text" ? (
-                  <p
+                  <div
                     className="text-field"
                     style={{
                       fontSize: object.fontSize,
@@ -506,7 +506,7 @@ const BannerArea: React.FC = () => {
                     }}
                   >
                     {object.content}
-                  </p>
+                  </div>
                 ) : object.type === "image" ? (
                   <img
                     className="image-field"

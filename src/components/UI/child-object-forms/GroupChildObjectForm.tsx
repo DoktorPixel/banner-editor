@@ -236,6 +236,12 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             >
               <MenuItem value="row">По рядках (row)</MenuItem>
               <MenuItem value="column">По колонках (column)</MenuItem>
+              <MenuItem value="row-reverse">
+                По рядках зворотом (row-reverse)
+              </MenuItem>
+              <MenuItem value="column-reverse">
+                По колонках зворотом (column-reverse)
+              </MenuItem>
             </Select>
           </FormControl>
 
