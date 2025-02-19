@@ -19,11 +19,10 @@
   cursor: grab;
 }
 
-//
 .banner-object,
 .banner-object-child {
-  padding: 1px;
-  border: 1px solid transparent;
+  // padding: 1px;
+  border: 1px solid transparent !important;
   cursor: pointer;
 }
 .banner-object:hover {
@@ -42,10 +41,10 @@
   border: 1px solid blue !important;
 }
 
-.banner-object .banner-object-child,
-.banner-object p {
-  padding: 1px;
-}
+// .banner-object .banner-object-child,
+// .banner-object p {
+//   padding: 1px;
+// }
 
 .resize-handle {
   display: none;
