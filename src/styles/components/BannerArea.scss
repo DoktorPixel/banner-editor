@@ -19,14 +19,15 @@
   cursor: grab;
 }
 
+//
 .banner-object,
 .banner-object-child {
   // padding: 1px;
-  border: 1px solid transparent !important;
+  border: 1px solid transparent;
   cursor: pointer;
 }
 .banner-object:hover {
-  border: 1px solid #ccc !important;
+  border: 1px solid #ccc;
 }
 
 .banner-object-child:hover {
@@ -34,13 +35,24 @@
 }
 
 .banner-object.selected {
-  border: 1px solid blue !important;
+  border: 1px solid blue;
 }
 
 .banner-object-child.selected {
   border: 1px solid blue !important;
 }
 
+.banner-object .text-field.banner-object-child {
+  border: 1px solid transparent !important;
+}
+
+.banner-area .text-field.banner-object-child:hover {
+  border: 1px solid #ccc !important ;
+}
+
+.banner-area .text-field.banner-object-child.selected {
+  border: 1px solid blue !important;
+}
 // .banner-object .banner-object-child,
 // .banner-object p {
 //   padding: 1px;

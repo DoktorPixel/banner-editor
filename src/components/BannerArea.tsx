@@ -233,33 +233,6 @@ const BannerArea: React.FC = () => {
                     width: object.width,
                     height: object.height,
                     zIndex: object.zIndex,
-                    display: object.display || "flex",
-                    flexDirection: object.flexDirection,
-                    justifyContent: object.justifyContent,
-                    alignItems: object.alignItems,
-                    gap: object.gap || "10px",
-                    transform: `rotate(${object.rotate || 0}deg)`,
-                    //
-                    backgroundColor: object.backgroundColor,
-                    borderRadius: object.borderRadius,
-                    opacity: object.opacity,
-                    borderTopStyle: object.borderTopStyle,
-                    borderTopColor: object.borderTopColor,
-                    borderTopWidth: object.borderTopWidth,
-                    borderBottomStyle: object.borderBottomStyle,
-                    borderBottomColor: object.borderBottomColor,
-                    borderBottomWidth: object.borderBottomWidth,
-                    borderLeftStyle: object.borderLeftStyle,
-                    borderLeftColor: object.borderLeftColor,
-                    borderLeftWidth: object.borderLeftWidth,
-                    borderRightStyle: object.borderRightStyle,
-                    borderRightColor: object.borderRightColor,
-                    borderRightWidth: object.borderRightWidth,
-                    //
-                    paddingTop: object.paddingTop,
-                    paddingBottom: object.paddingBottom,
-                    paddingLeft: object.paddingLeft,
-                    paddingRight: object.paddingRight,
                   }}
                   onMouseDown={(e) => handleMouseDown(object.id, e)}
                   onClick={(e) => {
@@ -271,174 +244,210 @@ const BannerArea: React.FC = () => {
                     selectedObjectIds.includes(object.id) ? "selected" : ""
                   }`}
                 >
-                  {object.children?.map((child) => {
-                    if (child.type === "text") {
-                      return (
-                        <div
-                          key={child.id}
-                          className={`text-field banner-object-child ${
-                            selectedChildId?.groupId === object.id &&
-                            selectedChildId.childId === child.id
-                              ? "selected"
-                              : ""
-                          }`}
-                          style={{
-                            fontSize: child.fontSize,
-                            color: child.color,
-                            fontFamily: child.fontFamily,
-                            fontWeight: child.fontWeight,
-                            fontStyle: child.fontStyle,
-                            textDecoration: child.textDecoration,
-                            textAlign: child.textAlign,
-                            border:
+                  <div
+                    style={{
+                      width: object.width,
+                      height: object.height,
+                      display: object.display || "flex",
+                      flexDirection: object.flexDirection,
+                      justifyContent: object.justifyContent,
+                      alignItems: object.alignItems,
+                      gap: object.gap || "10px",
+                      transform: `rotate(${object.rotate || 0}deg)`,
+                      //
+                      backgroundColor: object.backgroundColor,
+                      borderRadius: object.borderRadius,
+                      opacity: object.opacity,
+                      borderTopStyle: object.borderTopStyle,
+                      borderTopColor: object.borderTopColor,
+                      borderTopWidth: object.borderTopWidth,
+                      borderBottomStyle: object.borderBottomStyle,
+                      borderBottomColor: object.borderBottomColor,
+                      borderBottomWidth: object.borderBottomWidth,
+                      borderLeftStyle: object.borderLeftStyle,
+                      borderLeftColor: object.borderLeftColor,
+                      borderLeftWidth: object.borderLeftWidth,
+                      borderRightStyle: object.borderRightStyle,
+                      borderRightColor: object.borderRightColor,
+                      borderRightWidth: object.borderRightWidth,
+                      //
+                      paddingTop: object.paddingTop,
+                      paddingBottom: object.paddingBottom,
+                      paddingLeft: object.paddingLeft,
+                      paddingRight: object.paddingRight,
+                    }}
+                  >
+                    {object.children?.map((child) => {
+                      if (child.type === "text") {
+                        return (
+                          <div
+                            key={child.id}
+                            className={`text-field banner-object-child ${
                               selectedChildId?.groupId === object.id &&
                               selectedChildId.childId === child.id
-                                ? "1px solid blue"
-                                : "none",
-                            transform: `rotate(${child.rotate || 0}deg)`,
-                          }}
-                          onDoubleClick={(e) =>
-                            handleChildClick(object.id, child.id, e)
-                          }
-                        >
-                          {child.content}
-                        </div>
-                      );
-                    } else if (child.type === "image") {
-                      return (
-                        <img
-                          key={child.id}
-                          src={child.src}
-                          alt={child.name || "image"}
-                          style={{
-                            width: child.width,
-                            height: child.height,
-                            objectFit: child.objectFit,
-                            transform: `rotate(${child.rotate || 0}deg)`,
-                          }}
-                          onDoubleClick={(e) =>
-                            handleChildClick(object.id, child.id, e)
-                          }
-                          className={`banner-object-child ${
-                            selectedChildId?.groupId === object.id &&
-                            selectedChildId.childId === child.id
-                              ? "selected"
-                              : ""
-                          }`}
-                        />
-                      );
-                    } else if (child.type === "figure") {
-                      const { id, width, height, rotate, ...figureStyles } =
-                        child;
-                      return (
-                        <div
-                          style={{
-                            transform: `rotate(${rotate ?? 0}deg)`,
-                          }}
-                          className={`banner-object-child ${
-                            selectedChildId?.groupId === object.id &&
-                            selectedChildId.childId === child.id
-                              ? "selected"
-                              : ""
-                          }`}
-                        >
-                          <div
-                            key={id}
+                                ? "selected"
+                                : ""
+                            }`}
                             style={{
-                              position: "relative",
-                              width: width ?? "100px",
-                              height: height ?? "100px",
-                              ...figureStyles,
-                            }}
-                            onDoubleClick={(e) =>
-                              handleChildClick(object.id, child.id, e)
-                            }
-                          ></div>
-                        </div>
-                      );
-                    } else if (child.type === "group") {
-                      const { id, children, rotate, ...groupStyles } = child;
-                      return (
-                        <div
-                          className={`banner-object-child ${
-                            selectedChildId?.groupId === object.id &&
-                            selectedChildId.childId === child.id
-                              ? "selected"
-                              : ""
-                          }`}
-                          style={{
-                            transform: `rotate(${rotate ?? 0}deg)`,
-                          }}
-                        >
-                          <div
-                            key={id}
-                            style={{
-                              width: "auto",
-                              position: "relative",
-                              ...groupStyles,
+                              fontSize: child.fontSize,
+                              color: child.color,
+                              fontFamily: child.fontFamily,
+                              fontWeight: child.fontWeight,
+                              fontStyle: child.fontStyle,
+                              textDecoration: child.textDecoration,
+                              textAlign: child.textAlign,
+                              border:
+                                selectedChildId?.groupId === object.id &&
+                                selectedChildId.childId === child.id
+                                  ? "1px solid blue"
+                                  : "none",
+                              transform: `rotate(${child.rotate || 0}deg)`,
                             }}
                             onDoubleClick={(e) =>
                               handleChildClick(object.id, child.id, e)
                             }
                           >
-                            {children?.map((nestedChild) => {
-                              const {
-                                id: nestedId,
-                                content,
-                                rotate,
-                                src,
-                                ...nestedStyles
-                              } = nestedChild;
-                              if (nestedChild.type === "image") {
+                            {child.content}
+                          </div>
+                        );
+                      } else if (child.type === "image") {
+                        return (
+                          <img
+                            key={child.id}
+                            src={child.src}
+                            alt={child.name || "image"}
+                            style={{
+                              width: child.width,
+                              height: child.height,
+                              objectFit: child.objectFit,
+                              transform: `rotate(${child.rotate || 0}deg)`,
+                            }}
+                            onDoubleClick={(e) =>
+                              handleChildClick(object.id, child.id, e)
+                            }
+                            className={`banner-object-child image-field ${
+                              selectedChildId?.groupId === object.id &&
+                              selectedChildId.childId === child.id
+                                ? "selected"
+                                : ""
+                            }`}
+                          />
+                        );
+                      } else if (child.type === "figure") {
+                        const { id, width, height, rotate, ...figureStyles } =
+                          child;
+                        return (
+                          <div
+                            style={{
+                              transform: `rotate(${rotate ?? 0}deg)`,
+                            }}
+                            onDoubleClick={(e) =>
+                              handleChildClick(object.id, child.id, e)
+                            }
+                            className={`banner-object-child ${
+                              selectedChildId?.groupId === object.id &&
+                              selectedChildId.childId === child.id
+                                ? "selected"
+                                : ""
+                            }`}
+                          >
+                            <div
+                              key={id}
+                              style={{
+                                position: "relative",
+                                width: width ?? "100px",
+                                height: height ?? "100px",
+                                ...figureStyles,
+                              }}
+                            ></div>
+                          </div>
+                        );
+                      } else if (child.type === "group") {
+                        const { id, children, rotate, ...groupStyles } = child;
+                        return (
+                          <div
+                            style={{
+                              transform: `rotate(${rotate ?? 0}deg)`,
+                            }}
+                            className={`banner-object-child ${
+                              selectedChildId?.groupId === object.id &&
+                              selectedChildId.childId === child.id
+                                ? "selected"
+                                : ""
+                            }`}
+                            onDoubleClick={(e) =>
+                              handleChildClick(object.id, child.id, e)
+                            }
+                          >
+                            <div
+                              key={id}
+                              style={{
+                                width: "auto",
+                                position: "relative",
+                                ...groupStyles,
+                              }}
+                            >
+                              {children?.map((nestedChild) => {
+                                const {
+                                  id: nestedId,
+                                  content,
+                                  rotate,
+                                  src,
+                                  ...nestedStyles
+                                } = nestedChild;
+                                if (nestedChild.type === "image") {
+                                  return (
+                                    <img
+                                      className="image-field"
+                                      key={nestedId}
+                                      src={src}
+                                      alt={"image"}
+                                      style={{
+                                        ...nestedStyles,
+                                      }}
+                                    />
+                                  );
+                                } else if (nestedChild.type === "text") {
+                                  return (
+                                    <div
+                                      className="text-field"
+                                      key={nestedId}
+                                      style={{
+                                        ...nestedStyles,
+                                        transform: `rotate(${rotate ?? 0}deg)`,
+                                        position: "relative",
+                                        width: "auto",
+                                        height: "auto",
+                                      }}
+                                    >
+                                      {content}
+                                    </div>
+                                  );
+                                }
+                                // else if (nestedChild.type === "figure") {
+                                //   return (
+                                //   )
+                                // }
                                 return (
-                                  <img
-                                    key={nestedId}
-                                    src={src}
-                                    alt={"image"}
-                                    style={{
-                                      ...nestedStyles,
-                                    }}
-                                  />
-                                );
-                              } else if (nestedChild.type === "text") {
-                                return (
-                                  <div
+                                  <p
                                     key={nestedId}
                                     style={{
                                       ...nestedStyles,
                                       transform: `rotate(${rotate ?? 0}deg)`,
                                       position: "relative",
-                                      width: "auto",
-                                      height: "auto",
                                     }}
                                   >
                                     {content}
-                                  </div>
+                                  </p>
                                 );
-                              }
-                              // else if (nestedChild.type === "figure") {
-                              //   return (
-                              //   )
-                              // }
-                              return (
-                                <p
-                                  key={nestedId}
-                                  style={{
-                                    ...nestedStyles,
-                                    transform: `rotate(${rotate ?? 0}deg)`,
-                                    position: "relative",
-                                  }}
-                                >
-                                  {content}
-                                </p>
-                              );
-                            })}
+                              })}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  })}
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
                   <ResizeHandles
                     objectId={object.id}
                     selectedObjectId={selectedObjectIds[0]}
