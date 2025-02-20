@@ -53,6 +53,10 @@
 .banner-area .text-field.banner-object-child.selected {
   border: 1px solid blue !important;
 }
+
+.banner-area .banner-object .banner-object-child.selected-grand-child {
+  border: 1px solid blue !important;
+}
 // .banner-object .banner-object-child,
 // .banner-object p {
 //   padding: 1px;

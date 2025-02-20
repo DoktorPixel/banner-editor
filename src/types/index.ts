@@ -126,7 +126,7 @@ export interface BannerContextProps {
   ungroupSelectedObject: () => void;
 
   selectedChildId: { groupId: number; childId: number } | null;
-  selectChild: (groupId: number, childId: number) => void;
+  selectChild: (groupId: number, childId: number, parentId?: number) => void;
   clearChildSelection: () => void;
   updateChild: (
     groupId: number,
