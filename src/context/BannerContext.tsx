@@ -31,6 +31,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedChildId, setSelectedChildId] = useState<{
     groupId: number;
     childId: number;
+    parentId?: number;
   } | null>(null);
 
   //
@@ -75,11 +76,14 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     null
   );
 
-  const selectChild = (groupId: number, childId: number) => {
-    setSelectedChildId({ groupId, childId });
+  const selectChild = (groupId: number, childId: number, parentId?: number) => {
+    setSelectedChildId((prev) => {
+      const newSelection = { groupId, childId, parentId };
+      console.log("selectedChildId (prev)", prev);
+      console.log("selectedChildId (updated)", newSelection);
+      return newSelection;
+    });
   };
-
-  console.log("selectedChildId", selectedChildId);
 
   const clearChildSelection = () => {
     setSelectedChildId(null);

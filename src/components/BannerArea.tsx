@@ -62,10 +62,11 @@ const BannerArea: React.FC = () => {
   const handleChildClick = (
     groupId: number,
     childId: number,
-    event: React.MouseEvent
+    event: React.MouseEvent,
+    parentId?: number // Новый параметр для обработки grandChild
   ) => {
     event.stopPropagation();
-    selectChild(groupId, childId);
+    selectChild(groupId, childId, parentId);
   };
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
@@ -304,7 +305,12 @@ const BannerArea: React.FC = () => {
                               transform: `rotate(${child.rotate || 0}deg)`,
                             }}
                             onDoubleClick={(e) =>
-                              handleChildClick(object.id, child.id, e)
+                              handleChildClick(
+                                object.id,
+                                child.id,
+                                e,
+                                undefined
+                              )
                             }
                           >
                             {child.content}
@@ -323,7 +329,12 @@ const BannerArea: React.FC = () => {
                               transform: `rotate(${child.rotate || 0}deg)`,
                             }}
                             onDoubleClick={(e) =>
-                              handleChildClick(object.id, child.id, e)
+                              handleChildClick(
+                                object.id,
+                                child.id,
+                                e,
+                                undefined
+                              )
                             }
                             className={`banner-object-child image-field ${
                               selectedChildId?.groupId === object.id &&
@@ -342,7 +353,12 @@ const BannerArea: React.FC = () => {
                               transform: `rotate(${rotate ?? 0}deg)`,
                             }}
                             onDoubleClick={(e) =>
-                              handleChildClick(object.id, child.id, e)
+                              handleChildClick(
+                                object.id,
+                                child.id,
+                                e,
+                                undefined
+                              )
                             }
                             className={`banner-object-child ${
                               selectedChildId?.groupId === object.id &&
@@ -376,7 +392,12 @@ const BannerArea: React.FC = () => {
                                 : ""
                             }`}
                             onDoubleClick={(e) =>
-                              handleChildClick(object.id, child.id, e)
+                              handleChildClick(
+                                object.id,
+                                child.id,
+                                e,
+                                undefined
+                              )
                             }
                           >
                             <div
@@ -398,19 +419,32 @@ const BannerArea: React.FC = () => {
                                 if (nestedChild.type === "image") {
                                   return (
                                     <img
-                                      className="image-field"
                                       key={nestedId}
                                       src={src}
                                       alt={"image"}
                                       style={{
                                         ...nestedStyles,
                                       }}
+                                      className={`image-field banner-object-child ${
+                                        selectedChildId?.groupId === child.id &&
+                                        selectedChildId.childId ===
+                                          nestedChild.id
+                                          ? "selected-grand-child"
+                                          : ""
+                                      }`}
+                                      onDoubleClick={(e) =>
+                                        handleChildClick(
+                                          child.id,
+                                          nestedChild.id,
+                                          e,
+                                          object.id
+                                        )
+                                      }
                                     />
                                   );
                                 } else if (nestedChild.type === "text") {
                                   return (
                                     <div
-                                      className="text-field"
                                       key={nestedId}
                                       style={{
                                         ...nestedStyles,
@@ -419,6 +453,21 @@ const BannerArea: React.FC = () => {
                                         width: "auto",
                                         height: "auto",
                                       }}
+                                      className={`image-field banner-object-child ${
+                                        selectedChildId?.groupId === child.id &&
+                                        selectedChildId.childId ===
+                                          nestedChild.id
+                                          ? "selected-grand-child"
+                                          : ""
+                                      }`}
+                                      onDoubleClick={(e) =>
+                                        handleChildClick(
+                                          child.id,
+                                          nestedChild.id,
+                                          e,
+                                          object.id
+                                        )
+                                      }
                                     >
                                       {content}
                                     </div>
@@ -436,6 +485,20 @@ const BannerArea: React.FC = () => {
                                       transform: `rotate(${rotate ?? 0}deg)`,
                                       position: "relative",
                                     }}
+                                    className={`image-field banner-object-child ${
+                                      selectedChildId?.groupId === child.id &&
+                                      selectedChildId.childId === nestedChild.id
+                                        ? "selected-grand-child"
+                                        : ""
+                                    }`}
+                                    onDoubleClick={(e) =>
+                                      handleChildClick(
+                                        child.id,
+                                        nestedChild.id,
+                                        e,
+                                        object.id
+                                      )
+                                    }
                                   >
                                     {content}
                                   </p>
