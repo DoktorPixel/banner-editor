@@ -12,6 +12,7 @@ import TextAlignSelector from "./button-groups/TextAlignSelector";
 import TextDecorationSelector from "./button-groups/TextDecorationSelector";
 import FontStyleSelector from "./button-groups/FontStyleSelector";
 import { MuiColorInput } from "mui-color-input";
+import { useObjectCondition } from "../../utils/hooks";
 
 interface TextObjectFormProps {
   object: BannerObject;
@@ -27,6 +28,19 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
     value: string | number | boolean
   ) => {
     onChange(key, value);
+  };
+
+  const { updateCondition } = useObjectCondition();
+
+  const handleConditionChange = (
+    newType?: "showIf" | "hideIf",
+    newProps?: string[]
+  ) => {
+    const updatedCondition = {
+      type: newType ?? object.condition?.type ?? "hideIf",
+      props: newProps?.length ? newProps : object.condition?.props ?? [""],
+    };
+    updateCondition(object.id, updatedCondition);
   };
 
   return (
@@ -210,6 +224,33 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
+
+      <Box>
+        {/* === Управление condition === */}
+        <FormControl fullWidth margin="normal">
+          <InputLabel>Условие отображения</InputLabel>
+          <Select
+            value={object.condition?.type || "hideIf"} // hideIf по умолчанию
+            onChange={(e) =>
+              handleConditionChange(e.target.value as "showIf" | "hideIf")
+            }
+          >
+            <MenuItem value="showIf">Показать если</MenuItem>
+            <MenuItem value="hideIf">Скрыть если</MenuItem>
+          </Select>
+        </FormControl>
+
+        <TextField
+          label="Свойства (props), через запятую"
+          value={object.condition?.props?.join(", ") || ""}
+          onChange={(e) => {
+            const newProps = e.target.value.split(",").map((p) => p.trim());
+            handleConditionChange(undefined, newProps);
+          }}
+          fullWidth
+          margin="normal"
+        />
+      </Box>
     </Box>
   );
 };
