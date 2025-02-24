@@ -50,7 +50,7 @@ export const ConditionSelector: FC<ConditionSelectorProps> = ({
 
   if (!condition) {
     return (
-      <Box textAlign="center" mt={2}>
+      <Box mt={2}>
         <Button variant="outlined" color="primary" onClick={handleAddCondition}>
           Додати умову відображення
         </Button>
@@ -59,7 +59,7 @@ export const ConditionSelector: FC<ConditionSelectorProps> = ({
   }
 
   return (
-    <Box>
+    <Box mt={1}>
       <FormControl fullWidth margin="normal">
         <InputLabel sx={{ mt: -1 }}>Умова відображення</InputLabel>
         <Select
@@ -101,7 +101,7 @@ export const ConditionSelector: FC<ConditionSelectorProps> = ({
         margin="normal"
       />
 
-      <Box textAlign="center" mt={2}>
+      <Box mt={2}>
         <Button
           variant="outlined"
           color="error"

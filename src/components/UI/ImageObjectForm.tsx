@@ -9,6 +9,7 @@ import {
   Button,
 } from "@mui/material";
 import UpdateImageDialog from "./dialogs/UpdateImageDialog";
+import { ConditionSelector } from "./ConditionSelector";
 
 interface ImageObjectFormProps {
   object: BannerObject;
@@ -138,6 +139,8 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
+
+      <ConditionSelector objectId={object.id} condition={object.condition} />
 
       <UpdateImageDialog
         open={isDialogOpen}

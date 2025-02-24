@@ -11,6 +11,7 @@ import {
 import { MuiColorInput } from "mui-color-input";
 import { useState, useEffect } from "react";
 import { useObjectProperties } from "../../utils/hooks";
+import { ConditionSelector } from "./ConditionSelector";
 import {
   BorderBottom,
   BorderLeft,
@@ -325,6 +326,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         fullWidth
         style={{ marginTop: "22px" }}
       />
+      <ConditionSelector objectId={object.id} condition={object.condition} />
     </Box>
   );
 };

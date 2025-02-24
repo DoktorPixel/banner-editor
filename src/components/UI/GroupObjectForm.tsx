@@ -15,6 +15,7 @@ import {
 import { BannerObject } from "../../types";
 import { MuiColorInput } from "mui-color-input";
 import { useObjectProperties } from "../../utils/hooks";
+import { ConditionSelector } from "./ConditionSelector";
 import {
   BorderBottom,
   BorderLeft,
@@ -403,7 +404,11 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
       />
 
       {!isBorderEditing ? (
-        <Button variant="outlined" onClick={handleAddBorder}>
+        <Button
+          variant="outlined"
+          onClick={handleAddBorder}
+          sx={{ textAlign: "left" }}
+        >
           + Додати бордер
         </Button>
       ) : (
@@ -497,6 +502,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
           </Box>
         </Box>
       )}
+      <ConditionSelector objectId={object.id} condition={object.condition} />
     </Box>
   );
 };
