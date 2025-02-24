@@ -12,7 +12,8 @@ import TextAlignSelector from "./button-groups/TextAlignSelector";
 import TextDecorationSelector from "./button-groups/TextDecorationSelector";
 import FontStyleSelector from "./button-groups/FontStyleSelector";
 import { MuiColorInput } from "mui-color-input";
-import { useObjectCondition } from "../../utils/hooks";
+// import { useObjectCondition } from "../../utils/hooks";
+import { ConditionSelector } from "./ConditionSelector";
 
 interface TextObjectFormProps {
   object: BannerObject;
@@ -23,18 +24,18 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
   object,
   onChange,
 }) => {
-  const { updateCondition } = useObjectCondition();
+  // const { updateCondition } = useObjectCondition();
 
-  const handleConditionChange = (
-    newType?: "showIf" | "hideIf",
-    newProps?: string[]
-  ) => {
-    const updatedCondition = {
-      type: newType ?? object.condition?.type ?? "hideIf",
-      props: newProps?.length ? newProps : object.condition?.props ?? [""],
-    };
-    updateCondition(object.id, updatedCondition);
-  };
+  // const handleConditionChange = (
+  //   newType?: "showIf" | "hideIf",
+  //   newProps?: string[]
+  // ) => {
+  //   const updatedCondition = {
+  //     type: newType ?? object.condition?.type ?? "hideIf",
+  //     props: newProps?.length ? newProps : object.condition?.props ?? [""],
+  //   };
+  //   updateCondition(object.id, updatedCondition);
+  // };
 
   return (
     <Box>
@@ -208,23 +209,22 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         margin="normal"
       />
 
-      <Box>
-        {/* === Управление condition === */}
+      {/* <Box>
         <FormControl fullWidth margin="normal">
-          <InputLabel>Условие отображения</InputLabel>
+          <InputLabel>Умова відображення</InputLabel>
           <Select
-            value={object.condition?.type || "hideIf"} // hideIf по умолчанию
+            value={object.condition?.type || "hideIf"}
             onChange={(e) =>
               handleConditionChange(e.target.value as "showIf" | "hideIf")
             }
           >
-            <MenuItem value="showIf">Показать если</MenuItem>
-            <MenuItem value="hideIf">Скрыть если</MenuItem>
+            <MenuItem value="showIf">Показати якщо є</MenuItem>
+            <MenuItem value="hideIf">Приховати якщо є</MenuItem>0
           </Select>
         </FormControl>
 
         <TextField
-          label="Свойства (props), через запятую"
+          label="Параметри умови (props через кому)"
           value={object.condition?.props?.join(", ") || ""}
           onChange={(e) => {
             const newProps = e.target.value.split(",").map((p) => p.trim());
@@ -233,7 +233,8 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           fullWidth
           margin="normal"
         />
-      </Box>
+      </Box> */}
+      <ConditionSelector objectId={object.id} condition={object.condition} />
     </Box>
   );
 };

@@ -144,14 +144,16 @@ const ObjectProperties: React.FC = () => {
       )}
 
       {selectedObjectIds.length === 1 && !selectedChild && (
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleDelete}
-          sx={{ marginTop: "20px" }}
-        >
-          Видалити об'єкт
-        </Button>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDelete}
+            sx={{ marginTop: "20px" }}
+          >
+            Видалити об'єкт
+          </Button>
+        </div>
       )}
       {selectedObjectIds.length > 1 && (
         <Button

@@ -124,14 +124,13 @@ const ExportBanner: React.FC = () => {
             const condition = JSON.parse(element.getAttribute("data-condition"));
             const { type, props: conditionProps } = condition;
     
-            // Проверяем, что props существуют
             const propsExist = conditionProps.some((prop) => props[prop] !== undefined);
     
             if ((type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)) {
               element.style.display = "none";
             }
           } catch (error) {
-            console.error("Ошибка при разборе data-condition:", error);
+            console.error("Помилка при розборі data-condition:", error);
           }
         });
 
