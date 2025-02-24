@@ -35,13 +35,6 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
   onChange,
   onChangeMultiple,
 }) => {
-  const handleInputChange = (
-    key: keyof BannerChild,
-    value: string | number | undefined | "auto"
-  ) => {
-    onChange(key, value);
-  };
-
   const [isBorderEditing, setIsBorderEditing] = useState<boolean>(false);
   const [borderSides, setBorderSides] = useState({
     top: true,
@@ -182,7 +175,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
           type="number"
           value={isAutoWidth ? "" : Math.round(object.width as number)}
           onChange={(e) =>
-            handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
+            onChange("width", Math.round(parseInt(e.target.value, 10)))
           }
           fullWidth
           margin="normal"
@@ -204,9 +197,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         label="Висота блоку (px)"
         type="number"
         value={object.height || 50}
-        onChange={(e) =>
-          handleInputChange("height", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -215,7 +206,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         <InputLabel sx={{ top: "-7px" }}>Тип відображення (Display)</InputLabel>
         <Select
           value={object.display || "flex"}
-          onChange={(e) => handleInputChange("display", e.target.value)}
+          onChange={(e) => onChange("display", e.target.value)}
         >
           <MenuItem value="flex">Гнучкий (flex)</MenuItem>
           <MenuItem value="block">Блоковий (block)</MenuItem>
@@ -230,9 +221,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             </InputLabel>
             <Select
               value={object.flexDirection || "row"}
-              onChange={(e) =>
-                handleInputChange("flexDirection", e.target.value)
-              }
+              onChange={(e) => onChange("flexDirection", e.target.value)}
             >
               <MenuItem value="row">По рядках (row)</MenuItem>
               <MenuItem value="column">По колонках (column)</MenuItem>
@@ -251,9 +240,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             </InputLabel>
             <Select
               value={object.justifyContent || "center"}
-              onChange={(e) =>
-                handleInputChange("justifyContent", e.target.value)
-              }
+              onChange={(e) => onChange("justifyContent", e.target.value)}
             >
               <MenuItem value="start">З початку (start)</MenuItem>
               <MenuItem value="center">По центру (center)</MenuItem>
@@ -273,7 +260,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             </InputLabel>
             <Select
               value={object.alignItems || "center"}
-              onChange={(e) => handleInputChange("alignItems", e.target.value)}
+              onChange={(e) => onChange("alignItems", e.target.value)}
             >
               <MenuItem value="flex-start">Спочатку (flex-start)</MenuItem>
               <MenuItem value="center">По центру (center)</MenuItem>
@@ -285,7 +272,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             label="Відступ між елементами (gap, px)"
             type="number"
             value={object.gap || 10}
-            onChange={(e) => handleInputChange("gap", parseInt(e.target.value))}
+            onChange={(e) => onChange("gap", parseInt(e.target.value))}
             fullWidth
             margin="normal"
           />
@@ -297,9 +284,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         label="Колір фону"
         format="hex"
         value={object.backgroundColor || "none"}
-        onChange={(newColor: string) =>
-          handleInputChange("backgroundColor", newColor)
-        }
+        onChange={(newColor: string) => onChange("backgroundColor", newColor)}
         fullWidth
         sx={{ margin: "16px 0 10px 0" }}
       />
@@ -312,9 +297,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
           max: 1,
         }}
         value={object.opacity || 1}
-        onChange={(e) =>
-          handleInputChange("opacity", parseFloat(e.target.value))
-        }
+        onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
         fullWidth
         margin="normal"
       />
@@ -329,7 +312,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             type="number"
             value={object.paddingLeft}
             onChange={(e) =>
-              handleInputChange(
+              onChange(
                 "paddingLeft",
                 Math.max(0, parseFloat(e.target.value) || 0)
               )
@@ -341,7 +324,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             type="number"
             value={object.paddingRight}
             onChange={(e) =>
-              handleInputChange(
+              onChange(
                 "paddingRight",
                 Math.max(0, parseFloat(e.target.value) || 0)
               )
@@ -353,7 +336,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             type="number"
             value={object.paddingTop}
             onChange={(e) =>
-              handleInputChange(
+              onChange(
                 "paddingTop",
                 Math.max(0, parseFloat(e.target.value) || 0)
               )
@@ -365,7 +348,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             type="number"
             value={object.paddingBottom}
             onChange={(e) =>
-              handleInputChange(
+              onChange(
                 "paddingBottom",
                 Math.max(0, parseFloat(e.target.value) || 0)
               )
@@ -381,7 +364,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         value={object.borderRadius || 0}
         onChange={(e) => {
           const value = parseInt(e.target.value, 10);
-          handleInputChange("borderRadius", value >= 0 ? value : 0);
+          onChange("borderRadius", value >= 0 ? value : 0);
         }}
         fullWidth
         margin="normal"
@@ -391,9 +374,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         label="Поворот (градусів)"
         type="number"
         value={object.rotate || 0}
-        onChange={(e) =>
-          handleInputChange("rotate", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />

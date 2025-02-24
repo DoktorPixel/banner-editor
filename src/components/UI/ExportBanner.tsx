@@ -118,6 +118,22 @@ const ExportBanner: React.FC = () => {
       document.addEventListener("DOMContentLoaded", function () {
         const props = window.props || {};
 
+
+          document.querySelectorAll("[data-condition]").forEach((element) => {
+          try {
+            const condition = JSON.parse(element.getAttribute("data-condition"));
+            const { type, props: conditionProps } = condition;
+    
+            const propsExist = conditionProps.some((prop) => props[prop] !== undefined);
+    
+            if ((type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)) {
+              element.style.display = "none";
+            }
+          } catch (error) {
+            console.error("Помилка при розборі data-condition:", error);
+          }
+        });
+
         ${config
           .map((item) => {
             if (item.function === "format" && item.key) {

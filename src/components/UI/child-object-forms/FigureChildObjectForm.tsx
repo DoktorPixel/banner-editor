@@ -22,7 +22,7 @@ interface FigureChildObjectFormProps {
   object: BannerChild;
   onChange: (
     key: keyof BannerChild,
-    value: string | number | undefined
+    value: string | number | undefined | "auto"
   ) => void;
   onChangeMultiple: (updates: Partial<BannerChild>) => void;
 }
@@ -32,13 +32,6 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
   onChange,
   onChangeMultiple,
 }) => {
-  const handleInputChange = (
-    key: keyof BannerChild,
-    value: string | number | undefined | "auto"
-  ) => {
-    onChange(key, value);
-  };
-
   const [isBorderEditing, setIsBorderEditing] = useState<boolean>(false);
 
   const [borderSides, setBorderSides] = useState({
@@ -161,7 +154,7 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
         type="number"
         value={Math.round(object.width || 300)}
         onChange={(e) =>
-          handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
+          onChange("width", Math.round(parseInt(e.target.value, 10)))
         }
         fullWidth
         margin="normal"
@@ -170,9 +163,7 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
         label="Висота блоку (px)"
         type="number"
         value={object.height || 50}
-        onChange={(e) =>
-          handleInputChange("height", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -181,9 +172,7 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
         label="Колір фону"
         format="hex"
         value={object.backgroundColor || "#000000"}
-        onChange={(newColor: string) =>
-          handleInputChange("backgroundColor", newColor)
-        }
+        onChange={(newColor: string) => onChange("backgroundColor", newColor)}
         fullWidth
         sx={{ margin: "16px 0 10px 0" }}
       />
@@ -196,9 +185,7 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
           max: 1,
         }}
         value={object.opacity || 1}
-        onChange={(e) =>
-          handleInputChange("opacity", parseFloat(e.target.value))
-        }
+        onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
         fullWidth
         margin="normal"
       />
@@ -208,7 +195,7 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
         value={object.borderRadius || 0}
         onChange={(e) => {
           const value = parseInt(e.target.value, 10);
-          handleInputChange("borderRadius", value >= 0 ? value : 0);
+          onChange("borderRadius", value >= 0 ? value : 0);
         }}
         fullWidth
         margin="normal"
@@ -217,9 +204,7 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
         label="Поворот (градусів)"
         type="number"
         value={object.rotate || 0}
-        onChange={(e) =>
-          handleInputChange("rotate", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
         // style={{ marginTop: "22px" }}

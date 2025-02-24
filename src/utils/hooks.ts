@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useBanner } from "../context/BannerContext";
 import { BannerObject, BannerChild } from "../types";
 
@@ -191,4 +192,17 @@ export const getObjectTypeLabel = (type: BannerObject["type"]) => {
     default:
       return "Об'єкт";
   }
+};
+
+export const useObjectCondition = () => {
+  const { updateObject } = useBanner();
+
+  const updateCondition = useCallback(
+    (objectId: number, condition: BannerObject["condition"]) => {
+      updateObject(objectId, { condition });
+    },
+    [updateObject]
+  );
+
+  return { updateCondition };
 };
