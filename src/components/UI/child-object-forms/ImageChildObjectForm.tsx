@@ -35,12 +35,6 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
     onChange("src", newUrl);
   };
 
-  const handleInputChange = (
-    key: keyof BannerChild,
-    value: string | number
-  ) => {
-    onChange(key, value);
-  };
   return (
     <Box className="child-object-form">
       <Typography variant="h6" gutterBottom>
@@ -52,7 +46,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
         type="number"
         value={Math.round(object.width || 300)}
         onChange={(e) =>
-          handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
+          onChange("width", Math.round(parseInt(e.target.value, 10)))
         }
         fullWidth
         margin="normal"
@@ -61,9 +55,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
         label="Висота (px)"
         type="number"
         value={object.height || 300}
-        onChange={(e) =>
-          handleInputChange("height", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -80,7 +72,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
         <TextField
           label="URL изображения"
           value={object.src || ""}
-          onChange={(e) => handleInputChange("src", e.target.value)}
+          onChange={(e) => onChange("src", e.target.value)}
           fullWidth
           margin="normal"
           disabled
@@ -108,7 +100,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
         </InputLabel>
         <Select
           value={object.objectFit || "fill"}
-          onChange={(e) => handleInputChange("objectFit", e.target.value)}
+          onChange={(e) => onChange("objectFit", e.target.value)}
         >
           <MenuItem value="fill">Заповнити (fill)</MenuItem>
           <MenuItem value="contain">Вписати (contain)</MenuItem>
@@ -121,9 +113,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
         label="Поворот (градусів)"
         type="number"
         value={object.rotate || 0}
-        onChange={(e) =>
-          handleInputChange("rotate", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />

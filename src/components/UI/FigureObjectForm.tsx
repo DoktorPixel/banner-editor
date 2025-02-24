@@ -66,13 +66,6 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
   const capitalize = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1);
 
-  const handleInputChange = (
-    key: keyof BannerObject,
-    value: string | number | undefined
-  ) => {
-    onChange(key, value);
-  };
-
   const handleBorderToggle = (isEditing: boolean) => {
     setIsBorderEditing(isEditing);
     if (!isEditing) {
@@ -157,7 +150,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         type="number"
         value={Math.round(object.width || 300)}
         onChange={(e) =>
-          handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
+          onChange("width", Math.round(parseInt(e.target.value, 10)))
         }
         fullWidth
         margin="normal"
@@ -166,9 +159,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         label="Висота блоку (px)"
         type="number"
         value={object.height || 50}
-        onChange={(e) =>
-          handleInputChange("height", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -176,7 +167,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         label="Координата X"
         type="number"
         value={object.x || 0}
-        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
+        onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -184,7 +175,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         label="Координата Y"
         type="number"
         value={object.y || 0}
-        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
+        onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -193,9 +184,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         label="Колір фону"
         format="hex"
         value={object.backgroundColor || "#000000"}
-        onChange={(newColor: string) =>
-          handleInputChange("backgroundColor", newColor)
-        }
+        onChange={(newColor: string) => onChange("backgroundColor", newColor)}
         fullWidth
         sx={{ margin: "16px 0 10px 0" }}
       />
@@ -208,9 +197,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
           max: 1,
         }}
         value={object.opacity || 1}
-        onChange={(e) =>
-          handleInputChange("opacity", parseFloat(e.target.value))
-        }
+        onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
         fullWidth
         margin="normal"
       />
@@ -220,7 +207,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         value={object.borderRadius || 0}
         onChange={(e) => {
           const value = parseInt(e.target.value, 10);
-          handleInputChange("borderRadius", value >= 0 ? value : 0);
+          onChange("borderRadius", value >= 0 ? value : 0);
         }}
         fullWidth
         margin="normal"
@@ -326,9 +313,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         label="Поворот (градусів)"
         type="number"
         value={object.rotate || 0}
-        onChange={(e) =>
-          handleInputChange("rotate", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
         fullWidth
         style={{ marginTop: "22px" }}
       />
@@ -336,9 +321,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         label="Рівень шару (z-Index)"
         type="number"
         value={object.zIndex || 0}
-        onChange={(e) =>
-          handleInputChange("zIndex", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("zIndex", parseInt(e.target.value, 10))}
         fullWidth
         style={{ marginTop: "22px" }}
       />

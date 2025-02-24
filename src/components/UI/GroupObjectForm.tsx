@@ -26,7 +26,7 @@ interface TextObjectFormProps {
   object: BannerObject;
   onChange: (
     key: keyof BannerObject,
-    value: string | number | undefined
+    value: string | number | undefined | "auto"
   ) => void;
 }
 
@@ -34,13 +34,6 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
   object,
   onChange,
 }) => {
-  const handleInputChange = (
-    key: keyof BannerObject,
-    value: string | number | undefined | "auto"
-  ) => {
-    onChange(key, value);
-  };
-
   const [isBorderEditing, setIsBorderEditing] = useState<boolean>(false);
   const { updateObjectMultipleProperties } = useObjectProperties();
 
@@ -181,7 +174,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
           type="number"
           value={isAutoWidth ? "" : Math.round(object.width as number)}
           onChange={(e) =>
-            handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
+            onChange("width", Math.round(parseInt(e.target.value, 10)))
           }
           fullWidth
           margin="normal"
@@ -203,9 +196,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         label="Висота блоку (px)"
         type="number"
         value={object.height || 50}
-        onChange={(e) =>
-          handleInputChange("height", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -213,7 +204,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         label="Координата X"
         type="number"
         value={object.x || 0}
-        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
+        onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -221,7 +212,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         label="Координата Y"
         type="number"
         value={object.y || 0}
-        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
+        onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -229,7 +220,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         <InputLabel sx={{ top: "-7px" }}>Тип відображення (Display)</InputLabel>
         <Select
           value={object.display || "flex"}
-          onChange={(e) => handleInputChange("display", e.target.value)}
+          onChange={(e) => onChange("display", e.target.value)}
         >
           <MenuItem value="flex">Гнучкий (flex)</MenuItem>
           <MenuItem value="block">Блоковий (block)</MenuItem>
@@ -244,9 +235,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
             </InputLabel>
             <Select
               value={object.flexDirection || "row"}
-              onChange={(e) =>
-                handleInputChange("flexDirection", e.target.value)
-              }
+              onChange={(e) => onChange("flexDirection", e.target.value)}
             >
               <MenuItem value="row">По рядках (row)</MenuItem>
               <MenuItem value="column">По колонках (column)</MenuItem>
@@ -265,9 +254,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
             </InputLabel>
             <Select
               value={object.justifyContent || "center"}
-              onChange={(e) =>
-                handleInputChange("justifyContent", e.target.value)
-              }
+              onChange={(e) => onChange("justifyContent", e.target.value)}
             >
               <MenuItem value="start">З початку (start)</MenuItem>
               <MenuItem value="center">По центру (center)</MenuItem>
@@ -287,7 +274,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
             </InputLabel>
             <Select
               value={object.alignItems || "center"}
-              onChange={(e) => handleInputChange("alignItems", e.target.value)}
+              onChange={(e) => onChange("alignItems", e.target.value)}
             >
               <MenuItem value="flex-start">Спочатку (flex-start)</MenuItem>
               <MenuItem value="center">По центру (center)</MenuItem>
@@ -299,7 +286,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
             label="Відступ між елементами (gap, px)"
             type="number"
             value={object.gap || 10}
-            onChange={(e) => handleInputChange("gap", parseInt(e.target.value))}
+            onChange={(e) => onChange("gap", parseInt(e.target.value))}
             fullWidth
             margin="normal"
           />
@@ -311,9 +298,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         label="Колір фону"
         format="hex"
         value={object.backgroundColor || "none"}
-        onChange={(newColor: string) =>
-          handleInputChange("backgroundColor", newColor)
-        }
+        onChange={(newColor: string) => onChange("backgroundColor", newColor)}
         fullWidth
         sx={{ margin: "16px 0 10px 0" }}
       />
@@ -326,9 +311,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
           max: 1,
         }}
         value={object.opacity || 1}
-        onChange={(e) =>
-          handleInputChange("opacity", parseFloat(e.target.value))
-        }
+        onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
         fullWidth
         margin="normal"
       />
@@ -343,7 +326,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
             type="number"
             value={object.paddingLeft}
             onChange={(e) =>
-              handleInputChange(
+              onChange(
                 "paddingLeft",
                 Math.max(0, parseFloat(e.target.value) || 0)
               )
@@ -355,7 +338,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
             type="number"
             value={object.paddingRight}
             onChange={(e) =>
-              handleInputChange(
+              onChange(
                 "paddingRight",
                 Math.max(0, parseFloat(e.target.value) || 0)
               )
@@ -367,7 +350,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
             type="number"
             value={object.paddingTop}
             onChange={(e) =>
-              handleInputChange(
+              onChange(
                 "paddingTop",
                 Math.max(0, parseFloat(e.target.value) || 0)
               )
@@ -379,7 +362,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
             type="number"
             value={object.paddingBottom}
             onChange={(e) =>
-              handleInputChange(
+              onChange(
                 "paddingBottom",
                 Math.max(0, parseFloat(e.target.value) || 0)
               )
@@ -395,7 +378,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         value={object.borderRadius || 0}
         onChange={(e) => {
           const value = parseInt(e.target.value, 10);
-          handleInputChange("borderRadius", value >= 0 ? value : 0);
+          onChange("borderRadius", value >= 0 ? value : 0);
         }}
         fullWidth
         margin="normal"
@@ -405,9 +388,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         label="Поворот (градусів)"
         type="number"
         value={object.rotate || 0}
-        onChange={(e) =>
-          handleInputChange("rotate", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
@@ -416,9 +397,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         label="Номер шару (z-Index)"
         type="number"
         value={object.zIndex || 0}
-        onChange={(e) =>
-          handleInputChange("zIndex", parseInt(e.target.value, 10))
-        }
+        onChange={(e) => onChange("zIndex", parseInt(e.target.value, 10))}
         fullWidth
         margin="normal"
       />
