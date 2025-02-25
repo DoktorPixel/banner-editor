@@ -13,6 +13,7 @@ import { BannerChild } from "../../../types";
 import ChildFontSelector from "../ChildFontSelector";
 import TextDecorationSelector from "../button-groups/TextDecorationSelector";
 import FontStyleSelector from "../button-groups/FontStyleSelector";
+import { ChildConditionSelector } from "../ChildConditionSelector";
 
 interface TextChildObjectFormProps {
   object: BannerChild;
@@ -110,6 +111,11 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
         onChange={handleInputChange}
         fullWidth
         margin="normal"
+      />
+
+      <ChildConditionSelector
+        childId={object.id}
+        condition={object.condition}
       />
     </Box>
   );

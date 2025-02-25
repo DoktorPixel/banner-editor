@@ -206,3 +206,16 @@ export const useObjectCondition = () => {
 
   return { updateCondition };
 };
+
+export const useChildCondition = () => {
+  const { updateChild } = useBanner();
+
+  const updateChildCondition = useCallback(
+    (groupId: number, childId: number, condition: BannerChild["condition"]) => {
+      updateChild(groupId, childId, { condition });
+    },
+    [updateChild]
+  );
+
+  return { updateChildCondition };
+};
