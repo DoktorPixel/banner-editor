@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { BannerChild } from "../../../types";
 import { MuiColorInput } from "mui-color-input";
+import { ChildConditionSelector } from "../ChildConditionSelector";
 import {
   BorderBottom,
   BorderLeft,
@@ -474,6 +475,10 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
           </Box>
         </Box>
       )}
+      <ChildConditionSelector
+        childId={object.id}
+        condition={object.condition}
+      />
     </Box>
   );
 };

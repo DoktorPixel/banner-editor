@@ -10,7 +10,7 @@ import {
   ButtonGroup,
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
-
+import { ChildConditionSelector } from "../ChildConditionSelector";
 import {
   BorderBottom,
   BorderLeft,
@@ -305,6 +305,10 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
           </Box>
         </Box>
       )}
+      <ChildConditionSelector
+        childId={object.id}
+        condition={object.condition}
+      />
     </Box>
   );
 };

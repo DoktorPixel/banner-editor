@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import UpdateImageDialog from "../dialogs/UpdateImageDialog";
+import { ChildConditionSelector } from "../ChildConditionSelector";
 
 interface ImageChildObjectFormProps {
   object: BannerChild;
@@ -40,7 +41,6 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
       <Typography variant="h6" gutterBottom>
         Налаштування елементу групи
       </Typography>
-
       <TextField
         label="Ширина (px)"
         type="number"
@@ -67,7 +67,6 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-
       <div className="update-image-wrapper">
         <TextField
           label="URL изображения"
@@ -93,7 +92,6 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
           Оновити зображення
         </Button>
       </div>
-
       <FormControl fullWidth margin="normal">
         <InputLabel sx={{ top: "-7px" }}>
           Підгонка картинки (Object Fit)
@@ -108,7 +106,6 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
           <MenuItem value="none">Без змін (none)</MenuItem>
         </Select>
       </FormControl>
-
       <TextField
         label="Поворот (градусів)"
         type="number"
@@ -118,6 +115,10 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
         margin="normal"
       />
 
+      <ChildConditionSelector
+        childId={object.id}
+        condition={object.condition}
+      />
       <UpdateImageDialog
         open={isDialogOpen}
         initialUrl={object.src || ""}
