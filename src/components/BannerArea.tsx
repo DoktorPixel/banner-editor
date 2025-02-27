@@ -284,9 +284,9 @@ const BannerArea: React.FC = () => {
                       if (child.type === "text") {
                         return (
                           <div
+                            key={child.id}
                             id={`${child.id}`}
                             data-condition={JSON.stringify(child.condition)}
-                            key={child.id}
                             className={`text-field banner-object-child ${
                               selectedChildId?.groupId === object.id &&
                               selectedChildId.childId === child.id
@@ -355,6 +355,7 @@ const BannerArea: React.FC = () => {
                           child;
                         return (
                           <div
+                            key={id}
                             id={`${child.id}`}
                             data-condition={JSON.stringify(child.condition)}
                             style={{
@@ -376,7 +377,6 @@ const BannerArea: React.FC = () => {
                             }`}
                           >
                             <div
-                              key={id}
                               style={{
                                 position: "relative",
                                 width: width ?? "100px",
@@ -390,7 +390,7 @@ const BannerArea: React.FC = () => {
                         const { id, children, rotate, ...groupStyles } = child;
                         return (
                           <div
-                            id={`${child.id}`}
+                            id={`${id}`}
                             data-condition={JSON.stringify(child.condition)}
                             style={{
                               transform: `rotate(${rotate ?? 0}deg)`,
@@ -411,7 +411,6 @@ const BannerArea: React.FC = () => {
                             }
                           >
                             <div
-                              key={id}
                               style={{
                                 width: "auto",
                                 position: "relative",
@@ -430,9 +429,9 @@ const BannerArea: React.FC = () => {
                                 if (nestedChild.type === "image") {
                                   return (
                                     <img
+                                      key={nestedId}
                                       id={`${nestedId}`}
                                       data-condition={JSON.stringify(condition)}
-                                      key={nestedId}
                                       src={src}
                                       alt={"image"}
                                       style={{
@@ -552,7 +551,7 @@ const BannerArea: React.FC = () => {
           return (
             <Fragment key={object.id}>
               <div
-                key={object.id}
+                // key={object.id}
                 style={{
                   position: "absolute",
                   left: object.x,

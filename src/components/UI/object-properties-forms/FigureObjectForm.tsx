@@ -146,40 +146,45 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
 
   return (
     <Box>
-      <TextField
-        label="Ширина блоку (px)"
-        type="number"
-        value={Math.round(object.width || 300)}
-        onChange={(e) =>
-          onChange("width", Math.round(parseInt(e.target.value, 10)))
-        }
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Висота блоку (px)"
-        type="number"
-        value={object.height || 50}
-        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата X"
-        type="number"
-        value={object.x || 0}
-        onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата Y"
-        type="number"
-        value={object.y || 0}
-        onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
+      <div className="auto-size">
+        <TextField
+          label="Ширина блоку (px)"
+          type="number"
+          value={Math.round(object.width || 300)}
+          onChange={(e) =>
+            onChange("width", Math.round(parseInt(e.target.value, 10)))
+          }
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Висота блоку (px)"
+          type="number"
+          value={object.height || 50}
+          onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+      </div>
+
+      <div className="auto-size">
+        <TextField
+          label="Координата X"
+          type="number"
+          value={object.x || 0}
+          onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Координата Y"
+          type="number"
+          value={object.y || 0}
+          onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+      </div>
 
       <MuiColorInput
         label="Колір фону"

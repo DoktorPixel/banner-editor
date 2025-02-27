@@ -9,13 +9,12 @@ import {
   TextField,
   Button,
   ButtonGroup,
-  FormControlLabel,
-  Switch,
 } from "@mui/material";
 import { BannerObject } from "../../../types";
 import { MuiColorInput } from "mui-color-input";
 import { useObjectProperties } from "../../../utils/hooks";
 import { ConditionSelector } from "../ConditionSelector";
+import { AutoSizeInput } from "../AutoSizeInput";
 import {
   BorderBottom,
   BorderLeft,
@@ -44,15 +43,6 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
     left: true,
     right: true,
   });
-
-  const [isAutoWidth, setIsAutoWidth] = useState(false);
-
-  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const autoWidth = event.target.checked;
-    setIsAutoWidth(autoWidth);
-
-    onChange("width", autoWidth ? "auto" : 300);
-  };
 
   const toggleBorderSide = (side: "top" | "bottom" | "left" | "right") => {
     const isActive = borderSides[side];
@@ -157,66 +147,40 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
     });
   }, [object]);
 
-  useEffect(() => {
-    if (typeof object.width === "string") {
-      setIsAutoWidth(object.width === "auto");
-    } else {
-      setIsAutoWidth(false);
-    }
-  }, [object.width]);
-
   return (
     <Box>
       <Typography variant="h6">Налаштування групи</Typography>
+      <AutoSizeInput
+        label="Ширина блоку (px)"
+        value={object.width || 300}
+        onChange={(value) => onChange("width", value)}
+      />
 
-      <div className="auto-width">
+      <AutoSizeInput
+        label="Висота блоку (px)"
+        value={object.height || 50}
+        onChange={(value) => onChange("height", value)}
+      />
+
+      <div className="auto-size">
         <TextField
-          label="Ширина блоку (px)"
+          label="Координата X"
           type="number"
-          value={isAutoWidth ? "" : Math.round(object.width as number)}
-          onChange={(e) =>
-            onChange("width", Math.round(parseInt(e.target.value, 10)))
-          }
+          value={object.x || 0}
+          onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
           fullWidth
           margin="normal"
-          disabled={isAutoWidth}
         />
-        <FormControlLabel
-          control={
-            <Switch
-              checked={isAutoWidth}
-              onChange={handleSwitchChange}
-              color="primary"
-            />
-          }
-          label="auto"
+        <TextField
+          label="Координата Y"
+          type="number"
+          value={object.y || 0}
+          onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
         />
       </div>
 
-      <TextField
-        label="Висота блоку (px)"
-        type="number"
-        value={object.height || 50}
-        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата X"
-        type="number"
-        value={object.x || 0}
-        onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата Y"
-        type="number"
-        value={object.y || 0}
-        onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
       <FormControl fullWidth margin="normal">
         <InputLabel sx={{ top: "-7px" }}>Тип відображення (Display)</InputLabel>
         <Select
