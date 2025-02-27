@@ -1,4 +1,4 @@
-import { ResizeHandlesProps, ResizeDirection } from "../../types";
+import { ResizeHandlesProps, ResizeDirection } from "../types";
 
 const ResizeHandles: React.FC<ResizeHandlesProps> = ({
   objectId,

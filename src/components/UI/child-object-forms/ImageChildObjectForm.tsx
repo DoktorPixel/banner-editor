@@ -41,24 +41,28 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
       <Typography variant="h6" gutterBottom>
         Налаштування елементу групи
       </Typography>
-      <TextField
-        label="Ширина (px)"
-        type="number"
-        value={Math.round(object.width || 300)}
-        onChange={(e) =>
-          onChange("width", Math.round(parseInt(e.target.value, 10)))
-        }
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Висота (px)"
-        type="number"
-        value={object.height || 300}
-        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
+
+      <div className="auto-size">
+        <TextField
+          label="Ширина (px)"
+          type="number"
+          value={Math.round(object.width || 300)}
+          onChange={(e) =>
+            onChange("width", Math.round(parseInt(e.target.value, 10)))
+          }
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Висота (px)"
+          type="number"
+          value={object.height || 300}
+          onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+      </div>
+
       <TextField
         label="URL зображення"
         name="src"

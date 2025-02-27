@@ -1,4 +1,4 @@
-import { BannerObject } from "../../types";
+import { BannerObject } from "../../../types";
 import {
   TextField,
   FormControl,
@@ -6,14 +6,15 @@ import {
   Select,
   MenuItem,
   Box,
+  Tooltip,
 } from "@mui/material";
-import FontSelector from "./FontSelector";
-import TextAlignSelector from "./button-groups/TextAlignSelector";
-import TextDecorationSelector from "./button-groups/TextDecorationSelector";
-import FontStyleSelector from "./button-groups/FontStyleSelector";
+import FontSelector from "../FontSelector";
+import TextAlignSelector from "../button-groups/TextAlignSelector";
+import TextDecorationSelector from "../button-groups/TextDecorationSelector";
+import FontStyleSelector from "../button-groups/FontStyleSelector";
 import { MuiColorInput } from "mui-color-input";
 // import { useObjectCondition } from "../../utils/hooks";
-import { ConditionSelector } from "./ConditionSelector";
+import { ConditionSelector } from "../ConditionSelector";
 
 interface TextObjectFormProps {
   object: BannerObject;
@@ -39,42 +40,48 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
 
   return (
     <Box>
-      {!object.autoWidth && (
+      <div className="auto-size">
+        {!object.autoWidth && (
+          <TextField
+            label="Фіксована ширина (px)"
+            type="number"
+            value={Math.round(object.width || 300)}
+            onChange={(e) =>
+              onChange("width", Math.round(parseInt(e.target.value, 10)))
+            }
+            fullWidth
+            margin="normal"
+          />
+        )}
         <TextField
-          label="Фіксована ширина (px)"
+          label="Висота блоку (px)"
           type="number"
-          value={Math.round(object.width || 300)}
-          onChange={(e) =>
-            onChange("width", Math.round(parseInt(e.target.value, 10)))
-          }
+          value={object.height || 50}
+          onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
           fullWidth
           margin="normal"
         />
-      )}
-      <TextField
-        label="Висота блоку (px)"
-        type="number"
-        value={object.height || 50}
-        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата X"
-        type="number"
-        value={object.x || 0}
-        onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата Y"
-        type="number"
-        value={object.y || 0}
-        onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
+      </div>
+
+      <div className="auto-size">
+        <TextField
+          label="Координата X"
+          type="number"
+          value={object.x || 0}
+          onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Координата Y"
+          type="number"
+          value={object.y || 0}
+          onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+      </div>
+
       <TextField
         label="Текст"
         value={object.content || ""}
@@ -122,29 +129,33 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         sx={{ margin: "16px 0 10px 0" }}
       />
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel sx={{ top: "-7px" }}>Ширина блоку</InputLabel>
-        <Select
-          value={object.autoWidth ? "auto" : "fixed"}
-          onChange={(e) => onChange("autoWidth", e.target.value === "auto")}
-        >
-          <MenuItem value="auto">Автоматична (Auto)</MenuItem>
-          <MenuItem value="fixed">Фіксована (Fixed)</MenuItem>
-        </Select>
-      </FormControl>
-      {!object.autoWidth && (
-        <TextField
-          label="Максимальна кількість рядків"
-          type="number"
-          value={object.maxLines || ""}
-          onChange={(e) => {
-            const value = parseInt(e.target.value, 10);
-            onChange("maxLines", value >= 0 ? value : 0);
-          }}
-          fullWidth
-          margin="normal"
-        />
-      )}
+      <div className="auto-size">
+        <FormControl fullWidth margin="normal">
+          <InputLabel sx={{ top: "-7px" }}>Ширина блоку</InputLabel>
+          <Select
+            value={object.autoWidth ? "auto" : "fixed"}
+            onChange={(e) => onChange("autoWidth", e.target.value === "auto")}
+          >
+            <MenuItem value="auto">Автоматична (Auto)</MenuItem>
+            <MenuItem value="fixed">Фіксована (Fixed)</MenuItem>
+          </Select>
+        </FormControl>
+        {!object.autoWidth && (
+          <Tooltip title="Максимальна кількість рядків" placement="top" arrow>
+            <TextField
+              label="Максимальна кількість рядків"
+              type="number"
+              value={object.maxLines || ""}
+              onChange={(e) => {
+                const value = parseInt(e.target.value, 10);
+                onChange("maxLines", value >= 0 ? value : 0);
+              }}
+              fullWidth
+              margin="normal"
+            />
+          </Tooltip>
+        )}
+      </div>
 
       {/* <FormControl fullWidth margin="normal">
         <InputLabel>Стиль тексту</InputLabel>

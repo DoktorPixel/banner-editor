@@ -1,33 +1,38 @@
-import { BannerObject } from "../../types";
+import { useState, useEffect } from "react";
 import {
-  TextField,
   Box,
-  Button,
-  MenuItem,
-  Select,
   Typography,
+  // FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  Button,
   ButtonGroup,
 } from "@mui/material";
+import { BannerObject } from "../../../types";
 import { MuiColorInput } from "mui-color-input";
-import { useState, useEffect } from "react";
-import { useObjectProperties } from "../../utils/hooks";
-import { ConditionSelector } from "./ConditionSelector";
+import { useObjectProperties } from "../../../utils/hooks";
+import { ConditionSelector } from "../ConditionSelector";
+import { AutoSizeInput } from "../AutoSizeInput";
+import { FlexDirectionSelector } from "../FlexDirectionSelector";
+import { AutoGapInput } from "../AutoGapInput";
 import {
   BorderBottom,
   BorderLeft,
   BorderRight,
   BorderTop,
-} from "../../assets/icons";
+} from "../../../assets/icons";
 
-interface FigureObjectFormProps {
+interface TextObjectFormProps {
   object: BannerObject;
   onChange: (
     key: keyof BannerObject,
-    value: string | number | undefined
+    value: string | number | undefined | "auto"
   ) => void;
 }
 
-export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
+export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
   object,
   onChange,
 }) => {
@@ -146,45 +151,102 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
 
   return (
     <Box>
-      <TextField
+      <Typography variant="h6">Налаштування групи</Typography>
+      <AutoSizeInput
         label="Ширина блоку (px)"
-        type="number"
-        value={Math.round(object.width || 300)}
-        onChange={(e) =>
-          onChange("width", Math.round(parseInt(e.target.value, 10)))
-        }
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Висота блоку (px)"
-        type="number"
-        value={object.height || 50}
-        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата X"
-        type="number"
-        value={object.x || 0}
-        onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата Y"
-        type="number"
-        value={object.y || 0}
-        onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
+        value={object.width || 300}
+        onChange={(value) => onChange("width", value)}
       />
 
+      <AutoSizeInput
+        label="Висота блоку (px)"
+        value={object.height || 50}
+        onChange={(value) => onChange("height", value)}
+      />
+
+      <div className="auto-size">
+        <TextField
+          label="Координата X"
+          type="number"
+          value={object.x || 0}
+          onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Координата Y"
+          type="number"
+          value={object.y || 0}
+          onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+      </div>
+
+      {/* <FormControl fullWidth margin="normal">
+        <InputLabel sx={{ top: "-7px" }}>
+          Напрямок елементів (flexDirection)
+        </InputLabel>
+        <Select
+          value={object.flexDirection || "row"}
+          onChange={(e) => onChange("flexDirection", e.target.value)}
+        >
+          <MenuItem value="row">По рядках (row)</MenuItem>
+          <MenuItem value="column">По колонках (column)</MenuItem>
+          <MenuItem value="row-reverse">
+            По рядках зворотом (row-reverse)
+          </MenuItem>
+          <MenuItem value="column-reverse">
+            По колонках зворотом (column-reverse)
+          </MenuItem>
+        </Select>
+      </FormControl> */}
+
+      {/* <FormControl fullWidth margin="normal">
+        <InputLabel sx={{ top: "-7px" }}>
+          Вирівнювання по вертикалі (alignItems)
+        </InputLabel>
+        <Select
+          value={object.alignItems || "center"}
+          onChange={(e) => onChange("alignItems", e.target.value)}
+        >
+          <MenuItem value="flex-start">Спочатку (flex-start)</MenuItem>
+          <MenuItem value="center">По центру (center)</MenuItem>
+          <MenuItem value="flex-end">Вкінці (flex-end)</MenuItem>
+        </Select>
+      </FormControl> */}
+
+      {/* <FormControl fullWidth margin="normal">
+        <InputLabel sx={{ top: "-7px" }}>
+          Вирівнювання по горизонталі (justifyContent)
+        </InputLabel>
+        <Select
+          value={object.justifyContent || "center"}
+          onChange={(e) => onChange("justifyContent", e.target.value)}
+        >
+          <MenuItem value="start">З початку (start)</MenuItem>
+          <MenuItem value="center">По центру (center)</MenuItem>
+          <MenuItem value="end">В кінці (end)</MenuItem>
+          <MenuItem value="space-between">
+            Між елементами (space-between)
+          </MenuItem>
+        </Select>
+      </FormControl> */}
+
+      {/* <TextField
+        label="Відступ між елементами (gap, px)"
+        type="number"
+        value={object.gap || 10}
+        onChange={(e) => onChange("gap", parseInt(e.target.value))}
+        fullWidth
+        margin="normal"
+      /> */}
+
+      {/* фігура */}
       <MuiColorInput
         label="Колір фону"
         format="hex"
-        value={object.backgroundColor || "#000000"}
+        value={object.backgroundColor || "none"}
         onChange={(newColor: string) => onChange("backgroundColor", newColor)}
         fullWidth
         sx={{ margin: "16px 0 10px 0" }}
@@ -202,6 +264,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
+
       <TextField
         label="заокруглення (border-radius)"
         type="number"
@@ -214,8 +277,30 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         margin="normal"
       />
 
+      <TextField
+        label="Поворот (градусів)"
+        type="number"
+        value={object.rotate || 0}
+        onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
+
+      <TextField
+        label="Номер шару (z-Index)"
+        type="number"
+        value={object.zIndex || 0}
+        onChange={(e) => onChange("zIndex", parseInt(e.target.value, 10))}
+        fullWidth
+        margin="normal"
+      />
+
       {!isBorderEditing ? (
-        <Button variant="outlined" onClick={handleAddBorder}>
+        <Button
+          variant="outlined"
+          onClick={handleAddBorder}
+          sx={{ textAlign: "left" }}
+        >
           + Додати бордер
         </Button>
       ) : (
@@ -309,24 +394,84 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
           </Box>
         </Box>
       )}
-
-      <TextField
-        label="Поворот (градусів)"
-        type="number"
-        value={object.rotate || 0}
-        onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
-        fullWidth
-        style={{ marginTop: "22px" }}
-      />
-      <TextField
-        label="Рівень шару (z-Index)"
-        type="number"
-        value={object.zIndex || 0}
-        onChange={(e) => onChange("zIndex", parseInt(e.target.value, 10))}
-        fullWidth
-        style={{ marginTop: "22px" }}
-      />
       <ConditionSelector objectId={object.id} condition={object.condition} />
+
+      <div>
+        <InputLabel sx={{ marginTop: "10px", marginBottom: "10px" }}>
+          Відступи (padding):
+        </InputLabel>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <TextField
+            label="Left"
+            type="number"
+            value={object.paddingLeft}
+            onChange={(e) =>
+              onChange(
+                "paddingLeft",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Right"
+            type="number"
+            value={object.paddingRight}
+            onChange={(e) =>
+              onChange(
+                "paddingRight",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Top"
+            type="number"
+            value={object.paddingTop}
+            onChange={(e) =>
+              onChange(
+                "paddingTop",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Bottom"
+            type="number"
+            value={object.paddingBottom}
+            onChange={(e) =>
+              onChange(
+                "paddingBottom",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+        </div>
+      </div>
+
+      <Typography sx={{ mb: -1, mt: 1, fontSize: "14px" }}>
+        Direction + Gap
+      </Typography>
+      <div className="auto-size flex-direction-wrapper">
+        <FlexDirectionSelector
+          value={
+            (object.flexDirection as
+              | "row"
+              | "column"
+              | "row-reverse"
+              | "column-reverse") || "row"
+          }
+          onChange={(value) => onChange("flexDirection", value)}
+        />
+        <AutoGapInput
+          objectId={object.id}
+          value={object.gap}
+          updateObjectMultipleProperties={updateObjectMultipleProperties}
+        />
+      </div>
     </Box>
   );
 };

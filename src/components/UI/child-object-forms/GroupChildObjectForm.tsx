@@ -9,12 +9,13 @@ import {
   TextField,
   Button,
   ButtonGroup,
-  FormControlLabel,
-  Switch,
 } from "@mui/material";
 import { BannerChild } from "../../../types";
 import { MuiColorInput } from "mui-color-input";
 import { ChildConditionSelector } from "../ChildConditionSelector";
+import { AutoSizeInput } from "../AutoSizeInput";
+import { FlexDirectionSelector } from "../FlexDirectionSelector";
+// import { AutoGapInput } from "../AutoGapInput";
 import {
   BorderBottom,
   BorderLeft,
@@ -43,15 +44,6 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
     left: true,
     right: true,
   });
-
-  const [isAutoWidth, setIsAutoWidth] = useState(false);
-
-  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const autoWidth = event.target.checked;
-    setIsAutoWidth(autoWidth);
-
-    onChange("width", autoWidth ? "auto" : 300);
-  };
 
   const toggleBorderSide = (side: "top" | "bottom" | "left" | "right") => {
     const isActive = borderSides[side];
@@ -156,51 +148,22 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
     });
   }, [object]);
 
-  useEffect(() => {
-    if (typeof object.width === "string") {
-      setIsAutoWidth(object.width === "auto");
-    } else {
-      setIsAutoWidth(false);
-    }
-  }, [object.width]);
-
   return (
     <Box className="child-object-form">
       <Typography variant="h6" gutterBottom>
         Налаштування елементу групи
       </Typography>
 
-      <div className="auto-width">
-        <TextField
-          label="Ширина блоку (px)"
-          type="number"
-          value={isAutoWidth ? "" : Math.round(object.width as number)}
-          onChange={(e) =>
-            onChange("width", Math.round(parseInt(e.target.value, 10)))
-          }
-          fullWidth
-          margin="normal"
-          disabled={isAutoWidth}
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              checked={isAutoWidth}
-              onChange={handleSwitchChange}
-              color="primary"
-            />
-          }
-          label="auto"
-        />
-      </div>
+      <AutoSizeInput
+        label="Ширина блоку (px)"
+        value={object.width || 300}
+        onChange={(value) => onChange("width", value)}
+      />
 
-      <TextField
+      <AutoSizeInput
         label="Висота блоку (px)"
-        type="number"
         value={object.height || 50}
-        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
+        onChange={(value) => onChange("height", value)}
       />
 
       <FormControl fullWidth margin="normal">
@@ -302,62 +265,6 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-
-      <div>
-        <InputLabel sx={{ marginBottom: "10px" }}>
-          Відступи (padding):
-        </InputLabel>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <TextField
-            label="Left"
-            type="number"
-            value={object.paddingLeft}
-            onChange={(e) =>
-              onChange(
-                "paddingLeft",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-          <TextField
-            label="Right"
-            type="number"
-            value={object.paddingRight}
-            onChange={(e) =>
-              onChange(
-                "paddingRight",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-          <TextField
-            label="Top"
-            type="number"
-            value={object.paddingTop}
-            onChange={(e) =>
-              onChange(
-                "paddingTop",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-          <TextField
-            label="Bottom"
-            type="number"
-            value={object.paddingBottom}
-            onChange={(e) =>
-              onChange(
-                "paddingBottom",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-        </div>
-      </div>
 
       <TextField
         label="заокруглення (border-radius)"
@@ -479,6 +386,86 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         childId={object.id}
         condition={object.condition}
       />
+
+      <div>
+        <InputLabel sx={{ marginTop: "10px", marginBottom: "10px" }}>
+          Відступи (padding):
+        </InputLabel>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <TextField
+            label="Left"
+            type="number"
+            value={object.paddingLeft}
+            onChange={(e) =>
+              onChange(
+                "paddingLeft",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Right"
+            type="number"
+            value={object.paddingRight}
+            onChange={(e) =>
+              onChange(
+                "paddingRight",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Top"
+            type="number"
+            value={object.paddingTop}
+            onChange={(e) =>
+              onChange(
+                "paddingTop",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Bottom"
+            type="number"
+            value={object.paddingBottom}
+            onChange={(e) =>
+              onChange(
+                "paddingBottom",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+        </div>
+      </div>
+
+      <Typography sx={{ mb: -1, mt: 1, fontSize: "14px" }}>
+        Direction + Gap
+      </Typography>
+      <div
+        className="auto-size flex-direction-wrapper"
+        style={{ marginBottom: "10px" }}
+      >
+        <FlexDirectionSelector
+          value={
+            (object.flexDirection as
+              | "row"
+              | "column"
+              | "row-reverse"
+              | "column-reverse") || "row"
+          }
+          onChange={(value) => onChange("flexDirection", value)}
+        />
+        {/* <AutoGapInput
+          objectId={object.id}
+          value={object.gap}
+          updateObjectMultipleProperties={updateObjectMultipleProperties}
+        /> */}
+      </div>
     </Box>
   );
 };

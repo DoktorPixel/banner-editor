@@ -149,24 +149,27 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
       <Typography variant="h6" gutterBottom>
         Налаштування елементу групи
       </Typography>
-      <TextField
-        label="Ширина блоку (px)"
-        type="number"
-        value={Math.round(object.width || 300)}
-        onChange={(e) =>
-          onChange("width", Math.round(parseInt(e.target.value, 10)))
-        }
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Висота блоку (px)"
-        type="number"
-        value={object.height || 50}
-        onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
+
+      <div className="auto-size">
+        <TextField
+          label="Ширина блоку (px)"
+          type="number"
+          value={Math.round(object.width || 300)}
+          onChange={(e) =>
+            onChange("width", Math.round(parseInt(e.target.value, 10)))
+          }
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Висота блоку (px)"
+          type="number"
+          value={object.height || 50}
+          onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+      </div>
 
       <MuiColorInput
         label="Колір фону"

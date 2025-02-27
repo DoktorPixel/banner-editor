@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BannerObject } from "../../types";
+import { BannerObject } from "../../../types";
 import {
   TextField,
   FormControl,
@@ -8,8 +8,8 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import UpdateImageDialog from "./dialogs/UpdateImageDialog";
-import { ConditionSelector } from "./ConditionSelector";
+import UpdateImageDialog from "../dialogs/UpdateImageDialog";
+import { ConditionSelector } from "../ConditionSelector";
 
 interface ImageObjectFormProps {
   object: BannerObject;
@@ -43,42 +43,46 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
 
   return (
     <>
-      <TextField
-        label="Ширина (px)"
-        type="number"
-        value={Math.round(object.width || 300)}
-        onChange={(e) =>
-          handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
-        }
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Висота (px)"
-        type="number"
-        value={object.height || 300}
-        onChange={(e) =>
-          handleInputChange("height", parseInt(e.target.value, 10))
-        }
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата X"
-        type="number"
-        value={object.x}
-        onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Координата Y"
-        type="number"
-        value={object.y}
-        onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
+      <div className="">
+        <TextField
+          label="Ширина (px)"
+          type="number"
+          value={Math.round(object.width || 300)}
+          onChange={(e) =>
+            handleInputChange("width", Math.round(parseInt(e.target.value, 10)))
+          }
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Висота (px)"
+          type="number"
+          value={object.height || 300}
+          onChange={(e) =>
+            handleInputChange("height", parseInt(e.target.value, 10))
+          }
+          fullWidth
+          margin="normal"
+        />
+      </div>
+      <div className="auto-size">
+        <TextField
+          label="Координата X"
+          type="number"
+          value={object.x}
+          onChange={(e) => handleInputChange("x", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Координата Y"
+          type="number"
+          value={object.y}
+          onChange={(e) => handleInputChange("y", parseInt(e.target.value, 10))}
+          fullWidth
+          margin="normal"
+        />
+      </div>
       <div className="update-image-wrapper">
         <TextField
           label="URL изображения"

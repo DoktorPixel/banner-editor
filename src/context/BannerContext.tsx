@@ -20,6 +20,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   }>({});
 
   const objects = history[currentStep] || [];
+  console.log("objects:", objects);
 
   const renderedObjects = useMemo(() => {
     return objects.map((obj) => ({
