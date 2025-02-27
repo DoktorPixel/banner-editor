@@ -1,4 +1,4 @@
-import { BannerObject } from "../../types";
+import { BannerObject } from "../../../types";
 import {
   TextField,
   Box,
@@ -10,14 +10,14 @@ import {
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 import { useState, useEffect } from "react";
-import { useObjectProperties } from "../../utils/hooks";
-import { ConditionSelector } from "./ConditionSelector";
+import { useObjectProperties } from "../../../utils/hooks";
+import { ConditionSelector } from "../ConditionSelector";
 import {
   BorderBottom,
   BorderLeft,
   BorderRight,
   BorderTop,
-} from "../../assets/icons";
+} from "../../../assets/icons";
 
 interface FigureObjectFormProps {
   object: BannerObject;

@@ -3,7 +3,7 @@ import { useBanner } from "../context/BannerContext";
 import { useMode } from "../context/ModeContext";
 import { ResizeDirection } from "../types";
 import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
-import ResizeHandles from "./UI/ResizeHandles";
+import ResizeHandles from "../utils/ResizeHandles";
 import ContextMenu from "./UI/ContextMenu";
 import { BannerObject } from "../types";
 import Header from "./Header";

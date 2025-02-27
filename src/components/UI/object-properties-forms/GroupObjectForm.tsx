@@ -12,16 +12,16 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
-import { BannerObject } from "../../types";
+import { BannerObject } from "../../../types";
 import { MuiColorInput } from "mui-color-input";
-import { useObjectProperties } from "../../utils/hooks";
-import { ConditionSelector } from "./ConditionSelector";
+import { useObjectProperties } from "../../../utils/hooks";
+import { ConditionSelector } from "../ConditionSelector";
 import {
   BorderBottom,
   BorderLeft,
   BorderRight,
   BorderTop,
-} from "../../assets/icons";
+} from "../../../assets/icons";
 
 interface TextObjectFormProps {
   object: BannerObject;

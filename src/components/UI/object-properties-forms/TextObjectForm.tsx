@@ -1,4 +1,4 @@
-import { BannerObject } from "../../types";
+import { BannerObject } from "../../../types";
 import {
   TextField,
   FormControl,
@@ -7,13 +7,13 @@ import {
   MenuItem,
   Box,
 } from "@mui/material";
-import FontSelector from "./FontSelector";
-import TextAlignSelector from "./button-groups/TextAlignSelector";
-import TextDecorationSelector from "./button-groups/TextDecorationSelector";
-import FontStyleSelector from "./button-groups/FontStyleSelector";
+import FontSelector from "../FontSelector";
+import TextAlignSelector from "../button-groups/TextAlignSelector";
+import TextDecorationSelector from "../button-groups/TextDecorationSelector";
+import FontStyleSelector from "../button-groups/FontStyleSelector";
 import { MuiColorInput } from "mui-color-input";
 // import { useObjectCondition } from "../../utils/hooks";
-import { ConditionSelector } from "./ConditionSelector";
+import { ConditionSelector } from "../ConditionSelector";
 
 interface TextObjectFormProps {
   object: BannerObject;

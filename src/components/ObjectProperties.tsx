@@ -1,9 +1,9 @@
 import { Box, Typography, Button } from "@mui/material";
 import { useObjectProperties, useChildProperties } from "../utils/hooks";
-import { TextObjectForm } from "./UI/TextObjectForm";
-import { ImageObjectForm } from "./UI/ImageObjectForm";
-import { GroupObjectForm } from "./UI/GroupObjectForm";
-import { FigureObjectForm } from "./UI/FigureObjectForm";
+import { TextObjectForm } from "./UI/object-properties-forms/TextObjectForm";
+import { ImageObjectForm } from "./UI/object-properties-forms/ImageObjectForm";
+import { GroupObjectForm } from "./UI/object-properties-forms/GroupObjectForm";
+import { FigureObjectForm } from "./UI/object-properties-forms/FigureObjectForm";
 import { AutoLayoutForm } from "./UI/button-groups/AutoLayoutForm";
 // import { ChildObjectForm } from "./UI/ChildObjectForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";

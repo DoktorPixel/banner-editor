@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BannerObject } from "../../types";
+import { BannerObject } from "../../../types";
 import {
   TextField,
   FormControl,
@@ -8,8 +8,8 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import UpdateImageDialog from "./dialogs/UpdateImageDialog";
-import { ConditionSelector } from "./ConditionSelector";
+import UpdateImageDialog from "../dialogs/UpdateImageDialog";
+import { ConditionSelector } from "../ConditionSelector";
 
 interface ImageObjectFormProps {
   object: BannerObject;
