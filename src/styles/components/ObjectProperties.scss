@@ -46,3 +46,15 @@
   flex-direction: row;
   gap: 10px;
 }
+
+.auto-size.flex-direction-wrapper {
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
+}
+
+.flex-direction-selector {
+  margin-top: 8px;
+  max-width: 78px;
+  max-height: 33px;
+}

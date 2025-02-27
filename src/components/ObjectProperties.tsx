@@ -65,20 +65,27 @@ const ObjectProperties: React.FC = () => {
                 onChangeMultiple={handleChangeMultipleChildProperties}
               />
 
-              {selectedChild.display !== "block" && (
-                <>
-                  <AutoLayoutForm
-                    flexDirection={
-                      (selectedChild.flexDirection as "row" | "column") || "row"
-                    }
-                    justifyContent={selectedChild.justifyContent || "center"}
-                    alignItems={selectedChild.alignItems || "center"}
-                    onChange={(changes) =>
-                      handleChangeMultipleChildProperties(changes)
-                    }
-                  />
-                </>
-              )}
+              <AutoLayoutForm
+                flexDirection={
+                  (selectedChild.flexDirection as "row" | "column") || "row"
+                }
+                justifyContent={
+                  (selectedChild.justifyContent as
+                    | "start"
+                    | "center"
+                    | "end"
+                    | "space-between") || "center"
+                }
+                alignItems={
+                  (selectedChild.alignItems as
+                    | "flex-start"
+                    | "center"
+                    | "flex-end") || "center"
+                }
+                onChange={(changes) =>
+                  handleChangeMultipleChildProperties(changes)
+                }
+              />
             </>
           )}
           <Button
@@ -123,20 +130,27 @@ const ObjectProperties: React.FC = () => {
               }
             />
 
-            {selectedObject.display !== "block" && (
-              <>
-                <AutoLayoutForm
-                  flexDirection={
-                    (selectedObject.flexDirection as "row" | "column") || "row"
-                  }
-                  justifyContent={selectedObject.justifyContent || "center"}
-                  alignItems={selectedObject.alignItems || "center"}
-                  onChange={(changes) =>
-                    updateObjectMultipleProperties(selectedObject.id, changes)
-                  }
-                />
-              </>
-            )}
+            <AutoLayoutForm
+              flexDirection={
+                (selectedObject.flexDirection as "row" | "column") || "row"
+              }
+              justifyContent={
+                (selectedObject.justifyContent as
+                  | "start"
+                  | "center"
+                  | "end"
+                  | "space-between") || "center"
+              }
+              alignItems={
+                (selectedObject.alignItems as
+                  | "flex-start"
+                  | "center"
+                  | "flex-end") || "center"
+              }
+              onChange={(changes) =>
+                updateObjectMultipleProperties(selectedObject.id, changes)
+              }
+            />
           </>
         ) : null
       ) : (

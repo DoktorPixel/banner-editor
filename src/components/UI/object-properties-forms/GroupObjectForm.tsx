@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
-  FormControl,
+  // FormControl,
   InputLabel,
   Select,
   MenuItem,
@@ -15,6 +15,8 @@ import { MuiColorInput } from "mui-color-input";
 import { useObjectProperties } from "../../../utils/hooks";
 import { ConditionSelector } from "../ConditionSelector";
 import { AutoSizeInput } from "../AutoSizeInput";
+import { FlexDirectionSelector } from "../FlexDirectionSelector";
+import { AutoGapInput } from "../AutoGapInput";
 import {
   BorderBottom,
   BorderLeft,
@@ -181,82 +183,64 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         />
       </div>
 
-      <FormControl fullWidth margin="normal">
-        <InputLabel sx={{ top: "-7px" }}>Тип відображення (Display)</InputLabel>
+      {/* <FormControl fullWidth margin="normal">
+        <InputLabel sx={{ top: "-7px" }}>
+          Напрямок елементів (flexDirection)
+        </InputLabel>
         <Select
-          value={object.display || "flex"}
-          onChange={(e) => onChange("display", e.target.value)}
+          value={object.flexDirection || "row"}
+          onChange={(e) => onChange("flexDirection", e.target.value)}
         >
-          <MenuItem value="flex">Гнучкий (flex)</MenuItem>
-          <MenuItem value="block">Блоковий (block)</MenuItem>
+          <MenuItem value="row">По рядках (row)</MenuItem>
+          <MenuItem value="column">По колонках (column)</MenuItem>
+          <MenuItem value="row-reverse">
+            По рядках зворотом (row-reverse)
+          </MenuItem>
+          <MenuItem value="column-reverse">
+            По колонках зворотом (column-reverse)
+          </MenuItem>
         </Select>
-      </FormControl>
+      </FormControl> */}
 
-      {object.display !== "block" && (
-        <>
-          <FormControl fullWidth margin="normal">
-            <InputLabel sx={{ top: "-7px" }}>
-              Напрямок елементів (flexDirection)
-            </InputLabel>
-            <Select
-              value={object.flexDirection || "row"}
-              onChange={(e) => onChange("flexDirection", e.target.value)}
-            >
-              <MenuItem value="row">По рядках (row)</MenuItem>
-              <MenuItem value="column">По колонках (column)</MenuItem>
-              <MenuItem value="row-reverse">
-                По рядках зворотом (row-reverse)
-              </MenuItem>
-              <MenuItem value="column-reverse">
-                По колонках зворотом (column-reverse)
-              </MenuItem>
-            </Select>
-          </FormControl>
+      {/* <FormControl fullWidth margin="normal">
+        <InputLabel sx={{ top: "-7px" }}>
+          Вирівнювання по вертикалі (alignItems)
+        </InputLabel>
+        <Select
+          value={object.alignItems || "center"}
+          onChange={(e) => onChange("alignItems", e.target.value)}
+        >
+          <MenuItem value="flex-start">Спочатку (flex-start)</MenuItem>
+          <MenuItem value="center">По центру (center)</MenuItem>
+          <MenuItem value="flex-end">Вкінці (flex-end)</MenuItem>
+        </Select>
+      </FormControl> */}
 
-          <FormControl fullWidth margin="normal">
-            <InputLabel sx={{ top: "-7px" }}>
-              Вирівнювання по горизонталі (justifyContent)
-            </InputLabel>
-            <Select
-              value={object.justifyContent || "center"}
-              onChange={(e) => onChange("justifyContent", e.target.value)}
-            >
-              <MenuItem value="start">З початку (start)</MenuItem>
-              <MenuItem value="center">По центру (center)</MenuItem>
-              <MenuItem value="end">В кінці (end)</MenuItem>
-              <MenuItem value="space-between">
-                Між елементами (space-between)
-              </MenuItem>
-              <MenuItem value="space-around">
-                Рівномірно навколо (space-around)
-              </MenuItem>
-            </Select>
-          </FormControl>
+      {/* <FormControl fullWidth margin="normal">
+        <InputLabel sx={{ top: "-7px" }}>
+          Вирівнювання по горизонталі (justifyContent)
+        </InputLabel>
+        <Select
+          value={object.justifyContent || "center"}
+          onChange={(e) => onChange("justifyContent", e.target.value)}
+        >
+          <MenuItem value="start">З початку (start)</MenuItem>
+          <MenuItem value="center">По центру (center)</MenuItem>
+          <MenuItem value="end">В кінці (end)</MenuItem>
+          <MenuItem value="space-between">
+            Між елементами (space-between)
+          </MenuItem>
+        </Select>
+      </FormControl> */}
 
-          <FormControl fullWidth margin="normal">
-            <InputLabel sx={{ top: "-7px" }}>
-              Вирівнювання по вертикалі (alignItems)
-            </InputLabel>
-            <Select
-              value={object.alignItems || "center"}
-              onChange={(e) => onChange("alignItems", e.target.value)}
-            >
-              <MenuItem value="flex-start">Спочатку (flex-start)</MenuItem>
-              <MenuItem value="center">По центру (center)</MenuItem>
-              <MenuItem value="flex-end">Вкінці (flex-end)</MenuItem>
-            </Select>
-          </FormControl>
-
-          <TextField
-            label="Відступ між елементами (gap, px)"
-            type="number"
-            value={object.gap || 10}
-            onChange={(e) => onChange("gap", parseInt(e.target.value))}
-            fullWidth
-            margin="normal"
-          />
-        </>
-      )}
+      {/* <TextField
+        label="Відступ між елементами (gap, px)"
+        type="number"
+        value={object.gap || 10}
+        onChange={(e) => onChange("gap", parseInt(e.target.value))}
+        fullWidth
+        margin="normal"
+      /> */}
 
       {/* фігура */}
       <MuiColorInput
@@ -280,62 +264,6 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-
-      <div>
-        <InputLabel sx={{ marginBottom: "10px" }}>
-          Відступи (padding):
-        </InputLabel>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <TextField
-            label="Left"
-            type="number"
-            value={object.paddingLeft}
-            onChange={(e) =>
-              onChange(
-                "paddingLeft",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-          <TextField
-            label="Right"
-            type="number"
-            value={object.paddingRight}
-            onChange={(e) =>
-              onChange(
-                "paddingRight",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-          <TextField
-            label="Top"
-            type="number"
-            value={object.paddingTop}
-            onChange={(e) =>
-              onChange(
-                "paddingTop",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-          <TextField
-            label="Bottom"
-            type="number"
-            value={object.paddingBottom}
-            onChange={(e) =>
-              onChange(
-                "paddingBottom",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-        </div>
-      </div>
 
       <TextField
         label="заокруглення (border-radius)"
@@ -467,6 +395,83 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         </Box>
       )}
       <ConditionSelector objectId={object.id} condition={object.condition} />
+
+      <div>
+        <InputLabel sx={{ marginTop: "10px", marginBottom: "10px" }}>
+          Відступи (padding):
+        </InputLabel>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <TextField
+            label="Left"
+            type="number"
+            value={object.paddingLeft}
+            onChange={(e) =>
+              onChange(
+                "paddingLeft",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Right"
+            type="number"
+            value={object.paddingRight}
+            onChange={(e) =>
+              onChange(
+                "paddingRight",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Top"
+            type="number"
+            value={object.paddingTop}
+            onChange={(e) =>
+              onChange(
+                "paddingTop",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Bottom"
+            type="number"
+            value={object.paddingBottom}
+            onChange={(e) =>
+              onChange(
+                "paddingBottom",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+        </div>
+      </div>
+
+      <Typography sx={{ mb: -1, mt: 1, fontSize: "14px" }}>
+        Direction + Gap
+      </Typography>
+      <div className="auto-size flex-direction-wrapper">
+        <FlexDirectionSelector
+          value={
+            (object.flexDirection as
+              | "row"
+              | "column"
+              | "row-reverse"
+              | "column-reverse") || "row"
+          }
+          onChange={(value) => onChange("flexDirection", value)}
+        />
+        <AutoGapInput
+          objectId={object.id}
+          value={object.gap}
+          updateObjectMultipleProperties={updateObjectMultipleProperties}
+        />
+      </div>
     </Box>
   );
 };

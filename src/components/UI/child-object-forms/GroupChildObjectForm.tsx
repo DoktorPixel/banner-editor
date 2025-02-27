@@ -14,6 +14,8 @@ import { BannerChild } from "../../../types";
 import { MuiColorInput } from "mui-color-input";
 import { ChildConditionSelector } from "../ChildConditionSelector";
 import { AutoSizeInput } from "../AutoSizeInput";
+import { FlexDirectionSelector } from "../FlexDirectionSelector";
+// import { AutoGapInput } from "../AutoGapInput";
 import {
   BorderBottom,
   BorderLeft,
@@ -264,62 +266,6 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         margin="normal"
       />
 
-      <div>
-        <InputLabel sx={{ marginBottom: "10px" }}>
-          Відступи (padding):
-        </InputLabel>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <TextField
-            label="Left"
-            type="number"
-            value={object.paddingLeft}
-            onChange={(e) =>
-              onChange(
-                "paddingLeft",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-          <TextField
-            label="Right"
-            type="number"
-            value={object.paddingRight}
-            onChange={(e) =>
-              onChange(
-                "paddingRight",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-          <TextField
-            label="Top"
-            type="number"
-            value={object.paddingTop}
-            onChange={(e) =>
-              onChange(
-                "paddingTop",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-          <TextField
-            label="Bottom"
-            type="number"
-            value={object.paddingBottom}
-            onChange={(e) =>
-              onChange(
-                "paddingBottom",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
-            }
-            fullWidth
-          />
-        </div>
-      </div>
-
       <TextField
         label="заокруглення (border-radius)"
         type="number"
@@ -440,6 +386,86 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         childId={object.id}
         condition={object.condition}
       />
+
+      <div>
+        <InputLabel sx={{ marginTop: "10px", marginBottom: "10px" }}>
+          Відступи (padding):
+        </InputLabel>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <TextField
+            label="Left"
+            type="number"
+            value={object.paddingLeft}
+            onChange={(e) =>
+              onChange(
+                "paddingLeft",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Right"
+            type="number"
+            value={object.paddingRight}
+            onChange={(e) =>
+              onChange(
+                "paddingRight",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Top"
+            type="number"
+            value={object.paddingTop}
+            onChange={(e) =>
+              onChange(
+                "paddingTop",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+          <TextField
+            label="Bottom"
+            type="number"
+            value={object.paddingBottom}
+            onChange={(e) =>
+              onChange(
+                "paddingBottom",
+                Math.max(0, parseFloat(e.target.value) || 0)
+              )
+            }
+            fullWidth
+          />
+        </div>
+      </div>
+
+      <Typography sx={{ mb: -1, mt: 1, fontSize: "14px" }}>
+        Direction + Gap
+      </Typography>
+      <div
+        className="auto-size flex-direction-wrapper"
+        style={{ marginBottom: "10px" }}
+      >
+        <FlexDirectionSelector
+          value={
+            (object.flexDirection as
+              | "row"
+              | "column"
+              | "row-reverse"
+              | "column-reverse") || "row"
+          }
+          onChange={(value) => onChange("flexDirection", value)}
+        />
+        {/* <AutoGapInput
+          objectId={object.id}
+          value={object.gap}
+          updateObjectMultipleProperties={updateObjectMultipleProperties}
+        /> */}
+      </div>
     </Box>
   );
 };
