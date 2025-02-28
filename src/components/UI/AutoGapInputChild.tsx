@@ -11,24 +11,41 @@ export const AutoGapInputChild: React.FC<AutoGapInputChildProps> = ({
   value,
   onChangeMultiple,
 }) => {
-  const [isAuto, setIsAuto] = useState(value === undefined);
+  const [gapValue, setGapValue] = useState<number | undefined>(
+    value !== undefined ? parseInt(value as string, 10) : undefined
+  );
+  const [isAuto, setIsAuto] = useState(gapValue === undefined);
 
   useEffect(() => {
-    setIsAuto(value === undefined);
+    const parsedValue =
+      value !== undefined ? parseInt(value as string, 10) : undefined;
+    setGapValue(parsedValue);
+    setIsAuto(parsedValue === undefined);
   }, [value]);
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const auto = event.target.checked;
     setIsAuto(auto);
-    onChangeMultiple({
-      gap: auto ? undefined : 10,
-      justifyContent: auto ? "space-between" : "center",
-    });
+    if (auto) {
+      setGapValue(undefined);
+      onChangeMultiple({
+        gap: undefined,
+        justifyContent: "space-between",
+      });
+    } else {
+      setGapValue(10);
+      onChangeMultiple({
+        gap: 10,
+        justifyContent: "center",
+      });
+    }
   };
 
   const handleGapChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const parsedValue = parseInt(e.target.value, 10);
-    if (!isNaN(parsedValue)) {
+
+    if (!isNaN(parsedValue) && parsedValue >= 0) {
+      setGapValue(parsedValue);
       onChangeMultiple({ gap: parsedValue });
     }
   };
@@ -39,7 +56,7 @@ export const AutoGapInputChild: React.FC<AutoGapInputChildProps> = ({
         <TextField
           label="Відступ між елементами (gap, px)"
           type="number"
-          value={isAuto ? "" : value ?? 10}
+          value={isAuto ? "" : gapValue ?? ""}
           onChange={handleGapChange}
           fullWidth
           margin="normal"

@@ -255,7 +255,7 @@ const BannerArea: React.FC = () => {
                       flexDirection: object.flexDirection,
                       justifyContent: object.justifyContent,
                       alignItems: object.alignItems,
-                      gap: object.gap || "10px",
+                      gap: object.gap || 0,
                       transform: `rotate(${object.rotate || 0}deg)`,
                       //
                       backgroundColor: object.backgroundColor,
