@@ -15,7 +15,7 @@ import { MuiColorInput } from "mui-color-input";
 import { ChildConditionSelector } from "../ChildConditionSelector";
 import { AutoSizeInput } from "../AutoSizeInput";
 import { FlexDirectionSelector } from "../FlexDirectionSelector";
-// import { AutoGapInput } from "../AutoGapInput";
+import { AutoGapInputChild } from "../AutoGapInputChild";
 import {
   BorderBottom,
   BorderLeft,
@@ -448,11 +448,10 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
           }
           onChange={(value) => onChange("flexDirection", value)}
         />
-        {/* <AutoGapInput
-          objectId={object.id}
+        <AutoGapInputChild
           value={object.gap}
-          updateObjectMultipleProperties={updateObjectMultipleProperties}
-        /> */}
+          onChangeMultiple={onChangeMultiple}
+        />
       </div>
     </Box>
   );

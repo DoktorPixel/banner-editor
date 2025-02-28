@@ -3,7 +3,7 @@ import { TextField, FormControlLabel, Switch } from "@mui/material";
 
 interface AutoSizeInputProps {
   label: string;
-  value: number | string;
+  value: number | string | undefined;
   onChange: (value: number | "auto") => void;
 }
 
