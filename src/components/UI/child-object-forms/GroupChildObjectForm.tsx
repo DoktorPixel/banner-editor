@@ -391,16 +391,13 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         <InputLabel sx={{ marginTop: "10px", marginBottom: "10px" }}>
           Відступи (padding):
         </InputLabel>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "7px" }}>
           <TextField
             label="Left"
             type="number"
             value={object.paddingLeft}
             onChange={(e) =>
-              onChange(
-                "paddingLeft",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
+              onChange("paddingLeft", Math.max(0, parseFloat(e.target.value)))
             }
             fullWidth
           />
@@ -409,10 +406,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             type="number"
             value={object.paddingRight}
             onChange={(e) =>
-              onChange(
-                "paddingRight",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
+              onChange("paddingRight", Math.max(0, parseFloat(e.target.value)))
             }
             fullWidth
           />
@@ -421,10 +415,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             type="number"
             value={object.paddingTop}
             onChange={(e) =>
-              onChange(
-                "paddingTop",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
+              onChange("paddingTop", Math.max(0, parseFloat(e.target.value)))
             }
             fullWidth
           />
@@ -433,10 +424,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             type="number"
             value={object.paddingBottom}
             onChange={(e) =>
-              onChange(
-                "paddingBottom",
-                Math.max(0, parseFloat(e.target.value) || 0)
-              )
+              onChange("paddingBottom", Math.max(0, parseFloat(e.target.value)))
             }
             fullWidth
           />
