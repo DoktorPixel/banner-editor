@@ -242,6 +242,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
+      gap: "10px",
     };
 
     const newObjects = objects.filter(

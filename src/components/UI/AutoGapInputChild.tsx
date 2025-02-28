@@ -1,25 +1,19 @@
 import { useState, useEffect } from "react";
 import { TextField, FormControlLabel, Switch, Tooltip } from "@mui/material";
-import { BannerObject } from "../../types";
+import { BannerChild } from "../../types";
 
-interface AutoGapInputProps {
-  objectId: number;
+interface AutoGapInputChildProps {
   value: string | number | undefined;
-  updateObjectMultipleProperties: (
-    objectId: number,
-    updates: Partial<BannerObject>
-  ) => void;
+  onChangeMultiple: (updates: Partial<BannerChild>) => void;
 }
 
-export const AutoGapInput: React.FC<AutoGapInputProps> = ({
-  objectId,
+export const AutoGapInputChild: React.FC<AutoGapInputChildProps> = ({
   value,
-  updateObjectMultipleProperties,
+  onChangeMultiple,
 }) => {
   const [gapValue, setGapValue] = useState<number | undefined>(
     value !== undefined ? parseInt(value as string, 10) : undefined
   );
-
   const [isAuto, setIsAuto] = useState(gapValue === undefined);
 
   useEffect(() => {
@@ -34,13 +28,13 @@ export const AutoGapInput: React.FC<AutoGapInputProps> = ({
     setIsAuto(auto);
     if (auto) {
       setGapValue(undefined);
-      updateObjectMultipleProperties(objectId, {
+      onChangeMultiple({
         gap: undefined,
         justifyContent: "space-between",
       });
     } else {
       setGapValue(10);
-      updateObjectMultipleProperties(objectId, {
+      onChangeMultiple({
         gap: 10,
         justifyContent: "center",
       });
@@ -52,7 +46,7 @@ export const AutoGapInput: React.FC<AutoGapInputProps> = ({
 
     if (!isNaN(parsedValue) && parsedValue >= 0) {
       setGapValue(parsedValue);
-      updateObjectMultipleProperties(objectId, { gap: parsedValue });
+      onChangeMultiple({ gap: parsedValue });
     }
   };
 
