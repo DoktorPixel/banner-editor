@@ -69,6 +69,17 @@ const BannerArea: React.FC = () => {
     selectChild(groupId, childId, parentId);
   };
 
+  const handleResizeMouseDown = (
+    id: number,
+    direction: string,
+    event: React.MouseEvent
+  ) => {
+    if (mode === "test") return;
+    event.preventDefault();
+    setResizingId(id);
+    setResizeDirection(direction);
+  };
+
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
     if (mode === "test" || resizingId !== null) return;
 
@@ -81,17 +92,6 @@ const BannerArea: React.FC = () => {
       setOffset({ x: offsetX, y: offsetY });
       setDraggingId(id);
     }
-  };
-
-  const handleResizeMouseDown = (
-    id: number,
-    direction: string,
-    event: React.MouseEvent
-  ) => {
-    if (mode === "test") return;
-    event.preventDefault();
-    setResizingId(id);
-    setResizeDirection(direction);
   };
 
   const handleObjectClick = (id: number, event: React.MouseEvent) => {
@@ -160,7 +160,9 @@ const BannerArea: React.FC = () => {
     setResizeDirection(null);
     setTemporaryUpdates({});
   };
+
   //
+
   useEffect(() => {
     if (mode === "dev") {
       setTemporaryUpdates({});
