@@ -20,7 +20,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   }>({});
 
   const objects = history[currentStep] || [];
-  console.log("objects:", objects);
+  // console.log("objects:", objects);
 
   const renderedObjects = useMemo(() => {
     return objects.map((obj) => ({
@@ -81,7 +81,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedChildId((prev) => {
       const newSelection = { groupId, childId, parentId };
       console.log("selectedChildId (prev)", prev);
-      console.log("selectedChildId (updated)", newSelection);
+      // console.log("selectedChildId (updated)", newSelection);
       return newSelection;
     });
   };
@@ -186,6 +186,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const selectObject = (id: number, toggle = false) => {
     setSelectedObjectIds((prev) => {
       if (toggle) {
+        console.log("selectedObjectIds", selectedObjectIds);
         return prev.includes(id)
           ? prev.filter((objId) => objId !== id)
           : [...prev, id];
