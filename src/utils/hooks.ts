@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useBanner } from "../context/BannerContext";
 import { BannerObject, BannerChild } from "../types";
 
@@ -218,4 +218,35 @@ export const useChildCondition = () => {
   );
 
   return { updateChildCondition };
+};
+
+export const useSelectionBounds = (
+  selectedObjectIds: number[],
+  objects: BannerObject[]
+) => {
+  return useMemo(() => {
+    if (selectedObjectIds.length < 2) return null;
+
+    const selectedObjects = objects.filter((obj) =>
+      selectedObjectIds.includes(obj.id)
+    );
+
+    if (selectedObjects.length === 0) return null;
+
+    const minX = Math.min(...selectedObjects.map((obj) => obj.x));
+    const minY = Math.min(...selectedObjects.map((obj) => obj.y));
+    const maxX = Math.max(
+      ...selectedObjects.map((obj) => obj.x + (obj.width ?? 0))
+    );
+    const maxY = Math.max(
+      ...selectedObjects.map((obj) => obj.y + (obj.height ?? 0))
+    );
+
+    return {
+      left: minX,
+      top: minY,
+      width: maxX - minX,
+      height: maxY - minY,
+    };
+  }, [selectedObjectIds, objects]);
 };

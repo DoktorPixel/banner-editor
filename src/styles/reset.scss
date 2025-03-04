@@ -1,4 +1,7 @@
 @charset "utf-8";
+* {
+  box-sizing: border-box;
+}
 
 *:where(
     :not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)

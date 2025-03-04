@@ -113,6 +113,9 @@ export interface BannerContextProps {
   objects: BannerObject[];
   addObject: (object: BannerObject) => void;
   updateObject: (id: number, updates: Partial<BannerObject>) => void;
+  updateMultipleObjects: (
+    updates: Record<number, Partial<BannerObject>>
+  ) => void;
   deleteObject: (id: number) => void;
   deleteMultipleObjects: (ids: number[]) => void;
   undo: () => void;

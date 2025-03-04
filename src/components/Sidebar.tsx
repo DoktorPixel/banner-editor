@@ -110,6 +110,8 @@ const Sidebar: React.FC = () => {
     addObject({
       id: Date.now(),
       type: "image",
+      width: 250,
+      height: 250,
       x: 50,
       y: 50,
       src,

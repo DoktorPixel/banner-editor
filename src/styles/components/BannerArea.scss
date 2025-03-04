@@ -153,3 +153,9 @@
   top: 6px;
   right: 0px;
 }
+
+.selection-border {
+  z-index: 999;
+  box-shadow: 0 0 10px rgba(0, 0, 255, 0.1);
+  transition: all 0.1s ease-in-out;
+}
