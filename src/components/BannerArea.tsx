@@ -7,11 +7,13 @@ import ResizeHandles from "../utils/ResizeHandles";
 import ContextMenu from "./UI/ContextMenu";
 import { BannerObject } from "../types";
 import Header from "./Header";
+import { useSelectionBounds } from "../utils/hooks";
 
 const BannerArea: React.FC = () => {
   const {
     objects,
     updateObject,
+    updateMultipleObjects,
     selectedObjectIds,
     selectObject,
     clearSelection,
@@ -24,11 +26,12 @@ const BannerArea: React.FC = () => {
     renderedObjects,
   } = useBanner();
   const { mode } = useMode();
-  const [draggingId, setDraggingId] = useState<number | null>(null);
-  const [offset, setOffset] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
+
+  const [draggingIds, setDraggingIds] = useState<number[] | null>(null);
+  const [offsets, setOffsets] = useState<
+    Record<number, { x: number; y: number }>
+  >({});
+
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
 
@@ -59,28 +62,20 @@ const BannerArea: React.FC = () => {
   };
   //
 
+  const handleObjectClick = (id: number, event: React.MouseEvent) => {
+    if (mode === "test") return;
+    event.stopPropagation();
+    selectObject(id, event.ctrlKey || event.metaKey);
+  };
+
   const handleChildClick = (
     groupId: number,
     childId: number,
     event: React.MouseEvent,
-    parentId?: number // Новый параметр для обработки grandChild
+    parentId?: number
   ) => {
     event.stopPropagation();
     selectChild(groupId, childId, parentId);
-  };
-
-  const handleMouseDown = (id: number, event: React.MouseEvent) => {
-    if (mode === "test" || resizingId !== null) return;
-
-    event.preventDefault();
-    const object = objects.find((obj) => obj.id === id);
-    if (object && bannerRef.current) {
-      const rect = bannerRef.current.getBoundingClientRect();
-      const offsetX = event.clientX - (rect.left + object.x);
-      const offsetY = event.clientY - (rect.top + object.y);
-      setOffset({ x: offsetX, y: offsetY });
-      setDraggingId(id);
-    }
   };
 
   const handleResizeMouseDown = (
@@ -94,28 +89,57 @@ const BannerArea: React.FC = () => {
     setResizeDirection(direction);
   };
 
-  const handleObjectClick = (id: number, event: React.MouseEvent) => {
-    if (mode === "test") return;
-    event.stopPropagation();
-    selectObject(id, event.ctrlKey || event.metaKey);
+  const handleMouseDown = (id: number, event: React.MouseEvent) => {
+    if (mode === "test" || resizingId !== null) return;
+    event.preventDefault();
+
+    const movingObjects = selectedObjectIds.includes(id)
+      ? [...selectedObjectIds]
+      : [id];
+    setDraggingIds(movingObjects);
+
+    const newOffsets: Record<number, { x: number; y: number }> = {};
+    if (bannerRef.current) {
+      const rect = bannerRef.current.getBoundingClientRect();
+
+      movingObjects.forEach((objId) => {
+        const obj = objects.find((o) => o.id === objId);
+        if (obj) {
+          newOffsets[objId] = {
+            x: event.clientX - (rect.left + obj.x),
+            y: event.clientY - (rect.top + obj.y),
+          };
+        }
+      });
+    }
+    setOffsets(newOffsets);
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
     if (mode === "test") return;
-    if (draggingId !== null && resizingId === null && bannerRef.current) {
-      const rect = bannerRef.current.getBoundingClientRect();
-      const x = event.clientX - rect.left - offset.x;
-      const y = event.clientY - rect.top - offset.y;
 
-      setTemporaryUpdates((prev) => ({
-        ...prev,
-        [draggingId]: { x, y },
-      }));
+    if (draggingIds !== null && resizingId === null && bannerRef.current) {
+      const rect = bannerRef.current.getBoundingClientRect();
+
+      setTemporaryUpdates((prev) => {
+        const newUpdates = { ...prev };
+
+        draggingIds.forEach((id) => {
+          const obj = objects.find((o) => o.id === id);
+          if (obj) {
+            newUpdates[id] = {
+              x: event.clientX - rect.left - offsets[id].x,
+              y: event.clientY - rect.top - offsets[id].y,
+            };
+          }
+        });
+
+        return newUpdates;
+      });
     }
 
     if (resizingId !== null && bannerRef.current) {
       const object = objects.find((obj) => obj.id === resizingId);
-
       if (object) {
         const rect = bannerRef.current.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
@@ -144,23 +168,22 @@ const BannerArea: React.FC = () => {
   const handleMouseUp = () => {
     if (mode === "test") return;
 
-    if (draggingId !== null) {
-      if (temporaryUpdates[draggingId]) {
-        updateObject(draggingId, temporaryUpdates[draggingId]);
-      }
-    }
-    if (resizingId !== null) {
-      if (temporaryUpdates[resizingId]) {
-        updateObject(resizingId, temporaryUpdates[resizingId]);
-      }
+    if (draggingIds !== null && Object.keys(temporaryUpdates).length > 0) {
+      updateMultipleObjects(temporaryUpdates);
     }
 
-    setDraggingId(null);
+    if (resizingId !== null && temporaryUpdates[resizingId]) {
+      updateObject(resizingId, temporaryUpdates[resizingId]);
+    }
+
+    setDraggingIds(null);
     setResizingId(null);
     setResizeDirection(null);
     setTemporaryUpdates({});
   };
+
   //
+
   useEffect(() => {
     if (mode === "dev") {
       setTemporaryUpdates({});
@@ -208,6 +231,8 @@ const BannerArea: React.FC = () => {
     };
   }, [selectedObjectIds, objects]);
 
+  const selectionBounds = useSelectionBounds(selectedObjectIds, objects);
+
   return (
     <div className="banner-area-container">
       <Header />
@@ -222,6 +247,20 @@ const BannerArea: React.FC = () => {
           setContextMenu(null);
         }}
       >
+        {selectionBounds && (
+          <div
+            className="selection-border"
+            style={{
+              position: "absolute",
+              left: selectionBounds.left,
+              top: selectionBounds.top,
+              width: selectionBounds.width,
+              height: selectionBounds.height,
+              border: "1px dashed rgba(191, 191, 221, 0.75)",
+              pointerEvents: "none",
+            }}
+          />
+        )}
         {renderedObjects.map((object) => {
           if (object.type === "group") {
             return (
