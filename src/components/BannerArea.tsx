@@ -26,7 +26,7 @@ const BannerArea: React.FC = () => {
     renderedObjects,
   } = useBanner();
   const { mode } = useMode();
-
+  const [isDragging, setIsDragging] = useState(false);
   const [draggingIds, setDraggingIds] = useState<number[] | null>(null);
   const [offsets, setOffsets] = useState<
     Record<number, { x: number; y: number }>
@@ -63,7 +63,7 @@ const BannerArea: React.FC = () => {
   //
 
   const handleObjectClick = (id: number, event: React.MouseEvent) => {
-    if (mode === "test") return;
+    if (mode === "test" || isDragging) return;
     event.stopPropagation();
     selectObject(id, event.ctrlKey || event.metaKey);
   };
@@ -92,11 +92,16 @@ const BannerArea: React.FC = () => {
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
     if (mode === "test" || resizingId !== null) return;
     event.preventDefault();
+    event.stopPropagation();
 
-    const movingObjects = selectedObjectIds.includes(id)
-      ? [...selectedObjectIds]
-      : [id];
+    // Если объект уже выделен, не сбрасываем выделение
+    const isSelected = selectedObjectIds.includes(id);
+    const shouldKeepSelection = event.ctrlKey || event.metaKey || isSelected;
+
+    const movingObjects = shouldKeepSelection ? [...selectedObjectIds] : [id];
+
     setDraggingIds(movingObjects);
+    setIsDragging(true);
 
     const newOffsets: Record<number, { x: number; y: number }> = {};
     if (bannerRef.current) {
@@ -180,6 +185,7 @@ const BannerArea: React.FC = () => {
     setResizingId(null);
     setResizeDirection(null);
     setTemporaryUpdates({});
+    setIsDragging(false);
   };
 
   //
@@ -247,7 +253,7 @@ const BannerArea: React.FC = () => {
           setContextMenu(null);
         }}
       >
-        {selectionBounds && (
+        {selectionBounds && !isDragging && (
           <div
             className="selection-border"
             style={{
