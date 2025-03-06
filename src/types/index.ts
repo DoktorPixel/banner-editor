@@ -35,6 +35,7 @@ export interface BannerObject {
   paddingBottom?: number | string;
   paddingLeft?: number | string;
   paddingRight?: number | string;
+  abstractGroupId?: number | null;
 
   // borders
   borderTopStyle?: React.CSSProperties["borderTopStyle"];

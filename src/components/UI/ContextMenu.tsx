@@ -31,29 +31,15 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 
   const sendToBack = () => {
     const minZIndex = Math.min(...objects.map((obj) => obj.zIndex || 0));
-    // zIndex>0
-    // const newZIndex = Math.max(minZIndex - 1, 0);
     const newZIndex = minZIndex - 1;
     updateObject(object.id, { zIndex: newZIndex });
     onClose();
   };
 
-  // const stepForward = () => {
-  //   const currentZIndex = object.zIndex || 0;
-  //   updateObject(object.id, { zIndex: currentZIndex + 1 });
-  //   onClose();
-  // };
-
   const stepForward = () => {
     stepForwardWithCollision(object, objects, updateObject);
     onClose();
   };
-
-  // const stepBackward = () => {
-  //   const currentZIndex = object.zIndex || 0;
-  //   updateObject(object.id, { zIndex: currentZIndex - 1 });
-  //   onClose();
-  // };
 
   const stepBackward = () => {
     stepBackwardWithCollision(object, objects, updateObject);
@@ -70,28 +56,28 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
     >
       <Button
         onClick={stepForward}
-        style={{ padding: "4px 6px", fontSize: "14px" }}
+        style={{ padding: "2px 6px", fontSize: "12px" }}
       >
         перенести вперед
       </Button>
 
       <Button
         onClick={bringToFront}
-        style={{ padding: "4px 6px", fontSize: "14px" }}
+        style={{ padding: "2px 6px", fontSize: "12px" }}
       >
         на передній план
       </Button>
 
       <Button
         onClick={stepBackward}
-        style={{ padding: "4px 6px", fontSize: "14px" }}
+        style={{ padding: "2px 6px", fontSize: "12px" }}
       >
         перенести назад
       </Button>
 
       <Button
         onClick={sendToBack}
-        style={{ padding: "4px 6px", fontSize: "14px" }}
+        style={{ padding: "2px 6px", fontSize: "12px" }}
       >
         на задній план
       </Button>
