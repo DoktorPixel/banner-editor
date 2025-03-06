@@ -225,10 +225,18 @@ export const useSelectionBounds = (
   objects: BannerObject[]
 ) => {
   return useMemo(() => {
-    if (selectedObjectIds.length < 2) return null;
+    if (selectedObjectIds.length === 0) return null;
 
-    const selectedObjects = objects.filter((obj) =>
-      selectedObjectIds.includes(obj.id)
+    // Получаем список объектов, которые либо выделены, либо входят в абстрактную группу
+    const selectedObjects = objects.filter(
+      (obj) =>
+        selectedObjectIds.includes(obj.id) ||
+        (obj.abstractGroupId &&
+          objects.some(
+            (o) =>
+              selectedObjectIds.includes(o.id) &&
+              o.abstractGroupId === obj.abstractGroupId
+          ))
     );
 
     if (selectedObjects.length === 0) return null;

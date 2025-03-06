@@ -32,6 +32,7 @@ const Sidebar: React.FC = () => {
     ungroupSelectedObject,
     addJson,
     currentProjectName,
+    updateMultipleObjects,
   } = useBanner();
   const { updateObjectProperty } = useObjectProperties();
 
@@ -137,6 +138,30 @@ const Sidebar: React.FC = () => {
   const handleClearHistory = () => {
     clearHistory();
     closeDialog("isClearHistoryDialogOpen");
+  };
+
+  const groupSelectedObjectsAbstract = () => {
+    if (selectedObjectIds.length < 2) return;
+
+    const newAbstractGroupId = Date.now();
+
+    const updates = selectedObjectIds.reduce((acc, id) => {
+      acc[id] = { abstractGroupId: newAbstractGroupId };
+      return acc;
+    }, {} as Record<number, Partial<BannerObject>>);
+
+    updateMultipleObjects(updates);
+  };
+
+  const ungroupSelectedObjectsAbstract = () => {
+    if (selectedObjectIds.length === 0) return;
+
+    const updates = selectedObjectIds.reduce((acc, id) => {
+      acc[id] = { abstractGroupId: null };
+      return acc;
+    }, {} as Record<number, Partial<BannerObject>>);
+
+    updateMultipleObjects(updates);
   };
 
   return (
@@ -272,6 +297,37 @@ const Sidebar: React.FC = () => {
       >
         Розгрупувати
       </Button>
+
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={groupSelectedObjectsAbstract}
+        disabled={
+          selectedObjectIds.length < 2 ||
+          objects.every(
+            (obj) =>
+              selectedObjectIds.includes(obj.id) && obj.abstractGroupId !== null
+          )
+        }
+      >
+        Групувати (абстрактні)
+      </Button>
+
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={ungroupSelectedObjectsAbstract}
+        disabled={
+          selectedObjectIds.length === 0 ||
+          !objects.some(
+            (obj) =>
+              selectedObjectIds.includes(obj.id) && obj.abstractGroupId !== null
+          )
+        }
+      >
+        Розгрупувати (абстрактні)
+      </Button>
+
       <ExportToServer />
       <ExportBanner />
       <ManageDynamicImgsModal
