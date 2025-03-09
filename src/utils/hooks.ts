@@ -227,7 +227,6 @@ export const useSelectionBounds = (
   return useMemo(() => {
     if (selectedObjectIds.length === 0) return null;
 
-    // Получаем список объектов, которые либо выделены, либо входят в абстрактную группу
     const selectedObjects = objects.filter(
       (obj) =>
         selectedObjectIds.includes(obj.id) ||
