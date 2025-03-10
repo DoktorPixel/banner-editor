@@ -16,6 +16,8 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DynamicProps from "./UI/DynamicProps";
 import TabPanelComponent from "./UI/TabPanelComponent";
 import ManageDynamicImgsModal from "./UI/dialogs/ManageDynamicImgsModal";
+import SavePresetButton from "./UI/s3-components/SavePresetButton";
+import ApplyPresetButton from "./UI/s3-components/ApplyPresetButton";
 
 const Sidebar: React.FC = () => {
   const {
@@ -327,6 +329,9 @@ const Sidebar: React.FC = () => {
       >
         Розгрупувати (абстрактні)
       </Button>
+
+      <SavePresetButton />
+      <ApplyPresetButton />
 
       <ExportToServer />
       <ExportBanner />

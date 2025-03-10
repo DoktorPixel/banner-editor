@@ -65,6 +65,53 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   //
 
+  const addObject = (object: BannerObject) => {
+    const maxZIndex = objects.reduce(
+      (max, obj) => Math.max(max, obj.zIndex ?? 0),
+      0
+    );
+    const newObjects = [
+      ...objects,
+      {
+        ...object,
+        zIndex: maxZIndex + 1,
+      },
+    ];
+    updateHistory(newObjects);
+  };
+
+  const updateObject = (id: number, updates: Partial<BannerObject>) => {
+    const newObjects = objects.map((obj) =>
+      obj.id === id ? { ...obj, ...updates } : obj
+    );
+    updateHistory(newObjects);
+  };
+
+  const updateMultipleObjects = (
+    updates: Record<number, Partial<BannerObject>>
+  ) => {
+    const newObjects = objects.map((obj) =>
+      updates[obj.id] ? { ...obj, ...updates[obj.id] } : obj
+    );
+    updateHistory(newObjects);
+  };
+
+  const deleteObject = (id: number) => {
+    const newObjects = objects.filter((obj) => obj.id !== id);
+    updateHistory(newObjects);
+  };
+
+  const deleteMultipleObjects = (ids: number[]) => {
+    const newObjects = objects.filter((obj) => !ids.includes(obj.id));
+    updateHistory(newObjects);
+  };
+
+  const updateHistory = (newObjects: BannerObject[]) => {
+    const newHistory = [...history.slice(0, currentStep + 1), newObjects];
+    setHistory(newHistory);
+    setCurrentStep(newHistory.length - 1);
+  };
+
   const addJson = (jsonData: BannerObject[]) => {
     if (!Array.isArray(jsonData)) {
       console.error("Переданий JSON має бути масивом об'єктів.");
@@ -120,53 +167,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     updateHistory(newObjects);
   };
 
-  const addObject = (object: BannerObject) => {
-    const maxZIndex = objects.reduce(
-      (max, obj) => Math.max(max, obj.zIndex ?? 0),
-      0
-    );
-    const newObjects = [
-      ...objects,
-      {
-        ...object,
-        zIndex: maxZIndex + 1,
-      },
-    ];
-    updateHistory(newObjects);
-  };
-
-  const updateObject = (id: number, updates: Partial<BannerObject>) => {
-    const newObjects = objects.map((obj) =>
-      obj.id === id ? { ...obj, ...updates } : obj
-    );
-    updateHistory(newObjects);
-  };
-
-  const updateMultipleObjects = (
-    updates: Record<number, Partial<BannerObject>>
-  ) => {
-    const newObjects = objects.map((obj) =>
-      updates[obj.id] ? { ...obj, ...updates[obj.id] } : obj
-    );
-    updateHistory(newObjects);
-  };
-
-  const deleteObject = (id: number) => {
-    const newObjects = objects.filter((obj) => obj.id !== id);
-    updateHistory(newObjects);
-  };
-
-  const deleteMultipleObjects = (ids: number[]) => {
-    const newObjects = objects.filter((obj) => !ids.includes(obj.id));
-    updateHistory(newObjects);
-  };
-
-  const updateHistory = (newObjects: BannerObject[]) => {
-    const newHistory = [...history.slice(0, currentStep + 1), newObjects];
-    setHistory(newHistory);
-    setCurrentStep(newHistory.length - 1);
-  };
-
   const navigate = useNavigate();
 
   const clearHistory = () => {
@@ -206,7 +206,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // выделение все объектов abstractGroup (сам объект + его группа)
-
   // const selectObject = (id: number, toggle = false) => {
   //   setSelectedObjectIds((prev) => {
   //     const selectedObj = objects.find((obj) => obj.id === id);
@@ -327,6 +326,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         updateMultipleObjects,
         deleteObject,
         deleteMultipleObjects,
+        updateHistory,
         undo,
         redo,
         canUndo,

@@ -119,6 +119,7 @@ export interface BannerContextProps {
   ) => void;
   deleteObject: (id: number) => void;
   deleteMultipleObjects: (ids: number[]) => void;
+  updateHistory: (newObjects: BannerObject[]) => void;
   undo: () => void;
   redo: () => void;
   canUndo: boolean;
@@ -167,6 +168,12 @@ export interface ProjectData {
   objects: BannerObject[];
   dynamicImgs?: DynamicImg[];
   config?: ConfigItem[];
+}
+
+export interface PresetData {
+  id: string;
+  name: string;
+  objects: BannerObject[];
 }
 
 export interface ConfigItem {

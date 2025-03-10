@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { CircularProgress, Button, Snackbar, Alert } from "@mui/material";
-import { uploadToS3 } from "../../S3/s3Storage";
-import { useBanner } from "../../context/BannerContext";
-import { ProjectData } from "../../types";
-import { useConfig } from "../../context/ConfigContext";
+import { uploadToS3 } from "../../../S3/s3Storage";
+import { useBanner } from "../../../context/BannerContext";
+import { ProjectData } from "../../../types";
+import { useConfig } from "../../../context/ConfigContext";
 
 const UploadToS3Button: React.FC = () => {
   const { objects, dynamicImgs, currentProjectName } = useBanner();
@@ -94,7 +94,7 @@ const UploadToS3Button: React.FC = () => {
       </Button>
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={1500}
         onClose={handleCloseSnackbar}
         sx={{
           position: "absolute",

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useBanner } from "../context/BannerContext";
-import UploadToS3Button from "./UI/UploadToS3";
+import UploadToS3Button from "./UI/s3-components/UploadToS3";
 import Switch from "@mui/material/Switch";
 import { useMode } from "../context/ModeContext";
 
