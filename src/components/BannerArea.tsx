@@ -31,7 +31,10 @@ const BannerArea: React.FC = () => {
   const [offsets, setOffsets] = useState<
     Record<number, { x: number; y: number }>
   >({});
-
+  const [mouseDownPosition, setMouseDownPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
 
@@ -61,11 +64,23 @@ const BannerArea: React.FC = () => {
     setContextMenu(null);
   };
   //
-
+  // const handleObjectClick = (id: number, event: React.MouseEvent) => {
+  //   if (mode === "test" || isDragging) return;
+  //   event.stopPropagation();
+  //   selectObject(id, event.ctrlKey || event.metaKey);
+  // };
   const handleObjectClick = (id: number, event: React.MouseEvent) => {
     if (mode === "test" || isDragging) return;
     event.stopPropagation();
-    selectObject(id, event.ctrlKey || event.metaKey);
+    if (mouseDownPosition) {
+      const deltaX = Math.abs(event.clientX - mouseDownPosition.x);
+      const deltaY = Math.abs(event.clientY - mouseDownPosition.y);
+
+      if (deltaX < 5 && deltaY < 5) {
+        selectObject(id, event.ctrlKey || event.metaKey);
+      }
+    }
+    setMouseDownPosition(null);
   };
 
   const handleChildClick = (
@@ -93,6 +108,7 @@ const BannerArea: React.FC = () => {
     if (mode === "test" || resizingId !== null) return;
     event.preventDefault();
     event.stopPropagation();
+    setMouseDownPosition({ x: event.clientX, y: event.clientY });
 
     // Если объект уже выделен, не сбрасываем выделение
     const isSelected = selectedObjectIds.includes(id);
@@ -238,6 +254,32 @@ const BannerArea: React.FC = () => {
   }, [selectedObjectIds, objects]);
 
   const selectionBounds = useSelectionBounds(selectedObjectIds, objects);
+  // Начинаем перемещать все выделенные объекты
+  const handleSelectionBorderMouseDown = (event: React.MouseEvent) => {
+    if (mode === "test") return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.target !== event.currentTarget) return;
+
+    setDraggingIds([...selectedObjectIds]);
+    setIsDragging(true);
+
+    const newOffsets: Record<number, { x: number; y: number }> = {};
+    if (bannerRef.current) {
+      const rect = bannerRef.current.getBoundingClientRect();
+
+      selectedObjectIds.forEach((id) => {
+        const obj = objects.find((o) => o.id === id);
+        if (obj) {
+          newOffsets[id] = {
+            x: event.clientX - (rect.left + obj.x),
+            y: event.clientY - (rect.top + obj.y),
+          };
+        }
+      });
+    }
+    setOffsets(newOffsets);
+  };
 
   return (
     <div className="banner-area-container">
@@ -264,9 +306,14 @@ const BannerArea: React.FC = () => {
               height: selectionBounds.height,
               border: "1px dashed rgba(191, 191, 221, 0.75)",
               pointerEvents: "none",
+
+              // pointerEvents: "all",
+              // cursor: "move",
             }}
+            onMouseDownCapture={handleSelectionBorderMouseDown}
           />
         )}
+
         {renderedObjects.map((object) => {
           if (object.type === "group") {
             return (
