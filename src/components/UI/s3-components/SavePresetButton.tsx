@@ -27,6 +27,7 @@ const SavePresetButton: React.FC = () => {
     const preset = {
       id: `${Date.now()}`, // Уникальный ID пресета
       name: `Preset-${new Date().toLocaleTimeString()}`,
+      previewUrl: "",
       objects: presetObjects,
     };
     try {
