@@ -174,7 +174,7 @@ export const applyPresetToProject = async (
 
 // Получение списка пресетов из S3
 export const fetchPresetsList = async (): Promise<
-  { id: string; name: string }[]
+  { id: string; name: string; previewUrl: string }[]
 > => {
   try {
     const command = new ListObjectsV2Command({
@@ -184,12 +184,22 @@ export const fetchPresetsList = async (): Promise<
 
     const response = await s3Client.send(command);
 
-    return (
-      response.Contents?.map((item) => ({
-        id: item.Key?.replace("presets/", "").replace(".json", "") || "",
-        name: `Пресет ${item.LastModified?.toLocaleString()}`,
-      })) || []
+    const presets = await Promise.all(
+      response.Contents?.map(async (item) => {
+        const id = item.Key?.replace("presets/", "").replace(".json", "") || "";
+
+        // Загружаем JSON пресета
+        const presetData = await downloadPresetFromS3(id);
+
+        return {
+          id,
+          name: presetData?.name || "Без назви",
+          previewUrl: presetData?.previewUrl || "",
+        };
+      }) || []
     );
+
+    return presets;
   } catch (error) {
     console.error("Помилка отримання списку пресетів:", error);
     return [];

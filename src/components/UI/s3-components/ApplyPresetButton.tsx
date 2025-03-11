@@ -15,7 +15,9 @@ import { useBanner } from "../../../context/BannerContext";
 const ApplyPresetButton: React.FC = () => {
   const { objects, updateHistory } = useBanner();
   const [open, setOpen] = useState(false);
-  const [presets, setPresets] = useState<{ id: string; name: string }[]>([]);
+  const [presets, setPresets] = useState<
+    { id: string; name: string; previewUrl: string }[]
+  >([]);
   const [loading, setLoading] = useState(false);
 
   const fetchPresets = async () => {
@@ -59,6 +61,14 @@ const ApplyPresetButton: React.FC = () => {
                     <ListItemButton
                       onClick={() => handleApplyPreset(preset.id)}
                     >
+                      {preset.previewUrl && preset.previewUrl.trim() !== "" && (
+                        <img
+                          src={preset.previewUrl}
+                          alt="logo"
+                          width="200rem"
+                          height="auto"
+                        />
+                      )}
                       {preset.name}
                     </ListItemButton>
                   </ListItem>

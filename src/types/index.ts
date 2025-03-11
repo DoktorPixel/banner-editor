@@ -173,6 +173,7 @@ export interface ProjectData {
 export interface PresetData {
   id: string;
   name: string;
+  previewUrl?: string;
   objects: BannerObject[];
 }
 
