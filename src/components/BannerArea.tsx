@@ -8,6 +8,7 @@ import ContextMenu from "./UI/ContextMenu";
 import { BannerObject } from "../types";
 import Header from "./Header";
 import { useSelectionBounds } from "../utils/hooks";
+import Slider from "@mui/material/Slider";
 
 const BannerArea: React.FC = () => {
   const {
@@ -37,6 +38,7 @@ const BannerArea: React.FC = () => {
   } | null>(null);
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
+  const [scale, setScale] = useState(1);
 
   const bannerRef = useRef<HTMLDivElement>(null);
 
@@ -284,271 +286,320 @@ const BannerArea: React.FC = () => {
   return (
     <div className="banner-area-container">
       <Header />
-      <div
-        className="banner-area"
-        ref={bannerRef}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onClick={() => {
-          clearSelection();
-          clearChildSelection();
-          setContextMenu(null);
-        }}
-      >
-        {selectionBounds && !isDragging && (
-          <div
-            className="selection-border"
-            style={{
-              position: "absolute",
-              left: selectionBounds.left,
-              top: selectionBounds.top,
-              width: selectionBounds.width,
-              height: selectionBounds.height,
-              border: "1px dashed rgba(191, 191, 221, 0.75)",
-              pointerEvents: "none",
+      <div className="banner-wrapper">
+        <div
+          className="banner-area"
+          ref={bannerRef}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onClick={() => {
+            clearSelection();
+            clearChildSelection();
+            setContextMenu(null);
+          }}
+          style={{
+            transform: `scale(${scale})`,
+          }}
+        >
+          {selectionBounds && !isDragging && (
+            <div
+              className="selection-border"
+              style={{
+                position: "absolute",
+                left: selectionBounds.left,
+                top: selectionBounds.top,
+                width: selectionBounds.width,
+                height: selectionBounds.height,
+                border: "1px dashed rgba(191, 191, 221, 0.75)",
+                pointerEvents: "none",
 
-              // pointerEvents: "all",
-              // cursor: "move",
-            }}
-            onMouseDownCapture={handleSelectionBorderMouseDown}
-          />
-        )}
+                // pointerEvents: "all",
+                // cursor: "move",
+              }}
+              onMouseDownCapture={handleSelectionBorderMouseDown}
+            />
+          )}
 
-        {renderedObjects.map((object) => {
-          if (object.type === "group") {
-            return (
-              <Fragment key={object.id}>
-                <div
-                  id={`${object.id}`}
-                  data-condition={JSON.stringify(object.condition)}
-                  style={{
-                    position: "absolute",
-                    left: object.x,
-                    top: object.y,
-                    width: object.width,
-                    height: object.height,
-                    zIndex: object.zIndex,
-                  }}
-                  onMouseDown={(e) => handleMouseDown(object.id, e)}
-                  onClick={(e) => {
-                    handleObjectClick(object.id, e);
-                    clearChildSelection();
-                  }}
-                  onContextMenu={(e) => handleContextMenu(e, object)}
-                  className={`banner-object ${
-                    selectedObjectIds.includes(object.id) ? "selected" : ""
-                  }`}
-                >
+          {renderedObjects.map((object) => {
+            if (object.type === "group") {
+              return (
+                <Fragment key={object.id}>
                   <div
+                    id={`${object.id}`}
+                    data-condition={JSON.stringify(object.condition)}
                     style={{
+                      position: "absolute",
+                      left: object.x,
+                      top: object.y,
                       width: object.width,
                       height: object.height,
-                      display: object.display || "flex",
-                      flexDirection: object.flexDirection,
-                      justifyContent: object.justifyContent,
-                      alignItems: object.alignItems,
-                      gap: object.gap || 0,
-                      transform: `rotate(${object.rotate || 0}deg)`,
-                      //
-                      backgroundColor: object.backgroundColor,
-                      borderRadius: object.borderRadius,
-                      opacity: object.opacity,
-                      borderTopStyle: object.borderTopStyle,
-                      borderTopColor: object.borderTopColor,
-                      borderTopWidth: object.borderTopWidth,
-                      borderBottomStyle: object.borderBottomStyle,
-                      borderBottomColor: object.borderBottomColor,
-                      borderBottomWidth: object.borderBottomWidth,
-                      borderLeftStyle: object.borderLeftStyle,
-                      borderLeftColor: object.borderLeftColor,
-                      borderLeftWidth: object.borderLeftWidth,
-                      borderRightStyle: object.borderRightStyle,
-                      borderRightColor: object.borderRightColor,
-                      borderRightWidth: object.borderRightWidth,
-                      //
-                      paddingTop: object.paddingTop,
-                      paddingBottom: object.paddingBottom,
-                      paddingLeft: object.paddingLeft,
-                      paddingRight: object.paddingRight,
+                      zIndex: object.zIndex,
                     }}
+                    onMouseDown={(e) => handleMouseDown(object.id, e)}
+                    onClick={(e) => {
+                      handleObjectClick(object.id, e);
+                      clearChildSelection();
+                    }}
+                    onContextMenu={(e) => handleContextMenu(e, object)}
+                    className={`banner-object ${
+                      selectedObjectIds.includes(object.id) ? "selected" : ""
+                    }`}
                   >
-                    {object.children?.map((child) => {
-                      if (child.type === "text") {
-                        return (
-                          <div
-                            key={child.id}
-                            id={`${child.id}`}
-                            data-condition={JSON.stringify(child.condition)}
-                            className={`text-field banner-object-child ${
-                              selectedChildId?.groupId === object.id &&
-                              selectedChildId.childId === child.id
-                                ? "selected"
-                                : ""
-                            }`}
-                            style={{
-                              fontSize: child.fontSize,
-                              color: child.color,
-                              fontFamily: child.fontFamily,
-                              fontWeight: child.fontWeight,
-                              fontStyle: child.fontStyle,
-                              textDecoration: child.textDecoration,
-                              textAlign: child.textAlign,
-                              border:
+                    <div
+                      style={{
+                        width: object.width,
+                        height: object.height,
+                        display: object.display || "flex",
+                        flexDirection: object.flexDirection,
+                        justifyContent: object.justifyContent,
+                        alignItems: object.alignItems,
+                        gap: object.gap || 0,
+                        transform: `rotate(${object.rotate || 0}deg)`,
+                        //
+                        backgroundColor: object.backgroundColor,
+                        borderRadius: object.borderRadius,
+                        opacity: object.opacity,
+                        borderTopStyle: object.borderTopStyle,
+                        borderTopColor: object.borderTopColor,
+                        borderTopWidth: object.borderTopWidth,
+                        borderBottomStyle: object.borderBottomStyle,
+                        borderBottomColor: object.borderBottomColor,
+                        borderBottomWidth: object.borderBottomWidth,
+                        borderLeftStyle: object.borderLeftStyle,
+                        borderLeftColor: object.borderLeftColor,
+                        borderLeftWidth: object.borderLeftWidth,
+                        borderRightStyle: object.borderRightStyle,
+                        borderRightColor: object.borderRightColor,
+                        borderRightWidth: object.borderRightWidth,
+                        //
+                        paddingTop: object.paddingTop,
+                        paddingBottom: object.paddingBottom,
+                        paddingLeft: object.paddingLeft,
+                        paddingRight: object.paddingRight,
+                      }}
+                    >
+                      {object.children?.map((child) => {
+                        if (child.type === "text") {
+                          return (
+                            <div
+                              key={child.id}
+                              id={`${child.id}`}
+                              data-condition={JSON.stringify(child.condition)}
+                              className={`text-field banner-object-child ${
                                 selectedChildId?.groupId === object.id &&
                                 selectedChildId.childId === child.id
-                                  ? "1px solid blue"
-                                  : "none",
-                              transform: `rotate(${child.rotate || 0}deg)`,
-                            }}
-                            onDoubleClick={(e) =>
-                              handleChildClick(
-                                object.id,
-                                child.id,
-                                e,
-                                undefined
-                              )
-                            }
-                          >
-                            {child.content}
-                          </div>
-                        );
-                      } else if (child.type === "image") {
-                        return (
-                          <img
-                            id={`${child.id}`}
-                            data-condition={JSON.stringify(child.condition)}
-                            key={child.id}
-                            src={child.src}
-                            alt={child.name || "image"}
-                            style={{
-                              width: child.width,
-                              height: child.height,
-                              objectFit: child.objectFit,
-                              transform: `rotate(${child.rotate || 0}deg)`,
-                            }}
-                            onDoubleClick={(e) =>
-                              handleChildClick(
-                                object.id,
-                                child.id,
-                                e,
-                                undefined
-                              )
-                            }
-                            className={`banner-object-child image-field ${
-                              selectedChildId?.groupId === object.id &&
-                              selectedChildId.childId === child.id
-                                ? "selected"
-                                : ""
-                            }`}
-                          />
-                        );
-                      } else if (child.type === "figure") {
-                        const { id, width, height, rotate, ...figureStyles } =
-                          child;
-                        return (
-                          <div
-                            key={id}
-                            id={`${child.id}`}
-                            data-condition={JSON.stringify(child.condition)}
-                            style={{
-                              transform: `rotate(${rotate ?? 0}deg)`,
-                            }}
-                            onDoubleClick={(e) =>
-                              handleChildClick(
-                                object.id,
-                                child.id,
-                                e,
-                                undefined
-                              )
-                            }
-                            className={`banner-object-child ${
-                              selectedChildId?.groupId === object.id &&
-                              selectedChildId.childId === child.id
-                                ? "selected"
-                                : ""
-                            }`}
-                          >
-                            <div
+                                  ? "selected"
+                                  : ""
+                              }`}
                               style={{
-                                position: "relative",
-                                width: width ?? "100px",
-                                height: height ?? "100px",
-                                ...figureStyles,
+                                fontSize: child.fontSize,
+                                color: child.color,
+                                fontFamily: child.fontFamily,
+                                fontWeight: child.fontWeight,
+                                fontStyle: child.fontStyle,
+                                textDecoration: child.textDecoration,
+                                textAlign: child.textAlign,
+                                border:
+                                  selectedChildId?.groupId === object.id &&
+                                  selectedChildId.childId === child.id
+                                    ? "1px solid blue"
+                                    : "none",
+                                transform: `rotate(${child.rotate || 0}deg)`,
                               }}
-                            ></div>
-                          </div>
-                        );
-                      } else if (child.type === "group") {
-                        const { id, children, rotate, ...groupStyles } = child;
-                        return (
-                          <div
-                            id={`${id}`}
-                            data-condition={JSON.stringify(child.condition)}
-                            style={{
-                              transform: `rotate(${rotate ?? 0}deg)`,
-                            }}
-                            className={`banner-object-child ${
-                              selectedChildId?.groupId === object.id &&
-                              selectedChildId.childId === child.id
-                                ? "selected"
-                                : ""
-                            }`}
-                            onDoubleClick={(e) =>
-                              handleChildClick(
-                                object.id,
-                                child.id,
-                                e,
-                                undefined
-                              )
-                            }
-                          >
-                            <div
-                              style={{
-                                width: "auto",
-                                position: "relative",
-                                ...groupStyles,
-                              }}
+                              onDoubleClick={(e) =>
+                                handleChildClick(
+                                  object.id,
+                                  child.id,
+                                  e,
+                                  undefined
+                                )
+                              }
                             >
-                              {children?.map((nestedChild) => {
-                                const {
-                                  id: nestedId,
-                                  condition,
-                                  content,
-                                  rotate,
-                                  src,
-                                  ...nestedStyles
-                                } = nestedChild;
-                                if (nestedChild.type === "image") {
+                              {child.content}
+                            </div>
+                          );
+                        } else if (child.type === "image") {
+                          return (
+                            <img
+                              id={`${child.id}`}
+                              data-condition={JSON.stringify(child.condition)}
+                              key={child.id}
+                              src={child.src}
+                              alt={child.name || "image"}
+                              style={{
+                                width: child.width,
+                                height: child.height,
+                                objectFit: child.objectFit,
+                                transform: `rotate(${child.rotate || 0}deg)`,
+                              }}
+                              onDoubleClick={(e) =>
+                                handleChildClick(
+                                  object.id,
+                                  child.id,
+                                  e,
+                                  undefined
+                                )
+                              }
+                              className={`banner-object-child image-field ${
+                                selectedChildId?.groupId === object.id &&
+                                selectedChildId.childId === child.id
+                                  ? "selected"
+                                  : ""
+                              }`}
+                            />
+                          );
+                        } else if (child.type === "figure") {
+                          const { id, width, height, rotate, ...figureStyles } =
+                            child;
+                          return (
+                            <div
+                              key={id}
+                              id={`${child.id}`}
+                              data-condition={JSON.stringify(child.condition)}
+                              style={{
+                                transform: `rotate(${rotate ?? 0}deg)`,
+                              }}
+                              onDoubleClick={(e) =>
+                                handleChildClick(
+                                  object.id,
+                                  child.id,
+                                  e,
+                                  undefined
+                                )
+                              }
+                              className={`banner-object-child ${
+                                selectedChildId?.groupId === object.id &&
+                                selectedChildId.childId === child.id
+                                  ? "selected"
+                                  : ""
+                              }`}
+                            >
+                              <div
+                                style={{
+                                  position: "relative",
+                                  width: width ?? "100px",
+                                  height: height ?? "100px",
+                                  ...figureStyles,
+                                }}
+                              ></div>
+                            </div>
+                          );
+                        } else if (child.type === "group") {
+                          const { id, children, rotate, ...groupStyles } =
+                            child;
+                          return (
+                            <div
+                              id={`${id}`}
+                              data-condition={JSON.stringify(child.condition)}
+                              style={{
+                                transform: `rotate(${rotate ?? 0}deg)`,
+                              }}
+                              className={`banner-object-child ${
+                                selectedChildId?.groupId === object.id &&
+                                selectedChildId.childId === child.id
+                                  ? "selected"
+                                  : ""
+                              }`}
+                              onDoubleClick={(e) =>
+                                handleChildClick(
+                                  object.id,
+                                  child.id,
+                                  e,
+                                  undefined
+                                )
+                              }
+                            >
+                              <div
+                                style={{
+                                  width: "auto",
+                                  position: "relative",
+                                  ...groupStyles,
+                                }}
+                              >
+                                {children?.map((nestedChild) => {
+                                  const {
+                                    id: nestedId,
+                                    condition,
+                                    content,
+                                    rotate,
+                                    src,
+                                    ...nestedStyles
+                                  } = nestedChild;
+                                  if (nestedChild.type === "image") {
+                                    return (
+                                      <img
+                                        key={nestedId}
+                                        id={`${nestedId}`}
+                                        data-condition={JSON.stringify(
+                                          condition
+                                        )}
+                                        src={src}
+                                        alt={"image"}
+                                        style={{
+                                          ...nestedStyles,
+                                        }}
+                                        className={`image-field banner-object-child ${
+                                          selectedChildId?.groupId ===
+                                            child.id &&
+                                          selectedChildId.childId ===
+                                            nestedChild.id
+                                            ? "selected-grand-child"
+                                            : ""
+                                        }`}
+                                        onDoubleClick={(e) =>
+                                          handleChildClick(
+                                            child.id,
+                                            nestedChild.id,
+                                            e,
+                                            object.id
+                                          )
+                                        }
+                                      />
+                                    );
+                                  } else if (nestedChild.type === "text") {
+                                    return (
+                                      <div
+                                        id={`${nestedId}`}
+                                        data-condition={JSON.stringify(
+                                          condition
+                                        )}
+                                        key={nestedId}
+                                        style={{
+                                          ...nestedStyles,
+                                          transform: `rotate(${
+                                            rotate ?? 0
+                                          }deg)`,
+                                          position: "relative",
+                                          width: "auto",
+                                          height: "auto",
+                                        }}
+                                        className={`image-field banner-object-child ${
+                                          selectedChildId?.groupId ===
+                                            child.id &&
+                                          selectedChildId.childId ===
+                                            nestedChild.id
+                                            ? "selected-grand-child"
+                                            : ""
+                                        }`}
+                                        onDoubleClick={(e) =>
+                                          handleChildClick(
+                                            child.id,
+                                            nestedChild.id,
+                                            e,
+                                            object.id
+                                          )
+                                        }
+                                      >
+                                        {content}
+                                      </div>
+                                    );
+                                  }
+                                  // else if (nestedChild.type === "figure") {
+                                  //   return (
+                                  //   )
+                                  // }
                                   return (
-                                    <img
-                                      key={nestedId}
-                                      id={`${nestedId}`}
-                                      data-condition={JSON.stringify(condition)}
-                                      src={src}
-                                      alt={"image"}
-                                      style={{
-                                        ...nestedStyles,
-                                      }}
-                                      className={`image-field banner-object-child ${
-                                        selectedChildId?.groupId === child.id &&
-                                        selectedChildId.childId ===
-                                          nestedChild.id
-                                          ? "selected-grand-child"
-                                          : ""
-                                      }`}
-                                      onDoubleClick={(e) =>
-                                        handleChildClick(
-                                          child.id,
-                                          nestedChild.id,
-                                          e,
-                                          object.id
-                                        )
-                                      }
-                                    />
-                                  );
-                                } else if (nestedChild.type === "text") {
-                                  return (
-                                    <div
+                                    <p
                                       id={`${nestedId}`}
                                       data-condition={JSON.stringify(condition)}
                                       key={nestedId}
@@ -556,8 +607,6 @@ const BannerArea: React.FC = () => {
                                         ...nestedStyles,
                                         transform: `rotate(${rotate ?? 0}deg)`,
                                         position: "relative",
-                                        width: "auto",
-                                        height: "auto",
                                       }}
                                       className={`image-field banner-object-child ${
                                         selectedChildId?.groupId === child.id &&
@@ -576,56 +625,131 @@ const BannerArea: React.FC = () => {
                                       }
                                     >
                                       {content}
-                                    </div>
+                                    </p>
                                   );
-                                }
-                                // else if (nestedChild.type === "figure") {
-                                //   return (
-                                //   )
-                                // }
-                                return (
-                                  <p
-                                    id={`${nestedId}`}
-                                    data-condition={JSON.stringify(condition)}
-                                    key={nestedId}
-                                    style={{
-                                      ...nestedStyles,
-                                      transform: `rotate(${rotate ?? 0}deg)`,
-                                      position: "relative",
-                                    }}
-                                    className={`image-field banner-object-child ${
-                                      selectedChildId?.groupId === child.id &&
-                                      selectedChildId.childId === nestedChild.id
-                                        ? "selected-grand-child"
-                                        : ""
-                                    }`}
-                                    onDoubleClick={(e) =>
-                                      handleChildClick(
-                                        child.id,
-                                        nestedChild.id,
-                                        e,
-                                        object.id
-                                      )
-                                    }
-                                  >
-                                    {content}
-                                  </p>
-                                );
-                              })}
+                                })}
+                              </div>
                             </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })}
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
+                    <ResizeHandles
+                      objectId={object.id}
+                      selectedObjectId={selectedObjectIds[0]}
+                      handleResizeMouseDown={handleResizeMouseDown}
+                    />
                   </div>
+
+                  {contextMenu && contextMenu.object?.id === object.id && (
+                    <ContextMenu
+                      x={contextMenu.x}
+                      y={contextMenu.y}
+                      object={contextMenu.object}
+                      onClose={handleCloseContextMenu}
+                      objects={objects}
+                      updateObject={updateObject}
+                    />
+                  )}
+                </Fragment>
+              );
+            }
+
+            return (
+              <Fragment key={object.id}>
+                <div
+                  // key={object.id}
+                  style={{
+                    position: "absolute",
+                    left: object.x,
+                    top: object.y,
+                    width: object.autoWidth ? "auto" : object.width,
+                    height: object.height,
+                    zIndex: object.zIndex,
+                    cursor: "move",
+                    overflow: object.autoWidth ? "visible" : "hidden",
+                    transform: `rotate(${object.rotate || 0}deg)`,
+                  }}
+                  onMouseDown={(e) => handleMouseDown(object.id, e)}
+                  onClick={(e) => {
+                    handleObjectClick(object.id, e);
+                    clearChildSelection();
+                  }}
+                  onContextMenu={(e) => handleContextMenu(e, object)}
+                  className={`banner-object ${
+                    selectedObjectIds.includes(object.id) ? "selected" : ""
+                  }`}
+                >
+                  {object.type === "text" ? (
+                    <div
+                      id={`${object.id}`}
+                      data-condition={JSON.stringify(object.condition)}
+                      className="text-field"
+                      style={{
+                        fontSize: object.fontSize,
+                        color: object.color,
+                        fontFamily: object.fontFamily || "Poppins, sans-serif",
+                        fontWeight: object.fontWeight,
+                        fontStyle: object.fontStyle,
+                        // textTransform: object.textTransform,
+                        textDecoration: object.textDecoration,
+                        textAlign: object.textAlign,
+                        display: object.maxLines ? "-webkit-box" : "block",
+                        WebkitLineClamp: object.maxLines,
+                        WebkitBoxOrient: object.maxLines
+                          ? "vertical"
+                          : undefined,
+                        overflow: object.maxLines ? "hidden" : undefined,
+                        whiteSpace: object.autoWidth ? "nowrap" : "normal",
+                      }}
+                    >
+                      {object.content}
+                    </div>
+                  ) : object.type === "image" ? (
+                    <img
+                      id={`${object.id}`}
+                      data-condition={JSON.stringify(object.condition)}
+                      className="image-field"
+                      src={object.src}
+                      alt="img"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: object.objectFit,
+                      }}
+                    />
+                  ) : object.type === "figure" ? (
+                    <div
+                      id={`${object.id}`}
+                      data-condition={JSON.stringify(object.condition)}
+                      className="banner-figure"
+                      style={{
+                        backgroundColor: object.backgroundColor,
+                        borderRadius: object.borderRadius,
+                        opacity: object.opacity,
+                        borderTopStyle: object.borderTopStyle,
+                        borderTopColor: object.borderTopColor,
+                        borderTopWidth: object.borderTopWidth,
+                        borderBottomStyle: object.borderBottomStyle,
+                        borderBottomColor: object.borderBottomColor,
+                        borderBottomWidth: object.borderBottomWidth,
+                        borderLeftStyle: object.borderLeftStyle,
+                        borderLeftColor: object.borderLeftColor,
+                        borderLeftWidth: object.borderLeftWidth,
+                        borderRightStyle: object.borderRightStyle,
+                        borderRightColor: object.borderRightColor,
+                        borderRightWidth: object.borderRightWidth,
+                      }}
+                    ></div>
+                  ) : null}
+
                   <ResizeHandles
                     objectId={object.id}
                     selectedObjectId={selectedObjectIds[0]}
                     handleResizeMouseDown={handleResizeMouseDown}
                   />
                 </div>
-
                 {contextMenu && contextMenu.object?.id === object.id && (
                   <ContextMenu
                     x={contextMenu.x}
@@ -638,114 +762,20 @@ const BannerArea: React.FC = () => {
                 )}
               </Fragment>
             );
-          }
-
-          return (
-            <Fragment key={object.id}>
-              <div
-                // key={object.id}
-                style={{
-                  position: "absolute",
-                  left: object.x,
-                  top: object.y,
-                  width: object.autoWidth ? "auto" : object.width,
-                  height: object.height,
-                  zIndex: object.zIndex,
-                  cursor: "move",
-                  overflow: object.autoWidth ? "visible" : "hidden",
-                  transform: `rotate(${object.rotate || 0}deg)`,
-                }}
-                onMouseDown={(e) => handleMouseDown(object.id, e)}
-                onClick={(e) => {
-                  handleObjectClick(object.id, e);
-                  clearChildSelection();
-                }}
-                onContextMenu={(e) => handleContextMenu(e, object)}
-                className={`banner-object ${
-                  selectedObjectIds.includes(object.id) ? "selected" : ""
-                }`}
-              >
-                {object.type === "text" ? (
-                  <div
-                    id={`${object.id}`}
-                    data-condition={JSON.stringify(object.condition)}
-                    className="text-field"
-                    style={{
-                      fontSize: object.fontSize,
-                      color: object.color,
-                      fontFamily: object.fontFamily || "Poppins, sans-serif",
-                      fontWeight: object.fontWeight,
-                      fontStyle: object.fontStyle,
-                      // textTransform: object.textTransform,
-                      textDecoration: object.textDecoration,
-                      textAlign: object.textAlign,
-                      display: object.maxLines ? "-webkit-box" : "block",
-                      WebkitLineClamp: object.maxLines,
-                      WebkitBoxOrient: object.maxLines ? "vertical" : undefined,
-                      overflow: object.maxLines ? "hidden" : undefined,
-                      whiteSpace: object.autoWidth ? "nowrap" : "normal",
-                    }}
-                  >
-                    {object.content}
-                  </div>
-                ) : object.type === "image" ? (
-                  <img
-                    id={`${object.id}`}
-                    data-condition={JSON.stringify(object.condition)}
-                    className="image-field"
-                    src={object.src}
-                    alt="img"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: object.objectFit,
-                    }}
-                  />
-                ) : object.type === "figure" ? (
-                  <div
-                    id={`${object.id}`}
-                    data-condition={JSON.stringify(object.condition)}
-                    className="banner-figure"
-                    style={{
-                      backgroundColor: object.backgroundColor,
-                      borderRadius: object.borderRadius,
-                      opacity: object.opacity,
-                      borderTopStyle: object.borderTopStyle,
-                      borderTopColor: object.borderTopColor,
-                      borderTopWidth: object.borderTopWidth,
-                      borderBottomStyle: object.borderBottomStyle,
-                      borderBottomColor: object.borderBottomColor,
-                      borderBottomWidth: object.borderBottomWidth,
-                      borderLeftStyle: object.borderLeftStyle,
-                      borderLeftColor: object.borderLeftColor,
-                      borderLeftWidth: object.borderLeftWidth,
-                      borderRightStyle: object.borderRightStyle,
-                      borderRightColor: object.borderRightColor,
-                      borderRightWidth: object.borderRightWidth,
-                    }}
-                  ></div>
-                ) : null}
-
-                <ResizeHandles
-                  objectId={object.id}
-                  selectedObjectId={selectedObjectIds[0]}
-                  handleResizeMouseDown={handleResizeMouseDown}
-                />
-              </div>
-              {contextMenu && contextMenu.object?.id === object.id && (
-                <ContextMenu
-                  x={contextMenu.x}
-                  y={contextMenu.y}
-                  object={contextMenu.object}
-                  onClose={handleCloseContextMenu}
-                  objects={objects}
-                  updateObject={updateObject}
-                />
-              )}
-            </Fragment>
-          );
-        })}
+          })}
+        </div>
       </div>
+
+      <Slider
+        valueLabelDisplay="on"
+        value={Math.round(scale * 100)}
+        min={50}
+        max={200}
+        step={2}
+        onChange={(_, newValue) => setScale((newValue as number) / 100)}
+        aria-labelledby="zoom-slider"
+        valueLabelFormat={(value) => `${value}%`}
+      />
     </div>
   );
 };
