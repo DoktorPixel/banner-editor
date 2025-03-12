@@ -30,6 +30,7 @@ const Sidebar: React.FC = () => {
     objects,
     selectedObjectIds,
     selectObject,
+    selectAllObjects,
     groupSelectedObjects,
     ungroupSelectedObject,
     addJson,
@@ -254,6 +255,7 @@ const Sidebar: React.FC = () => {
                 objects={objects}
                 selectedObjectIds={selectedObjectIds}
                 selectObject={selectObject}
+                selectAllObjects={selectAllObjects}
                 openNameDialog={openNameDialog}
               />
             ),

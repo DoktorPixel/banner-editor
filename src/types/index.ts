@@ -126,6 +126,7 @@ export interface BannerContextProps {
   canRedo: boolean;
   selectedObjectIds: number[];
   selectObject: (id: number, toggle?: boolean) => void;
+  selectAllObjects: (id: number, toggle?: boolean) => void;
   clearSelection: () => void;
   clearHistory: () => void;
   clearProject: () => void;
