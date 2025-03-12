@@ -1,4 +1,13 @@
-import { List, ListItem, ListItemText, Box } from "@mui/material";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  Collapse,
+  IconButton,
+  Box,
+} from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { useState } from "react";
 import GroupListItem from "./GroupListItem";
 import { BannerObject } from "../../types";
 import { getObjectTypeLabel } from "../../utils/hooks";
@@ -7,6 +16,7 @@ interface ObjectListProps {
   objects: BannerObject[];
   selectedObjectIds: number[];
   selectObject: (id: number, toggle?: boolean) => void;
+  selectAllObjects: (id: number, toggle?: boolean) => void;
   openNameDialog: (object: BannerObject) => void;
 }
 
@@ -14,6 +24,7 @@ const SidebarObjectList: React.FC<ObjectListProps> = ({
   objects,
   selectedObjectIds,
   selectObject,
+  selectAllObjects,
   openNameDialog,
 }) => {
   const groupedObjects = objects.reduce<Record<number, BannerObject[]>>(
@@ -26,6 +37,13 @@ const SidebarObjectList: React.FC<ObjectListProps> = ({
     },
     {}
   );
+
+  const [openGroups, setOpenGroups] = useState<Record<number, boolean>>({});
+
+  const toggleGroup = (groupId: number) => {
+    setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
+  };
+
   return (
     <List sx={{ padding: "0px" }}>
       {objects.map((obj) => {
@@ -39,46 +57,81 @@ const SidebarObjectList: React.FC<ObjectListProps> = ({
           return (
             <Box
               key={`group-${obj.abstractGroupId}`}
-              sx={{
-                border: "2px dashed rgba(191, 191, 221, 0.75)",
-                padding: "5px",
-                marginBottom: "5px",
-              }}
+              sx={{ marginBottom: "5px" }}
             >
-              {group.map((groupObj) =>
-                groupObj.type === "group" ? (
-                  <GroupListItem
-                    key={groupObj.id}
-                    group={groupObj}
-                    selectedObjectIds={selectedObjectIds}
-                    selectObject={selectObject}
-                    openNameDialog={openNameDialog}
-                  />
-                ) : (
-                  <ListItem
-                    key={groupObj.id}
-                    component="li"
-                    onClick={(e) =>
-                      selectObject(groupObj.id, e.ctrlKey || e.metaKey)
-                    }
-                    onDoubleClick={() => openNameDialog(groupObj)}
-                    sx={{
-                      cursor: "pointer",
-                      backgroundColor: selectedObjectIds.includes(groupObj.id)
-                        ? "#f0f0f0"
-                        : "white",
-                      "&:hover": { backgroundColor: "lightblue" },
-                    }}
-                  >
-                    <ListItemText
-                      primary={
-                        groupObj.name || getObjectTypeLabel(groupObj.type)
-                      }
-                      sx={{ marginLeft: "10px" }}
-                    />
-                  </ListItem>
-                )
-              )}
+              <ListItem
+                component="div"
+                sx={{
+                  backgroundColor: group.every((groupObj) =>
+                    selectedObjectIds.includes(groupObj.id)
+                  )
+                    ? "#f0f0f0"
+                    : "white",
+                  "&:hover": { backgroundColor: "lightblue" },
+                }}
+                onClick={(e) =>
+                  selectAllObjects(obj.id, e.ctrlKey || e.metaKey)
+                }
+              >
+                <ListItemText primary="Абстрактна група" />
+                <IconButton
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleGroup(obj.abstractGroupId!);
+                  }}
+                >
+                  {openGroups[obj.abstractGroupId!] ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  )}
+                </IconButton>
+              </ListItem>
+              <Collapse
+                in={openGroups[obj.abstractGroupId]}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List component="div" disablePadding>
+                  {group.map((groupObj) =>
+                    groupObj.type === "group" ? (
+                      <GroupListItem
+                        key={groupObj.id}
+                        group={groupObj}
+                        selectedObjectIds={selectedObjectIds}
+                        selectObject={selectObject}
+                        openNameDialog={openNameDialog}
+                      />
+                    ) : (
+                      <ListItem
+                        key={groupObj.id}
+                        component="li"
+                        onClick={(e) =>
+                          selectObject(groupObj.id, e.ctrlKey || e.metaKey)
+                        }
+                        onDoubleClick={() => openNameDialog(groupObj)}
+                        sx={{
+                          cursor: "pointer",
+                          backgroundColor: selectedObjectIds.includes(
+                            groupObj.id
+                          )
+                            ? "#f0f0f0"
+                            : "white",
+                          "&:hover": { backgroundColor: "lightblue" },
+                          pl: 4,
+                        }}
+                      >
+                        <ListItemText
+                          primary={
+                            groupObj.name || getObjectTypeLabel(groupObj.type)
+                          }
+                        />
+                      </ListItem>
+                    )
+                  )}
+                </List>
+              </Collapse>
             </Box>
           );
         }

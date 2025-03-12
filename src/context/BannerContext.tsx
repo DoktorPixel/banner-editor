@@ -206,30 +206,30 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // выделение все объектов abstractGroup (сам объект + его группа)
-  // const selectObject = (id: number, toggle = false) => {
-  //   setSelectedObjectIds((prev) => {
-  //     const selectedObj = objects.find((obj) => obj.id === id);
-  //     if (!selectedObj) return prev;
+  const selectAllObjects = (id: number, toggle = false) => {
+    setSelectedObjectIds((prev) => {
+      const selectedObj = objects.find((obj) => obj.id === id);
+      if (!selectedObj) return prev;
 
-  //     const groupObjects = selectedObj.abstractGroupId
-  //       ? objects
-  //           .filter(
-  //             (obj) => obj.abstractGroupId === selectedObj.abstractGroupId
-  //           )
-  //           .map((obj) => obj.id)
-  //       : [];
+      const groupObjects = selectedObj.abstractGroupId
+        ? objects
+            .filter(
+              (obj) => obj.abstractGroupId === selectedObj.abstractGroupId
+            )
+            .map((obj) => obj.id)
+        : [];
 
-  //     const newSelection = new Set([id, ...groupObjects]);
+      const newSelection = new Set([id, ...groupObjects]);
 
-  //     if (toggle) {
-  //       return prev.some((objId) => newSelection.has(objId))
-  //         ? prev.filter((objId) => !newSelection.has(objId))
-  //         : [...prev, ...newSelection];
-  //     } else {
-  //       return [...newSelection];
-  //     }
-  //   });
-  // };
+      if (toggle) {
+        return prev.some((objId) => newSelection.has(objId))
+          ? prev.filter((objId) => !newSelection.has(objId))
+          : [...prev, ...newSelection];
+      } else {
+        return [...newSelection];
+      }
+    });
+  };
 
   const clearSelection = () => setSelectedObjectIds([]);
 
@@ -333,6 +333,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         canRedo,
         selectedObjectIds,
         selectObject,
+        selectAllObjects,
         clearSelection,
         clearHistory,
         clearProject,

@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { fetchPresetsList, downloadPresetFromS3 } from "../../../S3/s3Storage";
 import { useBanner } from "../../../context/BannerContext";
+import { BannerObject, BannerChild } from "../../../types";
 
 const ApplyPresetButton: React.FC = () => {
   const { objects, updateHistory } = useBanner();
@@ -36,9 +37,23 @@ const ApplyPresetButton: React.FC = () => {
 
   const handleApplyPreset = async (presetId: string) => {
     const preset = await downloadPresetFromS3(presetId);
-    if (preset) {
-      updateHistory([...objects, ...preset.objects]);
-    }
+    if (!preset) return;
+
+    const updateObjectIds = <T extends BannerObject | BannerChild>(
+      obj: T
+    ): T => ({
+      ...obj,
+      id: Date.now() + Math.random(),
+      // ...("abstractGroupId" in obj
+      //   ? { abstractGroupId: Date.now() + Math.random() }
+      //   : {}),
+      children: obj.children ? obj.children.map(updateObjectIds) : undefined,
+    });
+
+    const updatedObjects = preset.objects.map(updateObjectIds<BannerObject>);
+
+    updateHistory([...objects, ...updatedObjects]);
+
     handleClose();
   };
 
