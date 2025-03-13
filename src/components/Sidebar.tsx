@@ -308,24 +308,25 @@ const Sidebar: React.FC = () => {
         onClick={groupSelectedObjectsAbstract}
         disabled={
           selectedObjectIds.length < 2 ||
-          objects.every(
+          !objects.some(
             (obj) =>
-              selectedObjectIds.includes(obj.id) && obj.abstractGroupId !== null
+              selectedObjectIds.includes(obj.id) &&
+              (obj.abstractGroupId === null ||
+                obj.abstractGroupId === undefined)
           )
         }
       >
         Групувати (абстрактні)
       </Button>
-
       <Button
         variant="contained"
         color="secondary"
         onClick={ungroupSelectedObjectsAbstract}
         disabled={
-          selectedObjectIds.length === 0 ||
+          selectedObjectIds.length < 2 ||
           !objects.some(
             (obj) =>
-              selectedObjectIds.includes(obj.id) && obj.abstractGroupId !== null
+              selectedObjectIds.includes(obj.id) && obj.abstractGroupId != null
           )
         }
       >
