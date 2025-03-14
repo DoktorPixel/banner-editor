@@ -281,6 +281,19 @@ const BannerArea: React.FC = () => {
     setOffsets(newOffsets);
   };
 
+  useEffect(() => {
+    objects.forEach((object) => {
+      if (object.autoWidth && objectRefs.current[object.id]) {
+        const realWidth = objectRefs.current[object.id]!.offsetWidth;
+        if (object.width !== realWidth) {
+          updateObject(object.id, { width: realWidth });
+        }
+      }
+    });
+  }, [updateObject, objects]);
+
+  const objectRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
   return (
     <div className="banner-area-container">
       <Header />
@@ -321,6 +334,7 @@ const BannerArea: React.FC = () => {
                 <div
                   id={`${object.id}`}
                   data-condition={JSON.stringify(object.condition)}
+                  ref={(el) => (objectRefs.current[object.id] = el)}
                   style={{
                     position: "absolute",
                     left: object.x,
@@ -644,11 +658,13 @@ const BannerArea: React.FC = () => {
             <Fragment key={object.id}>
               <div
                 // key={object.id}
+                ref={(el) => (objectRefs.current[object.id] = el)}
                 style={{
                   position: "absolute",
                   left: object.x,
                   top: object.y,
                   width: object.autoWidth ? "auto" : object.width,
+
                   height: object.height,
                   zIndex: object.zIndex,
                   cursor: "move",
@@ -683,7 +699,8 @@ const BannerArea: React.FC = () => {
                       WebkitLineClamp: object.maxLines,
                       WebkitBoxOrient: object.maxLines ? "vertical" : undefined,
                       overflow: object.maxLines ? "hidden" : undefined,
-                      whiteSpace: object.autoWidth ? "nowrap" : "normal",
+                      whiteSpace: object.autoWidth ? "nowrap" : "pre-wrap",
+                      // whiteSpace: "pre-wrap",
                     }}
                   >
                     {object.content}
