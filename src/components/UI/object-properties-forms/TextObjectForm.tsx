@@ -25,34 +25,21 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
   object,
   onChange,
 }) => {
-  // const { updateCondition } = useObjectCondition();
-
-  // const handleConditionChange = (
-  //   newType?: "showIf" | "hideIf",
-  //   newProps?: string[]
-  // ) => {
-  //   const updatedCondition = {
-  //     type: newType ?? object.condition?.type ?? "hideIf",
-  //     props: newProps?.length ? newProps : object.condition?.props ?? [""],
-  //   };
-  //   updateCondition(object.id, updatedCondition);
-  // };
-
   return (
     <Box>
       <div className="auto-size">
-        {!object.autoWidth && (
-          <TextField
-            label="Фіксована ширина (px)"
-            type="number"
-            value={Math.round(object.width || 300)}
-            onChange={(e) =>
-              onChange("width", Math.round(parseInt(e.target.value, 10)))
-            }
-            fullWidth
-            margin="normal"
-          />
-        )}
+        <TextField
+          label="Фіксована ширина (px)"
+          type="number"
+          value={Math.round(object.width || 300)}
+          onChange={(e) =>
+            onChange("width", Math.round(parseInt(e.target.value, 10)))
+          }
+          fullWidth
+          disabled={object.autoWidth}
+          margin="normal"
+        />
+
         <TextField
           label="Висота блоку (px)"
           type="number"
@@ -156,49 +143,15 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           </Tooltip>
         )}
       </div>
-
-      {/* <FormControl fullWidth margin="normal">
-        <InputLabel>Стиль тексту</InputLabel>
-        <Select
-          value={object.fontStyle || "normal"}
-          onChange={(e) => onChange("fontStyle", e.target.value)}
-        >
-          <MenuItem value="normal">Звичайний (Normal)</MenuItem>
-          <MenuItem value="italic">Курсив (Italic)</MenuItem>
-        </Select>
-      </FormControl> */}
       <FontStyleSelector
         value={object.fontStyle || "normal"}
         onChange={(value) => onChange("fontStyle", value)}
       />
-      {/* <FormControl fullWidth margin="normal">
-        <InputLabel>Декорація тексту (Text Decoration)</InputLabel>
-        <Select
-          value={object.textDecoration || "none"}
-          onChange={(e) => onChange("textDecoration", e.target.value)}
-        >
-          <MenuItem value="none">Без декорації (None)</MenuItem>
-          <MenuItem value="underline">Підкреслення (Underline)</MenuItem>
-          <MenuItem value="overline">Над текстом (Overline)</MenuItem>
-          <MenuItem value="line-through">Закреслення (Line-Through)</MenuItem>
-        </Select>
-      </FormControl> */}
+
       <TextDecorationSelector
         value={(object.textDecoration || "none").toString()}
         onChange={(value) => onChange("textDecoration", value)}
       />
-
-      {/* <FormControl fullWidth margin="normal">
-        <InputLabel>Вирівнювання тексту (Text Align)</InputLabel>
-        <Select
-          value={object.textAlign || "left"}
-          onChange={(e) => onChange("textAlign", e.target.value)}
-        >
-          <MenuItem value="left">По лівому краю (Left)</MenuItem>
-          <MenuItem value="center">По центру (Center)</MenuItem>
-          <MenuItem value="right">По правому краю (Right)</MenuItem>
-        </Select>
-      </FormControl> */}
       <TextAlignSelector
         value={object.textAlign || "left"}
         onChange={(value) => onChange("textAlign", value)}
@@ -219,32 +172,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         fullWidth
         margin="normal"
       />
-
-      {/* <Box>
-        <FormControl fullWidth margin="normal">
-          <InputLabel>Умова відображення</InputLabel>
-          <Select
-            value={object.condition?.type || "hideIf"}
-            onChange={(e) =>
-              handleConditionChange(e.target.value as "showIf" | "hideIf")
-            }
-          >
-            <MenuItem value="showIf">Показати якщо є</MenuItem>
-            <MenuItem value="hideIf">Приховати якщо є</MenuItem>0
-          </Select>
-        </FormControl>
-
-        <TextField
-          label="Параметри умови (props через кому)"
-          value={object.condition?.props?.join(", ") || ""}
-          onChange={(e) => {
-            const newProps = e.target.value.split(",").map((p) => p.trim());
-            handleConditionChange(undefined, newProps);
-          }}
-          fullWidth
-          margin="normal"
-        />
-      </Box> */}
       <ConditionSelector objectId={object.id} condition={object.condition} />
     </Box>
   );
