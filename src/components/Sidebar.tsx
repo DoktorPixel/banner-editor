@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { useBanner } from "../context/BannerContext";
-import { Button, Stack } from "@mui/material";
+import {
+  Button,
+  // CircularProgress,
+  Stack,
+  Collapse,
+  IconButton,
+  // TextField,
+  Box,
+  Typography,
+} from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import TextDialog from "./UI/dialogs/TextDialog";
 import ImageDialog from "./UI/dialogs/ImageDialog";
 import ClearHistoryDialog from "./UI/dialogs/ClearHistoryDialog";
@@ -18,6 +28,8 @@ import TabPanelComponent from "./UI/TabPanelComponent";
 import ManageDynamicImgsModal from "./UI/dialogs/ManageDynamicImgsModal";
 import SavePresetButton from "./UI/s3-components/SavePresetButton";
 import ApplyPresetButton from "./UI/s3-components/ApplyPresetButton";
+import UploadToS3Button from "./UI/s3-components/UploadToS3";
+import SidebarTabs from "./UI/sidebar-components/SidebarTabs";
 
 const Sidebar: React.FC = () => {
   const {
@@ -36,9 +48,10 @@ const Sidebar: React.FC = () => {
     addJson,
     currentProjectName,
     updateMultipleObjects,
+    clearProject,
   } = useBanner();
   const { updateObjectProperty } = useObjectProperties();
-
+  const [open, setOpen] = useState(false);
   const [isDynamicImgsModalOpen, setIsDynamicImgsModalOpen] = useState(false);
 
   const [dialogState, setDialogState] = useState({
@@ -55,6 +68,12 @@ const Sidebar: React.FC = () => {
     currentName: "",
     objectId: null as number | null,
   });
+
+  const handleToggle = () => setOpen(!open);
+
+  const handleUpload = async () => {
+    clearProject();
+  };
 
   const openDialog = (type: keyof typeof dialogState) =>
     setDialogState((prev) => ({ ...prev, [type]: true }));
@@ -169,6 +188,26 @@ const Sidebar: React.FC = () => {
 
   return (
     <Stack spacing={2} className="sidebar">
+      <div className="sidebar-wrapper">
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Typography sx={{ lineHeight: "1" }}>FeedMaker</Typography>
+
+          <IconButton size="small" edge="start" onClick={handleToggle}>
+            {open ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+        </Box>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <UploadToS3Button />
+          <Button onClick={handleUpload}>закрити проект</Button>
+        </Collapse>
+        <Typography variant="h6" className="project-name">
+          {currentProjectName || "Без назви"}
+        </Typography>
+      </div>
+      <div className="grey-line"></div>
+
+      <SidebarTabs />
+
       <Button
         variant="contained"
         color="primary"

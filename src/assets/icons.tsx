@@ -370,3 +370,152 @@ export const BorderTop: React.FC<SVGProps> = ({
     </svg>
   );
 };
+
+<svg
+  width="21"
+  height="20"
+  viewBox="0 0 21 20"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M10.5 2.5V17.5M8 17.5H13M16.3333 5V2.5H4.66667V5"
+    stroke="black"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  />
+</svg>;
+
+export const SidebarText: React.FC<SVGProps> = ({
+  width = "21px",
+  height = "20px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 21 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M10.5 2.5V17.5M8 17.5H13M16.3333 5V2.5H4.66667V5"
+        stroke="black"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const SidebarImage: React.FC<SVGProps> = ({
+  width = "20px",
+  height = "20px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M20 0H0V20H20V0Z" fill="white" />
+      <path
+        d="M17.5 13.3333V16.6667C17.5 17.1269 17.1269 17.5 16.6667 17.5H3.33333C2.8731 17.5 2.5 17.1269 2.5 16.6667V15M17.5 13.3333V3.33333C17.5 2.8731 17.1269 2.5 16.6667 2.5H3.33333C2.8731 2.5 2.5 2.8731 2.5 3.33333V15M17.5 13.3333L12.9024 10.2683C12.6536 10.1023 12.3349 10.0825 12.0674 10.2162L2.5 15"
+        stroke="black"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.66667 9.16666C7.58714 9.16666 8.33333 8.42047 8.33333 7.49999C8.33333 6.57952 7.58714 5.83333 6.66667 5.83333C5.74619 5.83333 5 6.57952 5 7.49999C5 8.42047 5.74619 9.16666 6.66667 9.16666Z"
+        stroke="black"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const SidebarLayers: React.FC<SVGProps> = ({
+  width = "21px",
+  height = "20px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 21 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M10.873 0.921304C10.6383 0.804003 10.3622 0.804003 10.1275 0.921304L1.79423 5.08797C1.51191 5.22913 1.33357 5.51769 1.33357 5.83333C1.33357 6.14897 1.51191 6.43753 1.79423 6.57869L10.1275 10.7453C10.3622 10.8627 10.6383 10.8627 10.873 10.7453L19.2063 6.57869C19.4885 6.43753 19.6669 6.14897 19.6669 5.83333C19.6669 5.51769 19.4885 5.22913 19.2063 5.08797L10.873 0.921304Z"
+        fill="black"
+      />
+      <path
+        d="M1.42149 13.794C1.62732 13.3823 2.12787 13.2155 2.53952 13.4212L10.5002 17.4016L18.4608 13.4212C18.8725 13.2155 19.3731 13.3823 19.5788 13.794C19.7847 14.2056 19.6178 14.7062 19.2062 14.912L10.8728 19.0787C10.6382 19.196 10.3621 19.196 10.1275 19.0787L1.79417 14.912C1.38252 14.7062 1.21567 14.2056 1.42149 13.794Z"
+        fill="black"
+      />
+      <path
+        d="M2.53952 9.25457C2.12787 9.04882 1.62732 9.21566 1.42149 9.62732C1.21567 10.0389 1.38252 10.5395 1.79417 10.7453L10.1275 14.912C10.3621 15.0293 10.6382 15.0293 10.8728 14.912L19.2062 10.7453C19.6178 10.5395 19.7847 10.0389 19.5788 9.62732C19.3731 9.21566 18.8725 9.04882 18.4608 9.25457L10.5002 13.2349L2.53952 9.25457Z"
+        fill="black"
+      />
+    </svg>
+  );
+};
+
+export const SidebarVariables: React.FC<SVGProps> = ({
+  width = "21px",
+  height = "20px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 21 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.0884 17.5C18.2053 15.2407 18.8333 12.6941 18.8333 10C18.8333 7.30592 18.2053 4.7593 17.0884 2.5M3.91161 2.5C2.79469 4.7593 2.16667 7.30592 2.16667 10C2.16667 12.6941 2.79469 15.2407 3.91161 17.5M14.2905 7.1875H14.2158C13.6713 7.1875 13.154 7.42668 12.7997 7.84227L8.32059 13.0952C7.96623 13.5108 7.44892 13.75 6.90442 13.75H6.82969M7.76236 7.1875H8.92408C9.3405 7.1875 9.70642 7.46497 9.82083 7.86745L11.2995 13.0701C11.4139 13.4725 11.7798 13.75 12.1962 13.75H13.358"
+        stroke="black"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const SidebarDev: React.FC<SVGProps> = ({
+  width = "21px",
+  height = "20px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 21 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g clipPath="url(#clip0_20_41)">
+        <path
+          d="M0.5 2V18H20.5V2H0.5ZM1.5 3H19.5V5H1.5V3ZM1.5 6H19.5V17H1.5V6ZM8.14648 8.14648L4.79297 11.5L8.14648 14.8535L8.85352 14.1465L6.20703 11.5L8.85352 8.85352L8.14648 8.14648ZM12.8535 8.14648L12.1465 8.85352L14.793 11.5L12.1465 14.1465L12.8535 14.8535L16.207 11.5L12.8535 8.14648Z"
+          fill="#222222"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_20_41">
+          <rect
+            width="20"
+            height="20"
+            fill="white"
+            transform="translate(0.5)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};

@@ -1,13 +1,26 @@
 .sidebar {
   width: 320px;
-  background: #f0f0f0;
-  padding: 10px;
+  // // background: #f0f0f0;
+  // padding: 10px;
 }
-button {
-  display: block;
-  margin-bottom: 1rem;
+.sidebar-wrapper {
+  padding: 10px 10px 0 10px;
 }
 
+.sidebar-tabs {
+  display: flex;
+  padding-left: 6px;
+}
+// button {
+//   display: block;
+//   margin-bottom: 1rem;
+// }
+
 .group-list-item {
-  border: 2px solid #ccc;
+  border: 2px solid #f1f1f1;
+}
+.grey-line {
+  width: 100%;
+  border-bottom: 1px solid #f1f1f1;
+  margin: 10px 0;
 }

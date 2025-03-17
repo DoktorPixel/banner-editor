@@ -85,8 +85,8 @@ const UploadToS3Button: React.FC = () => {
     <>
       <Button
         onClick={handleUpload}
-        color="primary"
-        variant="contained"
+        // color="primary"
+        // variant="contained"
         disabled={isLoading || !hasChanges}
         startIcon={isLoading && <CircularProgress size={20} />}
       >
