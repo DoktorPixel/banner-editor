@@ -6,7 +6,7 @@ import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
 import ResizeHandles from "../utils/ResizeHandles";
 import ContextMenu from "./UI/ContextMenu";
 import { BannerObject } from "../types";
-import Header from "./Header";
+
 import { useSelectionBounds } from "../utils/hooks";
 
 const BannerArea: React.FC = () => {
@@ -296,7 +296,6 @@ const BannerArea: React.FC = () => {
 
   return (
     <div className="banner-area-container">
-      <Header />
       <div
         className="banner-area"
         ref={bannerRef}
