@@ -1,21 +1,11 @@
 import { useState } from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  // Typography,
-  // List,
-  // ListItem,
-  // ListItemText,
-} from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { useBanner } from "../../../context/BannerContext";
 import FontSelector2 from "../FontSelector2";
 
-// const fonts = ["Roboto", "Open Sans", "Rubik", "Montserrat", "Lato"];
-
 const TextPanel: React.FC = () => {
   const [textContent, setTextContent] = useState("");
-  // const [searchQuery, setSearchQuery] = useState("");
+
   const [selectedFont, setSelectedFont] = useState("Roboto");
 
   const { addObject } = useBanner();
@@ -37,12 +27,8 @@ const TextPanel: React.FC = () => {
       name: "",
     });
 
-    setTextContent(""); // Очистка поля
+    setTextContent("");
   };
-
-  // const filteredFonts = fonts.filter((font) =>
-  //   font.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
 
   return (
     <Box
@@ -58,7 +44,7 @@ const TextPanel: React.FC = () => {
         value={textContent}
         onChange={(e) => setTextContent(e.target.value)}
         fullWidth
-        // rows={4}
+        // rows={2}
         maxRows={5}
         multiline
         sx={{ backgroundColor: "#F1F1F1" }}
@@ -72,37 +58,11 @@ const TextPanel: React.FC = () => {
         Add Text
       </Button>
 
-      <FontSelector2 value={selectedFont} onChange={setSelectedFont} />
-
-      {/* <TextField
-        label="Type to find a font"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        fullWidth
+      <FontSelector2
+        value={selectedFont}
+        onChange={setSelectedFont}
+        previewText={textContent}
       />
-
-      <List
-        sx={{
-          maxHeight: 150,
-          overflowY: "auto",
-          border: "1px solid #ddd",
-          borderRadius: 1,
-        }}
-      >
-        {filteredFonts.map((font) => (
-          <ListItem
-            key={font}
-            button
-            selected={font === selectedFont}
-            onClick={() => setSelectedFont(font)}
-          >
-            <ListItemText
-              primary="Hello World"
-              primaryTypographyProps={{ style: { fontFamily: font } }}
-            />
-          </ListItem>
-        ))}
-      </List> */}
     </Box>
   );
 };

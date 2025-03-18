@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { BannerProvider } from "./context/BannerContext";
 import { ConfigProvider } from "./context/ConfigContext";
 import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
 import theme from "../theme";
 import Layout from "./components/Layout";
 
@@ -10,6 +11,7 @@ const App: React.FC = () => {
     <BannerProvider>
       <ConfigProvider>
         <ThemeProvider theme={theme}>
+          <CssBaseline />
           <Routes>
             <Route path="/project/:projectName" element={<Layout />} />
 

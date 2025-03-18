@@ -14,9 +14,14 @@ import SearchIcon from "@mui/icons-material/Search";
 interface FontSelectorProps {
   value: string;
   onChange: (font: string) => void;
+  previewText: string;
 }
 
-const FontSelector2: React.FC<FontSelectorProps> = ({ value, onChange }) => {
+const FontSelector2: React.FC<FontSelectorProps> = ({
+  value,
+  onChange,
+  previewText,
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loadedFonts, setLoadedFonts] = useState<Record<string, boolean>>({});
 
@@ -59,10 +64,20 @@ const FontSelector2: React.FC<FontSelectorProps> = ({ value, onChange }) => {
 
       <List
         sx={{
-          maxHeight: 210,
+          maxHeight: 802,
           overflowY: "auto",
-          border: "1px solid #ddd",
           borderRadius: 1,
+
+          // "&::-webkit-scrollbar": {
+          //   width: "5px",
+          // },
+          // "&::-webkit-scrollbar-thumb": {
+          //   backgroundColor: "#F1F1F1",
+          //   borderRadius: "6px",
+          // },
+          // "&::-webkit-scrollbar-thumb:hover": {
+          //   backgroundColor: "#CFCACA",
+          // },
         }}
       >
         {filteredFonts.map((font) => {
@@ -82,10 +97,10 @@ const FontSelector2: React.FC<FontSelectorProps> = ({ value, onChange }) => {
               }}
             >
               <ListItemText
-                primary={font.label}
+                primary={previewText.trim().substring(0, 14) || font.label}
                 disableTypography
                 sx={{
-                  fontSize: "24px",
+                  fontSize: "22px",
                   fontFamily: loadedFonts[font.value] ? font.value : "inherit",
                 }}
               />
