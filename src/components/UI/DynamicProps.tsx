@@ -6,7 +6,6 @@ import {
   Select,
   MenuItem,
   Button,
-  Typography,
   Tooltip,
   FormControl,
   InputLabel,
@@ -56,9 +55,6 @@ const DynamicProps: React.FC = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-      <Typography variant="body1" sx={{ marginTop: 0 }}>
-        Замініть динамічні значення:
-      </Typography>
       {config.map((item, index) => (
         <Box
           key={index}

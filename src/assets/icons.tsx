@@ -519,3 +519,171 @@ export const SidebarDev: React.FC<SVGProps> = ({
     </svg>
   );
 };
+
+export const SvgImage: React.FC<SVGProps> = ({
+  width = "14px",
+  height = "14px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M11 8.22222V10.4444C11 10.7513 10.7513 11 10.4444 11H1.55556C1.24873 11 1 10.7513 1 10.4444V9.33333M11 8.22222V1.55556C11 1.24873 10.7513 1 10.4444 1H1.55556C1.24873 1 1 1.24873 1 1.55556V9.33333M11 8.22222L7.93494 6.17883C7.76906 6.06822 7.55661 6.055 7.37828 6.14417L1 9.33333"
+        stroke="black"
+        stroke-width="0.5"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M3.7778 5.44444C4.39145 5.44444 4.88891 4.94697 4.88891 4.33332C4.88891 3.71968 4.39145 3.22221 3.7778 3.22221C3.16415 3.22221 2.66669 3.71968 2.66669 4.33332C2.66669 4.94697 3.16415 5.44444 3.7778 5.44444Z"
+        stroke="black"
+        stroke-width="0.5"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const SvgLayout: React.FC<SVGProps> = ({
+  width = "10px",
+  height = "10px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 10 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8.33333 0.833334H9.16667V9.16667H8.33333V0.833334ZM7.5 0L7.5 10H10V0H7.5ZM4.58333 0.833334H5.41667L5.41667 9.16667H4.58333L4.58333 0.833334ZM3.75 0L3.75 10H6.25L6.25 0H3.75ZM0.833333 0.833334H1.66667L1.66667 9.16667H0.833333L0.833333 0.833334ZM0 0L0 10H2.5L2.5 0H0Z"
+        fill="#0B1719"
+      />
+    </svg>
+  );
+};
+
+export const SvgLayoutOpen: React.FC<SVGProps> = ({
+  width = "10px",
+  height = "10px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 10 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M9.16667 8.33333V9.16667H0.833333V8.33333H9.16667ZM10 7.5H0V10H10V7.5ZM9.16667 4.58333V5.41667H0.833333V4.58333H9.16667ZM10 3.75H0V6.25H10V3.75ZM9.16667 0.833333V1.66667H0.833333V0.833333H9.16667ZM10 0H0V2.5H10V0Z"
+        fill="#0B1719"
+      />
+    </svg>
+  );
+};
+
+export const SvgText: React.FC<SVGProps> = ({
+  width = "12px",
+  height = "12px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 10 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5 1V9M3.28571 9H6.71429M9 2.33333V1H1V2.33333"
+        stroke="#6A6A6A"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const SvgVirtual: React.FC<SVGProps> = ({
+  width = "10px",
+  height = "10px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 10 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M1.42857 0H0V1.42857H1.42857V0Z" fill="#6A6A6A" />
+      <path d="M1.42857 8.57143H0V10H1.42857V8.57143Z" fill="#6A6A6A" />
+      <path d="M0 5.71429H1.42857V7.14286H0V5.71429Z" fill="#6A6A6A" />
+      <path d="M1.42857 2.85714H0V4.28571H1.42857V2.85714Z" fill="#6A6A6A" />
+      <path d="M2.85712 0H4.28569V1.42857H2.85712V0Z" fill="#6A6A6A" />
+      <path d="M4.28569 8.57143H2.85712V10H4.28569V8.57143Z" fill="#6A6A6A" />
+      <path d="M5.71429 0H7.14287V1.42857H5.71429V0Z" fill="#6A6A6A" />
+      <path d="M7.14287 8.57143H5.71429V10H7.14287V8.57143Z" fill="#6A6A6A" />
+      <path d="M8.57141 0H9.99998V1.42857H8.57141V0Z" fill="#6A6A6A" />
+      <path d="M9.99998 8.57143H8.57141V10H9.99998V8.57143Z" fill="#6A6A6A" />
+      <path
+        d="M8.57141 5.71429H9.99998V7.14286H8.57141V5.71429Z"
+        fill="#6A6A6A"
+      />
+      <path
+        d="M9.99998 2.85714H8.57141V4.28571H9.99998V2.85714Z"
+        fill="#6A6A6A"
+      />
+    </svg>
+  );
+};
+
+export const ArrowDown: React.FC<SVGProps> = ({
+  width = "12px",
+  height = "12px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 8 4"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M0.152813 0.13518C0.356563 -0.04506 0.686915 -0.04506 0.890665 0.13518L4.00001 2.88572L7.10937 0.13518C7.31313 -0.04506 7.64343 -0.04506 7.84718 0.13518C8.05094 0.31542 8.05094 0.607654 7.84718 0.787876L4.36891 3.8648C4.2711 3.95138 4.13837 4 4.00001 4C3.86164 4 3.72891 3.95138 3.6311 3.8648L0.152813 0.787876C-0.0509375 0.607654 -0.0509375 0.31542 0.152813 0.13518Z"
+        fill="#363853"
+      />
+    </svg>
+  );
+};
+
+export const ArrowRight: React.FC<SVGProps> = ({
+  width = "12px",
+  height = "12px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 4 8"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M0.13518 7.84719C-0.04506 7.64344 -0.04506 7.31309 0.13518 7.10934L2.88572 3.99999L0.13518 0.890628C-0.04506 0.686872 -0.04506 0.356575 0.13518 0.152818C0.31542 -0.0509396 0.607654 -0.0509396 0.787876 0.152818L3.8648 3.63109C3.95138 3.7289 4 3.86163 4 3.99999C4 4.13836 3.95138 4.27109 3.8648 4.3689L0.787876 7.84719C0.607654 8.05094 0.31542 8.05094 0.13518 7.84719Z"
+        fill="#363853"
+      />
+    </svg>
+  );
+};

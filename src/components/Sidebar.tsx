@@ -11,21 +11,21 @@ import {
   Typography,
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import TextDialog from "./UI/dialogs/TextDialog";
-import ImageDialog from "./UI/dialogs/ImageDialog";
+// import TextDialog from "./UI/dialogs/TextDialog";
+// import ImageDialog from "./UI/dialogs/ImageDialog";
 import ClearHistoryDialog from "./UI/dialogs/ClearHistoryDialog";
-import NameDialog from "./UI/dialogs/NameDialog";
-import JSONDialog from "./UI/dialogs/JSONDialog";
+// import NameDialog from "./UI/dialogs/NameDialog";
+// import JSONDialog from "./UI/dialogs/JSONDialog";
 import { BannerObject } from "../types";
-import { useObjectProperties } from "../utils/hooks";
+// import { useObjectProperties } from "../utils/hooks";
 
-import ExportToServer from "./UI/ExportToServer";
-import ExportBanner from "./UI/ExportBanner";
-import SidebarObjectList from "./UI/SidebarObjectList";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DynamicProps from "./UI/DynamicProps";
-import TabPanelComponent from "./UI/TabPanelComponent";
-import ManageDynamicImgsModal from "./UI/dialogs/ManageDynamicImgsModal";
+// import ExportInJSON from "./UI/ExportInJSON";
+// import ExportInHTML from "./UI/ExportInHTML";
+// import SidebarObjectList from "./UI/SidebarObjectList";
+// import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+// import DynamicProps from "./UI/DynamicProps";
+// import TabPanelComponent from "./UI/TabPanelComponent";
+// import ManageDynamicImgsModal from "./UI/dialogs/ManageDynamicImgsModal";
 import SavePresetButton from "./UI/s3-components/SavePresetButton";
 import ApplyPresetButton from "./UI/s3-components/ApplyPresetButton";
 import UploadToS3Button from "./UI/s3-components/UploadToS3";
@@ -33,7 +33,7 @@ import SidebarTabs from "./UI/sidebar-components/SidebarTabs";
 
 const Sidebar: React.FC = () => {
   const {
-    addObject,
+    // addObject,
     undo,
     redo,
     canUndo,
@@ -41,18 +41,18 @@ const Sidebar: React.FC = () => {
     clearHistory,
     objects,
     selectedObjectIds,
-    selectObject,
-    selectAllObjects,
+    // selectObject,
+    // selectAllObjects,
     groupSelectedObjects,
     ungroupSelectedObject,
-    addJson,
+    // addJson,
     currentProjectName,
     updateMultipleObjects,
     clearProject,
   } = useBanner();
-  const { updateObjectProperty } = useObjectProperties();
+  // const { updateObjectProperty } = useObjectProperties();
   const [open, setOpen] = useState(false);
-  const [isDynamicImgsModalOpen, setIsDynamicImgsModalOpen] = useState(false);
+  // const [isDynamicImgsModalOpen, setIsDynamicImgsModalOpen] = useState(false);
 
   const [dialogState, setDialogState] = useState({
     isTextDialogOpen: false,
@@ -61,13 +61,13 @@ const Sidebar: React.FC = () => {
     isJsonDialogOpen: false,
   });
 
-  const [textContent, setTextContent] = useState("");
-  const [imageSrc, setImageSrc] = useState("");
-  const [nameDialogState, setNameDialogState] = useState({
-    isNameDialogOpen: false,
-    currentName: "",
-    objectId: null as number | null,
-  });
+  // const [textContent, setTextContent] = useState("");
+  // const [imageSrc, setImageSrc] = useState("");
+  // const [nameDialogState, setNameDialogState] = useState({
+  //   isNameDialogOpen: false,
+  //   currentName: "",
+  //   objectId: null as number | null,
+  // });
 
   const handleToggle = () => setOpen(!open);
 
@@ -81,81 +81,81 @@ const Sidebar: React.FC = () => {
   const closeDialog = (type: keyof typeof dialogState) =>
     setDialogState((prev) => ({ ...prev, [type]: false }));
 
-  const openNameDialog = (object: BannerObject) => {
-    setNameDialogState({
-      isNameDialogOpen: true,
-      currentName: object.name || "",
-      objectId: object.id,
-    });
-  };
+  // const openNameDialog = (object: BannerObject) => {
+  //   setNameDialogState({
+  //     isNameDialogOpen: true,
+  //     currentName: object.name || "",
+  //     objectId: object.id,
+  //   });
+  // };
 
-  const closeNameDialog = () => {
-    setNameDialogState({
-      isNameDialogOpen: false,
-      currentName: "",
-      objectId: null,
-    });
-  };
+  // const closeNameDialog = () => {
+  //   setNameDialogState({
+  //     isNameDialogOpen: false,
+  //     currentName: "",
+  //     objectId: null,
+  //   });
+  // };
   //
-  const saveName = () => {
-    if (nameDialogState.objectId !== null) {
-      updateObjectProperty(
-        nameDialogState.objectId,
-        "name",
-        nameDialogState.currentName
-      );
-    }
-    closeNameDialog();
-  };
+  // const saveName = () => {
+  //   if (nameDialogState.objectId !== null) {
+  //     updateObjectProperty(
+  //       nameDialogState.objectId,
+  //       "name",
+  //       nameDialogState.currentName
+  //     );
+  //   }
+  //   closeNameDialog();
+  // };
 
-  const handleLoadJson = (jsonData: BannerObject[]) => {
-    addJson(jsonData);
-  };
+  // const handleLoadJson = (jsonData: BannerObject[]) => {
+  //   addJson(jsonData);
+  // };
 
-  const handleAddText = () => {
-    addObject({
-      id: Date.now(),
-      type: "text",
-      x: 50,
-      y: 50,
-      width: 200,
-      height: 50,
-      content: textContent || "Текст",
-      fontSize: 16,
-      color: "#000000",
-      name: "",
-    });
-    setTextContent("");
-    closeDialog("isTextDialogOpen");
-  };
+  // const handleAddText = () => {
+  //   addObject({
+  //     id: Date.now(),
+  //     type: "text",
+  //     x: 50,
+  //     y: 50,
+  //     width: 200,
+  //     height: 50,
+  //     content: textContent || "Текст",
+  //     fontSize: 16,
+  //     color: "#000000",
+  //     name: "",
+  //   });
+  //   setTextContent("");
+  //   closeDialog("isTextDialogOpen");
+  // };
 
-  const handleAddImage = (src: string) => {
-    addObject({
-      id: Date.now(),
-      type: "image",
-      width: 250,
-      height: 250,
-      x: 50,
-      y: 50,
-      src,
-      name: "",
-    });
-    setImageSrc("");
-    closeDialog("isImageDialogOpen");
-  };
+  // const handleAddImage = (src: string) => {
+  //   addObject({
+  //     id: Date.now(),
+  //     type: "image",
+  //     width: 250,
+  //     height: 250,
+  //     x: 50,
+  //     y: 50,
+  //     src,
+  //     name: "",
+  //   });
+  //   setImageSrc("");
+  //   closeDialog("isImageDialogOpen");
+  // };
 
-  const handleAddFigure = () => {
-    addObject({
-      id: Date.now(),
-      type: "figure",
-      x: 50,
-      y: 50,
-      width: 200,
-      height: 200,
-      backgroundColor: "#f0f0f0",
-      name: "",
-    });
-  };
+  // const handleAddFigure = () => {
+  //   addObject({
+  //     id: Date.now(),
+  //     type: "figure",
+  //     x: 50,
+  //     y: 50,
+  //     width: 200,
+  //     height: 200,
+  //     backgroundColor: "#f0f0f0",
+  //     name: "",
+  //   });
+  // };
 
   const handleClearHistory = () => {
     clearHistory();
@@ -198,7 +198,7 @@ const Sidebar: React.FC = () => {
         </Box>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <UploadToS3Button />
-          <Button onClick={handleUpload}>закрити проект</Button>
+          <Button onClick={handleUpload}>Close project</Button>
         </Collapse>
         <Typography variant="h6" className="project-name">
           {currentProjectName || "Без назви"}
@@ -208,35 +208,38 @@ const Sidebar: React.FC = () => {
 
       <SidebarTabs />
 
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => openDialog("isTextDialogOpen")}
       >
         Додати текст
-      </Button>
-      <Button
+      </Button> */}
+
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => openDialog("isImageDialogOpen")}
       >
         Додати зображення
-      </Button>
+      </Button> */}
 
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => handleAddFigure()}
       >
         Додати фігуру
-      </Button>
-      <Button
+      </Button> */}
+
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => setIsDynamicImgsModalOpen(true)}
       >
         Завантажити динамічні лого
-      </Button>
+      </Button> */}
+
       <Button
         variant="outlined"
         color="primary"
@@ -260,7 +263,8 @@ const Sidebar: React.FC = () => {
       >
         Очистити історію
       </Button>
-      <TextDialog
+
+      {/* <TextDialog
         open={dialogState.isTextDialogOpen}
         textContent={textContent}
         onChange={(e) => setTextContent(e.target.value)}
@@ -273,19 +277,19 @@ const Sidebar: React.FC = () => {
         onChange={(e) => setImageSrc(e.target.value)}
         onClose={() => closeDialog("isImageDialogOpen")}
         onAdd={(src) => handleAddImage(src)}
-      />
+      /> */}
 
       <ClearHistoryDialog
         open={dialogState.isClearHistoryDialogOpen}
         onClose={() => closeDialog("isClearHistoryDialogOpen")}
         onClear={handleClearHistory}
       />
-      <JSONDialog
+      {/* <JSONDialog
         open={dialogState.isJsonDialogOpen}
         onClose={() => closeDialog("isJsonDialogOpen")}
         onLoad={handleLoadJson}
-      />
-      <TabPanelComponent
+      /> */}
+      {/* <TabPanelComponent
         tabs={[
           {
             label: "Список об'єктів",
@@ -304,11 +308,11 @@ const Sidebar: React.FC = () => {
             content: <DynamicProps />,
           },
         ]}
-      />
+      /> */}
 
       {/*  */}
 
-      <NameDialog
+      {/* <NameDialog
         open={nameDialogState.isNameDialogOpen}
         name={nameDialogState.currentName}
         onChange={(e) =>
@@ -319,7 +323,7 @@ const Sidebar: React.FC = () => {
         }
         onClose={closeNameDialog}
         onSave={saveName}
-      />
+      /> */}
       <Button
         variant="contained"
         color="primary"
@@ -375,20 +379,20 @@ const Sidebar: React.FC = () => {
       <SavePresetButton />
       <ApplyPresetButton />
 
-      <ExportToServer />
-      <ExportBanner />
-      <ManageDynamicImgsModal
+      {/* <ExportInJSON />
+      <ExportInHTML /> */}
+      {/* <ManageDynamicImgsModal
         open={isDynamicImgsModalOpen}
         onClose={() => setIsDynamicImgsModalOpen(false)}
         projectId={currentProjectName}
-      />
-      <Button
+      /> */}
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => openDialog("isJsonDialogOpen")}
       >
         Завантажити JSON <CloudUploadIcon sx={{ marginLeft: "10px" }} />
-      </Button>
+      </Button> */}
     </Stack>
   );
 };

@@ -6,7 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 import Typography from "@mui/material/Typography";
 import { DynamicImg } from "../../types";
 
-const ExportBanner: React.FC = () => {
+const ExportInHTML: React.FC = () => {
   const { clearSelection, clearChildSelection, dynamicImgs } = useBanner();
   const { config } = useConfig();
   const [isLoading, setIsLoading] = useState(false);
@@ -78,8 +78,11 @@ const ExportBanner: React.FC = () => {
 
     styleSheets.forEach((styleSheet) => {
       try {
-        const rules = styleSheet.cssRules || [];
-        Array.from(rules).forEach((rule) => {
+        if (!styleSheet.cssRules) return;
+
+        const rules = Array.from(styleSheet.cssRules);
+
+        rules.forEach((rule) => {
           if (
             rule instanceof CSSStyleRule &&
             (bannerAreaElement.matches(rule.selectorText) ||
@@ -102,7 +105,7 @@ const ExportBanner: React.FC = () => {
         if (img.name && img.logoUrl) {
           acc[img.name] = img.logoUrl;
         } else {
-          console.warn("Пропущено елемент із неприпустимими даними:", img);
+          console.warn("Skipped element with invalid data:", img);
         }
         return acc;
       }, {} as Record<string, string>);
@@ -245,10 +248,10 @@ const ExportBanner: React.FC = () => {
 
     try {
       await navigator.clipboard.writeText(fullHTML);
-      setNotification("Дані успішно скопійовані в буфер обміну!");
+      setNotification("Data copied to clipboard successfully!");
     } catch (clipboardError) {
-      console.error("Помилка при копіюванні в буфер обміну:", clipboardError);
-      setNotification("Помилка при копіюванні в буфер обміну.");
+      console.error("Error copying to clipboard:", clipboardError);
+      setNotification("Error copying to clipboard.");
     } finally {
       setTimeout(() => setNotification(null), 2000);
       setIsLoading(false);
@@ -271,7 +274,7 @@ const ExportBanner: React.FC = () => {
           "Отправка..."
         ) : (
           <>
-            Надіслати HTML <SendIcon sx={{ marginLeft: "10px" }} />
+            Export in HTML <SendIcon sx={{ marginLeft: "10px" }} />
           </>
         )}
       </LoadingButton>
@@ -289,4 +292,4 @@ const ExportBanner: React.FC = () => {
   );
 };
 
-export default ExportBanner;
+export default ExportInHTML;

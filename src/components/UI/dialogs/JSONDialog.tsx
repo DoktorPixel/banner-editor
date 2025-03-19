@@ -25,19 +25,19 @@ const JSONDialog: React.FC<JSONDialogProps> = ({ open, onClose, onLoad }) => {
       setJsonContent("");
       onClose();
     } catch (error) {
-      console.error("Некоректний JSON:", error);
-      alert("Некоректний JSON. Перевірте структуру даних.");
+      console.error("Invalid JSON:", error);
+      alert("Invalid JSON. Check the data structure.");
     }
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle>Завантажити JSON</DialogTitle>
+      <DialogTitle>Import JSON</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin="dense"
-          label="Вставте JSON"
+          label="Вставить JSON"
           fullWidth
           multiline
           rows={10}
@@ -47,10 +47,10 @@ const JSONDialog: React.FC<JSONDialogProps> = ({ open, onClose, onLoad }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          Відмінити
+          Cancel
         </Button>
         <Button onClick={handleLoad} color="primary">
-          Завантажити
+          Download
         </Button>
       </DialogActions>
     </Dialog>

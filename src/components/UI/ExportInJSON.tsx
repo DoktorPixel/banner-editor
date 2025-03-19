@@ -5,7 +5,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
 import Typography from "@mui/material/Typography";
 
-const ExportToServer: React.FC = () => {
+const ExportInJSON: React.FC = () => {
   const { objects, clearSelection, clearChildSelection } = useBanner();
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
@@ -17,11 +17,11 @@ const ExportToServer: React.FC = () => {
       //
       const objectsJSON = JSON.stringify(objects, null, 2);
       await navigator.clipboard.writeText(objectsJSON);
-      console.log("HTML скопійований у буфер обміну!");
-      setNotification("Дані успішно скопійовані в буфер обміну!");
+      // console.log("HTML скопійований у буфер обміну!");
+      setNotification("Data copied to clipboard successfully!");
     } catch (clipboardError) {
-      console.error("Помилка при копіюванні в буфер обміну:", clipboardError);
-      setNotification("Помилка при копіюванні в буфер обміну.");
+      console.error("Error copying to clipboard.", clipboardError);
+      setNotification("Error copying to clipboard.");
     } finally {
       //
       setTimeout(() => setNotification(null), 2000);
@@ -62,7 +62,8 @@ const ExportToServer: React.FC = () => {
           "Отправка..."
         ) : (
           <>
-            Надіслати JSON <SendIcon sx={{ marginLeft: "10px" }} />
+            Export in JSON
+            <SendIcon sx={{ marginLeft: "10px" }} />
           </>
         )}
       </LoadingButton>
@@ -79,4 +80,4 @@ const ExportToServer: React.FC = () => {
   );
 };
 
-export default ExportToServer;
+export default ExportInJSON;

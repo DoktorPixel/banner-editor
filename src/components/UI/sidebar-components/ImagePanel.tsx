@@ -1,12 +1,85 @@
-import { Box, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, Button } from "@mui/material";
+import { useBanner } from "../../../context/BannerContext";
+import ImageDialog from "../dialogs/ImageDialog";
+import ManageDynamicImgsModal from "../dialogs/ManageDynamicImgsModal";
 const ImagePanel: React.FC = () => {
+  const { addObject, currentProjectName } = useBanner();
+  const [dialogState, setDialogState] = useState({
+    isImageDialogOpen: false,
+  });
+  const [imageSrc, setImageSrc] = useState("");
+  const [isDynamicImgsModalOpen, setIsDynamicImgsModalOpen] = useState(false);
+  const openDialog = (type: keyof typeof dialogState) =>
+    setDialogState((prev) => ({ ...prev, [type]: true }));
+  const closeDialog = (type: keyof typeof dialogState) =>
+    setDialogState((prev) => ({ ...prev, [type]: false }));
+
+  const handleAddImage = (src: string) => {
+    addObject({
+      id: Date.now(),
+      type: "image",
+      width: 250,
+      height: 250,
+      x: 50,
+      y: 50,
+      src,
+      name: "",
+    });
+    setImageSrc("");
+    closeDialog("isImageDialogOpen");
+  };
+
+  const handleAddFigure = () => {
+    addObject({
+      id: Date.now(),
+      type: "figure",
+      x: 50,
+      y: 50,
+      width: 200,
+      height: 200,
+      backgroundColor: "#f0f0f0",
+      name: "",
+    });
+  };
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      <Typography variant="h5">Image</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec
-        purus ut sem aliquet vehicula. Nullam nec purus ut sem aliquet vehicula.
-      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => openDialog("isImageDialogOpen")}
+      >
+        Add Image
+      </Button>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setIsDynamicImgsModalOpen(true)}
+      >
+        Add Dynamic Image
+      </Button>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => handleAddFigure()}
+      >
+        Add Figure
+      </Button>
+      <ImageDialog
+        open={dialogState.isImageDialogOpen}
+        imageSrc={imageSrc}
+        onChange={(e) => setImageSrc(e.target.value)}
+        onClose={() => closeDialog("isImageDialogOpen")}
+        onAdd={(src) => handleAddImage(src)}
+      />
+
+      <ManageDynamicImgsModal
+        open={isDynamicImgsModalOpen}
+        onClose={() => setIsDynamicImgsModalOpen(false)}
+        projectId={currentProjectName}
+      />
     </Box>
   );
 };

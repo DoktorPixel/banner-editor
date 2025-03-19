@@ -182,15 +182,15 @@ export const stepBackwardWithCollision = (
 export const getObjectTypeLabel = (type: BannerObject["type"]) => {
   switch (type) {
     case "text":
-      return "Текст";
+      return "Text";
     case "image":
-      return "Зображення";
+      return "Image";
     case "figure":
-      return "Фігура";
+      return "Figure";
     case "group":
-      return "Група";
+      return "Layout";
     default:
-      return "Об'єкт";
+      return "Object";
   }
 };
 
