@@ -32,7 +32,7 @@ const UploadToS3Button: React.FC = () => {
   const handleUpload = async () => {
     if (!currentProjectName) {
       setSnackbarMessage(
-        "Назва проекту не задана! Спочатку створіть або завантажте проект."
+        "No project name specified! Please create or load a project first."
       );
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
@@ -47,13 +47,15 @@ const UploadToS3Button: React.FC = () => {
 
     try {
       await uploadToS3(key, projectData);
-      setSnackbarMessage(`Дані ${currentProjectName} успішно завантажені в S3`);
+      setSnackbarMessage(
+        `${currentProjectName} data successfully uploaded to the server`
+      );
       setSnackbarSeverity("success");
       setOpenSnackbar(true);
       setInitialData({ objects, dynamicImgs, config });
     } catch (error) {
-      console.error("Ошибка завантаження в S3:", error);
-      setSnackbarMessage("Ошибка завантаження даних в S3");
+      console.error("Server upload error:", error);
+      setSnackbarMessage("Server upload error");
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
     } finally {
@@ -90,17 +92,17 @@ const UploadToS3Button: React.FC = () => {
         disabled={isLoading || !hasChanges}
         startIcon={isLoading && <CircularProgress size={20} />}
       >
-        {isLoading ? "Загрузка..." : "Відправити дані в S3"}
+        {isLoading ? "Loading..." : "Send data to server"}
       </Button>
       <Snackbar
         open={openSnackbar}
         autoHideDuration={1500}
         onClose={handleCloseSnackbar}
         sx={{
-          position: "absolute",
-          top: "23px!important",
-          left: "370px!important",
-          width: "500px",
+          position: "relative",
+          top: "0px!important",
+          left: "0px!important",
+          width: "320px",
           textAlign: "center",
         }}
       >

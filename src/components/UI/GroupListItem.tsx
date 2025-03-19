@@ -1,15 +1,16 @@
 import { useState } from "react";
-import {
-  ListItem,
-  ListItemText,
-  Collapse,
-  List,
-  IconButton,
-} from "@mui/material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { ListItem, Collapse, List, IconButton } from "@mui/material";
 import { BannerObject, BannerChild } from "../../types";
 import { useChildProperties, getObjectTypeLabel } from "../../utils/hooks";
 import ChildGroupListItem from "./ChildGroupListItem";
+import {
+  SvgLayout,
+  ArrowRight,
+  ArrowDown,
+  SvgLayoutOpen,
+  SvgImage,
+  SvgText,
+} from "../../assets/icons";
 
 interface GroupListItemProps {
   group: BannerObject;
@@ -48,26 +49,27 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
         sx={{
           cursor: "pointer",
           backgroundColor: selectedObjectIds.includes(group.id)
-            ? "lightgray"
+            ? "#EEEEEE"
             : "white",
-          "&:hover": { backgroundColor: "lightblue" },
+          "&:hover": { backgroundColor: "#f5f5f5" },
+          padding: "0",
+          display: "flex",
+          alignItems: "center",
         }}
       >
-        <ListItemText
-          primary={group.name || "Група"}
-          sx={{ fontWeight: "bold" }}
-        />
-        <IconButton size="small" edge="end" onClick={handleToggle}>
-          {open ? <ExpandLess /> : <ExpandMore />}
+        <IconButton
+          size="small"
+          edge="start"
+          sx={{ marginRight: "3px" }}
+          onClick={handleToggle}
+        >
+          {open ? <ArrowDown /> : <ArrowRight />}
         </IconButton>
+        {open ? <SvgLayoutOpen /> : <SvgLayout />}
+        <span className="layers-list-item">{group.name || "Layout"}</span>
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List
-          component="div"
-          disablePadding
-          className="group-list-item"
-          sx={{ borderLeft: "5px solid lightgray" }}
-        >
+        <List component="div" disablePadding className="group-list-item">
           {group.children?.map((child) =>
             child.type === "group" ? (
               <ChildGroupListItem
@@ -87,16 +89,18 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
                     selectedChildId?.childId === child.id
                       ? "lightgray"
                       : "white",
-                  "&:hover": { backgroundColor: "lightblue" },
-                  border:
-                    selectedChildId?.childId === child.id
-                      ? "1px solid blue"
-                      : "none",
+                  "&:hover": { backgroundColor: "#f5f5f5" },
+                  // padding: "0",
+                  // display: "flex",
+                  // alignItems: "center",
                 }}
               >
-                <ListItemText
-                  primary={child.name || getObjectTypeLabel(child.type)}
-                />
+                {child.type === "text" && <SvgText />}
+                {child.type === "image" && <SvgImage />}
+                {child.type === "figure" && <SvgImage />}
+                <span className="layers-list-item">
+                  {child.name || getObjectTypeLabel(child.type)}
+                </span>
               </ListItem>
             )
           )}

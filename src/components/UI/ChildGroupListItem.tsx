@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { ListItem, Collapse, List, IconButton } from "@mui/material";
 import {
-  ListItem,
-  ListItemText,
-  Collapse,
-  List,
-  IconButton,
-} from "@mui/material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
+  SvgLayout,
+  ArrowRight,
+  ArrowDown,
+  SvgLayoutOpen,
+  SvgImage,
+  SvgText,
+} from "../../assets/icons";
 import { BannerChild } from "../../types";
 import { useChildProperties, getObjectTypeLabel } from "../../utils/hooks";
 
@@ -38,24 +39,29 @@ const ChildGroupListItem: React.FC<ChildGroupListItemProps> = ({
           pl: 4,
           cursor: "pointer",
           backgroundColor:
-            selectedChildId?.childId === child.id ? "lightgray" : "white",
-          "&:hover": { backgroundColor: "lightblue" },
-          border:
-            selectedChildId?.childId === child.id ? "1px solid blue" : "none",
+            selectedChildId?.childId === child.id ? "#EEEEEE" : "white",
+          "&:hover": { backgroundColor: "#f5f5f5" },
+
+          padding: "0 0 0 36px",
+          display: "flex",
+          alignItems: "center",
         }}
       >
-        <ListItemText primary={child.name || getObjectTypeLabel(child.type)} />
-        <IconButton size="small" edge="end" onClick={handleToggle}>
-          {open ? <ExpandLess /> : <ExpandMore />}
+        <IconButton
+          size="small"
+          edge="start"
+          sx={{ marginRight: "3px" }}
+          onClick={handleToggle}
+        >
+          {open ? <ArrowDown /> : <ArrowRight />}
         </IconButton>
+        {open ? <SvgLayoutOpen /> : <SvgLayout />}
+        <span className="layers-list-item">
+          {child.name || getObjectTypeLabel(child.type)}
+        </span>
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List
-          component="div"
-          disablePadding
-          className="group-list-item"
-          sx={{ borderLeft: "5px solid lightgray" }}
-        >
+        <List component="div" disablePadding className="group-list-item">
           {child.children?.map((subChild) =>
             subChild.type === "group" ? (
               <ChildGroupListItem
@@ -76,18 +82,21 @@ const ChildGroupListItem: React.FC<ChildGroupListItemProps> = ({
                   cursor: "pointer",
                   backgroundColor:
                     selectedChildId?.childId === subChild.id
-                      ? "lightgray"
+                      ? "#EEEEEE"
                       : "white",
-                  "&:hover": { backgroundColor: "lightblue" },
-                  border:
-                    selectedChildId?.childId === subChild.id
-                      ? "1px solid blue"
-                      : "none",
+                  "&:hover": { backgroundColor: "#f5f5f5" },
+
+                  padding: "0 0 0 57px",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
-                <ListItemText
-                  primary={subChild.name || getObjectTypeLabel(subChild.type)}
-                />
+                {subChild.type === "text" && <SvgText />}
+                {subChild.type === "image" && <SvgImage />}
+                {subChild.type === "figure" && <SvgImage />}
+                <span className="layers-list-item">
+                  {subChild.name || getObjectTypeLabel(subChild.type)}
+                </span>
               </ListItem>
             )
           )}

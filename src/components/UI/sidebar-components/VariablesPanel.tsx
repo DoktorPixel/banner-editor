@@ -1,12 +1,9 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import DynamicProps from "../DynamicProps";
 const VariablesPanel: React.FC = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      <Typography variant="h5">Variables</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec
-        purus ut sem aliquet vehicula. Nullam nec purus ut sem aliquet vehicula.
-      </Typography>
+      <DynamicProps />
     </Box>
   );
 };

@@ -1,32 +1,35 @@
-import {
-  List,
-  ListItem,
-  ListItemText,
-  Collapse,
-  IconButton,
-  Box,
-} from "@mui/material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { List, ListItem, Collapse, IconButton, Box } from "@mui/material";
 import { useState } from "react";
 import GroupListItem from "./GroupListItem";
 import { BannerObject } from "../../types";
 import { getObjectTypeLabel } from "../../utils/hooks";
+import { useBanner } from "../../context/BannerContext";
+import { useObjectProperties } from "../../utils/hooks";
+import NameDialog from "./dialogs/NameDialog";
+import {
+  SvgImage,
+  SvgText,
+  SvgVirtual,
+  ArrowRight,
+  ArrowDown,
+} from "../../assets/icons";
 
-interface ObjectListProps {
-  objects: BannerObject[];
-  selectedObjectIds: number[];
-  selectObject: (id: number, toggle?: boolean) => void;
-  selectAllObjects: (id: number, toggle?: boolean) => void;
-  openNameDialog: (object: BannerObject) => void;
-}
+const SidebarObjectList: React.FC = () => {
+  const { objects, selectedObjectIds, selectObject, selectAllObjects } =
+    useBanner();
+  const { updateObjectProperty } = useObjectProperties();
+  const [nameDialogState, setNameDialogState] = useState({
+    isNameDialogOpen: false,
+    currentName: "",
+    objectId: null as number | null,
+  });
 
-const SidebarObjectList: React.FC<ObjectListProps> = ({
-  objects,
-  selectedObjectIds,
-  selectObject,
-  selectAllObjects,
-  openNameDialog,
-}) => {
+  const [openGroups, setOpenGroups] = useState<Record<number, boolean>>({});
+
+  const toggleGroup = (groupId: number) => {
+    setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
+  };
+
   const groupedObjects = objects.reduce<Record<number, BannerObject[]>>(
     (acc, obj) => {
       if (obj.abstractGroupId != null) {
@@ -38,14 +41,35 @@ const SidebarObjectList: React.FC<ObjectListProps> = ({
     {}
   );
 
-  const [openGroups, setOpenGroups] = useState<Record<number, boolean>>({});
+  const openNameDialog = (object: BannerObject) => {
+    setNameDialogState({
+      isNameDialogOpen: true,
+      currentName: object.name || "",
+      objectId: object.id,
+    });
+  };
 
-  const toggleGroup = (groupId: number) => {
-    setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
+  const closeNameDialog = () => {
+    setNameDialogState({
+      isNameDialogOpen: false,
+      currentName: "",
+      objectId: null,
+    });
+  };
+
+  const saveName = () => {
+    if (nameDialogState.objectId !== null) {
+      updateObjectProperty(
+        nameDialogState.objectId,
+        "name",
+        nameDialogState.currentName
+      );
+    }
+    closeNameDialog();
   };
 
   return (
-    <List sx={{ padding: "0px" }}>
+    <List sx={{ padding: "0px", margin: "0 0 0 6px" }}>
       {objects.map((obj) => {
         if (
           obj.abstractGroupId != null &&
@@ -57,43 +81,47 @@ const SidebarObjectList: React.FC<ObjectListProps> = ({
           return (
             <Box
               key={`group-${obj.abstractGroupId}`}
-              sx={{ marginBottom: "5px" }}
+              // sx={{ marginBottom: "5px" }}
             >
               <ListItem
                 component="div"
                 sx={{
+                  padding: "0px",
                   backgroundColor: group.every((groupObj) =>
                     selectedObjectIds.includes(groupObj.id)
                   )
                     ? "#f0f0f0"
                     : "white",
-                  "&:hover": { backgroundColor: "lightblue" },
+                  "&:hover": { backgroundColor: "#f5f5f5" },
                 }}
                 onClick={(e) =>
                   selectAllObjects(obj.id, e.ctrlKey || e.metaKey)
                 }
               >
-                <ListItemText primary="Абстрактна група" />
                 <IconButton
                   size="small"
+                  edge="start"
+                  sx={{ marginRight: "3px" }}
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleGroup(obj.abstractGroupId!);
                   }}
                 >
                   {openGroups[obj.abstractGroupId!] ? (
-                    <ExpandLess />
+                    <ArrowDown />
                   ) : (
-                    <ExpandMore />
+                    <ArrowRight />
                   )}
                 </IconButton>
+                <SvgVirtual />
+                <span className="layers-list-item">Group</span>
               </ListItem>
               <Collapse
                 in={openGroups[obj.abstractGroupId]}
                 timeout="auto"
                 unmountOnExit
               >
-                <List component="div" disablePadding>
+                <List component="div" sx={{ padding: "0 0 0 36px" }}>
                   {group.map((groupObj) =>
                     groupObj.type === "group" ? (
                       <GroupListItem
@@ -118,15 +146,19 @@ const SidebarObjectList: React.FC<ObjectListProps> = ({
                           )
                             ? "#f0f0f0"
                             : "white",
-                          "&:hover": { backgroundColor: "lightblue" },
-                          pl: 4,
+                          "&:hover": { backgroundColor: "#f5f5f5" },
+                          // padding: "0 0 0 36px",
+                          display: "flex",
+                          alignItems: "center",
                         }}
                       >
-                        <ListItemText
-                          primary={
-                            groupObj.name || getObjectTypeLabel(groupObj.type)
-                          }
-                        />
+                        {groupObj.type === "text" && <SvgText />}
+                        {groupObj.type === "image" && <SvgImage />}
+                        {groupObj.type === "figure" && <SvgImage />}
+
+                        <span className="layers-list-item">
+                          {groupObj.name || getObjectTypeLabel(groupObj.type)}
+                        </span>
                       </ListItem>
                     )
                   )}
@@ -156,19 +188,38 @@ const SidebarObjectList: React.FC<ObjectListProps> = ({
                 backgroundColor: selectedObjectIds.includes(obj.id)
                   ? "#f0f0f0"
                   : "white",
-                "&:hover": { backgroundColor: "lightblue" },
+                "&:hover": { backgroundColor: "#f5f5f5" },
+                padding: "0px",
+                display: "flex",
+                alignItems: "center",
               }}
             >
-              <ListItemText
-                primary={obj.name || getObjectTypeLabel(obj.type)}
-                sx={{ marginLeft: "10px" }}
-              />
+              {obj.type === "text" && <SvgText />}
+              {obj.type === "image" && <SvgImage />}
+              {obj.type === "figure" && <SvgImage />}
+
+              <span className="layers-list-item">
+                {obj.name || getObjectTypeLabel(obj.type)}
+              </span>
             </ListItem>
           );
         }
 
         return null;
       })}
+
+      <NameDialog
+        open={nameDialogState.isNameDialogOpen}
+        name={nameDialogState.currentName}
+        onChange={(e) =>
+          setNameDialogState((prev) => ({
+            ...prev,
+            currentName: e.target.value,
+          }))
+        }
+        onClose={closeNameDialog}
+        onSave={saveName}
+      />
     </List>
   );
 };
