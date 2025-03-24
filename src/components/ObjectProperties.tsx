@@ -34,7 +34,10 @@ const ObjectProperties: React.FC = () => {
 
   return (
     <Box className="object-properties">
-      <Typography variant="h5">Властивості об'єкту</Typography>
+      <Typography variant="h5" className="padding-wrapper">
+        Object properties
+      </Typography>
+      <div className="grey-line"></div>
 
       {selectedChild ? (
         <>
@@ -98,7 +101,7 @@ const ObjectProperties: React.FC = () => {
           </Button>
         </>
       ) : selectedObjectIds.length === 0 ? (
-        <Typography>Виберіть об'єкт для редагування</Typography>
+        <Typography>Select an object to edit</Typography>
       ) : selectedObjectIds.length === 1 ? (
         selectedObject?.type === "text" ? (
           <TextObjectForm
@@ -158,24 +161,28 @@ const ObjectProperties: React.FC = () => {
       )}
 
       {selectedObjectIds.length === 1 && !selectedChild && (
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleDelete}
-          sx={{ marginTop: "20px" }}
-        >
-          Видалити об'єкт
-        </Button>
+        <div className="padding-wrapper">
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDelete}
+            sx={{ marginTop: "20px" }}
+          >
+            Delete object
+          </Button>
+        </div>
       )}
       {selectedObjectIds.length > 1 && (
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleDeleteAll}
-          sx={{ marginTop: "20px" }}
-        >
-          Видалити вибрані об'єкти
-        </Button>
+        <div className="padding-wrapper">
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDeleteAll}
+            sx={{ marginTop: "20px" }}
+          >
+            Delete selected objects
+          </Button>
+        </div>
       )}
     </Box>
   );

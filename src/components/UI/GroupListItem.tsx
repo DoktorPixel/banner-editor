@@ -52,7 +52,7 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
             ? "#EEEEEE"
             : "white",
           "&:hover": { backgroundColor: "#f5f5f5" },
-          padding: "0",
+          padding: "5px 0 5px 0",
           display: "flex",
           alignItems: "center",
         }}
@@ -66,7 +66,9 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
           {open ? <ArrowDown /> : <ArrowRight />}
         </IconButton>
         {open ? <SvgLayoutOpen /> : <SvgLayout />}
-        <span className="layers-list-item">{group.name || "Layout"}</span>
+        <span className="layers-list-item">
+          {group.name?.substring(0, 10) || "Layout"}
+        </span>
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding className="group-list-item">
@@ -83,14 +85,14 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
                 component="li"
                 onClick={(e) => handleChildClick(group.id, child, e)}
                 sx={{
-                  pl: 4,
+                  // pl: 4,
                   cursor: "pointer",
                   backgroundColor:
                     selectedChildId?.childId === child.id
                       ? "lightgray"
                       : "white",
                   "&:hover": { backgroundColor: "#f5f5f5" },
-                  // padding: "0",
+                  padding: "5px 0 5px 0",
                   // display: "flex",
                   // alignItems: "center",
                 }}
@@ -99,7 +101,8 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
                 {child.type === "image" && <SvgImage />}
                 {child.type === "figure" && <SvgImage />}
                 <span className="layers-list-item">
-                  {child.name || getObjectTypeLabel(child.type)}
+                  {child.name?.substring(0, 8) ||
+                    getObjectTypeLabel(child.type)}
                 </span>
               </ListItem>
             )

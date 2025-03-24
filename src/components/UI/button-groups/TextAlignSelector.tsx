@@ -1,4 +1,4 @@
-import { ButtonGroup, Button } from "@mui/material";
+import { ButtonGroup, Button, InputLabel } from "@mui/material";
 import {
   TextAlignLeft,
   TextAlignRight,
@@ -16,29 +16,50 @@ const TextAlignSelector: React.FC<TextAlignSelectorProps> = ({
 }) => {
   return (
     <div className="text-align">
-      {/* <span className="title">Вирівнювання тексту (Text Align)</span> */}
-      <ButtonGroup
-        variant="contained"
-        color="primary"
-        size="small"
-        sx={{ boxShadow: "none" }}
-      >
+      <InputLabel sx={{ mb: "5px", fontSize: "12px" }}>Alignment</InputLabel>
+      <ButtonGroup color="primary" size="small" sx={{ boxShadow: "none" }}>
         <Button
           onClick={() => onChange("left")}
-          variant={value === "left" ? "contained" : "outlined"}
+          sx={{
+            height: "30px",
+            padding: "0 10px",
+            backgroundColor: value === "left" ? "white" : "#F1F1F1",
+            border: "2px solid #F1F1F1",
+            color: value === "left" ? "black" : "inherit",
+            "&:hover": {
+              backgroundColor: value === "left" ? "white" : "#E8E8E8",
+            },
+          }}
         >
           <TextAlignLeft width="24px" height="24px" />
         </Button>
         <Button
           onClick={() => onChange("center")}
-          variant={value === "center" ? "contained" : "outlined"}
+          sx={{
+            height: "30px",
+            padding: "0 10px",
+            backgroundColor: value === "center" ? "white" : "#F1F1F1",
+            border: "2px solid #F1F1F1",
+            color: value === "center" ? "black" : "inherit",
+            "&:hover": {
+              backgroundColor: value === "center" ? "white" : "#E8E8E8",
+            },
+          }}
         >
           <TextAlignCenter width="24px" height="24px" />
         </Button>
         <Button
           onClick={() => onChange("right")}
-          variant={value === "right" ? "contained" : "outlined"}
-          sx={{ borderColor: "#1976d2" }}
+          sx={{
+            height: "30px",
+            padding: "0 10px",
+            backgroundColor: value === "right" ? "white" : "#F1F1F1",
+            border: "2px solid #F1F1F1",
+            color: value === "right" ? "black" : "inherit",
+            "&:hover": {
+              backgroundColor: value === "right" ? "white" : "#E8E8E8",
+            },
+          }}
         >
           <TextAlignRight width="24px" height="24px" />
         </Button>

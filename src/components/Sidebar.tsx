@@ -240,30 +240,6 @@ const Sidebar: React.FC = () => {
         Завантажити динамічні лого
       </Button> */}
 
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={undo}
-        disabled={!canUndo}
-      >
-        Назад
-      </Button>
-      <Button
-        variant="outlined"
-        color="secondary"
-        onClick={redo}
-        disabled={!canRedo}
-      >
-        Вперед
-      </Button>
-      <Button
-        variant="contained"
-        color="error"
-        onClick={() => openDialog("isClearHistoryDialogOpen")}
-      >
-        Очистити історію
-      </Button>
-
       {/* <TextDialog
         open={dialogState.isTextDialogOpen}
         textContent={textContent}
@@ -324,60 +300,94 @@ const Sidebar: React.FC = () => {
         onClose={closeNameDialog}
         onSave={saveName}
       /> */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={groupSelectedObjects}
-        disabled={selectedObjectIds.length < 2}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          margin: "16px 10px 6px 6px",
+        }}
       >
-        Групувати
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={ungroupSelectedObject}
-        disabled={
-          selectedObjectIds.length !== 1 ||
-          objects.find((obj) => obj.id === selectedObjectIds[0])?.type !==
-            "group"
-        }
-      >
-        Розгрупувати
-      </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={undo}
+          disabled={!canUndo}
+        >
+          Назад
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={redo}
+          disabled={!canRedo}
+        >
+          Вперед
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => openDialog("isClearHistoryDialogOpen")}
+        >
+          Очистити історію
+        </Button>
 
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={groupSelectedObjectsAbstract}
-        disabled={
-          selectedObjectIds.length < 2 ||
-          !objects.some(
-            (obj) =>
-              selectedObjectIds.includes(obj.id) &&
-              (obj.abstractGroupId === null ||
-                obj.abstractGroupId === undefined)
-          )
-        }
-      >
-        Групувати (абстрактні)
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={ungroupSelectedObjectsAbstract}
-        disabled={
-          selectedObjectIds.length < 2 ||
-          !objects.some(
-            (obj) =>
-              selectedObjectIds.includes(obj.id) && obj.abstractGroupId != null
-          )
-        }
-      >
-        Розгрупувати (абстрактні)
-      </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={groupSelectedObjects}
+          disabled={selectedObjectIds.length < 2}
+        >
+          Групувати
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={ungroupSelectedObject}
+          disabled={
+            selectedObjectIds.length !== 1 ||
+            objects.find((obj) => obj.id === selectedObjectIds[0])?.type !==
+              "group"
+          }
+        >
+          Розгрупувати
+        </Button>
 
-      <SavePresetButton />
-      <ApplyPresetButton />
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={groupSelectedObjectsAbstract}
+          disabled={
+            selectedObjectIds.length < 2 ||
+            !objects.some(
+              (obj) =>
+                selectedObjectIds.includes(obj.id) &&
+                (obj.abstractGroupId === null ||
+                  obj.abstractGroupId === undefined)
+            )
+          }
+        >
+          Групувати (абстрактні)
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={ungroupSelectedObjectsAbstract}
+          disabled={
+            selectedObjectIds.length < 2 ||
+            !objects.some(
+              (obj) =>
+                selectedObjectIds.includes(obj.id) &&
+                obj.abstractGroupId != null
+            )
+          }
+        >
+          Розгрупувати (абстрактні)
+        </Button>
+
+        <SavePresetButton />
+        <ApplyPresetButton />
+      </div>
 
       {/* <ExportInJSON />
       <ExportInHTML /> */}

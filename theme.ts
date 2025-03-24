@@ -1,6 +1,18 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+  typography: {
+    subtitle1: {
+      fontSize: "22px",
+      fontWeight: 400,
+      // color: "#333",
+    },
+    subtitle2: {
+      fontSize: "16px",
+      fontWeight: 400,
+      // color: "#666",
+    },
+  },
   components: {
     MuiCssBaseline: {
       styleOverrides: `
@@ -30,6 +42,33 @@ const theme = createTheme({
           borderRadius: "5px",
           padding: "6px 10px",
           fontWeight: "700",
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#F1F1F1",
+          borderRadius: "5px",
+          border: "none",
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: "none",
+          },
+        },
+        input: {
+          padding: "6px ",
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#F1F1F1",
+          borderRadius: "5px",
+          border: "none",
+        },
+        input: {
+          padding: "6px ",
         },
       },
     },

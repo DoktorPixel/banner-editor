@@ -9,8 +9,8 @@ export const SelectedObjectsList: React.FC<SelectedObjectsListProps> = ({
   objects,
 }) => {
   return (
-    <>
-      <Typography variant="h6">Вибрані об'єкти:</Typography>
+    <div className="padding-wrapper">
+      <Typography variant="h6">Selected objects:</Typography>
       <ul>
         {objects.map(
           (obj) =>
@@ -21,6 +21,6 @@ export const SelectedObjectsList: React.FC<SelectedObjectsListProps> = ({
             )
         )}
       </ul>
-    </>
+    </div>
   );
 };

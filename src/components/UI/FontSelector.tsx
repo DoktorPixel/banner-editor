@@ -33,18 +33,22 @@ const FontSelector: React.FC<FontSelectorProps> = ({ value, onChange }) => {
       getOptionLabel={(option) => option.label}
       value={fonts.find((font) => font.value === value) || null}
       onChange={handleFontChange}
-      style={{ marginTop: 16 }}
+      style={{ marginTop: "30px" }}
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Виберіть шрифт..."
+          label="Font"
           variant="outlined"
-          InputProps={{
-            ...params.InputProps,
-            style: {
-              fontFamily: value,
-              padding: "0px 6px",
-              marginBottom: 8,
+          slotProps={{
+            input: {
+              ...params.InputProps,
+              style: {
+                fontFamily: value,
+                padding: "0px 6px",
+                marginBottom: 8,
+                border: "1px solid #E4E4E4",
+                backgroundColor: "white",
+              },
             },
           }}
         />

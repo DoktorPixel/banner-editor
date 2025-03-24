@@ -86,7 +86,7 @@ const SidebarObjectList: React.FC = () => {
               <ListItem
                 component="div"
                 sx={{
-                  padding: "0px",
+                  padding: "5px 0 5px 0px",
                   backgroundColor: group.every((groupObj) =>
                     selectedObjectIds.includes(groupObj.id)
                   )
@@ -147,7 +147,7 @@ const SidebarObjectList: React.FC = () => {
                             ? "#f0f0f0"
                             : "white",
                           "&:hover": { backgroundColor: "#f5f5f5" },
-                          // padding: "0 0 0 36px",
+                          padding: "5px 0 5px 0px",
                           display: "flex",
                           alignItems: "center",
                         }}
@@ -157,7 +157,8 @@ const SidebarObjectList: React.FC = () => {
                         {groupObj.type === "figure" && <SvgImage />}
 
                         <span className="layers-list-item">
-                          {groupObj.name || getObjectTypeLabel(groupObj.type)}
+                          {groupObj.name?.substring(0, 12) ||
+                            getObjectTypeLabel(groupObj.type)}
                         </span>
                       </ListItem>
                     )
@@ -189,7 +190,7 @@ const SidebarObjectList: React.FC = () => {
                   ? "#f0f0f0"
                   : "white",
                 "&:hover": { backgroundColor: "#f5f5f5" },
-                padding: "0px",
+                padding: "5px 0 5px 0px",
                 display: "flex",
                 alignItems: "center",
               }}
@@ -199,7 +200,7 @@ const SidebarObjectList: React.FC = () => {
               {obj.type === "figure" && <SvgImage />}
 
               <span className="layers-list-item">
-                {obj.name || getObjectTypeLabel(obj.type)}
+                {obj.name?.substring(0, 14) || getObjectTypeLabel(obj.type)}
               </span>
             </ListItem>
           );

@@ -118,24 +118,32 @@ const ExportInHTML: React.FC = () => {
     <script>
       const dynamicImgsObject = ${JSON.stringify(dynamicImgsObject)};
   
-      document.addEventListener("DOMContentLoaded", function () {
-        const props = window.props || {};
-
+        document.addEventListener("DOMContentLoaded", function () {
+          const props = window.props || {};
 
           document.querySelectorAll("[data-condition]").forEach((element) => {
-          try {
-            const condition = JSON.parse(element.getAttribute("data-condition"));
-            const { type, props: conditionProps } = condition;
-    
-            const propsExist = conditionProps.some((prop) => props[prop] !== undefined);
-    
-            if ((type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)) {
-              element.style.display = "none";
-            }
-          } catch (error) {
-            console.error("Помилка при розборі data-condition:", error);
-          }
-        });
+              try {
+                const condition = JSON.parse(element.getAttribute("data-condition"));
+                const { type, props: conditionProps, state } = condition;
+
+                const propsExist = conditionProps.some((prop) => props[prop] !== undefined);
+
+                let shouldHide = false;
+
+                if (state === "exist") {
+                  shouldHide = (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist);
+                } else if (state === "noExist") {
+                  shouldHide = (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist);
+                }
+
+                if (shouldHide) {
+                  element.style.display = "none";
+                }
+              } catch (error) {
+                console.error("Ошибка при разборе data-condition:", error);
+              }
+
+         });
 
         ${config
           .map((item) => {
