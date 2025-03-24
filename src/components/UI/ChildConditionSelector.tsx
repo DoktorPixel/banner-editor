@@ -13,7 +13,11 @@ import { useObjectProperties } from "../../utils/hooks";
 
 interface ChildConditionSelectorProps {
   childId: number;
-  condition?: { type: "showIf" | "hideIf"; props: string[] };
+  condition?: {
+    type: "showIf" | "hideIf";
+    props: string[];
+    state: "exist" | "noExist";
+  };
 }
 
 export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
@@ -30,6 +34,7 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
 
   const handleConditionChange = (
     newType?: "showIf" | "hideIf",
+    newState?: "exist" | "noExist",
     newProps?: string[]
   ) => {
     const cleanedProps = Array.from(
@@ -38,6 +43,7 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
 
     const updatedCondition = {
       type: newType ?? condition?.type ?? "hideIf",
+      state: newState ?? condition?.state ?? "exist",
       props: cleanedProps.length > 0 ? cleanedProps : condition?.props ?? [""],
     };
 
@@ -45,7 +51,11 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
   };
 
   const handleAddCondition = () => {
-    updateChildCondition(groupId, childId, { type: "showIf", props: [] });
+    updateChildCondition(groupId, childId, {
+      type: "showIf",
+      state: "exist",
+      props: [],
+    });
   };
 
   const handleRemoveCondition = () => {
@@ -91,7 +101,7 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
             .map((p) => p.trim())
             .filter((p) => p !== "");
 
-          handleConditionChange(undefined, propsArray);
+          handleConditionChange(undefined, undefined, propsArray);
         }}
         onBlur={() => {
           const finalPropsArray = inputValue
@@ -99,11 +109,27 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
             .map((p) => p.trim())
             .filter((p) => p !== "");
 
-          handleConditionChange(undefined, finalPropsArray);
+          handleConditionChange(undefined, undefined, finalPropsArray);
         }}
         fullWidth
         margin="normal"
       />
+
+      <FormControl fullWidth margin="normal">
+        <InputLabel sx={{ mt: -1 }}>Стан параметра</InputLabel>
+        <Select
+          value={condition?.state || "exist"}
+          onChange={(e) =>
+            handleConditionChange(
+              undefined,
+              e.target.value as "exist" | "noExist"
+            )
+          }
+        >
+          <MenuItem value="exist">Існує</MenuItem>
+          <MenuItem value="noExist">Не існує</MenuItem>
+        </Select>
+      </FormControl>
 
       <Box mt={2}>
         <Button
