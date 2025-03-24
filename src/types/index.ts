@@ -83,7 +83,7 @@ export interface BannerChild {
   condition?: {
     type: "showIf" | "hideIf";
     props: string[];
-    state: "exist" | "noExist";
+    // state: "exist" | "noExist";
   };
   flexDirection?: React.CSSProperties["flexDirection"];
   justifyContent?: React.CSSProperties["justifyContent"];
