@@ -535,14 +535,14 @@ export const SvgImage: React.FC<SVGProps> = ({
       <path
         d="M11 8.22222V10.4444C11 10.7513 10.7513 11 10.4444 11H1.55556C1.24873 11 1 10.7513 1 10.4444V9.33333M11 8.22222V1.55556C11 1.24873 10.7513 1 10.4444 1H1.55556C1.24873 1 1 1.24873 1 1.55556V9.33333M11 8.22222L7.93494 6.17883C7.76906 6.06822 7.55661 6.055 7.37828 6.14417L1 9.33333"
         stroke="black"
-        stroke-width="0.5"
-        stroke-linejoin="round"
+        strokeWidth="0.5"
+        strokeLinejoin="round"
       />
       <path
         d="M3.7778 5.44444C4.39145 5.44444 4.88891 4.94697 4.88891 4.33332C4.88891 3.71968 4.39145 3.22221 3.7778 3.22221C3.16415 3.22221 2.66669 3.71968 2.66669 4.33332C2.66669 4.94697 3.16415 5.44444 3.7778 5.44444Z"
         stroke="black"
-        stroke-width="0.5"
-        stroke-linejoin="round"
+        strokeWidth="0.5"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -603,8 +603,8 @@ export const SvgText: React.FC<SVGProps> = ({
       <path
         d="M5 1V9M3.28571 9H6.71429M9 2.33333V1H1V2.33333"
         stroke="#6A6A6A"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -657,8 +657,8 @@ export const ArrowDown: React.FC<SVGProps> = ({
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M0.152813 0.13518C0.356563 -0.04506 0.686915 -0.04506 0.890665 0.13518L4.00001 2.88572L7.10937 0.13518C7.31313 -0.04506 7.64343 -0.04506 7.84718 0.13518C8.05094 0.31542 8.05094 0.607654 7.84718 0.787876L4.36891 3.8648C4.2711 3.95138 4.13837 4 4.00001 4C3.86164 4 3.72891 3.95138 3.6311 3.8648L0.152813 0.787876C-0.0509375 0.607654 -0.0509375 0.31542 0.152813 0.13518Z"
         fill="#363853"
       />
@@ -679,10 +679,62 @@ export const ArrowRight: React.FC<SVGProps> = ({
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M0.13518 7.84719C-0.04506 7.64344 -0.04506 7.31309 0.13518 7.10934L2.88572 3.99999L0.13518 0.890628C-0.04506 0.686872 -0.04506 0.356575 0.13518 0.152818C0.31542 -0.0509396 0.607654 -0.0509396 0.787876 0.152818L3.8648 3.63109C3.95138 3.7289 4 3.86163 4 3.99999C4 4.13836 3.95138 4.27109 3.8648 4.3689L0.787876 7.84719C0.607654 8.05094 0.31542 8.05094 0.13518 7.84719Z"
         fill="#363853"
+      />
+    </svg>
+  );
+};
+
+export const PlusIcon: React.FC<SVGProps> = ({
+  width = "20px",
+  height = "20px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M20 0H0V20H20V0Z" fill="white" />
+      <path
+        d="M10 5V15"
+        stroke="black"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M5 10H15"
+        stroke="black"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const MinusIcon: React.FC<SVGProps> = ({
+  width = "20px",
+  height = "20px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M20 0H0V20H20V0Z" fill="white" />
+      <path
+        d="M5 10H15"
+        stroke="black"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       />
     </svg>
   );

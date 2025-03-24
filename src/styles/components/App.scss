@@ -19,24 +19,26 @@
   position: relative;
 }
 
-.main .app .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input,
-.main .app .css-1pk1fka {
-  padding: 5px 10px;
-}
-.main .app .css-2u11ia-MuiInputBase-input-MuiOutlinedInput-input,
-.main .app .object-properties .css-1ooubvk {
-  padding: 8px 10px;
-}
-.main
-  .app
-  .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input,
-.main .app .css-mp9f0v {
-  padding: 5px 10px;
-}
-// .main .app .css-113d811-MuiFormLabel-root-MuiInputLabel-root,
-// .main .app .css-1niro10 {
-//   top: -7px;
+// .main .app .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input,
+// .main .app .css-1pk1fka {
+//   padding: 5px 10px;
 // }
+// .main .app .css-2u11ia-MuiInputBase-input-MuiOutlinedInput-input,
+// .main .app .object-properties .css-1ooubvk {
+//   padding: 8px 10px;
+// }
+// .main
+//   .app
+//   .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input,
+// .main .app .css-mp9f0v {
+//   padding: 5px 10px;
+// }
+
+.main .app .css-113d811-MuiFormLabel-root-MuiInputLabel-root,
+.main .app .css-1niro10 {
+  top: -12px;
+  left: -15px;
+}
 
 .main .app .css-19qnlrw-MuiFormLabel-root-MuiInputLabel-root,
 .main .app .css-160rfsr {
@@ -88,3 +90,16 @@
   margin: 0 !important;
   line-height: 1;
 }
+
+.padding-wrapper {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.project-dialog-input input {
+  padding: 14px !important;
+}
+
+// .text-field-input {
+//   padding: 0 !important;
+// }

@@ -31,17 +31,17 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const validateProjectName = (name: string): boolean => {
     if (name.length < 6) {
-      setError("Назва проекту повинна містити не менше 6 символів.");
+      setError("The project name must contain at least 6 characters.");
       return false;
     }
     if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
       setError(
-        "Назва проекту повинна містити тільки латинські букви, цифри, дефіси або підкреслення."
+        "The project name must contain only Latin letters, numbers, hyphens or underscores."
       );
       return false;
     }
     if (name.length > 36) {
-      setError("Назва проекту не може перевищувати 36 символів.");
+      setError("The project name cannot exceed 36 characters.");
       return false;
     }
     setError(null);
@@ -59,7 +59,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       if (existingProject) {
         setSnackbar({
           open: true,
-          message: "Проект із таким ім'ям уже існує!",
+          message: "A project with that name already exists!",
         });
         return;
       }
@@ -70,14 +70,14 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       clearHistory();
       setSnackbar({
         open: true,
-        message: "Новий проект створено успішно!",
+        message: "The new project has been created successfully!",
       });
       onClose();
     } catch (error) {
-      console.error("Помилка створення проекту:", error);
+      console.error("Project creation error:", error);
       setSnackbar({
         open: true,
-        message: "Не вдалося створити новий проект.",
+        message: "Failed to create a new project.",
       });
     } finally {
       setLoading(false);
@@ -107,20 +107,20 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         );
         setSnackbar({
           open: true,
-          message: "Проект завантажено успішно!",
+          message: "Project uploaded successfully!",
         });
         onClose();
       } else {
         setSnackbar({
           open: true,
-          message: "Помилка: Проект не знайдено, перевірте назву.",
+          message: "Error: Project not found, check the name.",
         });
       }
     } catch (error) {
-      console.error("Помилка завантаження проекту:", error);
+      console.error("Project upload error:", error);
       setSnackbar({
         open: true,
-        message: "Не вдалося завантажити проект.",
+        message: "The project could not be loaded.",
       });
     } finally {
       setLoading(false);
@@ -134,12 +134,12 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
       <Dialog open={true} onClose={onClose}>
-        <DialogTitle>Виберіть дію</DialogTitle>
+        <DialogTitle sx={{ minWidth: "380px" }}>Choose an action</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
             variant="outlined"
-            label="Назва проекту"
+            label="Project name"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
             onBlur={() => validateProjectName(projectName)}
@@ -147,6 +147,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             margin="normal"
             error={!!error}
             helperText={error}
+            className="project-dialog-input"
           />
         </DialogContent>
 
@@ -183,7 +184,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               {loading ? (
                 <CircularProgress size={20} />
               ) : (
-                "Створити новий проект"
+                "Create a new project"
               )}
             </Button>
             <Button
@@ -195,11 +196,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 whiteSpace: "nowrap",
               }}
             >
-              {loading ? (
-                <CircularProgress size={20} />
-              ) : (
-                "Завантажити існуючий"
-              )}
+              {loading ? <CircularProgress size={20} /> : "Upload existing"}
             </Button>
           </div>
         </DialogActions>

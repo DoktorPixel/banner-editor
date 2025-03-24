@@ -18,7 +18,11 @@ export interface BannerObject {
   height?: number;
   children?: BannerChild[];
   display?: React.CSSProperties["display"];
-  condition?: { type: "showIf" | "hideIf"; props: string[] };
+  condition?: {
+    type: "showIf" | "hideIf";
+    props: string[];
+    state: "exist" | "noExist";
+  };
   flexDirection?: React.CSSProperties["flexDirection"];
   justifyContent?: React.CSSProperties["justifyContent"];
   alignItems?: React.CSSProperties["alignItems"];
@@ -76,7 +80,11 @@ export interface BannerChild {
   objectFit?: React.CSSProperties["objectFit"];
   rotate?: number | undefined;
   display?: React.CSSProperties["display"];
-  condition?: { type: "showIf" | "hideIf"; props: string[] };
+  condition?: {
+    type: "showIf" | "hideIf";
+    props: string[];
+    state: "exist" | "noExist";
+  };
   flexDirection?: React.CSSProperties["flexDirection"];
   justifyContent?: React.CSSProperties["justifyContent"];
   alignItems?: React.CSSProperties["alignItems"];

@@ -42,7 +42,7 @@ const ChildGroupListItem: React.FC<ChildGroupListItemProps> = ({
             selectedChildId?.childId === child.id ? "#EEEEEE" : "white",
           "&:hover": { backgroundColor: "#f5f5f5" },
 
-          padding: "0 0 0 36px",
+          padding: "5px 0 5px 36px",
           display: "flex",
           alignItems: "center",
         }}
@@ -86,7 +86,7 @@ const ChildGroupListItem: React.FC<ChildGroupListItemProps> = ({
                       : "white",
                   "&:hover": { backgroundColor: "#f5f5f5" },
 
-                  padding: "0 0 0 57px",
+                  padding: "5px 0 5px 57px",
                   display: "flex",
                   alignItems: "center",
                 }}

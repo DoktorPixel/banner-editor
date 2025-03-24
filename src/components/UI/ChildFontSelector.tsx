@@ -40,14 +40,18 @@ const ChildFontSelector: React.FC<FontSelectorProps> = ({
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Виберіть шрифт..."
+          label="Font"
           variant="outlined"
-          InputProps={{
-            ...params.InputProps,
-            style: {
-              fontFamily: value,
-              padding: "0px 6px",
-              marginBottom: 8,
+          slotProps={{
+            input: {
+              ...params.InputProps,
+              style: {
+                fontFamily: value,
+                padding: "0px 6px",
+                marginBottom: 8,
+                border: "1px solid #E4E4E4",
+                backgroundColor: "white",
+              },
             },
           }}
         />
