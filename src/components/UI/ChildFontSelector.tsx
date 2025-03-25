@@ -36,7 +36,7 @@ const ChildFontSelector: React.FC<FontSelectorProps> = ({
       getOptionLabel={(option) => option.label}
       value={fonts.find((font) => font.value === value) || null}
       onChange={handleFontChange}
-      style={{ marginTop: 16 }}
+      style={{ marginTop: "30px" }}
       renderInput={(params) => (
         <TextField
           {...params}

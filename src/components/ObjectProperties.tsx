@@ -91,17 +91,21 @@ const ObjectProperties: React.FC = () => {
               />
             </>
           )}
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleDeleteChild}
-            sx={{ marginTop: "20px" }}
-          >
-            Видалити елемент з групи
-          </Button>
+          <div className="padding-wrapper">
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleDeleteChild}
+              sx={{ marginTop: "20px" }}
+            >
+              Remove item from group
+            </Button>
+          </div>
         </>
       ) : selectedObjectIds.length === 0 ? (
-        <Typography>Select an object to edit</Typography>
+        <div className="padding-wrapper">
+          <Typography>Select an object to edit</Typography>
+        </div>
       ) : selectedObjectIds.length === 1 ? (
         selectedObject?.type === "text" ? (
           <TextObjectForm

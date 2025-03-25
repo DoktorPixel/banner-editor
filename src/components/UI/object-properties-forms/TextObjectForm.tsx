@@ -45,8 +45,21 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           fullWidth
           margin="normal"
           multiline
-
-          // maxRows={5}
+          // slotProps={{
+          //   input: {
+          //     style: {
+          //       padding: "6px",
+          //       // height: "auto",
+          //       // overflow: "auto",
+          //     },
+          //   },
+          // }}
+          maxRows={5}
+          // InputProps={{
+          //   classes: {
+          //     input: "custom-textarea",
+          //   },
+          // }}
         />
       </div>
 

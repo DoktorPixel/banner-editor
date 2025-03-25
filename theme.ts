@@ -58,6 +58,10 @@ const theme = createTheme({
         input: {
           padding: "6px ",
         },
+        inputMultiline: {
+          minHeight: "44px!important",
+          overflow: "auto",
+        },
       },
     },
     MuiInputBase: {

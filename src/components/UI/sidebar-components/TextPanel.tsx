@@ -47,7 +47,7 @@ const TextPanel: React.FC = () => {
         // rows={2}
         maxRows={5}
         multiline
-        sx={{ backgroundColor: "#F1F1F1" }}
+        // sx={{ backgroundColor: "#F1F1F1" }}
       />
 
       <Button
