@@ -1,13 +1,17 @@
 import { FC, useState } from "react";
 import {
   Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   TextField,
+  Typography,
+  IconButton,
 } from "@mui/material";
+
+import { PlusIcon, MinusIcon } from "../../assets/icons";
+import ActionToggle from "./button-groups/ActionToggle";
 import { useChildCondition } from "../../utils/hooks";
 import { useObjectProperties } from "../../utils/hooks";
 
@@ -25,12 +29,12 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
   condition,
 }) => {
   const { updateChildCondition } = useChildCondition();
+  const { selectedObjectIds } = useObjectProperties();
+  const groupId = selectedObjectIds[0];
+
   const [inputValue, setInputValue] = useState(
     condition?.props?.join(", ") || ""
   );
-
-  const { selectedObjectIds } = useObjectProperties();
-  const groupId = selectedObjectIds[0];
 
   const handleConditionChange = (
     newType?: "showIf" | "hideIf",
@@ -64,82 +68,97 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
 
   if (!condition) {
     return (
-      <Box mt={2}>
-        <Button variant="outlined" color="primary" onClick={handleAddCondition}>
-          Додати умову відображення
-        </Button>
+      <Box
+        paddingLeft="10px"
+        paddingRight="10px"
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Typography variant="subtitle2">Program visibility</Typography>
+        <IconButton onClick={handleAddCondition}>
+          <PlusIcon />
+        </IconButton>
       </Box>
     );
   }
 
   return (
-    <Box mt={1}>
-      <FormControl fullWidth margin="normal">
-        <InputLabel sx={{ mt: -1 }}>Умова відображення</InputLabel>
-        <Select
-          value={condition?.type || "hideIf"}
-          onChange={(e) =>
-            handleConditionChange(e.target.value as "showIf" | "hideIf")
-          }
-        >
-          <MenuItem value="showIf">Показати якщо є</MenuItem>
-          <MenuItem value="hideIf">Приховати якщо є</MenuItem>
-        </Select>
-      </FormControl>
-
-      <TextField
-        label="Параметри умови (props через кому)"
-        value={inputValue}
-        onChange={(e) => {
-          const newValue = e.target.value;
-          setInputValue(newValue);
-
-          if (newValue.endsWith(",")) return;
-
-          const propsArray = newValue
-            .split(",")
-            .map((p) => p.trim())
-            .filter((p) => p !== "");
-
-          handleConditionChange(undefined, undefined, propsArray);
-        }}
-        onBlur={() => {
-          const finalPropsArray = inputValue
-            .split(",")
-            .map((p) => p.trim())
-            .filter((p) => p !== "");
-
-          handleConditionChange(undefined, undefined, finalPropsArray);
-        }}
-        fullWidth
-        margin="normal"
-      />
-
-      <FormControl fullWidth margin="normal">
-        <InputLabel sx={{ mt: -1 }}>Стан параметра</InputLabel>
-        <Select
-          value={condition?.state || "exist"}
-          onChange={(e) =>
-            handleConditionChange(
-              undefined,
-              e.target.value as "exist" | "noExist"
-            )
-          }
-        >
-          <MenuItem value="exist">Існує</MenuItem>
-          <MenuItem value="noExist">Не існує</MenuItem>
-        </Select>
-      </FormControl>
-
-      <Box mt={2}>
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={handleRemoveCondition}
-        >
-          Видалити умову відображення
-        </Button>
+    <Box paddingLeft="10px" paddingRight="10px">
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Typography variant="subtitle2">Program visibility</Typography>
+        <IconButton onClick={handleRemoveCondition} edge="start">
+          <MinusIcon />
+        </IconButton>
       </Box>
+      <div style={{ maxWidth: "134px" }}>
+        <ActionToggle
+          label="Action"
+          options={[
+            { value: "hideIf", label: "Hide" },
+            { value: "showIf", label: "Show" },
+          ]}
+          selected={condition?.type || "hideIf"}
+          onChange={handleConditionChange}
+        />
+      </div>
+
+      <div className="auto-size" style={{ marginTop: "8px" }}>
+        <div style={{ flex: 1 }}>
+          <InputLabel sx={{ mt: "-2px", mb: -2, fontSize: "12px" }}>
+            Property
+          </InputLabel>
+          <TextField
+            value={inputValue}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              setInputValue(newValue);
+
+              if (newValue.endsWith(",")) return;
+
+              const propsArray = newValue
+                .split(",")
+                .map((p) => p.trim())
+                .filter((p) => p !== "");
+              handleConditionChange(undefined, undefined, propsArray);
+            }}
+            onBlur={() => {
+              const finalPropsArray = inputValue
+                .split(",")
+                .map((p) => p.trim())
+                .filter((p) => p !== "");
+              handleConditionChange(undefined, undefined, finalPropsArray);
+            }}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+        <div style={{ flex: 1 }}>
+          <InputLabel sx={{ mt: "-2px", mb: -2, fontSize: "12px" }}>
+            Condition
+          </InputLabel>
+          <FormControl fullWidth margin="normal">
+            <Select
+              sx={{
+                backgroundColor: "#fff",
+                borderRadius: "6px",
+                border: "1px solid #E4E4E4",
+                width: "100%",
+              }}
+              value={condition?.state || "exist"}
+              onChange={(e) =>
+                handleConditionChange(
+                  undefined,
+                  e.target.value as "exist" | "noExist"
+                )
+              }
+            >
+              <MenuItem value="exist">Exist</MenuItem>
+              <MenuItem value="noExist">No exist</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+      </div>
     </Box>
   );
 };

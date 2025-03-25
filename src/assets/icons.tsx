@@ -704,13 +704,13 @@ export const PlusIcon: React.FC<SVGProps> = ({
       <path
         d="M10 5V15"
         stroke="black"
-        stroke-linecap="round"
+        strokeLinecap="round"
         stroke-linejoin="round"
       />
       <path
         d="M5 10H15"
         stroke="black"
-        stroke-linecap="round"
+        strokeLinecap="round"
         stroke-linejoin="round"
       />
     </svg>
@@ -733,7 +733,7 @@ export const MinusIcon: React.FC<SVGProps> = ({
       <path
         d="M5 10H15"
         stroke="black"
-        stroke-linecap="round"
+        strokeLinecap="round"
         stroke-linejoin="round"
       />
     </svg>
