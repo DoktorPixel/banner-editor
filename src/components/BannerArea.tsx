@@ -289,6 +289,12 @@ const BannerArea: React.FC = () => {
           updateObject(object.id, { width: realWidth });
         }
       }
+      if (object.autoHeight && objectRefs.current[object.id]) {
+        const realHeight = objectRefs.current[object.id]!.offsetHeight;
+        if (object.height !== realHeight) {
+          updateObject(object.id, { height: realHeight });
+        }
+      }
     });
   }, [updateObject, objects]);
 
@@ -338,8 +344,11 @@ const BannerArea: React.FC = () => {
                     position: "absolute",
                     left: object.x,
                     top: object.y,
-                    width: object.width,
-                    height: object.height,
+                    // width: object.width,
+                    width: object.autoWidth ? "auto" : object.width,
+                    // overflow: object.autoWidth ? "visible" : "hidden",
+                    // height: object.height,
+                    height: object.autoHeight ? "auto" : object.height,
                     zIndex: object.zIndex,
                   }}
                   onMouseDown={(e) => handleMouseDown(object.id, e)}
@@ -354,8 +363,8 @@ const BannerArea: React.FC = () => {
                 >
                   <div
                     style={{
-                      width: object.width,
-                      height: object.height,
+                      width: object.autoWidth ? "auto" : object.width,
+                      height: object.autoHeight ? "auto" : object.height,
                       display: object.display || "flex",
                       flexDirection: object.flexDirection,
                       justifyContent: object.justifyContent,

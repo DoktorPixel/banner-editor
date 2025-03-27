@@ -58,9 +58,9 @@ export const AutoGapInput: React.FC<AutoGapInputProps> = ({
 
   return (
     <div className="auto-size">
-      <Tooltip title="Відступ між елементами (gap, px)" placement="top" arrow>
+      <Tooltip title="gap, px" placement="top" arrow>
         <TextField
-          label="Відступ між елементами (gap, px)"
+          // label="gap"
           type="number"
           value={isAuto ? "" : gapValue ?? ""}
           onChange={handleGapChange}

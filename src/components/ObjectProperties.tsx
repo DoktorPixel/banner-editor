@@ -21,7 +21,6 @@ const ObjectProperties: React.FC = () => {
     handleDelete,
     handleDeleteAll,
     updateObjectProperty,
-    updateObjectMultipleProperties,
     //
   } = useObjectProperties();
 
@@ -134,28 +133,6 @@ const ObjectProperties: React.FC = () => {
               object={selectedObject}
               onChange={(key, value) =>
                 updateObjectProperty(selectedObject.id, key, value)
-              }
-            />
-
-            <AutoLayoutForm
-              flexDirection={
-                (selectedObject.flexDirection as "row" | "column") || "row"
-              }
-              justifyContent={
-                (selectedObject.justifyContent as
-                  | "start"
-                  | "center"
-                  | "end"
-                  | "space-between") || "center"
-              }
-              alignItems={
-                (selectedObject.alignItems as
-                  | "flex-start"
-                  | "center"
-                  | "flex-end") || "center"
-              }
-              onChange={(changes) =>
-                updateObjectMultipleProperties(selectedObject.id, changes)
               }
             />
           </>

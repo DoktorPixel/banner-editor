@@ -1,8 +1,9 @@
 import { Button, FormControl, Typography } from "@mui/material";
+import { ReactNode } from "react";
 
 interface ActionToggleProps<T extends string> {
-  label: string;
-  options: { value: T; label: string }[];
+  label?: string;
+  options: { value: T; label: ReactNode }[];
   selected: T;
   onChange: (value: T) => void;
 }
@@ -15,9 +16,12 @@ function ActionToggle<T extends string>({
 }: ActionToggleProps<T>) {
   return (
     <FormControl fullWidth sx={{ marginTop: "6px", marginBottom: "8px" }}>
-      <Typography variant="caption" sx={{ color: "#00000099" }}>
-        {label}
-      </Typography>
+      {label && (
+        <Typography variant="caption" sx={{ color: "#00000099" }}>
+          {label}
+        </Typography>
+      )}
+
       <div
         style={{
           display: "flex",
@@ -33,6 +37,8 @@ function ActionToggle<T extends string>({
             sx={{
               flex: 1,
               width: "100%",
+              minWidth: "42px",
+              minHeight: "30px",
               padding: "4px 6px",
               color: "#000000",
               fontWeight: "400",

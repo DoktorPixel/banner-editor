@@ -1,10 +1,5 @@
 import { ButtonGroup, Button, Tooltip } from "@mui/material";
-import {
-  ArrowDownward,
-  // ArrowUpward,
-  // ArrowBack,
-  ArrowForward,
-} from "@mui/icons-material";
+import { ArrowDownward, ArrowForward } from "@mui/icons-material";
 
 interface FlexDirectionSelectorProps {
   value: "row" | "column" | "row-reverse" | "column-reverse";
@@ -40,24 +35,6 @@ export const FlexDirectionSelector: React.FC<FlexDirectionSelectorProps> = ({
           <ArrowDownward />
         </Button>
       </Tooltip>
-
-      {/* <Tooltip title="По рядках зворотом (row-reverse)">
-        <Button
-          onClick={() => onChange("row-reverse")}
-          variant={value === "row-reverse" ? "contained" : "outlined"}
-        >
-          <ArrowBack />
-        </Button>
-      </Tooltip> */}
-
-      {/* <Tooltip title="По колонках зворотом (column-reverse)">
-        <Button
-          onClick={() => onChange("column-reverse")}
-          variant={value === "column-reverse" ? "contained" : "outlined"}
-        >
-          <ArrowUpward />
-        </Button>
-      </Tooltip> */}
     </ButtonGroup>
   );
 };
