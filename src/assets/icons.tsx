@@ -705,13 +705,13 @@ export const PlusIcon: React.FC<SVGProps> = ({
         d="M10 5V15"
         stroke="black"
         strokeLinecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
       <path
         d="M5 10H15"
         stroke="black"
         strokeLinecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -734,8 +734,177 @@ export const MinusIcon: React.FC<SVGProps> = ({
         d="M5 10H15"
         stroke="black"
         strokeLinecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
+    </svg>
+  );
+};
+
+export const ArrowRight1: React.FC<SVGProps> = ({
+  width = "12px",
+  height = "12px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M6.19528 0.219668C6.45561 -0.0732226 6.87774 -0.0732226 7.13808 0.219668L11.8047 5.46968C12.0651 5.76256 12.0651 6.23746 11.8047 6.53034L7.13808 11.7803C6.87774 12.0732 6.45561 12.0732 6.19528 11.7803C5.93494 11.4875 5.93494 11.0126 6.19528 10.7197L9.72388 6.75001H0.666668C0.29848 6.75001 0 6.41424 0 6.00001C0 5.58578 0.29848 5.25001 0.666668 5.25001H9.72388L6.19528 1.28033C5.93494 0.987436 5.93494 0.512566 6.19528 0.219668Z"
+        fill="black"
+      />
+    </svg>
+  );
+};
+
+export const ArrowDown1: React.FC<SVGProps> = ({
+  width = "12px",
+  height = "12px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M11.7803 6.19528C12.0732 6.45561 12.0732 6.87774 11.7803 7.13808L6.53032 11.8047C6.23744 12.0651 5.76254 12.0651 5.46966 11.8047L0.219656 7.13808C-0.0732193 6.87774 -0.0732193 6.45561 0.219656 6.19528C0.512532 5.93494 0.987432 5.93494 1.28031 6.19528L5.24999 9.72388L5.24999 0.666668C5.24999 0.29848 5.58576 0 5.99999 0C6.41422 0 6.74999 0.29848 6.74999 0.666668L6.74999 9.72388L10.7197 6.19528C11.0126 5.93494 11.4874 5.93494 11.7803 6.19528Z"
+        fill="black"
+      />
+    </svg>
+  );
+};
+
+export const PaddingLeft: React.FC<SVGProps> = ({
+  width = "12px",
+  height = "13px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 12 13"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 12.5H12V0.5H0V12.5ZM2.25 1.25V2H3V1.25H11.25V11.75H2.25V11H1.5V11.75H0.75V11H1.5V10.25H0.75V9.5H1.5V8.75H0.75V8H1.5V7.25H0.75V6.5H1.5V5.75H0.75V5H1.5V4.25H0.75V3.5H1.5V2.75H0.75V2H1.5V1.25H2.25Z"
+        fill="#838383"
+      />
+      <path d="M1.5 9.5H2.25V10.25H1.5V9.5Z" fill="#838383" />
+      <path d="M2.25 10.25H3V11H2.25V10.25Z" fill="#838383" />
+      <path d="M2.25 8.75H3V9.5H2.25V8.75Z" fill="#838383" />
+      <path d="M2.25 7.25H3V8H2.25V7.25Z" fill="#838383" />
+      <path d="M1.5 8H2.25V8.75H1.5V8Z" fill="#838383" />
+      <path d="M1.5 6.5H2.25V7.25H1.5V6.5Z" fill="#838383" />
+      <path d="M1.5 5H2.25V5.75H1.5V5Z" fill="#838383" />
+      <path d="M2.25 5.75H3V6.5H2.25V5.75Z" fill="#838383" />
+      <path d="M2.25 4.25H3V5H2.25V4.25Z" fill="#838383" />
+      <path d="M2.25 2.75H3V3.5H2.25V2.75Z" fill="#838383" />
+      <path d="M1.5 3.5H2.25V4.25H1.5V3.5Z" fill="#838383" />
+      <path d="M1.5 2H2.25V2.75H1.5V2Z" fill="#838383" />
+    </svg>
+  );
+};
+export const PaddingRight: React.FC<SVGProps> = ({
+  width = "12px",
+  height = "13px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 12 13"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 0.5H0V12.5H12V0.5ZM9.75 11.75V11H9V11.75H0.75V1.25H9.75V2H10.5V1.25H11.25V2H10.5V2.75H11.25V3.5H10.5V4.25H11.25V5H10.5V5.75H11.25V6.5H10.5V7.25H11.25V8H10.5V8.75H11.25V9.5H10.5V10.25H11.25V11H10.5V11.75H9.75Z"
+        fill="#838383"
+      />
+      <path d="M9.75 2.75H10.5V3.5H9.75V2.75Z" fill="#838383" />
+      <path d="M9 2H9.75V2.75H9V2Z" fill="#838383" />
+      <path d="M9 3.5H9.75V4.25H9V3.5Z" fill="#838383" />
+      <path d="M9 5H9.75V5.75H9V5Z" fill="#838383" />
+      <path d="M9.75 4.25H10.5V5H9.75V4.25Z" fill="#838383" />
+      <path d="M9.75 5.75H10.5V6.5H9.75V5.75Z" fill="#838383" />
+      <path d="M9.75 7.25H10.5V8H9.75V7.25Z" fill="#838383" />
+      <path d="M9 6.5H9.75V7.25H9V6.5Z" fill="#838383" />
+      <path d="M9 8H9.75V8.75H9V8Z" fill="#838383" />
+      <path d="M9 9.5H9.75V10.25H9V9.5Z" fill="#838383" />
+      <path d="M9.75 8.75H10.5V9.5H9.75V8.75Z" fill="#838383" />
+      <path d="M9.75 10.25H10.5V11H9.75V10.25Z" fill="#838383" />
+    </svg>
+  );
+};
+export const PaddingTop: React.FC<SVGProps> = ({
+  width = "12px",
+  height = "12px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 0V12H12V0H0ZM11.25 2.25H10.5V3H11.25V11.25H0.75V2.25H1.5V1.5H0.75V0.75H1.5V1.5H2.25V0.75H3V1.5H3.75V0.75H4.5V1.5H5.25V0.75H6V1.5H6.75V0.75H7.5V1.5H8.25V0.75H9V1.5H9.75V0.75H10.5V1.5H11.25V2.25Z"
+        fill="#838383"
+      />
+      <path d="M2.25 1.5H3V2.25H2.25V1.5Z" fill="#838383" />
+      <path d="M1.5 2.25H2.25V3H1.5V2.25Z" fill="#838383" />
+      <path d="M3 2.25H3.75V3H3V2.25Z" fill="#838383" />
+      <path d="M4.5 2.25H5.25V3H4.5V2.25Z" fill="#838383" />
+      <path d="M3.75 1.5H4.5V2.25H3.75V1.5Z" fill="#838383" />
+      <path d="M5.25 1.5H6V2.25H5.25V1.5Z" fill="#838383" />
+      <path d="M6.75 1.5H7.5V2.25H6.75V1.5Z" fill="#838383" />
+      <path d="M6 2.25H6.75V3H6V2.25Z" fill="#838383" />
+      <path d="M7.5 2.25H8.25V3H7.5V2.25Z" fill="#838383" />
+      <path d="M9 2.25H9.75V3H9V2.25Z" fill="#838383" />
+      <path d="M8.25 1.5H9V2.25H8.25V1.5Z" fill="#838383" />
+      <path d="M9.75 1.5H10.5V2.25H9.75V1.5Z" fill="#838383" />
+    </svg>
+  );
+};
+export const PaddingBottom: React.FC<SVGProps> = ({
+  width = "12px",
+  height = "12px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 12V0H0V12H12ZM0.75 9.75H1.5V9H0.75V0.75H11.25V9.75H10.5V10.5H11.25V11.25H10.5V10.5H9.75V11.25H9V10.5H8.25V11.25H7.5V10.5H6.75V11.25H6V10.5H5.25V11.25H4.5V10.5H3.75V11.25H3V10.5H2.25V11.25H1.5V10.5H0.75V9.75Z"
+        fill="#838383"
+      />
+      <path d="M9 9.75H9.75V10.5H9V9.75Z" fill="#838383" />
+      <path d="M9.75 9H10.5V9.75H9.75V9Z" fill="#838383" />
+      <path d="M8.25 9H9V9.75H8.25V9Z" fill="#838383" />
+      <path d="M6.75 9H7.5V9.75H6.75V9Z" fill="#838383" />
+      <path d="M7.5 9.75H8.25V10.5H7.5V9.75Z" fill="#838383" />
+      <path d="M6 9.75H6.75V10.5H6V9.75Z" fill="#838383" />
+      <path d="M4.5 9.75H5.25V10.5H4.5V9.75Z" fill="#838383" />
+      <path d="M5.25 9H6V9.75H5.25V9Z" fill="#838383" />
+      <path d="M3.75 9H4.5V9.75H3.75V9Z" fill="#838383" />
+      <path d="M2.25 9H3V9.75H2.25V9Z" fill="#838383" />
+      <path d="M3 9.75H3.75V10.5H3V9.75Z" fill="#838383" />
+      <path d="M1.5 9.75H2.25V10.5H1.5V9.75Z" fill="#838383" />
     </svg>
   );
 };

@@ -16,6 +16,8 @@ export interface BannerObject {
   src?: string;
   width?: number;
   height?: number;
+  autoWidth?: boolean;
+  autoHeight?: boolean;
   children?: BannerChild[];
   display?: React.CSSProperties["display"];
   condition?: {
@@ -31,7 +33,6 @@ export interface BannerObject {
   objectFit?: React.CSSProperties["objectFit"];
   rotate?: number | undefined;
   maxLines?: number;
-  autoWidth?: boolean;
   borderRadius?: React.CSSProperties["borderRadius"];
   backgroundColor?: string;
   opacity?: React.CSSProperties["opacity"];
