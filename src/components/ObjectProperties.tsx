@@ -18,8 +18,8 @@ const ObjectProperties: React.FC = () => {
     selectedObject,
     selectedObjects,
     selectedObjectIds,
-    handleDelete,
-    handleDeleteAll,
+    // handleDelete,
+    // handleDeleteAll,
     updateObjectProperty,
     //
   } = useObjectProperties();
@@ -141,7 +141,7 @@ const ObjectProperties: React.FC = () => {
         <SelectedObjectsList objects={selectedObjects} />
       )}
 
-      {selectedObjectIds.length === 1 && !selectedChild && (
+      {/* {selectedObjectIds.length === 1 && !selectedChild && (
         <div className="padding-wrapper">
           <Button
             variant="contained"
@@ -164,7 +164,8 @@ const ObjectProperties: React.FC = () => {
             Delete selected objects
           </Button>
         </div>
-      )}
+      )} */}
+      <div className="grey-line"></div>
     </Box>
   );
 };

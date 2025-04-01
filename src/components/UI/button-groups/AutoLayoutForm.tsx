@@ -1,4 +1,5 @@
 import { ButtonGroup, Button, Box } from "@mui/material";
+import { GroupLeft, GroupCenter, GroupRight } from "../../../assets/icons";
 
 interface AutoLayoutFormProps {
   justifyContent: "start" | "center" | "end" | "space-between";
@@ -8,27 +9,31 @@ interface AutoLayoutFormProps {
 }
 
 const rowAlignments = [
-  { label: "Top-Left", justifyContent: "start", alignItems: "flex-start" },
-  { label: "Top-Center", justifyContent: "center", alignItems: "flex-start" },
-  { label: "Top-Right", justifyContent: "end", alignItems: "flex-start" },
-  { label: "Left", justifyContent: "start", alignItems: "center" },
-  { label: "Center", justifyContent: "center", alignItems: "center" },
-  { label: "Right", justifyContent: "end", alignItems: "center" },
-  { label: "Bottom-Left", justifyContent: "start", alignItems: "flex-end" },
-  { label: "Bottom-Center", justifyContent: "center", alignItems: "flex-end" },
-  { label: "Bottom-Right", justifyContent: "end", alignItems: "flex-end" },
+  { label: <GroupLeft />, justifyContent: "start", alignItems: "flex-start" },
+  {
+    label: <GroupCenter />,
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  { label: <GroupRight />, justifyContent: "end", alignItems: "flex-start" },
+  { label: <GroupLeft />, justifyContent: "start", alignItems: "center" },
+  { label: <GroupCenter />, justifyContent: "center", alignItems: "center" },
+  { label: <GroupRight />, justifyContent: "end", alignItems: "center" },
+  { label: <GroupLeft />, justifyContent: "start", alignItems: "flex-end" },
+  { label: <GroupCenter />, justifyContent: "center", alignItems: "flex-end" },
+  { label: <GroupRight />, justifyContent: "end", alignItems: "flex-end" },
 ];
 
 const columnAlignments = [
-  { label: "Left-Top", justifyContent: "start", alignItems: "flex-start" },
-  { label: "Center-Top", justifyContent: "start", alignItems: "center" },
-  { label: "Right-Top", justifyContent: "start", alignItems: "flex-end" },
-  { label: "Left", justifyContent: "center", alignItems: "flex-start" },
-  { label: "Center", justifyContent: "center", alignItems: "center" },
-  { label: "Right", justifyContent: "center", alignItems: "flex-end" },
-  { label: "Left-Bottom", justifyContent: "end", alignItems: "flex-start" },
-  { label: "Center-Bottom", justifyContent: "end", alignItems: "center" },
-  { label: "Right-Bottom", justifyContent: "end", alignItems: "flex-end" },
+  { label: <GroupLeft />, justifyContent: "start", alignItems: "flex-start" },
+  { label: <GroupCenter />, justifyContent: "start", alignItems: "center" },
+  { label: <GroupRight />, justifyContent: "start", alignItems: "flex-end" },
+  { label: <GroupLeft />, justifyContent: "center", alignItems: "flex-start" },
+  { label: <GroupCenter />, justifyContent: "center", alignItems: "center" },
+  { label: <GroupRight />, justifyContent: "center", alignItems: "flex-end" },
+  { label: <GroupLeft />, justifyContent: "end", alignItems: "flex-start" },
+  { label: <GroupCenter />, justifyContent: "end", alignItems: "center" },
+  { label: <GroupRight />, justifyContent: "end", alignItems: "flex-end" },
 ];
 
 const spaceBetweenRow = [
@@ -69,15 +74,22 @@ export const AutoLayoutForm: React.FC<AutoLayoutFormProps> = ({
             display="flex"
             flexDirection={flexDirection === "row" ? "column" : "row"}
           >
-            {alignments.map((item) => (
+            {alignments.map((item, index) => (
               <Button
-                key={item.label}
-                variant={isActive(item) ? "contained" : "outlined"}
-                style={{
+                key={index}
+                sx={{
                   fontSize: 9,
-                  fontWeight: "700",
-                  padding: 2,
                   maxWidth: 90,
+                  // borderRadius: 0,
+                  border: "2px solid #F1F1F1",
+                  padding: "4px 6px",
+                  color: "#000000",
+                  fontWeight: "400",
+                  // borderRadius: isActive(item) ? "14px" : "0px",
+                  backgroundColor: isActive(item) ? "white" : "#F1F1F1",
+                  "&:hover": {
+                    backgroundColor: isActive(item) ? "#e3e3e3" : "#f5f5f5",
+                  },
                 }}
                 onClick={() => {
                   onChange({
@@ -92,27 +104,51 @@ export const AutoLayoutForm: React.FC<AutoLayoutFormProps> = ({
           </Box>
         ) : (
           [0, 1, 2].map((rowIndex) => (
-            <ButtonGroup key={rowIndex} variant="outlined" fullWidth>
-              {alignments.slice(rowIndex * 3, rowIndex * 3 + 3).map((item) => (
-                <Button
-                  key={item.label}
-                  variant={isActive(item) ? "contained" : "outlined"}
-                  style={{
-                    fontSize: 9,
-                    fontWeight: "700",
-                    padding: 2,
-                    maxWidth: 90,
-                  }}
-                  onClick={() => {
-                    onChange({
-                      justifyContent: item.justifyContent,
-                      alignItems: item.alignItems,
-                    });
-                  }}
-                >
-                  {item.label}
-                </Button>
-              ))}
+            <ButtonGroup key={rowIndex}>
+              {alignments
+                .slice(rowIndex * 3, rowIndex * 3 + 3)
+                .map((item, index) => {
+                  let borderRadiusStyles = {};
+
+                  if (rowIndex === 0 && index === 0) {
+                    borderRadiusStyles = { borderTopLeftRadius: "6px" };
+                  } else if (rowIndex === 0 && index === 2) {
+                    borderRadiusStyles = { borderTopRightRadius: "6px" };
+                  } else if (rowIndex === 2 && index === 0) {
+                    borderRadiusStyles = { borderBottomLeftRadius: "6px" };
+                  } else if (rowIndex === 2 && index === 2) {
+                    borderRadiusStyles = { borderBottomRightRadius: "6px" };
+                  }
+
+                  return (
+                    <Button
+                      key={index}
+                      sx={{
+                        maxWidth: 90,
+                        border: "2px solid #F1F1F1",
+                        padding: "7px 10px",
+                        color: "#000000",
+                        fontWeight: "400",
+                        borderRadius: 0,
+                        backgroundColor: isActive(item) ? "white" : "#F1F1F1",
+                        "&:hover": {
+                          backgroundColor: isActive(item)
+                            ? "#e3e3e3"
+                            : "#fcfafa",
+                        },
+                        ...borderRadiusStyles,
+                      }}
+                      onClick={() => {
+                        onChange({
+                          justifyContent: item.justifyContent,
+                          alignItems: item.alignItems,
+                        });
+                      }}
+                    >
+                      {item.label}
+                    </Button>
+                  );
+                })}
             </ButtonGroup>
           ))
         )}

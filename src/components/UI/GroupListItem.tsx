@@ -92,7 +92,8 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
                       ? "lightgray"
                       : "white",
                   "&:hover": { backgroundColor: "#f5f5f5" },
-                  padding: "5px 0 5px 0",
+                  // padding: "5px 0 5px 0",
+                  padding: "5px 0 5px 36px",
                   // display: "flex",
                   // alignItems: "center",
                 }}
