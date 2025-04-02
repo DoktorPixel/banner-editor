@@ -478,7 +478,6 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
       <div className="padding-wrapper">
         <Box>
           {object.backgroundColor && object.backgroundColor !== "none" ? (
-            // Если фон установлен, показываем настройки + кнопку удаления
             <div>
               <Box
                 display="flex"
@@ -569,67 +568,78 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
 
       <div className="padding-wrapper">
         {!isBorderEditing ? (
-          <Button
-            variant="outlined"
-            onClick={handleAddBorder}
-            sx={{ textAlign: "left" }}
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
           >
-            + Додати бордер
-          </Button>
+            <Typography variant="subtitle2">Stroke</Typography>
+            <IconButton onClick={handleAddBorder}>
+              <PlusIcon />
+            </IconButton>
+          </Box>
         ) : (
           <Box className="border-editor">
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => handleBorderToggle(false)}
-              style={{ marginBottom: "10px" }}
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
             >
-              Видалити бордер
-            </Button>
+              <Typography variant="subtitle2">Stroke</Typography>
+              <IconButton onClick={() => handleBorderToggle(false)}>
+                <MinusIcon />
+              </IconButton>
+            </Box>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <Box>
-                <Typography variant="body2">
-                  Стиль рамки (border-style)
-                </Typography>
-                <Select
-                  value={object.borderTopStyle || "solid"}
-                  onChange={(e) => handleBorderChange("Style", e.target.value)}
-                  fullWidth
-                >
-                  <MenuItem value="solid">Суцільна (Solid)</MenuItem>
-                  <MenuItem value="dotted">Крапками (Dotted)</MenuItem>
-                  <MenuItem value="dashed">Штрихова (Dashed)</MenuItem>
-                  <MenuItem value="double">Подвійна (Double)</MenuItem>
-                </Select>
-              </Box>
-
               <MuiColorInput
-                label="Колір рамки (border-color)"
+                label="Color"
                 format="hex"
                 value={object.borderTopColor || "#000000"}
                 onChange={(newColor: string) =>
                   handleBorderChange("Color", newColor)
                 }
                 fullWidth
-                sx={{ margin: "16px 0 10px 0" }}
+                sx={{ marginTop: "20px" }}
               />
 
-              <Box>
-                <TextField
-                  label="Ширина рамки (border-width, px)"
-                  type="number"
-                  value={object.borderTopWidth || 1}
-                  onChange={(e) =>
-                    handleBorderChange(
-                      "Width",
-                      parseInt(e.target.value, 10) || undefined
-                    )
-                  }
-                  fullWidth
-                />
-              </Box>
+              <div className="auto-size" style={{ marginBottom: "10px" }}>
+                <div style={{ flex: 1 }}>
+                  <InputLabel sx={{ mb: "2px", fontSize: "12px" }}>
+                    Style
+                  </InputLabel>
+                  <Select
+                    value={object.borderTopStyle || "solid"}
+                    onChange={(e) =>
+                      handleBorderChange("Style", e.target.value)
+                    }
+                    fullWidth
+                  >
+                    <MenuItem value="solid">Solid</MenuItem>
+                    <MenuItem value="dotted">Dotted</MenuItem>
+                    <MenuItem value="dashed">Dashed</MenuItem>
+                    <MenuItem value="double">Double</MenuItem>
+                  </Select>
+                </div>
 
-              <div className="border-selectors">
+                <div style={{ flex: 1 }}>
+                  <InputLabel sx={{ mb: "2px", fontSize: "12px" }}>
+                    Weight
+                  </InputLabel>
+                  <TextField
+                    type="number"
+                    value={object.borderTopWidth || 1}
+                    onChange={(e) =>
+                      handleBorderChange(
+                        "Width",
+                        parseInt(e.target.value, 10) || undefined
+                      )
+                    }
+                    fullWidth
+                  />
+                </div>
+              </div>
+
+              <div className="border-selectors" style={{ display: "none" }}>
                 <ButtonGroup>
                   <Button
                     variant={borderSides.top ? "contained" : "outlined"}
@@ -668,6 +678,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
           </Box>
         )}
       </div>
+
       <div className="grey-line"></div>
       <div className="padding-wrapper" style={{ marginTop: "10px" }}>
         <div className="auto-size">

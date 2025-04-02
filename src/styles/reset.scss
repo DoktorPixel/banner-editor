@@ -43,3 +43,15 @@ img {
 table {
   border-collapse: collapse;
 }
+
+//
+
+// html,
+// body {
+//   overflow-x: hidden;
+// }
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+}

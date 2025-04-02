@@ -4,9 +4,9 @@
   border: 1px solid #ececec;
   background: #ffffff;
   width: 320px;
-  height: 100%;
+  height: auto;
   min-height: 1120px;
-  overflow: auto;
+  overflow-y: scroll;
   .properties-list {
     display: flex;
     flex-direction: column;
