@@ -1,5 +1,7 @@
 .banner-area {
-  position: relative;
+  // position: relative;
+  position: sticky;
+  top: 0;
   background: #fff;
   border: 1px solid #ddd;
   overflow: hidden;

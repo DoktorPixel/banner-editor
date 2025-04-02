@@ -908,3 +908,71 @@ export const PaddingBottom: React.FC<SVGProps> = ({
     </svg>
   );
 };
+
+export const GroupLeft: React.FC<SVGProps> = ({
+  width = "13px",
+  height = "10px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 13 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M1 1H11.6667" stroke="black" stroke-linecap="round" />
+      <path d="M1 3.66666H9.66667" stroke="black" stroke-linecap="round" />
+      <path d="M1 6.33334H11.6667" stroke="black" stroke-linecap="round" />
+      <path d="M1 9H4.66667" stroke="black" stroke-linecap="round" />
+    </svg>
+  );
+};
+
+export const GroupCenter: React.FC<SVGProps> = ({
+  width = "12px",
+  height = "10px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 12 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M0.666626 1H11.3333" stroke="black" stroke-linecap="round" />
+      <path
+        d="M2.66663 3.66666H9.33329"
+        stroke="black"
+        stroke-linecap="round"
+      />
+      <path
+        d="M0.666626 6.33334H11.3333"
+        stroke="black"
+        stroke-linecap="round"
+      />
+      <path d="M4 9H8" stroke="black" stroke-linecap="round" />
+    </svg>
+  );
+};
+
+export const GroupRight: React.FC<SVGProps> = ({
+  width = "13px",
+  height = "10px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 13 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M1.33337 1H12" stroke="black" stroke-linecap="round" />
+      <path d="M3.33337 3.66666H12" stroke="black" stroke-linecap="round" />
+      <path d="M1.33337 6.33334H12" stroke="black" stroke-linecap="round" />
+      <path d="M8 9H12" stroke="black" stroke-linecap="round" />
+    </svg>
+  );
+};

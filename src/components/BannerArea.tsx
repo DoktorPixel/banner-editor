@@ -6,7 +6,8 @@ import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
 import ResizeHandles from "../utils/ResizeHandles";
 import ContextMenu from "./UI/ContextMenu";
 import { BannerObject } from "../types";
-
+import { useChildProperties } from "../utils/hooks";
+import { useObjectProperties } from "../utils/hooks";
 import { useSelectionBounds } from "../utils/hooks";
 
 const BannerArea: React.FC = () => {
@@ -25,6 +26,9 @@ const BannerArea: React.FC = () => {
     setTemporaryUpdates,
     renderedObjects,
   } = useBanner();
+  const { selectedChild } = useChildProperties();
+
+  const { handleDelete, handleDeleteAll } = useObjectProperties();
   const { mode } = useMode();
   const [isDragging, setIsDragging] = useState(false);
   const [draggingIds, setDraggingIds] = useState<number[] | null>(null);
@@ -300,6 +304,24 @@ const BannerArea: React.FC = () => {
 
   const objectRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Delete") {
+        if (selectedObjectIds.length === 1 && !selectedChild) {
+          handleDelete();
+        } else if (selectedObjectIds.length > 1) {
+          handleDeleteAll();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedObjectIds, selectedChild]);
+
   return (
     <div className="banner-area-container">
       <div
@@ -372,7 +394,11 @@ const BannerArea: React.FC = () => {
                       gap: object.gap || 0,
                       transform: `rotate(${object.rotate || 0}deg)`,
                       //
-                      backgroundColor: object.backgroundColor,
+                      // backgroundColor: object.backgroundColor,
+                      backgroundColor:
+                        object.backgroundColor !== "none"
+                          ? object.backgroundColor
+                          : undefined,
                       borderRadius: object.borderRadius,
                       opacity: object.opacity,
                       borderTopStyle: object.borderTopStyle,

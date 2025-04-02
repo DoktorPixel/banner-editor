@@ -9,7 +9,9 @@ import {
   Button,
   ButtonGroup,
   InputAdornment,
+  IconButton,
 } from "@mui/material";
+import { PlusIcon, MinusIcon } from "../../../assets/icons";
 import { BannerObject } from "../../../types";
 import { MuiColorInput } from "mui-color-input";
 import { useObjectProperties } from "../../../utils/hooks";
@@ -434,8 +436,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
       </div>
       <div className="grey-line"></div>
 
-      <div className="padding-wrapper">
-        {/* фігура */}
+      {/* <div className="padding-wrapper">
         <MuiColorInput
           label="Color"
           format="hex"
@@ -444,6 +445,96 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
           fullWidth
           sx={{ margin: "16px 0 10px 0" }}
         />
+
+        <div className="auto-size">
+          <TextField
+            label="Opacity"
+            type="number"
+            inputProps={{
+              step: 0.1,
+              min: 0,
+              max: 1,
+            }}
+            value={object.opacity || 1}
+            onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            label="Border radius"
+            type="number"
+            value={object.borderRadius || 0}
+            onChange={(e) => {
+              const value = parseInt(e.target.value, 10);
+              onChange("borderRadius", value >= 0 ? value : 0);
+            }}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      </div> */}
+
+      <div className="padding-wrapper">
+        <Box>
+          {object.backgroundColor && object.backgroundColor !== "none" ? (
+            // Если фон установлен, показываем настройки + кнопку удаления
+            <div>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Typography variant="subtitle2">Background </Typography>
+                <IconButton
+                  onClick={() => {
+                    onChange("backgroundColor", "none");
+                  }}
+                >
+                  <MinusIcon />
+                </IconButton>
+              </Box>
+
+              <MuiColorInput
+                label="Color"
+                format="hex"
+                // value={object.backgroundColor || "none"}
+                value={
+                  object.backgroundColor === "none"
+                    ? ""
+                    : object.backgroundColor
+                }
+                onChange={(newColor: string) =>
+                  onChange("backgroundColor", newColor)
+                }
+                fullWidth
+                sx={{ margin: "16px 0 10px 0" }}
+              />
+            </div>
+          ) : (
+            //
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Typography variant="subtitle2">Background</Typography>
+              <IconButton
+                onClick={() => onChange("backgroundColor", "#F1F1F1")}
+              >
+                <PlusIcon />
+              </IconButton>
+            </Box>
+          )}
+        </Box>
+      </div>
+
+      <div className="grey-line"></div>
+
+      <div className="padding-wrapper">
+        <Typography variant="subtitle2" sx={{ mb: "10px" }}>
+          Appearance
+        </Typography>
 
         <div className="auto-size">
           <TextField

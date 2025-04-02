@@ -1,8 +1,12 @@
 .object-properties {
-  width: 320px;
   padding: 10px 0;
+  margin-bottom: 20px;
   border: 1px solid #ececec;
-  // background: #f0f0f0;
+  background: #ffffff;
+  width: 320px;
+  height: 100%;
+  min-height: 1120px;
+  overflow: auto;
   .properties-list {
     display: flex;
     flex-direction: column;
