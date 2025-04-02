@@ -1,7 +1,11 @@
 .sidebar {
+  border: 1px solid #ececec;
+  background: #ffffff;
   width: 320px;
-  // // background: #f0f0f0;
-  // padding: 10px;
+  height: 100%;
+  min-height: 1120px;
+  overflow: auto;
+  margin-bottom: 20px;
 }
 .sidebar-wrapper {
   padding: 10px 10px 0 10px;
