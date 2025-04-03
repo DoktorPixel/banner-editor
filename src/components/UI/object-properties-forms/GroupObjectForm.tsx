@@ -165,7 +165,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
       <Typography
         variant="subtitle1"
         className="padding-wrapper"
-        sx={{ mb: 2 }}
+        sx={{ mb: 1 }}
       >
         Layout
       </Typography>

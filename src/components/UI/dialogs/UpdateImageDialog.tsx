@@ -10,6 +10,7 @@ import {
   Box,
   IconButton,
   Slider,
+  InputLabel,
 } from "@mui/material";
 import ImageCompression from "browser-image-compression";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -64,7 +65,7 @@ const UpdateImageDialog: React.FC<UpdateImageDialogProps> = ({
         };
         reader.readAsDataURL(compressedFile);
       } catch (error) {
-        console.error("Помилка при стисканні зображення:", error);
+        console.error("Image compression error:", error);
       }
     } else {
       setFile(null);
@@ -100,15 +101,15 @@ const UpdateImageDialog: React.FC<UpdateImageDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Оновити зображення</DialogTitle>
+      <DialogTitle>Update image</DialogTitle>
       <DialogContent>
         <Typography variant="body2" gutterBottom>
-          Завантажте зображення через URL або виберіть файл:
+          Upload image via URL or select file:
         </Typography>
+        <InputLabel sx={{ mt: 1, mb: -1, fontSize: "12px" }}>URL</InputLabel>
         <Box display="flex" alignItems="center" mb={2}>
           <TextField
             margin="dense"
-            label="URL зображення"
             fullWidth
             value={preview}
             onChange={handleUrlChange}
@@ -129,7 +130,7 @@ const UpdateImageDialog: React.FC<UpdateImageDialogProps> = ({
           }}
         >
           <Typography gutterBottom>
-            Максимальна ширина (пікселі): {maxWidthOrHeight}
+            Maximum width (pixels): {maxWidthOrHeight}
           </Typography>
           <Slider
             value={maxWidthOrHeight}
@@ -168,10 +169,10 @@ const UpdateImageDialog: React.FC<UpdateImageDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          Відмінити
+          Cancel
         </Button>
         <Button onClick={handleUpdate} color="primary" disabled={!preview}>
-          Оновити
+          Update
         </Button>
       </DialogActions>
     </Dialog>
