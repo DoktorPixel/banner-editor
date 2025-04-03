@@ -9,6 +9,7 @@ import {
   Button,
   Typography,
   InputAdornment,
+  Box,
   // IconButton,
 } from "@mui/material";
 import UpdateImageDialog from "../dialogs/UpdateImageDialog";
@@ -45,7 +46,7 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
   };
 
   return (
-    <>
+    <Box>
       <Typography
         variant="subtitle1"
         className="padding-wrapper"
@@ -94,7 +95,6 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
           />
         </div>
       </div>
-
       <div className="grey-line"></div>
       <div className="padding-wrapper">
         <Typography variant="subtitle2">Layout</Typography>
@@ -208,6 +208,6 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         onClose={handleDialogClose}
         onUpdate={handleUpdateUrl}
       />
-    </>
+    </Box>
   );
 };

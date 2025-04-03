@@ -758,7 +758,10 @@ const BannerArea: React.FC = () => {
                     data-condition={JSON.stringify(object.condition)}
                     className="banner-figure"
                     style={{
-                      backgroundColor: object.backgroundColor,
+                      backgroundColor:
+                        object.backgroundColor !== "none"
+                          ? object.backgroundColor
+                          : undefined,
                       borderRadius: object.borderRadius,
                       opacity: object.opacity,
                       borderTopStyle: object.borderTopStyle,
