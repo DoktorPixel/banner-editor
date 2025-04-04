@@ -1,10 +1,9 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useObjectProperties, useChildProperties } from "../utils/hooks";
 import { TextObjectForm } from "./UI/object-properties-forms/TextObjectForm";
 import { ImageObjectForm } from "./UI/object-properties-forms/ImageObjectForm";
 import { GroupObjectForm } from "./UI/object-properties-forms/GroupObjectForm";
 import { FigureObjectForm } from "./UI/object-properties-forms/FigureObjectForm";
-import { AutoLayoutForm } from "./UI/button-groups/AutoLayoutForm";
 // import { ChildObjectForm } from "./UI/ChildObjectForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";
 //
@@ -27,7 +26,6 @@ const ObjectProperties: React.FC = () => {
   const {
     selectedChild,
     handleChangeChild,
-    handleDeleteChild,
     handleChangeMultipleChildProperties,
   } = useChildProperties();
 
@@ -66,40 +64,8 @@ const ObjectProperties: React.FC = () => {
                 onChange={handleChangeChild}
                 onChangeMultiple={handleChangeMultipleChildProperties}
               />
-
-              <AutoLayoutForm
-                flexDirection={
-                  (selectedChild.flexDirection as "row" | "column") || "row"
-                }
-                justifyContent={
-                  (selectedChild.justifyContent as
-                    | "start"
-                    | "center"
-                    | "end"
-                    | "space-between") || "center"
-                }
-                alignItems={
-                  (selectedChild.alignItems as
-                    | "flex-start"
-                    | "center"
-                    | "flex-end") || "center"
-                }
-                onChange={(changes) =>
-                  handleChangeMultipleChildProperties(changes)
-                }
-              />
             </>
           )}
-          <div className="padding-wrapper">
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleDeleteChild}
-              sx={{ marginTop: "20px" }}
-            >
-              Remove item from group
-            </Button>
-          </div>
         </>
       ) : selectedObjectIds.length === 0 ? (
         <div className="padding-wrapper">

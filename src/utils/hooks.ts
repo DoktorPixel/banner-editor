@@ -86,7 +86,7 @@ export const useChildProperties = () => {
 
   const handleChangeChild = (
     key: keyof BannerChild,
-    value: string | number | undefined
+    value: string | number | undefined | "auto" | boolean
   ) => {
     if (selectedChildId) {
       updateChild(selectedChildId.groupId, selectedChildId.childId, {

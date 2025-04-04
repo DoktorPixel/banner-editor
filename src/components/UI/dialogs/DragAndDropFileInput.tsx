@@ -37,7 +37,7 @@ const DragAndDropFileInput: React.FC<DragAndDropFileInputProps> = ({
     if (!disabled && e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       if (accept && !file.type.match(accept)) {
-        console.error("Невірний тип файлу");
+        console.error("Invalid file type");
         return;
       }
       onChange(file);
@@ -87,7 +87,7 @@ const DragAndDropFileInput: React.FC<DragAndDropFileInputProps> = ({
           </Box>
         ) : (
           <Typography variant="body2" color="textSecondary">
-            Перетягніть або виберіть зображення
+            Drag or select an image
           </Typography>
         )}
       </Box>

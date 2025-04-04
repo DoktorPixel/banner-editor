@@ -8,6 +8,9 @@ import {
   Select,
   Typography,
   ButtonGroup,
+  InputLabel,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 import { ChildConditionSelector } from "../ChildConditionSelector";
@@ -16,6 +19,8 @@ import {
   BorderLeft,
   BorderRight,
   BorderTop,
+  MinusIcon,
+  PlusIcon,
 } from "../../../assets/icons";
 
 interface FigureChildObjectFormProps {
@@ -146,172 +151,316 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
 
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        Налаштування елементу групи
+      <Typography
+        variant="subtitle1"
+        className="padding-wrapper"
+        sx={{ mb: 1 }}
+      >
+        Nested figure
       </Typography>
 
-      <div className="auto-size">
-        <TextField
-          label="Ширина блоку (px)"
-          type="number"
-          value={Math.round(object.width || 300)}
-          onChange={(e) =>
-            onChange("width", Math.round(parseInt(e.target.value, 10)))
-          }
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Висота блоку (px)"
-          type="number"
-          value={object.height || 50}
-          onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
-          fullWidth
-          margin="normal"
-        />
-      </div>
-
-      <MuiColorInput
-        label="Колір фону"
-        format="hex"
-        value={object.backgroundColor || "#000000"}
-        onChange={(newColor: string) => onChange("backgroundColor", newColor)}
-        fullWidth
-        sx={{ margin: "16px 0 10px 0" }}
-      />
-      <TextField
-        label="Прозорість (opacity, від 0 до 1)"
-        type="number"
-        inputProps={{
-          step: 0.1,
-          min: 0,
-          max: 1,
-        }}
-        value={object.opacity || 1}
-        onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="заокруглення (border-radius)"
-        type="number"
-        value={object.borderRadius || 0}
-        onChange={(e) => {
-          const value = parseInt(e.target.value, 10);
-          onChange("borderRadius", value >= 0 ? value : 0);
-        }}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Поворот (градусів)"
-        type="number"
-        value={object.rotate || 0}
-        onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-        // style={{ marginTop: "22px" }}
-      />
-
-      {!isBorderEditing ? (
-        <Button variant="outlined" onClick={handleAddBorder}>
-          + Додати бордер
-        </Button>
-      ) : (
-        <Box className="border-editor">
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => handleBorderToggle(false)}
-            style={{ marginBottom: "10px" }}
-          >
-            Видалити бордер
-          </Button>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Box>
-              <Typography variant="body2">
-                Стиль рамки (border-style)
-              </Typography>
-              <Select
-                value={object.borderTopStyle || "solid"}
-                onChange={(e) => handleBorderChange("Style", e.target.value)}
-                fullWidth
-              >
-                <MenuItem value="solid">Суцільна (Solid)</MenuItem>
-                <MenuItem value="dotted">Крапками (Dotted)</MenuItem>
-                <MenuItem value="dashed">Штрихова (Dashed)</MenuItem>
-                <MenuItem value="double">Подвійна (Double)</MenuItem>
-              </Select>
-            </Box>
-
-            <MuiColorInput
-              label="Колір рамки (border-color)"
-              format="hex"
-              value={object.borderTopColor || "#000000"}
-              onChange={(newColor: string) =>
-                handleBorderChange("Color", newColor)
-              }
-              fullWidth
-              sx={{ margin: "16px 0 10px 0" }}
-            />
-
-            <Box>
-              <TextField
-                label="Ширина рамки (border-width, px)"
-                type="number"
-                value={object.borderTopWidth || 1}
-                onChange={(e) =>
-                  handleBorderChange(
-                    "Width",
-                    parseInt(e.target.value, 10) || undefined
-                  )
-                }
-                fullWidth
-              />
-            </Box>
-
-            <div className="border-selectors">
-              <ButtonGroup>
-                <Button
-                  variant={borderSides.top ? "contained" : "outlined"}
-                  onClick={() => toggleBorderSide("top")}
-                  sx={{ padding: "4px 10px" }}
-                >
-                  <BorderTop width="24px" height="24px" />
-                </Button>
-                <Button
-                  variant={borderSides.bottom ? "contained" : "outlined"}
-                  onClick={() => toggleBorderSide("bottom")}
-                  sx={{ padding: "4px 10px" }}
-                >
-                  <BorderBottom width="24px" height="24px" />
-                </Button>
-              </ButtonGroup>
-
-              <ButtonGroup>
-                <Button
-                  variant={borderSides.left ? "contained" : "outlined"}
-                  onClick={() => toggleBorderSide("left")}
-                  sx={{ padding: "4px 10px" }}
-                >
-                  <BorderLeft width="24px" height="24px" />
-                </Button>
-                <Button
-                  variant={borderSides.right ? "contained" : "outlined"}
-                  onClick={() => toggleBorderSide("right")}
-                  sx={{ padding: "4px 10px" }}
-                >
-                  <BorderRight width="24px" height="24px" />
-                </Button>
-              </ButtonGroup>
-            </div>
-          </Box>
-        </Box>
-      )}
+      <div className="grey-line"></div>
       <ChildConditionSelector
         childId={object.id}
         condition={object.condition}
       />
+      <div className="grey-line"></div>
+      <div className="padding-wrapper">
+        <Typography variant="subtitle2">General</Typography>
+        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
+          Position
+        </InputLabel>
+        <div className="auto-size">
+          <TextField
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">X</InputAdornment>
+                ),
+              },
+            }}
+            type="number"
+            value={object.y || 0}
+            onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">Y</InputAdornment>
+                ),
+              },
+            }}
+            type="number"
+            value={object.y || 0}
+            onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      </div>
+      <div className="grey-line"></div>
+
+      <div className="padding-wrapper">
+        <Typography variant="subtitle2">Layout</Typography>
+        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>Size</InputLabel>
+        <div className="auto-size">
+          <TextField
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">W</InputAdornment>
+                ),
+              },
+            }}
+            type="number"
+            value={Math.round(object.width || 300)}
+            onChange={(e) =>
+              onChange("width", Math.round(parseInt(e.target.value, 10)))
+            }
+            fullWidth
+            disabled={object.autoWidth}
+            margin="normal"
+          />
+
+          <TextField
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">H</InputAdornment>
+                ),
+              },
+            }}
+            type="number"
+            value={Math.round(object.height || 50)}
+            onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
+            fullWidth
+            disabled={object.autoHeight}
+            margin="normal"
+          />
+        </div>
+      </div>
+      <div className="grey-line"></div>
+
+      <div className="padding-wrapper">
+        <Box>
+          {object.backgroundColor && object.backgroundColor !== "none" ? (
+            <div>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Typography variant="subtitle2">Background </Typography>
+                <IconButton
+                  onClick={() => {
+                    onChange("backgroundColor", "none");
+                  }}
+                >
+                  <MinusIcon />
+                </IconButton>
+              </Box>
+
+              <MuiColorInput
+                label="Color"
+                format="hex"
+                // value={object.backgroundColor || "none"}
+                value={
+                  object.backgroundColor === "none"
+                    ? ""
+                    : object.backgroundColor
+                }
+                onChange={(newColor: string) =>
+                  onChange("backgroundColor", newColor)
+                }
+                fullWidth
+                sx={{ margin: "16px 0 10px 0" }}
+              />
+            </div>
+          ) : (
+            //
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Typography variant="subtitle2">Background</Typography>
+              <IconButton
+                onClick={() => onChange("backgroundColor", "#F1F1F1")}
+              >
+                <PlusIcon />
+              </IconButton>
+            </Box>
+          )}
+        </Box>
+      </div>
+      <div className="grey-line"></div>
+
+      <div className="padding-wrapper">
+        <Typography variant="subtitle2" sx={{ mb: "10px" }}>
+          Appearance
+        </Typography>
+
+        <div className="auto-size">
+          <TextField
+            label="Opacity"
+            type="number"
+            inputProps={{
+              step: 0.1,
+              min: 0,
+              max: 1,
+            }}
+            value={object.opacity || 1}
+            onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            label="Border radius"
+            type="number"
+            value={object.borderRadius || 0}
+            onChange={(e) => {
+              const value = parseInt(e.target.value, 10);
+              onChange("borderRadius", value >= 0 ? value : 0);
+            }}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      </div>
+
+      <div className="grey-line"></div>
+
+      <div className="padding-wrapper">
+        {!isBorderEditing ? (
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="subtitle2">Stroke</Typography>
+            <IconButton onClick={handleAddBorder}>
+              <PlusIcon />
+            </IconButton>
+          </Box>
+        ) : (
+          <Box className="border-editor">
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Typography variant="subtitle2">Stroke</Typography>
+              <IconButton onClick={() => handleBorderToggle(false)}>
+                <MinusIcon />
+              </IconButton>
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <MuiColorInput
+                label="Color"
+                format="hex"
+                value={object.borderTopColor || "#000000"}
+                onChange={(newColor: string) =>
+                  handleBorderChange("Color", newColor)
+                }
+                fullWidth
+                sx={{ marginTop: "20px" }}
+              />
+
+              <div className="auto-size" style={{ marginBottom: "10px" }}>
+                <div style={{ flex: 1 }}>
+                  <InputLabel sx={{ mb: "2px", fontSize: "12px" }}>
+                    Style
+                  </InputLabel>
+                  <Select
+                    value={object.borderTopStyle || "solid"}
+                    onChange={(e) =>
+                      handleBorderChange("Style", e.target.value)
+                    }
+                    fullWidth
+                  >
+                    <MenuItem value="solid">Solid</MenuItem>
+                    <MenuItem value="dotted">Dotted</MenuItem>
+                    <MenuItem value="dashed">Dashed</MenuItem>
+                    <MenuItem value="double">Double</MenuItem>
+                  </Select>
+                </div>
+
+                <div style={{ flex: 1 }}>
+                  <InputLabel sx={{ mb: "2px", fontSize: "12px" }}>
+                    Weight
+                  </InputLabel>
+                  <TextField
+                    type="number"
+                    value={object.borderTopWidth || 1}
+                    onChange={(e) =>
+                      handleBorderChange(
+                        "Width",
+                        parseInt(e.target.value, 10) || undefined
+                      )
+                    }
+                    fullWidth
+                  />
+                </div>
+              </div>
+
+              <div className="border-selectors" style={{ display: "none" }}>
+                <ButtonGroup>
+                  <Button
+                    variant={borderSides.top ? "contained" : "outlined"}
+                    onClick={() => toggleBorderSide("top")}
+                    sx={{ padding: "4px 10px" }}
+                  >
+                    <BorderTop width="24px" height="24px" />
+                  </Button>
+                  <Button
+                    variant={borderSides.bottom ? "contained" : "outlined"}
+                    onClick={() => toggleBorderSide("bottom")}
+                    sx={{ padding: "4px 10px" }}
+                  >
+                    <BorderBottom width="24px" height="24px" />
+                  </Button>
+                </ButtonGroup>
+
+                <ButtonGroup>
+                  <Button
+                    variant={borderSides.left ? "contained" : "outlined"}
+                    onClick={() => toggleBorderSide("left")}
+                    sx={{ padding: "4px 10px" }}
+                  >
+                    <BorderLeft width="24px" height="24px" />
+                  </Button>
+                  <Button
+                    variant={borderSides.right ? "contained" : "outlined"}
+                    onClick={() => toggleBorderSide("right")}
+                    sx={{ padding: "4px 10px" }}
+                  >
+                    <BorderRight width="24px" height="24px" />
+                  </Button>
+                </ButtonGroup>
+              </div>
+            </Box>
+          </Box>
+        )}
+      </div>
+
+      <div className="grey-line"></div>
+      <div className="padding-wrapper" style={{ marginTop: "10px" }}>
+        <div className="auto-size">
+          <TextField
+            label="Rotate"
+            type="number"
+            value={object.rotate || 0}
+            onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      </div>
     </Box>
   );
 };

@@ -9,6 +9,7 @@ import {
   Button,
   Box,
   Typography,
+  InputAdornment,
 } from "@mui/material";
 import UpdateImageDialog from "../dialogs/UpdateImageDialog";
 import { ChildConditionSelector } from "../ChildConditionSelector";
@@ -38,91 +39,156 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
 
   return (
     <Box className="child-object-form">
-      <Typography variant="h6" gutterBottom>
-        Налаштування елементу групи
+      <Typography
+        variant="subtitle1"
+        className="padding-wrapper"
+        sx={{ mb: 1 }}
+      >
+        Nsted image
       </Typography>
 
-      <div className="auto-size">
-        <TextField
-          label="Ширина (px)"
-          type="number"
-          value={Math.round(object.width || 300)}
-          onChange={(e) =>
-            onChange("width", Math.round(parseInt(e.target.value, 10)))
-          }
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Висота (px)"
-          type="number"
-          value={object.height || 300}
-          onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
-          fullWidth
-          margin="normal"
-        />
-      </div>
-
-      <TextField
-        label="URL зображення"
-        name="src"
-        value={object.src || ""}
-        onChange={(e) => onChange("src", e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <div className="update-image-wrapper">
-        <TextField
-          label="URL изображения"
-          value={object.src || ""}
-          onChange={(e) => onChange("src", e.target.value)}
-          fullWidth
-          margin="normal"
-          disabled
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleDialogOpen}
-          fullWidth
-          style={{
-            padding: "2px 8px",
-            fontSize: "11px",
-            height: "32px",
-            top: "3px",
-            lineHeight: "1.2",
-          }}
-        >
-          Оновити зображення
-        </Button>
-      </div>
-      <FormControl fullWidth margin="normal">
-        <InputLabel sx={{ top: "-7px" }}>
-          Підгонка картинки (Object Fit)
-        </InputLabel>
-        <Select
-          value={object.objectFit || "fill"}
-          onChange={(e) => onChange("objectFit", e.target.value)}
-        >
-          <MenuItem value="fill">Заповнити (fill)</MenuItem>
-          <MenuItem value="contain">Вписати (contain)</MenuItem>
-          <MenuItem value="cover">Накрити (cover)</MenuItem>
-          <MenuItem value="none">Без змін (none)</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        label="Поворот (градусів)"
-        type="number"
-        value={object.rotate || 0}
-        onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
-        fullWidth
-        margin="normal"
-      />
-
+      <div className="grey-line"></div>
       <ChildConditionSelector
         childId={object.id}
         condition={object.condition}
       />
+      <div className="grey-line"></div>
+      <div className="padding-wrapper">
+        <Typography variant="subtitle2">General</Typography>
+        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
+          Position
+        </InputLabel>
+        <div className="auto-size">
+          <TextField
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">X</InputAdornment>
+                ),
+              },
+            }}
+            type="number"
+            value={object.y || 0}
+            onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">Y</InputAdornment>
+                ),
+              },
+            }}
+            type="number"
+            value={object.y || 0}
+            onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      </div>
+      <div className="grey-line"></div>
+      <div className="padding-wrapper">
+        <Typography variant="subtitle2">Layout</Typography>
+        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>Size</InputLabel>
+        <div className="auto-size">
+          <TextField
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">W</InputAdornment>
+                ),
+              },
+            }}
+            type="number"
+            value={Math.round(object.width || 300)}
+            onChange={(e) =>
+              onChange("width", Math.round(parseInt(e.target.value, 10)))
+            }
+            fullWidth
+            disabled={object.autoWidth}
+            margin="normal"
+          />
+
+          <TextField
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">H</InputAdornment>
+                ),
+              },
+            }}
+            type="number"
+            value={Math.round(object.height || 50)}
+            onChange={(e) => onChange("height", parseInt(e.target.value, 10))}
+            fullWidth
+            disabled={object.autoHeight}
+            margin="normal"
+          />
+        </div>
+      </div>
+      <div className="grey-line"></div>
+      <div className="padding-wrapper">
+        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>URL</InputLabel>
+        <div className="update-image-wrapper">
+          <TextField
+            value={object.src || ""}
+            onChange={(e) => onChange("src", e.target.value)}
+            fullWidth
+            margin="normal"
+            disabled
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleDialogOpen}
+            fullWidth
+            style={{
+              padding: "2px 8px",
+              fontSize: "11px",
+              height: "32px",
+              top: "3px",
+              lineHeight: "1.2",
+            }}
+          >
+            Update image
+          </Button>
+        </div>
+      </div>
+
+      <div className="padding-wrapper">
+        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
+          Object Fit
+        </InputLabel>
+        <FormControl fullWidth margin="normal">
+          <Select
+            value={object.objectFit || "fill"}
+            onChange={(e) => onChange("objectFit", e.target.value)}
+          >
+            <MenuItem value="fill">Fill</MenuItem>
+            <MenuItem value="contain">Contain</MenuItem>
+            <MenuItem value="cover">Cover</MenuItem>
+            <MenuItem value="none">None</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+      <div className="grey-line"></div>
+      <div className="padding-wrapper" style={{ marginTop: "10px" }}>
+        <div className="auto-size">
+          <TextField
+            label="Rotate"
+            type="number"
+            value={object.rotate || 0}
+            onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      </div>
+
       <UpdateImageDialog
         open={isDialogOpen}
         initialUrl={object.src || ""}

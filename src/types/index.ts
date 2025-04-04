@@ -76,6 +76,8 @@ export interface BannerChild {
   y?: number;
   width?: number;
   height?: number;
+  autoWidth?: boolean;
+  autoHeight?: boolean;
   src?: string;
   name?: string;
   objectFit?: React.CSSProperties["objectFit"];
@@ -92,7 +94,6 @@ export interface BannerChild {
   gap?: React.CSSProperties["gap"];
   children?: BannerChild[]; // for groups
   maxLines?: number;
-  autoWidth?: boolean;
   borderRadius?: React.CSSProperties["borderRadius"];
   backgroundColor?: string;
   opacity?: React.CSSProperties["opacity"];

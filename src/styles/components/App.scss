@@ -1,5 +1,5 @@
 .main {
-  // max-width: 1760px;
+  // width: 1760px;
   // margin: 0 auto;
   // overflow: auto;
   min-height: 100vh;
@@ -17,6 +17,11 @@
   // margin: 0 auto;
   z-index: -101;
   position: relative;
+}
+
+.app {
+  overflow-y: auto; /* Прокрутка только внутри */
+  height: 100vh; /* Занимает весь экран */
 }
 
 // .main .app .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input,
