@@ -26,7 +26,7 @@ const BannerArea: React.FC = () => {
     setTemporaryUpdates,
     renderedObjects,
   } = useBanner();
-  const { selectedChild } = useChildProperties();
+  const { selectedChild, handleDeleteChild } = useChildProperties();
 
   const { handleDelete, handleDeleteAll } = useObjectProperties();
   const { mode } = useMode();
@@ -304,13 +304,33 @@ const BannerArea: React.FC = () => {
 
   const objectRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
+  // useEffect(() => {
+  //   const handleKeyDown = (event: KeyboardEvent) => {
+  //     if (event.key === "Delete") {
+  //       if (selectedObjectIds.length === 1 && !selectedChild) {
+  //         handleDelete();
+  //       } else if (selectedObjectIds.length > 1) {
+  //         handleDeleteAll();
+  //       }
+  //     }
+  //   };
+
+  //   document.addEventListener("keydown", handleKeyDown);
+
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, [selectedObjectIds, selectedChild]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Delete") {
-        if (selectedObjectIds.length === 1 && !selectedChild) {
-          handleDelete();
+        if (selectedChild) {
+          handleDeleteChild(); // Удаляем потомка группы, если он выбран
+        } else if (selectedObjectIds.length === 1) {
+          handleDelete(); // Удаляем одиночный объект
         } else if (selectedObjectIds.length > 1) {
-          handleDeleteAll();
+          handleDeleteAll(); // Удаляем несколько объектов
         }
       }
     };
@@ -320,7 +340,13 @@ const BannerArea: React.FC = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedObjectIds, selectedChild]);
+  }, [
+    selectedObjectIds,
+    selectedChild,
+    handleDelete,
+    handleDeleteAll,
+    handleDeleteChild,
+  ]);
 
   return (
     <div className="banner-area-container">
@@ -527,7 +553,17 @@ const BannerArea: React.FC = () => {
                           </div>
                         );
                       } else if (child.type === "group") {
-                        const { id, children, rotate, ...groupStyles } = child;
+                        const {
+                          id,
+                          children,
+                          rotate,
+                          width,
+                          height,
+                          autoWidth,
+                          autoHeight,
+                          backgroundColor,
+                          ...groupStyles
+                        } = child;
                         return (
                           <div
                             id={`${id}`}
@@ -552,7 +588,13 @@ const BannerArea: React.FC = () => {
                           >
                             <div
                               style={{
-                                width: "auto",
+                                // width: "auto",
+                                width: autoWidth ? "auto" : width,
+                                height: autoHeight ? "auto" : height,
+                                backgroundColor:
+                                  backgroundColor !== "none"
+                                    ? backgroundColor
+                                    : undefined,
                                 position: "relative",
                                 ...groupStyles,
                               }}

@@ -146,6 +146,14 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
 
   return (
     <Box>
+      <Typography
+        variant="subtitle1"
+        className="padding-wrapper"
+        sx={{ mb: 1 }}
+      >
+        Layout
+      </Typography>
+      <div className="grey-line"></div>
       <Typography variant="h6" gutterBottom>
         Налаштування елементу групи
       </Typography>

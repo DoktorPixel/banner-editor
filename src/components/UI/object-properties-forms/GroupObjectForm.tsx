@@ -436,45 +436,6 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
       </div>
       <div className="grey-line"></div>
 
-      {/* <div className="padding-wrapper">
-        <MuiColorInput
-          label="Color"
-          format="hex"
-          value={object.backgroundColor || "none"}
-          onChange={(newColor: string) => onChange("backgroundColor", newColor)}
-          fullWidth
-          sx={{ margin: "16px 0 10px 0" }}
-        />
-
-        <div className="auto-size">
-          <TextField
-            label="Opacity"
-            type="number"
-            inputProps={{
-              step: 0.1,
-              min: 0,
-              max: 1,
-            }}
-            value={object.opacity || 1}
-            onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
-            fullWidth
-            margin="normal"
-          />
-
-          <TextField
-            label="Border radius"
-            type="number"
-            value={object.borderRadius || 0}
-            onChange={(e) => {
-              const value = parseInt(e.target.value, 10);
-              onChange("borderRadius", value >= 0 ? value : 0);
-            }}
-            fullWidth
-            margin="normal"
-          />
-        </div>
-      </div> */}
-
       <div className="padding-wrapper">
         <Box>
           {object.backgroundColor && object.backgroundColor !== "none" ? (
