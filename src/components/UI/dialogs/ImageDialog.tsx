@@ -10,6 +10,7 @@ import {
   Box,
   IconButton,
   Slider,
+  InputLabel,
 } from "@mui/material";
 import ImageCompression from "browser-image-compression";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -66,7 +67,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
         };
         reader.readAsDataURL(compressedFile);
       } catch (error) {
-        console.error("Помилка при стисканні зображення:", error);
+        console.error("Image compression error:", error);
       }
     } else {
       setFile(null);
@@ -104,15 +105,15 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Додати зображення</DialogTitle>
+      <DialogTitle>Add image</DialogTitle>
       <DialogContent>
         <Typography variant="body2" gutterBottom>
-          Завантажте зображення через URL або виберіть файл:
+          Upload image via URL or select file:
         </Typography>
+        <InputLabel sx={{ mt: 1, mb: -1, fontSize: "12px" }}>URL</InputLabel>
         <Box display="flex" alignItems="center" mb={2}>
           <TextField
             margin="dense"
-            label="URL зображення"
             fullWidth
             value={imageSrc}
             onChange={handleUrlChange}
@@ -133,7 +134,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
           }}
         >
           <Typography gutterBottom>
-            Максимальна ширина (пікселі): {maxWidthOrHeight}
+            Maximum width (pixels): {maxWidthOrHeight}
           </Typography>
           <Slider
             value={maxWidthOrHeight}
@@ -173,10 +174,10 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          Відмінити
+          Cancel
         </Button>
         <Button onClick={handleAdd} color="primary" disabled={!preview}>
-          Додати
+          Add
         </Button>
       </DialogActions>
     </Dialog>

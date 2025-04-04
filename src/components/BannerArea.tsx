@@ -517,8 +517,14 @@ const BannerArea: React.FC = () => {
                           />
                         );
                       } else if (child.type === "figure") {
-                        const { id, width, height, rotate, ...figureStyles } =
-                          child;
+                        const {
+                          id,
+                          width,
+                          height,
+                          rotate,
+                          backgroundColor,
+                          ...figureStyles
+                        } = child;
                         return (
                           <div
                             key={id}
@@ -547,6 +553,10 @@ const BannerArea: React.FC = () => {
                                 position: "relative",
                                 width: width ?? "100px",
                                 height: height ?? "100px",
+                                backgroundColor:
+                                  backgroundColor !== "none"
+                                    ? backgroundColor
+                                    : undefined,
                                 ...figureStyles,
                               }}
                             ></div>
