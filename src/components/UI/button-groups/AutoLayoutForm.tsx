@@ -1,5 +1,15 @@
 import { ButtonGroup, Button, Box } from "@mui/material";
-import { GroupLeft, GroupCenter, GroupRight } from "../../../assets/icons";
+import {
+  GroupLeft,
+  GroupCenter,
+  GroupRight,
+  GroupRowLeft,
+  GroupRowCenter,
+  GroupRowRight,
+  RowLeftBottom,
+  RowCenterBottom,
+  RowRightBottom,
+} from "../../../assets/icons";
 
 interface AutoLayoutFormProps {
   justifyContent: "start" | "center" | "end" | "space-between";
@@ -16,36 +26,129 @@ const rowAlignments = [
     alignItems: "flex-start",
   },
   { label: <GroupRight />, justifyContent: "end", alignItems: "flex-start" },
-  { label: <GroupLeft />, justifyContent: "start", alignItems: "center" },
-  { label: <GroupCenter />, justifyContent: "center", alignItems: "center" },
-  { label: <GroupRight />, justifyContent: "end", alignItems: "center" },
-  { label: <GroupLeft />, justifyContent: "start", alignItems: "flex-end" },
-  { label: <GroupCenter />, justifyContent: "center", alignItems: "flex-end" },
-  { label: <GroupRight />, justifyContent: "end", alignItems: "flex-end" },
+  { label: <GroupRowLeft />, justifyContent: "start", alignItems: "center" },
+  { label: <GroupRowCenter />, justifyContent: "center", alignItems: "center" },
+  { label: <GroupRowRight />, justifyContent: "end", alignItems: "center" },
+  { label: <RowLeftBottom />, justifyContent: "start", alignItems: "flex-end" },
+  {
+    label: <RowCenterBottom />,
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  { label: <RowRightBottom />, justifyContent: "end", alignItems: "flex-end" },
 ];
 
 const columnAlignments = [
   { label: <GroupLeft />, justifyContent: "start", alignItems: "flex-start" },
   { label: <GroupCenter />, justifyContent: "start", alignItems: "center" },
   { label: <GroupRight />, justifyContent: "start", alignItems: "flex-end" },
-  { label: <GroupLeft />, justifyContent: "center", alignItems: "flex-start" },
-  { label: <GroupCenter />, justifyContent: "center", alignItems: "center" },
-  { label: <GroupRight />, justifyContent: "center", alignItems: "flex-end" },
-  { label: <GroupLeft />, justifyContent: "end", alignItems: "flex-start" },
-  { label: <GroupCenter />, justifyContent: "end", alignItems: "center" },
-  { label: <GroupRight />, justifyContent: "end", alignItems: "flex-end" },
+  {
+    label: <GroupRowLeft />,
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  { label: <GroupRowCenter />, justifyContent: "center", alignItems: "center" },
+  {
+    label: <GroupRowRight />,
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  { label: <RowLeftBottom />, justifyContent: "end", alignItems: "flex-start" },
+  { label: <RowCenterBottom />, justifyContent: "end", alignItems: "center" },
+  { label: <RowRightBottom />, justifyContent: "end", alignItems: "flex-end" },
 ];
 
 const spaceBetweenRow = [
-  { label: "Top", justifyContent: "space-between", alignItems: "flex-start" },
-  { label: "Middle", justifyContent: "space-between", alignItems: "center" },
-  { label: "Bottom", justifyContent: "space-between", alignItems: "flex-end" },
+  {
+    label: (
+      <div style={{ display: "flex", alignItems: "center", gap: "26px" }}>
+        <GroupLeft />
+        <GroupCenter />
+        <GroupRight />
+      </div>
+    ),
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  {
+    label: (
+      <div style={{ display: "flex", alignItems: "center", gap: "25px" }}>
+        <GroupRowLeft />
+        <GroupRowCenter />
+        <GroupRowRight />
+      </div>
+    ),
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  {
+    label: (
+      <div style={{ display: "flex", alignItems: "center", gap: "25px" }}>
+        <RowLeftBottom />
+        <RowCenterBottom />
+        <RowRightBottom />
+      </div>
+    ),
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+  },
 ];
 
 const spaceBetweenColumn = [
-  { label: "Left", justifyContent: "space-between", alignItems: "flex-start" },
-  { label: "Center", justifyContent: "space-between", alignItems: "center" },
-  { label: "Right", justifyContent: "space-between", alignItems: "flex-end" },
+  {
+    label: (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "18px",
+        }}
+      >
+        <GroupLeft />
+        <GroupRowLeft />
+        <RowLeftBottom />
+      </div>
+    ),
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  {
+    label: (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "18px",
+        }}
+      >
+        <GroupCenter />
+        <GroupRowCenter />
+        <RowCenterBottom />
+      </div>
+    ),
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  {
+    label: (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "18px",
+        }}
+      >
+        <GroupRight />
+        <GroupRowRight />
+        <RowRightBottom />
+      </div>
+    ),
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+  },
 ];
 
 export const AutoLayoutForm: React.FC<AutoLayoutFormProps> = ({
@@ -78,13 +181,11 @@ export const AutoLayoutForm: React.FC<AutoLayoutFormProps> = ({
               <Button
                 key={index}
                 sx={{
-                  fontSize: 9,
-                  maxWidth: 90,
+                  maxWidth: 118,
                   // borderRadius: 0,
                   border: "2px solid #F1F1F1",
-                  padding: "4px 6px",
-                  color: "#000000",
-                  fontWeight: "400",
+                  padding: "7px 10px",
+                  minWidth: "39px",
                   // borderRadius: isActive(item) ? "14px" : "0px",
                   backgroundColor: isActive(item) ? "white" : "#F1F1F1",
                   "&:hover": {
