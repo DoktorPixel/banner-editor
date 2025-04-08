@@ -921,10 +921,10 @@ export const GroupLeft: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M1 1H11.6667" stroke="black" stroke-linecap="round" />
-      <path d="M1 3.66666H9.66667" stroke="black" stroke-linecap="round" />
-      <path d="M1 6.33334H11.6667" stroke="black" stroke-linecap="round" />
-      <path d="M1 9H4.66667" stroke="black" stroke-linecap="round" />
+      <path d="M1 1H11.6667" stroke="black" strokeLinecap="round" />
+      <path d="M1 3.66666H9.66667" stroke="black" strokeLinecap="round" />
+      <path d="M1 6.33334H11.6667" stroke="black" strokeLinecap="round" />
+      <path d="M1 9H4.66667" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -941,18 +941,14 @@ export const GroupCenter: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M0.666626 1H11.3333" stroke="black" stroke-linecap="round" />
-      <path
-        d="M2.66663 3.66666H9.33329"
-        stroke="black"
-        stroke-linecap="round"
-      />
+      <path d="M0.666626 1H11.3333" stroke="black" strokeLinecap="round" />
+      <path d="M2.66663 3.66666H9.33329" stroke="black" strokeLinecap="round" />
       <path
         d="M0.666626 6.33334H11.3333"
         stroke="black"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
-      <path d="M4 9H8" stroke="black" stroke-linecap="round" />
+      <path d="M4 9H8" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -969,10 +965,10 @@ export const GroupRight: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M1.33337 1H12" stroke="black" stroke-linecap="round" />
-      <path d="M3.33337 3.66666H12" stroke="black" stroke-linecap="round" />
-      <path d="M1.33337 6.33334H12" stroke="black" stroke-linecap="round" />
-      <path d="M8 9H12" stroke="black" stroke-linecap="round" />
+      <path d="M1.33337 1H12" stroke="black" strokeLinecap="round" />
+      <path d="M3.33337 3.66666H12" stroke="black" strokeLinecap="round" />
+      <path d="M1.33337 6.33334H12" stroke="black" strokeLinecap="round" />
+      <path d="M8 9H12" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -989,10 +985,10 @@ export const GroupRowRight: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M1 4H6.5H12" stroke="black" stroke-linecap="round" />
-      <path d="M7 1H9.5H12" stroke="black" stroke-linecap="round" />
-      <path d="M1 7H12" stroke="black" stroke-linecap="round" />
-      <path d="M7 10H12" stroke="black" stroke-linecap="round" />
+      <path d="M1 4H6.5H12" stroke="black" strokeLinecap="round" />
+      <path d="M7 1H9.5H12" stroke="black" strokeLinecap="round" />
+      <path d="M1 7H12" stroke="black" strokeLinecap="round" />
+      <path d="M7 10H12" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -1009,10 +1005,10 @@ export const GroupRowCenter: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M1 4H12" stroke="black" stroke-linecap="round" />
-      <path d="M4 1H6.5H9" stroke="black" stroke-linecap="round" />
-      <path d="M1 7H12" stroke="black" stroke-linecap="round" />
-      <path d="M4 10H9" stroke="black" stroke-linecap="round" />
+      <path d="M1 4H12" stroke="black" strokeLinecap="round" />
+      <path d="M4 1H6.5H9" stroke="black" strokeLinecap="round" />
+      <path d="M1 7H12" stroke="black" strokeLinecap="round" />
+      <path d="M4 10H9" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -1034,16 +1030,16 @@ export const GroupRowLeft: React.FC<SVGProps> = ({
           id="Vector"
           d="M1 4H6.5H12"
           stroke="black"
-          stroke-linecap="round"
+          strokeLinecap="round"
         />
         <path
           id="Vector_2"
           d="M1 1H3.5H6"
           stroke="black"
-          stroke-linecap="round"
+          strokeLinecap="round"
         />
-        <path id="Vector_3" d="M1 7H12" stroke="black" stroke-linecap="round" />
-        <path id="Vector_4" d="M1 10H6" stroke="black" stroke-linecap="round" />
+        <path id="Vector_3" d="M1 7H12" stroke="black" strokeLinecap="round" />
+        <path id="Vector_4" d="M1 10H6" stroke="black" strokeLinecap="round" />
       </g>
     </svg>
   );
@@ -1061,10 +1057,10 @@ export const RowLeftBottom: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M12 9H1.33333" stroke="black" stroke-linecap="round" />
-      <path d="M10 6.33334H1.33333" stroke="black" stroke-linecap="round" />
-      <path d="M12 3.66666H1.33333" stroke="black" stroke-linecap="round" />
-      <path d="M5.33337 1H1.33337" stroke="black" stroke-linecap="round" />
+      <path d="M12 9H1.33333" stroke="black" strokeLinecap="round" />
+      <path d="M10 6.33334H1.33333" stroke="black" strokeLinecap="round" />
+      <path d="M12 3.66666H1.33333" stroke="black" strokeLinecap="round" />
+      <path d="M5.33337 1H1.33337" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -1081,22 +1077,17 @@ export const RowCenterBottom: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M11.6666 9H0.999959" stroke="black" stroke-linecap="round" />
-      <path
-        d="M9.66663 6.33334H2.99996"
-        stroke="black"
-        stroke-linecap="round"
-      />
+      <path d="M11.6666 9H0.999959" stroke="black" strokeLinecap="round" />
+      <path d="M9.66663 6.33334H2.99996" stroke="black" strokeLinecap="round" />
       <path
         d="M11.6666 3.66666H0.999959"
         stroke="black"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
-      <path d="M8.33325 1H4.33325" stroke="black" stroke-linecap="round" />
+      <path d="M8.33325 1H4.33325" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
-
 export const RowRightBottom: React.FC<SVGProps> = ({
   width = "14px",
   height = "11px",
@@ -1109,18 +1100,14 @@ export const RowRightBottom: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M11.6666 9H0.999959" stroke="black" stroke-linecap="round" />
-      <path
-        d="M11.6666 6.33334H2.99996"
-        stroke="black"
-        stroke-linecap="round"
-      />
+      <path d="M11.6666 9H0.999959" stroke="black" strokeLinecap="round" />
+      <path d="M11.6666 6.33334H2.99996" stroke="black" strokeLinecap="round" />
       <path
         d="M11.6666 3.66666H0.999959"
         stroke="black"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
-      <path d="M11.6666 1H7.99996" stroke="black" stroke-linecap="round" />
+      <path d="M11.6666 1H7.99996" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };

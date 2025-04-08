@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useBanner } from "../context/BannerContext";
-import { Box, TextField, Button, Typography, IconButton } from "@mui/material";
+import { Box, TextField, Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { BannerObject, BannerChild } from "../types";
 
@@ -105,9 +105,6 @@ const InsertingProps: React.FC = () => {
 
   return (
     <Box className="inserting-props">
-      <Typography variant="h5" gutterBottom>
-        Замінити динамічні значення:
-      </Typography>
       <div className="key-value-wrapper">
         {keyValuePairs.map((pair, index) => (
           <div className="key-value-pair" key={index}>

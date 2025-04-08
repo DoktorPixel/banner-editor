@@ -260,6 +260,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             </div>
           </div>
         </div>
+
         <InputLabel sx={{ mt: 1, mb: "2px", fontSize: "12px" }}>
           Alignment
         </InputLabel>
