@@ -32,3 +32,50 @@
 .layers-list-item {
   margin-left: 10px;
 }
+
+.inserting-props {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+//
+.variables-panel {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.table-header,
+.table-row {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border-bottom: 1px solid #e0e0e0;
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+}
+
+.table-header {
+  border-top: 1px solid #e0e0e0;
+  font-weight: 700;
+  .table-cell {
+    padding-left: 10px;
+  }
+}
+
+.table-cell {
+  flex: 1;
+  padding: 0;
+  border-right: 1px solid #e0e0e0;
+}
+.table-cell.table-actions {
+  border-right: none;
+}
+
+.table-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 40px;
+}

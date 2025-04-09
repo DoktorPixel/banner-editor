@@ -9,6 +9,7 @@ import { BannerObject } from "../types";
 import { useChildProperties } from "../utils/hooks";
 import { useObjectProperties } from "../utils/hooks";
 import { useSelectionBounds } from "../utils/hooks";
+import { replaceDynamicVariables } from "../utils/hooks";
 
 const BannerArea: React.FC = () => {
   const {
@@ -45,6 +46,9 @@ const BannerArea: React.FC = () => {
   const bannerRef = useRef<HTMLDivElement>(null);
 
   //
+  const rawPairs = sessionStorage.getItem("keyValuePairs");
+  const keyValuePairs = rawPairs ? JSON.parse(rawPairs) : [];
+
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
@@ -483,7 +487,10 @@ const BannerArea: React.FC = () => {
                               )
                             }
                           >
-                            {child.content}
+                            {replaceDynamicVariables(
+                              child.content ?? "",
+                              keyValuePairs
+                            )}
                           </div>
                         );
                       } else if (child.type === "image") {
@@ -492,7 +499,10 @@ const BannerArea: React.FC = () => {
                             id={`${child.id}`}
                             data-condition={JSON.stringify(child.condition)}
                             key={child.id}
-                            src={child.src}
+                            src={replaceDynamicVariables(
+                              child.src ?? "",
+                              keyValuePairs
+                            )}
                             alt={child.name || "image"}
                             style={{
                               width: child.width,
@@ -624,7 +634,10 @@ const BannerArea: React.FC = () => {
                                       key={nestedId}
                                       id={`${nestedId}`}
                                       data-condition={JSON.stringify(condition)}
-                                      src={src}
+                                      src={replaceDynamicVariables(
+                                        src ?? "",
+                                        keyValuePairs
+                                      )}
                                       alt={"image"}
                                       style={{
                                         ...nestedStyles,
@@ -789,14 +802,20 @@ const BannerArea: React.FC = () => {
                       // whiteSpace: "pre-wrap",
                     }}
                   >
-                    {object.content}
+                    {replaceDynamicVariables(
+                      object.content ?? "",
+                      keyValuePairs
+                    )}
                   </div>
                 ) : object.type === "image" ? (
                   <img
                     id={`${object.id}`}
                     data-condition={JSON.stringify(object.condition)}
                     className="image-field"
-                    src={object.src}
+                    src={replaceDynamicVariables(
+                      object.src ?? "",
+                      keyValuePairs
+                    )}
                     alt="img"
                     style={{
                       width: "100%",
