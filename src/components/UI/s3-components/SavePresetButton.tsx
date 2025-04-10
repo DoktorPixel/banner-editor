@@ -11,7 +11,7 @@ const SavePresetButton: React.FC = () => {
 
   const handleSavePreset = async () => {
     if (selectedObjectIds.length < 2) {
-      console.warn("Виберіть як мінімум 2 об'єкти для створення пресета");
+      console.warn("Select at least 2 objects to create a preset");
       return;
     }
 
@@ -20,7 +20,7 @@ const SavePresetButton: React.FC = () => {
     );
 
     if (!presetObjects.length) {
-      console.warn("Не знайдено об'єктів для збереження в пресет");
+      console.warn("No objects found to save to preset");
       return;
     }
     setIsLoading(true);
@@ -32,10 +32,10 @@ const SavePresetButton: React.FC = () => {
     };
     try {
       await uploadPresetToS3(preset);
-      setNotification("Дані успішно завантажені в S3");
+      setNotification("Data successfully uploaded to the server");
     } catch (error) {
-      console.error("Помилка завантаження в S3:", error);
-      setNotification("Помилка при завантажені в S3");
+      console.error("Server upload error", error);
+      setNotification("Error while uploading to the server");
     } finally {
       setTimeout(() => setNotification(null), 2000);
       setIsLoading(false);
@@ -51,7 +51,7 @@ const SavePresetButton: React.FC = () => {
         disabled={selectedObjectIds.length < 2 || isLoading}
         startIcon={isLoading && <CircularProgress size={20} />}
       >
-        {isLoading ? "Загрузка..." : "Зберігти як пресет"}
+        {isLoading ? "Loading..." : "Save as preset"}
       </Button>
       {notification && (
         <Typography

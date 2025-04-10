@@ -7,6 +7,7 @@ import {
   TextField,
   Grid,
   IconButton,
+  InputLabel,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -47,7 +48,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
         const projectData = await downloadFromS3(`projects/${projectId}.json`);
         setDynamicImgs?.(projectData?.dynamicImgs || []);
       } catch (error) {
-        console.error("Ошибка при загрузке изображений из S3:", error);
+        console.error("Error uploading images to server:", error);
       } finally {
         setLoading(false);
       }
@@ -66,7 +67,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
       addDynamicImg?.(newDynamicImg);
       setNewDynamicImg({ name: "", logoUrl: "" });
     } catch (error) {
-      console.error("Ошибка при добавлении изображения:", error);
+      console.error("Error adding image:", error);
     }
   };
 
@@ -81,7 +82,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
       await updateDynamicImgsInProject(projectId, updatedDynamicImgs);
       setDynamicImgs?.(updatedDynamicImgs);
     } catch (error) {
-      console.error("Ошибка при удалении изображения:", error);
+      console.error("Error deleting image:", error);
     }
   };
 
@@ -103,7 +104,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
         };
         reader.readAsDataURL(compressedFile);
       } catch (error) {
-        console.error("Помилка при стисканні зображення:", error);
+        console.error("Correction when squeezing an image:", error);
       }
     } else {
       setNewDynamicImg((prev) => ({ ...prev, logoUrl: "" }));
@@ -128,10 +129,10 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
         }}
       >
         <Typography variant="h6" gutterBottom>
-          Управління зображеннями
+          Image management
         </Typography>
         {loading ? (
-          <Typography>Загрузка...</Typography>
+          <Typography>Loading...</Typography>
         ) : (
           <>
             <Box>
@@ -170,9 +171,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
               </Grid>
             </Box>
             <Box sx={{ mt: 4 }}>
-              <Typography variant="subtitle1">
-                Додати нове зображення
-              </Typography>
+              <Typography variant="subtitle1">Add new image</Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -181,41 +180,49 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
                   mt: 2,
                 }}
               >
-                <TextField
-                  label="Назва зображення"
-                  value={newDynamicImg.name}
-                  onChange={(e) =>
-                    setNewDynamicImg((prev) => ({
-                      ...prev,
-                      name: e.target.value,
-                    }))
-                  }
-                  fullWidth
-                />
-                <TextField
-                  label="URL логотипу"
-                  value={newDynamicImg.logoUrl}
-                  onChange={(e) =>
-                    setNewDynamicImg((prev) => ({
-                      ...prev,
-                      logoUrl: e.target.value,
-                    }))
-                  }
-                  fullWidth
-                />
-                <DragAndDropFileInput2
-                  value={null}
-                  onChange={handleFileChange}
-                  accept="image/*"
-                />
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <InputLabel sx={{ fontSize: "12px" }}>Image name</InputLabel>
+                  <TextField
+                    value={newDynamicImg.name}
+                    onChange={(e) =>
+                      setNewDynamicImg((prev) => ({
+                        ...prev,
+                        name: e.target.value,
+                      }))
+                    }
+                    fullWidth
+                  />
+                </div>
 
-                <IconButton
-                  color="primary"
-                  onClick={handleAddDynamicImg}
-                  disabled={!newDynamicImg.name || !newDynamicImg.logoUrl}
-                >
-                  <AddCircleIcon />
-                </IconButton>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <InputLabel sx={{ fontSize: "12px" }}>URL</InputLabel>
+                  <TextField
+                    value={newDynamicImg.logoUrl}
+                    onChange={(e) =>
+                      setNewDynamicImg((prev) => ({
+                        ...prev,
+                        logoUrl: e.target.value,
+                      }))
+                    }
+                    fullWidth
+                  />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <DragAndDropFileInput2
+                    value={null}
+                    onChange={handleFileChange}
+                    accept="image/*"
+                  />
+
+                  <IconButton
+                    color="primary"
+                    onClick={handleAddDynamicImg}
+                    disabled={!newDynamicImg.name || !newDynamicImg.logoUrl}
+                  >
+                    <AddCircleIcon />
+                  </IconButton>
+                </div>
               </Box>
             </Box>
             <Box
@@ -227,7 +234,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
               }}
             >
               <Button variant="outlined" onClick={onClose}>
-                Закрити
+                Close
               </Button>
             </Box>
           </>

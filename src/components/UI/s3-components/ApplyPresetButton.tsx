@@ -60,11 +60,11 @@ const ApplyPresetButton: React.FC = () => {
   return (
     <>
       <Button variant="contained" color="primary" onClick={handleOpen}>
-        Додати пресет
+        Add preset
       </Button>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Виберіть пресет</DialogTitle>
+        <DialogTitle>Select a preset</DialogTitle>
         <DialogContent>
           {loading ? (
             <CircularProgress />
@@ -89,7 +89,7 @@ const ApplyPresetButton: React.FC = () => {
                   </ListItem>
                 ))
               ) : (
-                <p>Немає доступних пресетів</p>
+                <p>No presets available</p>
               )}
             </List>
           )}
