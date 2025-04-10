@@ -191,11 +191,24 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
             fullWidth
             margin="normal"
           />
-          <TextField
+          {/* <TextField
             label="z-Index"
             type="number"
             value={object.zIndex || 0}
             onChange={(e) => onChange("zIndex", parseInt(e.target.value, 10))}
+            fullWidth
+            margin="normal"
+          /> */}
+          <TextField
+            label="Opacity"
+            type="number"
+            inputProps={{
+              step: 0.1,
+              min: 0,
+              max: 1,
+            }}
+            value={object.opacity || 1}
+            onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
             fullWidth
             margin="normal"
           />

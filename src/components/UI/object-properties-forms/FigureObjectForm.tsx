@@ -242,6 +242,50 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
       <div className="grey-line"></div>
 
       <div className="padding-wrapper">
+        <Typography variant="subtitle2" sx={{ mb: "10px" }}>
+          Appearance
+        </Typography>
+
+        <div className="auto-size">
+          <TextField
+            label="Opacity"
+            type="number"
+            inputProps={{
+              step: 0.1,
+              min: 0,
+              max: 1,
+            }}
+            value={object.opacity || 1}
+            onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            label="Border radius"
+            type="number"
+            value={object.borderRadius || 0}
+            onChange={(e) => {
+              const value = parseInt(e.target.value, 10);
+              onChange("borderRadius", value >= 0 ? value : 0);
+            }}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+        <div className="auto-size" style={{ width: "calc(50% - 5px)" }}>
+          <TextField
+            label="Rotate"
+            type="number"
+            value={object.rotate || 0}
+            onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      </div>
+
+      <div className="padding-wrapper">
         <Box>
           {object.backgroundColor && object.backgroundColor !== "none" ? (
             <div>
@@ -293,42 +337,6 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
           )}
         </Box>
       </div>
-      <div className="grey-line"></div>
-
-      <div className="padding-wrapper">
-        <Typography variant="subtitle2" sx={{ mb: "10px" }}>
-          Appearance
-        </Typography>
-
-        <div className="auto-size">
-          <TextField
-            label="Opacity"
-            type="number"
-            inputProps={{
-              step: 0.1,
-              min: 0,
-              max: 1,
-            }}
-            value={object.opacity || 1}
-            onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
-            fullWidth
-            margin="normal"
-          />
-
-          <TextField
-            label="Border radius"
-            type="number"
-            value={object.borderRadius || 0}
-            onChange={(e) => {
-              const value = parseInt(e.target.value, 10);
-              onChange("borderRadius", value >= 0 ? value : 0);
-            }}
-            fullWidth
-            margin="normal"
-          />
-        </div>
-      </div>
-
       <div className="grey-line"></div>
 
       <div className="padding-wrapper">
@@ -442,28 +450,6 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
             </Box>
           </Box>
         )}
-      </div>
-
-      <div className="grey-line"></div>
-      <div className="padding-wrapper" style={{ marginTop: "10px" }}>
-        <div className="auto-size">
-          <TextField
-            label="Rotate"
-            type="number"
-            value={object.rotate || 0}
-            onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="z-Index"
-            type="number"
-            value={object.zIndex || 0}
-            onChange={(e) => onChange("zIndex", parseInt(e.target.value, 10))}
-            fullWidth
-            margin="normal"
-          />
-        </div>
       </div>
     </Box>
   );

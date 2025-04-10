@@ -471,6 +471,7 @@ const BannerArea: React.FC = () => {
                               fontStyle: child.fontStyle,
                               textDecoration: child.textDecoration,
                               textAlign: child.textAlign,
+                              opacity: child.opacity,
                               border:
                                 selectedChildId?.groupId === object.id &&
                                 selectedChildId.childId === child.id
@@ -509,6 +510,7 @@ const BannerArea: React.FC = () => {
                               height: child.height,
                               objectFit: child.objectFit,
                               transform: `rotate(${child.rotate || 0}deg)`,
+                              opacity: child.opacity,
                             }}
                             onDoubleClick={(e) =>
                               handleChildClick(
@@ -792,6 +794,7 @@ const BannerArea: React.FC = () => {
                       fontWeight: object.fontWeight,
                       fontStyle: object.fontStyle,
                       // textTransform: object.textTransform,
+                      opacity: object.opacity,
                       textDecoration: object.textDecoration,
                       textAlign: object.textAlign,
                       display: object.maxLines ? "-webkit-box" : "block",
@@ -821,6 +824,7 @@ const BannerArea: React.FC = () => {
                       width: "100%",
                       height: "100%",
                       objectFit: object.objectFit,
+                      opacity: object.opacity,
                     }}
                   />
                 ) : object.type === "figure" ? (

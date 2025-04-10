@@ -260,6 +260,10 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
 
       <div className="grey-line"></div>
       <div className="padding-wrapper" style={{ marginTop: "20px" }}>
+        <Typography variant="subtitle2" sx={{ mb: "10px" }}>
+          Appearance
+        </Typography>
+
         <div className="auto-size">
           <TextField
             label="Rotate"
@@ -270,10 +274,15 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
             margin="normal"
           />
           <TextField
-            label="z-Index"
+            label="Opacity"
             type="number"
-            value={object.zIndex || 0}
-            onChange={(e) => onChange("zIndex", parseInt(e.target.value, 10))}
+            inputProps={{
+              step: 0.1,
+              min: 0,
+              max: 1,
+            }}
+            value={object.opacity || 1}
+            onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
             fullWidth
             margin="normal"
           />
