@@ -921,10 +921,10 @@ export const GroupLeft: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M1 1H11.6667" stroke="black" stroke-linecap="round" />
-      <path d="M1 3.66666H9.66667" stroke="black" stroke-linecap="round" />
-      <path d="M1 6.33334H11.6667" stroke="black" stroke-linecap="round" />
-      <path d="M1 9H4.66667" stroke="black" stroke-linecap="round" />
+      <path d="M1 1H11.6667" stroke="black" strokeLinecap="round" />
+      <path d="M1 3.66666H9.66667" stroke="black" strokeLinecap="round" />
+      <path d="M1 6.33334H11.6667" stroke="black" strokeLinecap="round" />
+      <path d="M1 9H4.66667" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -941,18 +941,14 @@ export const GroupCenter: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M0.666626 1H11.3333" stroke="black" stroke-linecap="round" />
-      <path
-        d="M2.66663 3.66666H9.33329"
-        stroke="black"
-        stroke-linecap="round"
-      />
+      <path d="M0.666626 1H11.3333" stroke="black" strokeLinecap="round" />
+      <path d="M2.66663 3.66666H9.33329" stroke="black" strokeLinecap="round" />
       <path
         d="M0.666626 6.33334H11.3333"
         stroke="black"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
-      <path d="M4 9H8" stroke="black" stroke-linecap="round" />
+      <path d="M4 9H8" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -969,10 +965,10 @@ export const GroupRight: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M1.33337 1H12" stroke="black" stroke-linecap="round" />
-      <path d="M3.33337 3.66666H12" stroke="black" stroke-linecap="round" />
-      <path d="M1.33337 6.33334H12" stroke="black" stroke-linecap="round" />
-      <path d="M8 9H12" stroke="black" stroke-linecap="round" />
+      <path d="M1.33337 1H12" stroke="black" strokeLinecap="round" />
+      <path d="M3.33337 3.66666H12" stroke="black" strokeLinecap="round" />
+      <path d="M1.33337 6.33334H12" stroke="black" strokeLinecap="round" />
+      <path d="M8 9H12" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -989,10 +985,10 @@ export const GroupRowRight: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M1 4H6.5H12" stroke="black" stroke-linecap="round" />
-      <path d="M7 1H9.5H12" stroke="black" stroke-linecap="round" />
-      <path d="M1 7H12" stroke="black" stroke-linecap="round" />
-      <path d="M7 10H12" stroke="black" stroke-linecap="round" />
+      <path d="M1 4H6.5H12" stroke="black" strokeLinecap="round" />
+      <path d="M7 1H9.5H12" stroke="black" strokeLinecap="round" />
+      <path d="M1 7H12" stroke="black" strokeLinecap="round" />
+      <path d="M7 10H12" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -1009,10 +1005,10 @@ export const GroupRowCenter: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M1 4H12" stroke="black" stroke-linecap="round" />
-      <path d="M4 1H6.5H9" stroke="black" stroke-linecap="round" />
-      <path d="M1 7H12" stroke="black" stroke-linecap="round" />
-      <path d="M4 10H9" stroke="black" stroke-linecap="round" />
+      <path d="M1 4H12" stroke="black" strokeLinecap="round" />
+      <path d="M4 1H6.5H9" stroke="black" strokeLinecap="round" />
+      <path d="M1 7H12" stroke="black" strokeLinecap="round" />
+      <path d="M4 10H9" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -1034,16 +1030,16 @@ export const GroupRowLeft: React.FC<SVGProps> = ({
           id="Vector"
           d="M1 4H6.5H12"
           stroke="black"
-          stroke-linecap="round"
+          strokeLinecap="round"
         />
         <path
           id="Vector_2"
           d="M1 1H3.5H6"
           stroke="black"
-          stroke-linecap="round"
+          strokeLinecap="round"
         />
-        <path id="Vector_3" d="M1 7H12" stroke="black" stroke-linecap="round" />
-        <path id="Vector_4" d="M1 10H6" stroke="black" stroke-linecap="round" />
+        <path id="Vector_3" d="M1 7H12" stroke="black" strokeLinecap="round" />
+        <path id="Vector_4" d="M1 10H6" stroke="black" strokeLinecap="round" />
       </g>
     </svg>
   );
@@ -1061,10 +1057,10 @@ export const RowLeftBottom: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M12 9H1.33333" stroke="black" stroke-linecap="round" />
-      <path d="M10 6.33334H1.33333" stroke="black" stroke-linecap="round" />
-      <path d="M12 3.66666H1.33333" stroke="black" stroke-linecap="round" />
-      <path d="M5.33337 1H1.33337" stroke="black" stroke-linecap="round" />
+      <path d="M12 9H1.33333" stroke="black" strokeLinecap="round" />
+      <path d="M10 6.33334H1.33333" stroke="black" strokeLinecap="round" />
+      <path d="M12 3.66666H1.33333" stroke="black" strokeLinecap="round" />
+      <path d="M5.33337 1H1.33337" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
@@ -1081,22 +1077,17 @@ export const RowCenterBottom: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M11.6666 9H0.999959" stroke="black" stroke-linecap="round" />
-      <path
-        d="M9.66663 6.33334H2.99996"
-        stroke="black"
-        stroke-linecap="round"
-      />
+      <path d="M11.6666 9H0.999959" stroke="black" strokeLinecap="round" />
+      <path d="M9.66663 6.33334H2.99996" stroke="black" strokeLinecap="round" />
       <path
         d="M11.6666 3.66666H0.999959"
         stroke="black"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
-      <path d="M8.33325 1H4.33325" stroke="black" stroke-linecap="round" />
+      <path d="M8.33325 1H4.33325" stroke="black" strokeLinecap="round" />
     </svg>
   );
 };
-
 export const RowRightBottom: React.FC<SVGProps> = ({
   width = "14px",
   height = "11px",
@@ -1109,18 +1100,155 @@ export const RowRightBottom: React.FC<SVGProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M11.6666 9H0.999959" stroke="black" stroke-linecap="round" />
-      <path
-        d="M11.6666 6.33334H2.99996"
-        stroke="black"
-        stroke-linecap="round"
-      />
+      <path d="M11.6666 9H0.999959" stroke="black" strokeLinecap="round" />
+      <path d="M11.6666 6.33334H2.99996" stroke="black" strokeLinecap="round" />
       <path
         d="M11.6666 3.66666H0.999959"
         stroke="black"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
-      <path d="M11.6666 1H7.99996" stroke="black" stroke-linecap="round" />
+      <path d="M11.6666 1H7.99996" stroke="black" strokeLinecap="round" />
+    </svg>
+  );
+};
+
+export const AddButton: React.FC<SVGProps> = ({
+  width = "20px",
+  height = "20px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M20 0H0V20H20V0Z" fill="white" />
+      <path
+        d="M10 5V15"
+        stroke="black"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M5 10H15"
+        stroke="black"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const ThreeDots: React.FC<SVGProps> = ({
+  width = "30px",
+  height = "4px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 30 4"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M11.1111 2C11.1111 2.85913 10.4147 3.55555 9.55556 3.55555C8.69645 3.55555 8 2.85913 8 2C8 1.14087 8.69645 0.444443 9.55556 0.444443C10.4147 0.444443 11.1111 1.14087 11.1111 2Z"
+        fill="#1C274C"
+      />
+      <path
+        d="M16.5556 2C16.5556 2.85913 15.8591 3.55555 15 3.55555C14.1409 3.55555 13.4445 2.85913 13.4445 2C13.4445 1.14087 14.1409 0.444443 15 0.444443C15.8591 0.444443 16.5556 1.14087 16.5556 2Z"
+        fill="#1C274C"
+      />
+      <path
+        d="M22 2C22 2.85913 21.3036 3.55555 20.4445 3.55555C19.5853 3.55555 18.8889 2.85913 18.8889 2C18.8889 1.14087 19.5853 0.444443 20.4445 0.444443C21.3036 0.444443 22 1.14087 22 2Z"
+        fill="#1C274C"
+      />
+    </svg>
+  );
+};
+
+export const BigArrowRight: React.FC<SVGProps> = ({
+  width = "30px",
+  height = "30px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g
+        id="页面-1"
+        stroke="none"
+        stroke-width="1"
+        fill="none"
+        fill-rule="evenodd"
+      >
+        <g
+          id="Arrow"
+          transform="translate(-146.000000, -48.000000)"
+          fill-rule="nonzero"
+        >
+          <g id="arrow_right_fill" transform="translate(146.000000, 48.000000)">
+            <path
+              d="M24,0 L24,24 L0,24 L0,0 L24,0 Z M12.5934901,23.257841 L12.5819402,23.2595131 L12.5108777,23.2950439 L12.4918791,23.2987469 L12.4918791,23.2987469 L12.4767152,23.2950439 L12.4056548,23.2595131 C12.3958229,23.2563662 12.3870493,23.2590235 12.3821421,23.2649074 L12.3780323,23.275831 L12.360941,23.7031097 L12.3658947,23.7234994 L12.3769048,23.7357139 L12.4804777,23.8096931 L12.4953491,23.8136134 L12.4953491,23.8136134 L12.5071152,23.8096931 L12.6106902,23.7357139 L12.6232938,23.7196733 L12.6232938,23.7196733 L12.6266527,23.7031097 L12.609561,23.275831 C12.6075724,23.2657013 12.6010112,23.2592993 12.5934901,23.257841 L12.5934901,23.257841 Z M12.8583906,23.1452862 L12.8445485,23.1473072 L12.6598443,23.2396597 L12.6498822,23.2499052 L12.6498822,23.2499052 L12.6471943,23.2611114 L12.6650943,23.6906389 L12.6699349,23.7034178 L12.6699349,23.7034178 L12.678386,23.7104931 L12.8793402,23.8032389 C12.8914285,23.8068999 12.9022333,23.8029875 12.9078286,23.7952264 L12.9118235,23.7811639 L12.8776777,23.1665331 C12.8752882,23.1545897 12.8674102,23.1470016 12.8583906,23.1452862 L12.8583906,23.1452862 Z M12.1430473,23.1473072 C12.1332178,23.1423925 12.1221763,23.1452606 12.1156365,23.1525954 L12.1099173,23.1665331 L12.0757714,23.7811639 C12.0751323,23.7926639 12.0828099,23.8018602 12.0926481,23.8045676 L12.108256,23.8032389 L12.3092106,23.7104931 L12.3186497,23.7024347 L12.3186497,23.7024347 L12.3225043,23.6906389 L12.340401,23.2611114 L12.337245,23.2485176 L12.337245,23.2485176 L12.3277531,23.2396597 L12.1430473,23.1473072 Z"
+              id="MingCute"
+              fill-rule="nonzero"
+            ></path>
+            <path
+              d="M15.0606,5.2826 L20.7174,10.9395 C21.3032,11.5252 21.3032,12.475 20.7174,13.0608 L15.0606,18.7176 C14.4748,19.3034 13.525,19.3034 12.9392,18.7176 C12.3535,18.1318 12.3535,17.1821 12.9392,16.5963 L16.0354,13.5001 L4.5,13.5001 C3.67157,13.5001 3,12.8285 3,12.0001 C3,11.1717 3.67157,10.5001 4.5,10.5001 L16.0354,10.5001 L12.9392,7.40392 C12.3535,6.81814 12.3535,5.86839 12.9392,5.2826 C13.525,4.69682 14.4748,4.69682 15.0606,5.2826 Z"
+              id="路径"
+              fill="currentColor"
+            ></path>
+          </g>
+        </g>
+      </g>
+    </svg>
+  );
+};
+
+export const BigArrowLeft: React.FC<SVGProps> = ({
+  width = "30px",
+  height = "30px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g
+        id="页面-1"
+        stroke="none"
+        stroke-width="1"
+        fill="none"
+        fill-rule="evenodd"
+      >
+        <g
+          id="Arrow"
+          transform="translate(-98.000000, -48.000000)"
+          fill-rule="nonzero"
+        >
+          <g id="arrow_left_fill" transform="translate(98.000000, 48.000000)">
+            <path
+              d="M24,0 L24,24 L0,24 L0,0 L24,0 Z M12.5934901,23.257841 L12.5819402,23.2595131 L12.5108777,23.2950439 L12.4918791,23.2987469 L12.4918791,23.2987469 L12.4767152,23.2950439 L12.4056548,23.2595131 C12.3958229,23.2563662 12.3870493,23.2590235 12.3821421,23.2649074 L12.3780323,23.275831 L12.360941,23.7031097 L12.3658947,23.7234994 L12.3769048,23.7357139 L12.4804777,23.8096931 L12.4953491,23.8136134 L12.4953491,23.8136134 L12.5071152,23.8096931 L12.6106902,23.7357139 L12.6232938,23.7196733 L12.6232938,23.7196733 L12.6266527,23.7031097 L12.609561,23.275831 C12.6075724,23.2657013 12.6010112,23.2592993 12.5934901,23.257841 L12.5934901,23.257841 Z M12.8583906,23.1452862 L12.8445485,23.1473072 L12.6598443,23.2396597 L12.6498822,23.2499052 L12.6498822,23.2499052 L12.6471943,23.2611114 L12.6650943,23.6906389 L12.6699349,23.7034178 L12.6699349,23.7034178 L12.678386,23.7104931 L12.8793402,23.8032389 C12.8914285,23.8068999 12.9022333,23.8029875 12.9078286,23.7952264 L12.9118235,23.7811639 L12.8776777,23.1665331 C12.8752882,23.1545897 12.8674102,23.1470016 12.8583906,23.1452862 L12.8583906,23.1452862 Z M12.1430473,23.1473072 C12.1332178,23.1423925 12.1221763,23.1452606 12.1156365,23.1525954 L12.1099173,23.1665331 L12.0757714,23.7811639 C12.0751323,23.7926639 12.0828099,23.8018602 12.0926481,23.8045676 L12.108256,23.8032389 L12.3092106,23.7104931 L12.3186497,23.7024347 L12.3186497,23.7024347 L12.3225043,23.6906389 L12.340401,23.2611114 L12.337245,23.2485176 L12.337245,23.2485176 L12.3277531,23.2396597 L12.1430473,23.1473072 Z"
+              id="MingCute"
+              fill-rule="nonzero"
+            ></path>
+            <path
+              d="M3.2826,10.9395 C2.69682,11.5252 2.69682,12.475 3.2826,13.0608 L8.93946,18.7176 C9.52524,19.3034 10.475,19.3034 11.0608,18.7176 C11.6466,18.1318 11.6466,17.1821 11.0608,16.5963 L7.96458,13.5001 L19.5,13.5001 C20.3284,13.5001 21,12.8285 21,12.0001 C21,11.1717 20.3284,10.5001 19.5,10.5001 L7.96458,10.5001 L11.0608,7.40392 C11.6466,6.81814 11.6466,5.86839 11.0608,5.2826 C10.475,4.69682 9.52524,4.69682 8.93946,5.2826 L3.2826,10.9395 Z"
+              id="路径"
+              fill="currentColor"
+            ></path>
+          </g>
+        </g>
+      </g>
     </svg>
   );
 };

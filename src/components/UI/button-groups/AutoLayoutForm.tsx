@@ -124,7 +124,9 @@ const spaceBetweenColumn = [
         }}
       >
         <GroupCenter />
+
         <GroupRowCenter />
+
         <RowCenterBottom />
       </div>
     ),

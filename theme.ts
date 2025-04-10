@@ -72,7 +72,8 @@ const theme = createTheme({
           border: "none",
         },
         input: {
-          padding: "6px ",
+          padding: "0px ",
+          // padding: "6px ",
         },
       },
     },

@@ -177,12 +177,29 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
       </div>
       <div className="grey-line"></div>
       <div className="padding-wrapper" style={{ marginTop: "10px" }}>
+        <Typography variant="subtitle2" sx={{ mb: "10px" }}>
+          Appearance
+        </Typography>
+
         <div className="auto-size">
           <TextField
             label="Rotate"
             type="number"
             value={object.rotate || 0}
             onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Opacity"
+            type="number"
+            inputProps={{
+              step: 0.1,
+              min: 0,
+              max: 1,
+            }}
+            value={object.opacity || 1}
+            onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
             fullWidth
             margin="normal"
           />

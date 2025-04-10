@@ -30,6 +30,7 @@ import SavePresetButton from "./UI/s3-components/SavePresetButton";
 import ApplyPresetButton from "./UI/s3-components/ApplyPresetButton";
 import UploadToS3Button from "./UI/s3-components/UploadToS3";
 import SidebarTabs from "./UI/sidebar-components/SidebarTabs";
+import { BigArrowRight, BigArrowLeft } from "../assets/icons";
 
 const Sidebar: React.FC = () => {
   const {
@@ -189,12 +190,54 @@ const Sidebar: React.FC = () => {
   return (
     <Stack spacing={2} className="sidebar">
       <div className="sidebar-wrapper">
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Typography sx={{ lineHeight: "1" }}>FeedMaker</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+            <Typography sx={{ lineHeight: "1" }}>FeedMaker</Typography>
+            <IconButton size="small" edge="start" onClick={handleToggle}>
+              {open ? <ExpandLess /> : <ExpandMore />}
+            </IconButton>
+          </div>
 
-          <IconButton size="small" edge="start" onClick={handleToggle}>
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </IconButton>
+          <div>
+            <IconButton
+              size="small"
+              // edge="start"
+              onClick={undo}
+              disabled={!canUndo}
+            >
+              <BigArrowLeft />
+            </IconButton>
+            <IconButton
+              size="small"
+              // edge="start"
+              onClick={redo}
+              disabled={!canRedo}
+            >
+              <BigArrowRight />
+            </IconButton>
+            {/* <Button
+              variant="outlined"
+              color="primary"
+              onClick={undo}
+              disabled={!canUndo}
+            >
+              Назад
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={redo}
+              disabled={!canRedo}
+            >
+              Вперед
+            </Button> */}
+          </div>
         </Box>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <UploadToS3Button />
@@ -308,22 +351,6 @@ const Sidebar: React.FC = () => {
           margin: "16px 10px 6px 6px",
         }}
       >
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={undo}
-          disabled={!canUndo}
-        >
-          Назад
-        </Button>
-        <Button
-          variant="outlined"
-          color="secondary"
-          onClick={redo}
-          disabled={!canRedo}
-        >
-          Вперед
-        </Button>
         <Button
           variant="contained"
           color="error"

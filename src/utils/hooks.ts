@@ -257,3 +257,17 @@ export const useSelectionBounds = (
     };
   }, [selectedObjectIds, objects]);
 };
+
+export const replaceDynamicVariables = (
+  content: string,
+  keyValuePairs: { key: string; value: string }[]
+): string => {
+  let result = content;
+
+  keyValuePairs.forEach(({ key, value }) => {
+    const dynamicKey = `{{${key}}}`;
+    result = result.replaceAll(dynamicKey, value);
+  });
+
+  return result;
+};

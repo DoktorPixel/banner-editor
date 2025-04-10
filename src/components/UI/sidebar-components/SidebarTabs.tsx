@@ -69,7 +69,7 @@ const SidebarTabs: React.FC = () => {
       </Box>
 
       {/* Content Panel */}
-      <Box sx={{ flex: 1, margin: "0 10px" }}>
+      <Box sx={{ flex: 1, margin: "0 10px 10px 10px" }}>
         {activeTab === "text" && <TextPanel />}
         {activeTab === "image" && <ImagePanel />}
         {activeTab === "layers" && <LayersPanel />}
