@@ -10,9 +10,6 @@ import {
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 // import ClearHistoryDialog from "./UI/dialogs/ClearHistoryDialog";
-import { BannerObject } from "../types";
-import SavePresetButton from "./UI/s3-components/SavePresetButton";
-import ApplyPresetButton from "./UI/s3-components/ApplyPresetButton";
 import UploadToS3Button from "./UI/s3-components/UploadToS3";
 import SidebarTabs from "./UI/sidebar-components/SidebarTabs";
 import { BigArrowRight, BigArrowLeft } from "../assets/icons";
@@ -24,12 +21,7 @@ const Sidebar: React.FC = () => {
     canUndo,
     canRedo,
     // clearHistory,
-    objects,
-    selectedObjectIds,
-    groupSelectedObjects,
-    ungroupSelectedObject,
     currentProjectName,
-    updateMultipleObjects,
     clearProject,
   } = useBanner();
 
@@ -58,30 +50,6 @@ const Sidebar: React.FC = () => {
   //   clearHistory();
   //   closeDialog("isClearHistoryDialogOpen");
   // };
-
-  const groupSelectedObjectsAbstract = () => {
-    if (selectedObjectIds.length < 2) return;
-
-    const newAbstractGroupId = Date.now();
-
-    const updates = selectedObjectIds.reduce((acc, id) => {
-      acc[id] = { abstractGroupId: newAbstractGroupId };
-      return acc;
-    }, {} as Record<number, Partial<BannerObject>>);
-
-    updateMultipleObjects(updates);
-  };
-
-  const ungroupSelectedObjectsAbstract = () => {
-    if (selectedObjectIds.length === 0) return;
-
-    const updates = selectedObjectIds.reduce((acc, id) => {
-      acc[id] = { abstractGroupId: null };
-      return acc;
-    }, {} as Record<number, Partial<BannerObject>>);
-
-    updateMultipleObjects(updates);
-  };
 
   return (
     <Stack spacing={2} className="sidebar">
@@ -136,6 +104,7 @@ const Sidebar: React.FC = () => {
         onClose={() => closeDialog("isClearHistoryDialogOpen")}
         onClear={handleClearHistory}
       /> */}
+
       <div
         style={{
           display: "flex",
@@ -151,62 +120,6 @@ const Sidebar: React.FC = () => {
         >
           Очистити історію
         </Button> */}
-
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={groupSelectedObjects}
-          disabled={selectedObjectIds.length < 2}
-        >
-          Групувати
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={ungroupSelectedObject}
-          disabled={
-            selectedObjectIds.length !== 1 ||
-            objects.find((obj) => obj.id === selectedObjectIds[0])?.type !==
-              "group"
-          }
-        >
-          Розгрупувати
-        </Button>
-
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={groupSelectedObjectsAbstract}
-          disabled={
-            selectedObjectIds.length < 2 ||
-            !objects.some(
-              (obj) =>
-                selectedObjectIds.includes(obj.id) &&
-                (obj.abstractGroupId === null ||
-                  obj.abstractGroupId === undefined)
-            )
-          }
-        >
-          Групувати (абстрактні)
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={ungroupSelectedObjectsAbstract}
-          disabled={
-            selectedObjectIds.length < 2 ||
-            !objects.some(
-              (obj) =>
-                selectedObjectIds.includes(obj.id) &&
-                obj.abstractGroupId != null
-            )
-          }
-        >
-          Розгрупувати (абстрактні)
-        </Button>
-
-        <SavePresetButton />
-        <ApplyPresetButton />
       </div>
     </Stack>
   );

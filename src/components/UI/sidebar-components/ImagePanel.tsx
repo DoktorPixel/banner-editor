@@ -3,6 +3,8 @@ import { Box, Button } from "@mui/material";
 import { useBanner } from "../../../context/BannerContext";
 import ImageDialog from "../dialogs/ImageDialog";
 import ManageDynamicImgsModal from "../dialogs/ManageDynamicImgsModal";
+import SavePresetButton from "../s3-components/SavePresetButton";
+import ApplyPresetButton from "../s3-components/ApplyPresetButton";
 const ImagePanel: React.FC = () => {
   const { addObject, currentProjectName } = useBanner();
   const [dialogState, setDialogState] = useState({
@@ -67,6 +69,9 @@ const ImagePanel: React.FC = () => {
       >
         Add Figure
       </Button>
+
+      <SavePresetButton />
+      <ApplyPresetButton />
       <ImageDialog
         open={dialogState.isImageDialogOpen}
         imageSrc={imageSrc}
