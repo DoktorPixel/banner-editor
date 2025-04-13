@@ -178,7 +178,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     setHistory([[]]);
     setCurrentStep(0);
     setCurrentProjectName(null);
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   const undo = () => {
