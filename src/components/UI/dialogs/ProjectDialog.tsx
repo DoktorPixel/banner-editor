@@ -13,12 +13,14 @@ import { uploadToS3, downloadFromS3 } from "../../../S3/s3Storage";
 import { useBanner } from "../../../context/BannerContext";
 import { ProjectData } from "../../../types";
 import { useConfig } from "../../../context/ConfigContext";
+import { useNavigate } from "react-router-dom";
 
 const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [projectName, setProjectName] = useState("");
   const { setConfig } = useConfig();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -67,6 +69,8 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       const initialData: ProjectData = { objects: [] };
       await uploadToS3(key, initialData);
       setCurrentProjectName(projectName);
+      navigate(`/project/${projectName}`, { replace: true });
+
       clearHistory();
       setSnackbar({
         open: true,
@@ -95,6 +99,8 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       if (data && typeof data === "object" && Array.isArray(data.objects)) {
         addJson(data.objects);
         setCurrentProjectName(projectName);
+        navigate(`/project/${projectName}`, { replace: true });
+
         setConfig(
           data.config || [
             {
