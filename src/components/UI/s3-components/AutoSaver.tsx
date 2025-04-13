@@ -1,0 +1,89 @@
+import { useEffect, useState, useRef, useCallback } from "react";
+import { useBanner } from "../../../context/BannerContext";
+import { useConfig } from "../../../context/ConfigContext";
+import { uploadToS3 } from "../../../S3/s3Storage";
+import { ProjectData } from "../../../types";
+import { debounce } from "lodash";
+import isEqual from "fast-deep-equal";
+
+const AutoSaver: React.FC = () => {
+  const { objects, dynamicImgs, currentProjectName } = useBanner();
+  const { config } = useConfig();
+
+  const [saved, setSaved] = useState(false);
+
+  const lastDataRef = useRef({
+    objects: structuredClone(objects),
+    dynamicImgs: structuredClone(dynamicImgs),
+    config: structuredClone(config),
+  });
+
+  const saveData = useCallback(async () => {
+    if (!currentProjectName) {
+      console.log("⛔️ Not saving: no currentProjectName");
+      return;
+    }
+
+    console.log("💾 Auto-saving...");
+
+    const key = `projects/${currentProjectName}.json`;
+    const projectData: ProjectData = { objects, dynamicImgs, config };
+
+    try {
+      await uploadToS3(key, projectData);
+      lastDataRef.current = {
+        objects: structuredClone(objects),
+        dynamicImgs: structuredClone(dynamicImgs),
+        config: structuredClone(config),
+      };
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1000);
+    } catch (error) {
+      console.error("Auto-save error:", error);
+    }
+  }, [objects, dynamicImgs, config, currentProjectName]);
+
+  const debouncedSave = useRef(
+    debounce(saveData, 1000, { leading: false, trailing: true })
+  ).current;
+
+  useEffect(() => {
+    const objectsChanged = !isEqual(objects, lastDataRef.current.objects);
+    const imgsChanged = !isEqual(dynamicImgs, lastDataRef.current.dynamicImgs);
+    const configChanged = !isEqual(config, lastDataRef.current.config);
+    const hasChanges = objectsChanged || imgsChanged || configChanged;
+
+    console.log("🔍 hasChanges:", hasChanges);
+    console.log("  ⤷ objectsChanged:", objectsChanged);
+    console.log("  ⤷ imgsChanged:", imgsChanged);
+    console.log("  ⤷ configChanged:", configChanged);
+
+    if (hasChanges) {
+      debouncedSave();
+    }
+
+    return () => {
+      debouncedSave.cancel();
+    };
+  }, [objects, dynamicImgs, config]);
+
+  return saved ? (
+    <div
+      style={{
+        position: "absolute",
+        // bottom: "0px",
+        left: "120px",
+        background: "#F1F1F1",
+        borderRadius: "6px",
+        padding: "2px 6px",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+        fontSize: "14px",
+        fontWeight: 500,
+      }}
+    >
+      Saved
+    </div>
+  ) : null;
+};
+
+export default AutoSaver;
