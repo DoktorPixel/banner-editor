@@ -19,12 +19,7 @@ const AutoSaver: React.FC = () => {
   });
 
   const saveData = useCallback(async () => {
-    if (!currentProjectName) {
-      console.log("⛔️ Not saving: no currentProjectName");
-      return;
-    }
-
-    console.log("💾 Auto-saving...");
+    if (!currentProjectName) return;
 
     const key = `projects/${currentProjectName}.json`;
     const projectData: ProjectData = { objects, dynamicImgs, config };
@@ -52,11 +47,6 @@ const AutoSaver: React.FC = () => {
     const imgsChanged = !isEqual(dynamicImgs, lastDataRef.current.dynamicImgs);
     const configChanged = !isEqual(config, lastDataRef.current.config);
     const hasChanges = objectsChanged || imgsChanged || configChanged;
-
-    console.log("🔍 hasChanges:", hasChanges);
-    console.log("  ⤷ objectsChanged:", objectsChanged);
-    console.log("  ⤷ imgsChanged:", imgsChanged);
-    console.log("  ⤷ configChanged:", configChanged);
 
     if (hasChanges) {
       debouncedSave();
