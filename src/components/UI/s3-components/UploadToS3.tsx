@@ -47,6 +47,7 @@ const UploadToS3Button: React.FC = () => {
 
     try {
       await uploadToS3(key, projectData);
+      console.log("Uploaded objects:", projectData.objects);
       setSnackbarMessage(
         `${currentProjectName} data successfully uploaded to the server`
       );
@@ -72,7 +73,7 @@ const UploadToS3Button: React.FC = () => {
       if (hasChanges) {
         event.preventDefault();
         event.returnValue =
-          "У вас є незбережені зміни. Ви впевнені, що хочете залишити сторінку?";
+          "You have unsaved changes. Are you sure you want to leave the page?";
       }
     };
 
@@ -89,7 +90,7 @@ const UploadToS3Button: React.FC = () => {
         onClick={handleUpload}
         // color="primary"
         // variant="contained"
-        disabled={isLoading || !hasChanges}
+        disabled={isLoading}
         startIcon={isLoading && <CircularProgress size={20} />}
       >
         {isLoading ? "Loading..." : "Send data to server"}
