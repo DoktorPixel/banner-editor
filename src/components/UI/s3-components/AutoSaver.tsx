@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { useBanner } from "../../../context/BannerContext";
 import { useConfig } from "../../../context/ConfigContext";
 import { uploadToS3 } from "../../../S3/s3Storage";
@@ -12,29 +12,37 @@ const AutoSaver: React.FC = () => {
 
   const [saved, setSaved] = useState(false);
 
-  const lastDataRef = useRef({
-    objects: structuredClone(objects),
-    dynamicImgs: structuredClone(dynamicImgs),
-    config: structuredClone(config),
+  const lastDataRef = useRef<ProjectData>({
+    objects: [],
+    dynamicImgs: [],
+    config: [],
   });
 
-  const saveData = useCallback(async () => {
-    if (!currentProjectName) {
-      console.log("⛔️ Not saving: no currentProjectName");
-      return;
-    }
+  useEffect(() => {
+    lastDataRef.current = {
+      objects: structuredClone(objects),
+      dynamicImgs: structuredClone(dynamicImgs ?? []),
+      config: structuredClone(config ?? []),
+    };
+  }, [currentProjectName]);
 
-    console.log("💾 Auto-saving...");
+  const saveData = useCallback(async () => {
+    if (!currentProjectName) return;
 
     const key = `projects/${currentProjectName}.json`;
-    const projectData: ProjectData = { objects, dynamicImgs, config };
+    const projectData: ProjectData = {
+      objects,
+      dynamicImgs,
+      config,
+    };
 
     try {
       await uploadToS3(key, projectData);
+      console.log("✅ Auto-saved objects:", projectData.objects);
       lastDataRef.current = {
         objects: structuredClone(objects),
-        dynamicImgs: structuredClone(dynamicImgs),
-        config: structuredClone(config),
+        dynamicImgs: structuredClone(dynamicImgs ?? []),
+        config: structuredClone(config ?? []),
       };
       setSaved(true);
       setTimeout(() => setSaved(false), 1000);
@@ -43,20 +51,22 @@ const AutoSaver: React.FC = () => {
     }
   }, [objects, dynamicImgs, config, currentProjectName]);
 
-  const debouncedSave = useRef(
-    debounce(saveData, 1000, { leading: false, trailing: true })
-  ).current;
+  const debouncedSave = useMemo(
+    () => debounce(saveData, 1000, { leading: false, trailing: true }),
+    [saveData]
+  );
 
   useEffect(() => {
     const objectsChanged = !isEqual(objects, lastDataRef.current.objects);
-    const imgsChanged = !isEqual(dynamicImgs, lastDataRef.current.dynamicImgs);
-    const configChanged = !isEqual(config, lastDataRef.current.config);
+    const imgsChanged = !isEqual(
+      dynamicImgs ?? [],
+      lastDataRef.current.dynamicImgs ?? []
+    );
+    const configChanged = !isEqual(
+      config ?? [],
+      lastDataRef.current.config ?? []
+    );
     const hasChanges = objectsChanged || imgsChanged || configChanged;
-
-    console.log("🔍 hasChanges:", hasChanges);
-    console.log("  ⤷ objectsChanged:", objectsChanged);
-    console.log("  ⤷ imgsChanged:", imgsChanged);
-    console.log("  ⤷ configChanged:", configChanged);
 
     if (hasChanges) {
       debouncedSave();
@@ -65,13 +75,12 @@ const AutoSaver: React.FC = () => {
     return () => {
       debouncedSave.cancel();
     };
-  }, [objects, dynamicImgs, config]);
+  }, [objects, dynamicImgs, config, debouncedSave]);
 
   return saved ? (
     <div
       style={{
         position: "absolute",
-        // bottom: "0px",
         left: "120px",
         background: "#F1F1F1",
         borderRadius: "6px",
