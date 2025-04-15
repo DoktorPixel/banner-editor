@@ -168,6 +168,9 @@ export interface BannerContextProps {
   addDynamicImg?: (dynamicImg: DynamicImg) => void;
   updateDynamicImg?: (oldName: string, updates: Partial<DynamicImg>) => void;
   deleteDynamicImg?: (name: string) => void;
+  //
+  currentProjectId: string | null;
+  setCurrentProjectId: (id: string | null) => void;
 }
 
 export interface DynamicImg {
