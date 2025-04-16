@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useBanner } from "../context/BannerContext";
 import { BannerObject, BannerChild } from "../types";
+// import { ConfigItem } from "../types";
 
 export const useObjectProperties = () => {
   const {
@@ -267,6 +268,96 @@ export const replaceDynamicVariables = (
   keyValuePairs.forEach(({ key, value }) => {
     const dynamicKey = `{{${key}}}`;
     result = result.replaceAll(dynamicKey, value);
+  });
+
+  return result;
+};
+
+// export const replaceDynamicText = (
+//   content: string,
+//   keyValuePairs: { key: string; value: string }[]
+// ): string => {
+//   let result = content;
+
+//   // Обработка функций, например {{format(price)}}
+//   const functionRegex = /{{(\w+)\(([\w]+)\)}}/g;
+//   result = result.replace(functionRegex, (_, funcName, key) => {
+//     const pair = keyValuePairs.find((item) => item.key === key);
+//     if (!pair) return "";
+
+//     let value = pair.value;
+
+//     switch (funcName) {
+//       case "format":
+//         const numericValue = parseFloat(value.replace(/[^\d.]/g, ""));
+//         if (!isNaN(numericValue)) {
+//           return numericValue.toLocaleString("ru") + " грн";
+//         }
+//         return value;
+//       default:
+//         return value;
+//     }
+//   });
+
+//   // Обычные переменные: {{key}}
+//   keyValuePairs.forEach(({ key, value }) => {
+//     const dynamicKey = `{{${key}}}`;
+//     result = result.replaceAll(dynamicKey, value);
+//   });
+
+//   return result;
+// };
+
+export const replaceDynamicText = (
+  content: string,
+  keyValuePairs: { key: string; value: string }[]
+): string => {
+  let result = content;
+  // console.log("content", content);
+  // console.log("keyValuePairs", keyValuePairs);
+
+  // {{ function(arg1, arg2) }}
+  const functionRegex = /{{\s*(\w+)\s*\(\s*([\w\s,]+?)\s*\)\s*}}/g;
+
+  result = result.replace(
+    functionRegex,
+    (_match: string, funcName: string, args: string): string => {
+      const argKeys = args.split(",").map((arg) => arg.trim());
+      const values: string[] = argKeys.map((key) => {
+        const found = keyValuePairs.find((item) => item.key === key);
+        return found?.value || "";
+      });
+
+      switch (funcName) {
+        case "format": {
+          const value = values[0];
+          const numericValue = parseFloat(value.replace(/[^\d.]/g, ""));
+          return !isNaN(numericValue)
+            ? numericValue.toLocaleString("ru") + " грн"
+            : value;
+        }
+
+        case "discount": {
+          const [priceStr, saleStr] = values;
+          const price = parseFloat(priceStr.replace(/[^\d.]/g, ""));
+          const salePrice = parseFloat(saleStr.replace(/[^\d.]/g, ""));
+          if (!isNaN(price) && !isNaN(salePrice) && price !== 0) {
+            const discount = ((price - salePrice) / price) * 100;
+            return Math.round(discount).toString();
+          }
+          return "0";
+        }
+
+        default:
+          return values[0] ?? "";
+      }
+    }
+  );
+
+  // {{key}}
+  keyValuePairs.forEach(({ key, value }) => {
+    const dynamicKey = new RegExp(`{{\\s*${key}\\s*}}`, "g");
+    result = result.replace(dynamicKey, value);
   });
 
   return result;

@@ -20,7 +20,7 @@ export const syncProjectWithFeededify = async (
     });
 
     const projects: { items: { id: string; name: string }[] } = response.data;
-    console.log("📁 Projects list:", projects);
+    // console.log("📁 Projects list:", projects);
 
     // Project search
     let project = projects.items.find((p) => p.name === projectName);
@@ -38,9 +38,9 @@ export const syncProjectWithFeededify = async (
       );
 
       project = createResponse.data;
-      console.log("📁 Created new project:", project);
+      // console.log("📁 Created new project:", project);
     } else {
-      console.log("📁 Found existing project:", project);
+      // console.log("📁 Found existing project:", project);
     }
 
     //  ProjectData loading

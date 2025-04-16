@@ -38,7 +38,7 @@ const AutoSaver: React.FC = () => {
 
     try {
       await uploadToS3(key, projectData);
-      console.log("✅ Auto-saved objects:", projectData.objects);
+      // console.log("✅ Auto-saved objects:", projectData.objects);
       lastDataRef.current = {
         objects: structuredClone(objects),
         dynamicImgs: structuredClone(dynamicImgs ?? []),
