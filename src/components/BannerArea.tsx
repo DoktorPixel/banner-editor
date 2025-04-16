@@ -9,7 +9,8 @@ import { BannerObject } from "../types";
 import { useChildProperties } from "../utils/hooks";
 import { useObjectProperties } from "../utils/hooks";
 import { useSelectionBounds } from "../utils/hooks";
-import { replaceDynamicVariables } from "../utils/hooks";
+import { replaceDynamicVariables, replaceDynamicText } from "../utils/hooks";
+// import { useConfig } from "../context/ConfigContext";
 
 const BannerArea: React.FC = () => {
   const {
@@ -28,7 +29,7 @@ const BannerArea: React.FC = () => {
     renderedObjects,
   } = useBanner();
   const { selectedChild, handleDeleteChild } = useChildProperties();
-
+  // const { config } = useConfig();
   const { handleDelete, handleDeleteAll } = useObjectProperties();
   const { mode } = useMode();
   const [isDragging, setIsDragging] = useState(false);
@@ -488,7 +489,7 @@ const BannerArea: React.FC = () => {
                               )
                             }
                           >
-                            {replaceDynamicVariables(
+                            {replaceDynamicText(
                               child.content ?? "",
                               keyValuePairs
                             )}
@@ -805,10 +806,7 @@ const BannerArea: React.FC = () => {
                       // whiteSpace: "pre-wrap",
                     }}
                   >
-                    {replaceDynamicVariables(
-                      object.content ?? "",
-                      keyValuePairs
-                    )}
+                    {replaceDynamicText(object.content ?? "", keyValuePairs)}
                   </div>
                 ) : object.type === "image" ? (
                   <img
