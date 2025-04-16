@@ -5,6 +5,9 @@ import ImageDialog from "../dialogs/ImageDialog";
 import ManageDynamicImgsModal from "../dialogs/ManageDynamicImgsModal";
 import SavePresetButton from "../s3-components/SavePresetButton";
 import ApplyPresetButton from "../s3-components/ApplyPresetButton";
+import ImageUploader from "./ImageUploader";
+import ImageGallery from "./ImageGallery";
+
 const ImagePanel: React.FC = () => {
   const { addObject, currentProjectName } = useBanner();
   const [dialogState, setDialogState] = useState({
@@ -16,7 +19,6 @@ const ImagePanel: React.FC = () => {
     setDialogState((prev) => ({ ...prev, [type]: true }));
   const closeDialog = (type: keyof typeof dialogState) =>
     setDialogState((prev) => ({ ...prev, [type]: false }));
-
   const handleAddImage = (src: string) => {
     addObject({
       id: Date.now(),
@@ -85,6 +87,9 @@ const ImagePanel: React.FC = () => {
         onClose={() => setIsDynamicImgsModalOpen(false)}
         projectId={currentProjectName}
       />
+
+      <ImageUploader />
+      <ImageGallery />
     </Box>
   );
 };

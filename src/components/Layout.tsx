@@ -11,6 +11,7 @@ import ProjectDialog from "./UI/dialogs/ProjectDialog";
 import { downloadFromS3 } from "../S3/s3Storage";
 import { useConfig } from "../context/ConfigContext";
 import { CircularProgress, Box } from "@mui/material";
+import { syncProjectWithFeededify } from "../utils/syncProjectWithFeededify";
 
 const Layout: React.FC = () => {
   const { mode } = useMode();
@@ -47,6 +48,8 @@ const Layout: React.FC = () => {
             ]
           );
           navigate(`/project/${projectName}`, { replace: true });
+          // Feededify
+          await syncProjectWithFeededify(projectName, data);
         } else {
           throw new Error("Invalid project data");
         }

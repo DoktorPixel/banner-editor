@@ -18,7 +18,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [temporaryUpdates, setTemporaryUpdates] = useState<{
     [key: number]: Partial<BannerObject>;
   }>({});
-
+  const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
   const objects = history[currentStep] || [];
   // console.log("objects:", objects);
 
@@ -359,6 +359,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         addDynamicImg,
         updateDynamicImg,
         deleteDynamicImg,
+        currentProjectId,
+        setCurrentProjectId,
       }}
     >
       {children}

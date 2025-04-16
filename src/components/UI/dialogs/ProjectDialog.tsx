@@ -14,6 +14,7 @@ import { useBanner } from "../../../context/BannerContext";
 import { ProjectData } from "../../../types";
 import { useConfig } from "../../../context/ConfigContext";
 import { useNavigate } from "react-router-dom";
+import { syncProjectWithFeededify } from "../../../utils/syncProjectWithFeededify";
 
 const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [projectName, setProjectName] = useState("");
@@ -68,6 +69,8 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
       const initialData: ProjectData = { objects: [] };
       await uploadToS3(key, initialData);
+      // Feededify
+      await syncProjectWithFeededify(projectName, initialData);
       setCurrentProjectName(projectName);
       navigate(`/project/${projectName}`, { replace: true });
 
@@ -100,7 +103,8 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         addJson(data.objects);
         setCurrentProjectName(projectName);
         navigate(`/project/${projectName}`, { replace: true });
-
+        // Feededify
+        await syncProjectWithFeededify(projectName, data);
         setConfig(
           data.config || [
             {
