@@ -38,6 +38,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   //
 
   const [dynamicImgs, setDynamicImgs] = useState<DynamicImg[]>([]);
+  const [refreshCounter, setRefreshCounter] = useState(0);
+  const triggerRefresh = () => setRefreshCounter((prev) => prev + 1);
 
   const addDynamicImg = (dynamicImg: DynamicImg) => {
     setDynamicImgs((prev) => {
@@ -361,6 +363,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         deleteDynamicImg,
         currentProjectId,
         setCurrentProjectId,
+        refreshCounter,
+        triggerRefresh,
       }}
     >
       {children}

@@ -171,6 +171,8 @@ export interface BannerContextProps {
   //
   currentProjectId: string | null;
   setCurrentProjectId: (id: string | null) => void;
+  refreshCounter: number;
+  triggerRefresh: () => void;
 }
 
 export interface DynamicImg {
