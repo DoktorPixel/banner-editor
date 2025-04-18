@@ -12,7 +12,7 @@ export const syncProjectWithFeededify = async (
     const response = await axios.get(`${API_BASE_URL}/Project`, {
       params: {
         skip: 0,
-        count: 100,
+        count: 1000,
       },
       headers: {
         Accept: "application/json",
@@ -38,9 +38,9 @@ export const syncProjectWithFeededify = async (
       );
 
       project = createResponse.data;
-      // console.log("📁 Created new project:", project);
+      console.log("📁 Created new project:", project);
     } else {
-      // console.log("📁 Found existing project:", project);
+      console.log("📁 Found existing project:", project);
     }
 
     //  ProjectData loading

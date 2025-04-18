@@ -11,7 +11,7 @@ import ProjectDialog from "./UI/dialogs/ProjectDialog";
 import { downloadFromS3 } from "../S3/s3Storage";
 import { useConfig } from "../context/ConfigContext";
 import { CircularProgress, Box } from "@mui/material";
-import { syncProjectWithFeededify } from "../utils/syncProjectWithFeededify";
+import { useSyncProjectWithFeededify } from "../utils/useSyncProjectWithFeededify";
 
 const Layout: React.FC = () => {
   const { mode } = useMode();
@@ -21,6 +21,7 @@ const Layout: React.FC = () => {
   const { projectName } = useParams<{ projectName: string }>();
   const [isCheckingProject, setIsCheckingProject] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
+  const { sync } = useSyncProjectWithFeededify();
 
   useEffect(() => {
     const tryLoadProject = async () => {
@@ -49,7 +50,7 @@ const Layout: React.FC = () => {
           );
           navigate(`/project/${projectName}`, { replace: true });
           // Feededify
-          await syncProjectWithFeededify(projectName, data);
+          await sync(projectName, data);
         } else {
           throw new Error("Invalid project data");
         }

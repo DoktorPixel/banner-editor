@@ -5,14 +5,30 @@ import { TextField } from "@mui/material";
 
 const ImageUploader: React.FC = () => {
   const { uploadImage } = useFeededifyApi();
-  const { currentProjectId } = useBanner();
+  const { currentProjectId, triggerRefresh, addObject } = useBanner();
+  // console.log("🖼️ ImageUploader, currentProjectId:", currentProjectId);
 
+  const handleAddImage = (src: string) => {
+    addObject({
+      id: Date.now(),
+      type: "image",
+      width: 250,
+      height: 250,
+      x: 50,
+      y: 50,
+      src,
+      name: "",
+    });
+  };
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !currentProjectId) return;
     try {
-      await uploadImage(file, currentProjectId);
-      event.target.value = ""; // Clear the input value to allow re-uploading the same file
+      const result = await uploadImage(file, currentProjectId);
+      event.target.value = "";
+      triggerRefresh();
+      const fullUrl = `https://api.feededify.app/client/${result.url}`;
+      handleAddImage(fullUrl);
     } catch (error) {
       console.error("❌ Upload error:", error);
     }

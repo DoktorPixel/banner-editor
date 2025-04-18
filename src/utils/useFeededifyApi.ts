@@ -35,6 +35,7 @@ export const useFeededifyApi = () => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
+      console.log("Ответ от сервера:", response.data);
       return response.data;
     },
     []
@@ -43,8 +44,13 @@ export const useFeededifyApi = () => {
   const getImages = useCallback(
     async (projectId: string): Promise<ImageItem[]> => {
       const response = await axios.get(`${API_BASE}/Image`, {
-        params: { projectId },
+        params: {
+          projectId,
+          skip: 0,
+          count: 100,
+        },
       });
+      console.log("Ответ от сервера:", response.data);
       return response.data.items;
     },
     []

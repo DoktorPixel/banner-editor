@@ -88,6 +88,8 @@ const ImagePanel: React.FC = () => {
         projectId={currentProjectName}
       />
 
+      <div className="grey-line"></div>
+
       <ImageUploader />
       <ImageGallery />
     </Box>
