@@ -15,8 +15,9 @@ const ImagePanel: React.FC = () => {
   });
   const [imageSrc, setImageSrc] = useState("");
   const [isDynamicImgsModalOpen, setIsDynamicImgsModalOpen] = useState(false);
-  const openDialog = (type: keyof typeof dialogState) =>
-    setDialogState((prev) => ({ ...prev, [type]: true }));
+  // const openDialog = (type: keyof typeof dialogState) =>
+  //   setDialogState((prev) => ({ ...prev, [type]: true }));
+
   const closeDialog = (type: keyof typeof dialogState) =>
     setDialogState((prev) => ({ ...prev, [type]: false }));
   const handleAddImage = (src: string) => {
@@ -48,13 +49,14 @@ const ImagePanel: React.FC = () => {
   };
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => openDialog("isImageDialogOpen")}
       >
         Add Image
-      </Button>
+      </Button> */}
+      <ImageUploader />
 
       <Button
         variant="contained"
@@ -90,7 +92,6 @@ const ImagePanel: React.FC = () => {
 
       <div className="grey-line"></div>
 
-      <ImageUploader />
       <ImageGallery />
     </Box>
   );

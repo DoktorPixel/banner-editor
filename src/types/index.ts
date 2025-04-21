@@ -129,6 +129,7 @@ export interface BannerContextProps {
   ) => void;
   deleteObject: (id: number) => void;
   deleteMultipleObjects: (ids: number[]) => void;
+  deleteObjectsByImageSrc: (src: string) => void;
   updateHistory: (newObjects: BannerObject[]) => void;
   undo: () => void;
   redo: () => void;
