@@ -108,6 +108,13 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     updateHistory(newObjects);
   };
 
+  const deleteObjectsByImageSrc = (src: string) => {
+    const newObjects = objects.filter(
+      (obj) => obj.type !== "image" || obj.src !== src
+    );
+    updateHistory(newObjects);
+  };
+
   const updateHistory = (newObjects: BannerObject[]) => {
     const newHistory = [...history.slice(0, currentStep + 1), newObjects];
     setHistory(newHistory);
@@ -328,6 +335,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         updateMultipleObjects,
         deleteObject,
         deleteMultipleObjects,
+        deleteObjectsByImageSrc,
         updateHistory,
         undo,
         redo,

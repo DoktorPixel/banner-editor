@@ -132,3 +132,18 @@
     display: flex;
   }
 }
+
+.image-gallery-wrapper {
+  padding: 4px;
+  border: 1px dashed transparent;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.image-gallery-wrapper.drag-over {
+  border-color: #1976d2;
+  background-color: #f0f4ff;
+}
+
+.image-gallery-wrapper:hover {
+  border-color: #ccc;
+}
