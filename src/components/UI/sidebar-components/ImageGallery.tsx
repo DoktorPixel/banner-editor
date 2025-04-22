@@ -3,7 +3,7 @@ import { useFeededifyApi, ImageItem } from "../../../utils/useFeededifyApi";
 import { useBanner } from "../../../context/BannerContext";
 import { DeleteBtn } from "../../../assets/icons";
 
-const IMAGE_BASE_URL = "https://api.feededify.app/client/";
+// const IMAGE_BASE_URL = "https://api.feededify.app/client/";
 
 const ImageGallery: React.FC = () => {
   const { getImages, deleteImage, uploadImage } = useFeededifyApi();
@@ -26,7 +26,7 @@ const ImageGallery: React.FC = () => {
     const imageToDelete = images.find((img) => img.id === id);
     if (!imageToDelete) return;
 
-    const fullSrc = `${IMAGE_BASE_URL}${imageToDelete.url}`;
+    const fullSrc = imageToDelete.url;
     await deleteImage(id);
     setImages((prev) => prev.filter((img) => img.id !== id));
     deleteObjectsByImageSrc(fullSrc);
@@ -49,7 +49,7 @@ const ImageGallery: React.FC = () => {
         height: 250,
         x: 50,
         y: 50,
-        src: `${IMAGE_BASE_URL}${result.url}`,
+        src: result.url,
         name: "",
       });
     } catch (error) {
@@ -84,8 +84,7 @@ const ImageGallery: React.FC = () => {
     >
       <div className="image-grid">
         {images.map((img, index) => {
-          const rawUrl = img.url;
-          const fullSrc = `${IMAGE_BASE_URL}${rawUrl}`;
+          const fullSrc = img.url;
 
           return (
             <div

@@ -3,7 +3,7 @@ import { useFeededifyApi } from "../../../utils/useFeededifyApi";
 import { useBanner } from "../../../context/BannerContext";
 import { Button } from "@mui/material";
 
-const IMAGE_BASE_URL = "https://api.feededify.app/client/";
+// const IMAGE_BASE_URL = "https://api.feededify.app/client/";
 
 const ImageUploader: React.FC = () => {
   const { uploadImage } = useFeededifyApi();
@@ -18,7 +18,7 @@ const ImageUploader: React.FC = () => {
       height: 250,
       x: 50,
       y: 50,
-      src: `${IMAGE_BASE_URL}${url}`, // сохраняем как есть, без encodeURI
+      src: url,
       name: "",
     });
   };
@@ -30,7 +30,7 @@ const ImageUploader: React.FC = () => {
       const result = await uploadImage(file, currentProjectId);
       event.target.value = "";
       triggerRefresh();
-      handleAddImage(result.url); // raw url
+      handleAddImage(result.url);
     } catch (error) {
       console.error("❌ Upload error:", error);
     }

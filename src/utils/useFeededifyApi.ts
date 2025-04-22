@@ -35,7 +35,7 @@ export const useFeededifyApi = () => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      console.log("Ответ от сервера:", response.data);
+      console.log("uploadImage Ответ от сервера:", response.data);
       return response.data;
     },
     []
@@ -50,7 +50,7 @@ export const useFeededifyApi = () => {
           count: 100,
         },
       });
-      console.log("Ответ от сервера:", response.data);
+      console.log("getImages Ответ от сервера:", response.data);
       return response.data.items;
     },
     []
