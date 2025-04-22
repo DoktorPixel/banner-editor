@@ -2,10 +2,15 @@
   border: 1px solid #ececec;
   background: #ffffff;
   width: 320px;
+  // height: auto;
+
   height: auto;
-  min-height: 1120px;
+  max-height: 100vh;
   overflow-y: scroll;
-  margin-bottom: 20px;
+
+  // min-height: 1120px;
+  overflow-y: auto;
+  margin-bottom: 10px;
 }
 .sidebar-wrapper {
   padding: 10px 10px 0 10px;

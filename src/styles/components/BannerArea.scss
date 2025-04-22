@@ -1,20 +1,25 @@
 .banner-area {
-  // position: relative;
-  position: sticky;
-  top: 10px;
+  position: relative;
+  // position: sticky;
+  top: 20px;
   background: #fff;
-  border: 1px solid #ddd;
-  overflow-y: auto;
+  // border: 1px solid #ddd;
   width: 1080px;
   min-width: 1080px;
   height: 1080px;
   min-height: 1080px;
   z-index: -100;
+
+  // overflow-y: auto;
 }
 .banner-area-container {
   position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 1080px;
+  max-height: 100vh;
   z-index: -100;
-  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .object {
