@@ -270,8 +270,6 @@ const ExportInHTML: React.FC = () => {
     <>
       <LoadingButton
         onClick={() => {
-          clearSelection();
-          clearChildSelection();
           exportBannerToHTML();
         }}
         variant="contained"
