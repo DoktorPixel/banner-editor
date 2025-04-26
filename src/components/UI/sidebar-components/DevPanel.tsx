@@ -6,6 +6,8 @@ import { BannerObject } from "../../../types";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ExportInJSON from "../ExportInJSON";
 import ExportInHTML from "../ExportInHTML";
+// import { ExportToHTML_2 } from "../ExportToHTML_2";
+import { ExportToHTMLButton } from "../ExportToHTMLButton_2";
 
 const DevPanel: React.FC = () => {
   const { addJson } = useBanner();
@@ -38,6 +40,8 @@ const DevPanel: React.FC = () => {
 
       <ExportInJSON />
       <ExportInHTML />
+      {/* <ExportToHTML_2 /> */}
+      <ExportToHTMLButton />
 
       <JSONDialog
         open={dialogState.isJsonDialogOpen}

@@ -118,6 +118,7 @@ export interface BannerChild {
   borderRightStyle?: React.CSSProperties["borderTopStyle"];
   borderRightColor?: string;
   borderRightWidth?: number | string;
+  zIndex?: number | undefined;
 }
 
 export interface BannerContextProps {
