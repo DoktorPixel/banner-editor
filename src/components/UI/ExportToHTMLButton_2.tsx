@@ -5,6 +5,8 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 // import { ExportToHTML_2 } from "./ExportToHTML_2";
 import { ExportToHTML_3 } from "./ExportToHTML_3";
+// import { ExportToHTML_4 } from "./ExportToHTML_4";
+
 import { useBanner } from "../../context/BannerContext";
 
 export const ExportToHTMLButton = () => {
@@ -36,7 +38,7 @@ export const ExportToHTMLButton = () => {
         loading={isLoading}
         endIcon={<ContentCopyIcon />}
       >
-        {isLoading ? "Копирование..." : "Скопировать HTML"}
+        {isLoading ? "Copying..." : "Export in HTML"}
       </LoadingButton>
 
       {notification && (
