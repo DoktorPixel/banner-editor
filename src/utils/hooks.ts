@@ -362,3 +362,47 @@ export const replaceDynamicText = (
 
   return result;
 };
+
+export const shouldHideObject = (
+  condition: BannerObject["condition"] | undefined,
+  keyValuePairs: { key: string; value: string }[]
+): boolean => {
+  if (!condition) return false;
+
+  const { type, props: conditionProps, state } = condition;
+  const propsExist = conditionProps.some((prop) =>
+    keyValuePairs.some((pair) => pair.key === prop)
+  );
+
+  if (state === "exist") {
+    return (
+      (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)
+    );
+  } else if (state === "noExist") {
+    return (
+      (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist)
+    );
+  }
+
+  return false;
+};
+
+// export const shouldHideObject = (
+//   condition: BannerObject["condition"] | undefined,
+//   keyValuePairs: { key: string; value: string }[]
+// ): boolean => {
+//   if (!condition) return false;
+
+//   const { type, props: conditionProps, state } = condition;
+//   const propsExist = conditionProps.some((prop) =>
+//     keyValuePairs.some((pair) => pair.key === prop)
+//   );
+
+//   const isExist = state === "exist";
+//   const isHide = type === "hideIf";
+
+//   return (isExist && isHide && propsExist) ||
+//          (isExist && !isHide && !propsExist) ||
+//          (!isExist && isHide && !propsExist) ||
+//          (!isExist && !isHide && propsExist);
+// };
