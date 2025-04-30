@@ -11,6 +11,7 @@ import { useObjectProperties } from "../utils/hooks";
 import { useSelectionBounds } from "../utils/hooks";
 import { replaceDynamicVariables, replaceDynamicText } from "../utils/hooks";
 // import { useConfig } from "../context/ConfigContext";
+import { shouldHideObject } from "../utils/hooks";
 
 const BannerArea: React.FC = () => {
   const {
@@ -49,6 +50,7 @@ const BannerArea: React.FC = () => {
   //
   const rawPairs = sessionStorage.getItem("keyValuePairs");
   const keyValuePairs = rawPairs ? JSON.parse(rawPairs) : [];
+  // console.log("keyValuePairs", keyValuePairs);
 
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -386,6 +388,8 @@ const BannerArea: React.FC = () => {
         )}
 
         {renderedObjects.map((object) => {
+          const isHidden = shouldHideObject(object.condition, keyValuePairs);
+          if (isHidden) return null;
           if (object.type === "group") {
             return (
               <Fragment key={object.id}>
@@ -452,6 +456,11 @@ const BannerArea: React.FC = () => {
                     }}
                   >
                     {object.children?.map((child) => {
+                      const isHidden = shouldHideObject(
+                        child.condition,
+                        keyValuePairs
+                      );
+                      if (isHidden) return null;
                       if (child.type === "text") {
                         return (
                           <div
@@ -631,6 +640,11 @@ const BannerArea: React.FC = () => {
                                   src,
                                   ...nestedStyles
                                 } = nestedChild;
+                                const isHidden = shouldHideObject(
+                                  condition,
+                                  keyValuePairs
+                                );
+                                if (isHidden) return null;
                                 if (nestedChild.type === "image") {
                                   return (
                                     <img

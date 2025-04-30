@@ -13,6 +13,7 @@ import {
   ArrowRight,
   ArrowDown,
 } from "../../assets/icons";
+import { VisibilityToggle } from "./button-groups/VisibilityToggle";
 
 const SidebarObjectList: React.FC = () => {
   const { objects, selectedObjectIds, selectObject, selectAllObjects } =
@@ -115,6 +116,7 @@ const SidebarObjectList: React.FC = () => {
                 </IconButton>
                 <SvgVirtual />
                 <span className="layers-list-item">Group</span>
+                <VisibilityToggle />
               </ListItem>
               <Collapse
                 in={openGroups[obj.abstractGroupId]}
@@ -155,10 +157,10 @@ const SidebarObjectList: React.FC = () => {
                         {groupObj.type === "text" && <SvgText />}
                         {groupObj.type === "image" && <SvgImage />}
                         {groupObj.type === "figure" && <SvgImage />}
-
                         <span className="layers-list-item">
                           {groupObj.name?.substring(0, 12) ||
                             getObjectTypeLabel(groupObj.type)}
+                          <VisibilityToggle />
                         </span>
                       </ListItem>
                     )
@@ -201,6 +203,7 @@ const SidebarObjectList: React.FC = () => {
 
               <span className="layers-list-item">
                 {obj.name?.substring(0, 14) || getObjectTypeLabel(obj.type)}
+                <VisibilityToggle />
               </span>
             </ListItem>
           );
