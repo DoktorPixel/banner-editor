@@ -42,6 +42,8 @@ export interface BannerObject {
   paddingRight?: number | string;
   abstractGroupId?: number | null;
 
+  // hidden?: boolean; //
+
   // borders
   borderTopStyle?: React.CSSProperties["borderTopStyle"];
   borderTopColor?: string;

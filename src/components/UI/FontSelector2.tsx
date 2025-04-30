@@ -64,8 +64,9 @@ const FontSelector2: React.FC<FontSelectorProps> = ({
 
       <List
         sx={{
-          maxHeight: 802,
-          overflowY: "auto",
+          // height: "50%",
+          maxHeight: "calc(100vh - 380px)",
+          overflowY: "scroll",
           borderRadius: 1,
 
           // "&::-webkit-scrollbar": {

@@ -50,7 +50,7 @@ const BannerArea: React.FC = () => {
   //
   const rawPairs = sessionStorage.getItem("keyValuePairs");
   const keyValuePairs = rawPairs ? JSON.parse(rawPairs) : [];
-  console.log("keyValuePairs", keyValuePairs);
+  // console.log("keyValuePairs", keyValuePairs);
 
   const [contextMenu, setContextMenu] = useState<{
     x: number;
