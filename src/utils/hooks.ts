@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useBanner } from "../context/BannerContext";
 import { BannerObject, BannerChild } from "../types";
+import type { Property } from "csstype";
 // import { ConfigItem } from "../types";
 
 export const useObjectProperties = () => {
@@ -406,3 +407,13 @@ export const shouldHideObject = (
 //          (!isExist && isHide && !propsExist) ||
 //          (!isExist && !isHide && propsExist);
 // };
+
+export function computeOpacity(
+  opacity: Property.Opacity | undefined,
+  isHidden: boolean
+): number | string {
+  if (isHidden) {
+    return typeof opacity === "number" ? opacity * 0.3 : 0.3;
+  }
+  return opacity ?? 1;
+}
