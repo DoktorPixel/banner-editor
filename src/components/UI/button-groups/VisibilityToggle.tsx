@@ -1,27 +1,20 @@
-import { useState } from "react";
 import { EyeClosed, EyeOpen } from "../../../assets/icons";
 import { IconButton } from "@mui/material";
+import { useConfig } from "../../../context/ConfigContext";
 
 interface VisibilityToggleProps {
-  initialVisible?: boolean;
-  onToggle?: (visible: boolean) => void;
+  objectId: number;
 }
 
 export const VisibilityToggle: React.FC<VisibilityToggleProps> = ({
-  initialVisible = true,
-  onToggle,
+  objectId,
 }) => {
-  const [visible, setVisible] = useState(initialVisible);
-
-  const handleToggle = () => {
-    const newState = !visible;
-    setVisible(newState);
-    onToggle?.(newState);
-  };
+  const { hiddenObjectIds, toggleHiddenObject } = useConfig();
+  const isVisible = !hiddenObjectIds.includes(objectId);
 
   return (
     <IconButton
-      onClick={handleToggle}
+      onClick={() => toggleHiddenObject(objectId)}
       size="small"
       sx={{
         width: 24,
@@ -30,7 +23,7 @@ export const VisibilityToggle: React.FC<VisibilityToggleProps> = ({
         marginLeft: "10px",
       }}
     >
-      {visible ? <EyeOpen /> : <EyeClosed />}
+      {isVisible ? <EyeOpen /> : <EyeClosed />}
     </IconButton>
   );
 };
