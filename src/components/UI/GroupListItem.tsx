@@ -69,7 +69,7 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
         {open ? <SvgLayoutOpen /> : <SvgLayout />}
         <span className="layers-list-item">
           {group.name?.substring(0, 10) || "Layout"}
-          <VisibilityToggle />
+          <VisibilityToggle objectId={group.id} />
         </span>
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
@@ -106,7 +106,7 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
                 <span className="layers-list-item">
                   {child.name?.substring(0, 8) ||
                     getObjectTypeLabel(child.type)}
-                  <VisibilityToggle />
+                  <VisibilityToggle objectId={child.id} />
                 </span>
               </ListItem>
             )

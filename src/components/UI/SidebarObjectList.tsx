@@ -116,7 +116,7 @@ const SidebarObjectList: React.FC = () => {
                 </IconButton>
                 <SvgVirtual />
                 <span className="layers-list-item">Group</span>
-                <VisibilityToggle />
+                {/* <VisibilityToggle /> */}
               </ListItem>
               <Collapse
                 in={openGroups[obj.abstractGroupId]}
@@ -160,7 +160,7 @@ const SidebarObjectList: React.FC = () => {
                         <span className="layers-list-item">
                           {groupObj.name?.substring(0, 12) ||
                             getObjectTypeLabel(groupObj.type)}
-                          <VisibilityToggle />
+                          <VisibilityToggle objectId={groupObj.id} />
                         </span>
                       </ListItem>
                     )
@@ -203,7 +203,7 @@ const SidebarObjectList: React.FC = () => {
 
               <span className="layers-list-item">
                 {obj.name?.substring(0, 14) || getObjectTypeLabel(obj.type)}
-                <VisibilityToggle />
+                <VisibilityToggle objectId={obj.id} />
               </span>
             </ListItem>
           );

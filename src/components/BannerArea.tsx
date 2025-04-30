@@ -13,6 +13,7 @@ import { replaceDynamicVariables, replaceDynamicText } from "../utils/hooks";
 // import { useConfig } from "../context/ConfigContext";
 import { shouldHideObject } from "../utils/hooks";
 import { computeOpacity } from "../utils/hooks";
+import { useConfig } from "../context/ConfigContext";
 
 const BannerArea: React.FC = () => {
   const {
@@ -30,6 +31,7 @@ const BannerArea: React.FC = () => {
     setTemporaryUpdates,
     renderedObjects,
   } = useBanner();
+  const { hiddenObjectIds } = useConfig();
   const { selectedChild, handleDeleteChild } = useChildProperties();
   // const { config } = useConfig();
   const { handleDelete, handleDeleteAll } = useObjectProperties();
@@ -380,7 +382,6 @@ const BannerArea: React.FC = () => {
               height: selectionBounds.height,
               border: "1px dashed rgba(191, 191, 221, 0.75)",
               pointerEvents: "none",
-
               // pointerEvents: "all",
               // cursor: "move",
             }}
@@ -390,7 +391,7 @@ const BannerArea: React.FC = () => {
 
         {renderedObjects.map((object) => {
           const isHidden = shouldHideObject(object.condition, keyValuePairs);
-
+          const isVisible = !hiddenObjectIds.includes(object.id);
           // const effectiveOpacity =
           //   isHidden && typeof object.opacity === "number"
           //     ? object.opacity * 0.4
@@ -416,7 +417,7 @@ const BannerArea: React.FC = () => {
                     // height: object.height,
                     height: object.autoHeight ? "auto" : object.height,
                     zIndex: object.zIndex,
-                    // visibility: isVisible ? "visible" : "hidden",
+                    visibility: isVisible ? "visible" : "hidden",
                   }}
                   onMouseDown={(e) => handleMouseDown(object.id, e)}
                   onClick={(e) => {
@@ -470,6 +471,8 @@ const BannerArea: React.FC = () => {
                         child.condition,
                         keyValuePairs
                       );
+                      const isVisibleCild =
+                        isVisible && !hiddenObjectIds.includes(child.id);
                       // if (isHidden) return null;
                       if (child.type === "text") {
                         return (
@@ -492,7 +495,7 @@ const BannerArea: React.FC = () => {
                               textDecoration: child.textDecoration,
                               textAlign: child.textAlign,
                               opacity: computeOpacity(child.opacity, isHidden),
-
+                              visibility: isVisibleCild ? "visible" : "hidden",
                               border:
                                 selectedChildId?.groupId === object.id &&
                                 selectedChildId.childId === child.id
@@ -532,6 +535,7 @@ const BannerArea: React.FC = () => {
                               objectFit: child.objectFit,
                               transform: `rotate(${child.rotate || 0}deg)`,
                               opacity: computeOpacity(child.opacity, isHidden),
+                              visibility: isVisibleCild ? "visible" : "hidden",
                             }}
                             onDoubleClick={(e) =>
                               handleChildClick(
@@ -565,6 +569,7 @@ const BannerArea: React.FC = () => {
                             data-condition={JSON.stringify(child.condition)}
                             style={{
                               transform: `rotate(${rotate ?? 0}deg)`,
+                              visibility: isVisibleCild ? "visible" : "hidden",
                             }}
                             onDoubleClick={(e) =>
                               handleChildClick(
@@ -613,6 +618,7 @@ const BannerArea: React.FC = () => {
                             data-condition={JSON.stringify(child.condition)}
                             style={{
                               transform: `rotate(${rotate ?? 0}deg)`,
+                              visibility: isVisibleCild ? "visible" : "hidden",
                             }}
                             className={`banner-object-child ${
                               selectedChildId?.groupId === object.id &&
@@ -643,6 +649,10 @@ const BannerArea: React.FC = () => {
                               }}
                             >
                               {children?.map((nestedChild) => {
+                                const isVisibleCildNested =
+                                  isVisible &&
+                                  isVisibleCild &&
+                                  !hiddenObjectIds.includes(nestedChild.id);
                                 const {
                                   id: nestedId,
                                   condition,
@@ -669,6 +679,9 @@ const BannerArea: React.FC = () => {
                                       alt={"image"}
                                       style={{
                                         ...nestedStyles,
+                                        visibility: isVisibleCildNested
+                                          ? "visible"
+                                          : "hidden",
                                       }}
                                       className={`image-field banner-object-child ${
                                         selectedChildId?.groupId === child.id &&
@@ -699,6 +712,9 @@ const BannerArea: React.FC = () => {
                                         position: "relative",
                                         width: "auto",
                                         height: "auto",
+                                        visibility: isVisibleCildNested
+                                          ? "visible"
+                                          : "hidden",
                                       }}
                                       className={`image-field banner-object-child ${
                                         selectedChildId?.groupId === child.id &&
@@ -733,6 +749,9 @@ const BannerArea: React.FC = () => {
                                       ...nestedStyles,
                                       transform: `rotate(${rotate ?? 0}deg)`,
                                       position: "relative",
+                                      visibility: isVisibleCildNested
+                                        ? "visible"
+                                        : "hidden",
                                     }}
                                     className={`image-field banner-object-child ${
                                       selectedChildId?.groupId === child.id &&
@@ -797,6 +816,7 @@ const BannerArea: React.FC = () => {
                   cursor: "move",
                   overflow: object.autoWidth ? "visible" : "hidden",
                   transform: `rotate(${object.rotate || 0}deg)`,
+                  visibility: isVisible ? "visible" : "hidden",
                 }}
                 onMouseDown={(e) => handleMouseDown(object.id, e)}
                 onClick={(e) => {

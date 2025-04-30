@@ -201,7 +201,8 @@ export interface ConfigItem {
   key: string;
   value1?: string;
   value2?: string;
-  function: string;
+  function?: string;
+  hiddenObjectIds?: number[];
 }
 
 export type ResizeDirection =

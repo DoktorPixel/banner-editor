@@ -10,6 +10,7 @@ import {
 } from "../../assets/icons";
 import { BannerChild } from "../../types";
 import { useChildProperties, getObjectTypeLabel } from "../../utils/hooks";
+import { VisibilityToggle } from "./button-groups/VisibilityToggle";
 
 interface ChildGroupListItemProps {
   groupId: number;
@@ -58,6 +59,7 @@ const ChildGroupListItem: React.FC<ChildGroupListItemProps> = ({
         {open ? <SvgLayoutOpen /> : <SvgLayout />}
         <span className="layers-list-item">
           {child.name || getObjectTypeLabel(child.type)}
+          <VisibilityToggle objectId={child.id} />
         </span>
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
@@ -96,6 +98,7 @@ const ChildGroupListItem: React.FC<ChildGroupListItemProps> = ({
                 {subChild.type === "figure" && <SvgImage />}
                 <span className="layers-list-item">
                   {subChild.name || getObjectTypeLabel(subChild.type)}
+                  <VisibilityToggle objectId={subChild.id} />
                 </span>
               </ListItem>
             )
