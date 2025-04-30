@@ -28,7 +28,6 @@ export const VisibilityToggle: React.FC<VisibilityToggleProps> = ({
         height: 24,
         padding: 0,
         marginLeft: "10px",
-        // marginLeft: "auto"
       }}
     >
       {visible ? <EyeOpen /> : <EyeClosed />}

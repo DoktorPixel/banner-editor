@@ -12,6 +12,7 @@ import { useSelectionBounds } from "../utils/hooks";
 import { replaceDynamicVariables, replaceDynamicText } from "../utils/hooks";
 // import { useConfig } from "../context/ConfigContext";
 import { shouldHideObject } from "../utils/hooks";
+import { computeOpacity } from "../utils/hooks";
 
 const BannerArea: React.FC = () => {
   const {
@@ -389,7 +390,15 @@ const BannerArea: React.FC = () => {
 
         {renderedObjects.map((object) => {
           const isHidden = shouldHideObject(object.condition, keyValuePairs);
-          if (isHidden) return null;
+
+          // const effectiveOpacity =
+          //   isHidden && typeof object.opacity === "number"
+          //     ? object.opacity * 0.4
+          //     : isHidden
+          //     ? 0.4
+          //     : object.opacity ?? 1;
+
+          // if (isHidden) return null;
           if (object.type === "group") {
             return (
               <Fragment key={object.id}>
@@ -407,6 +416,7 @@ const BannerArea: React.FC = () => {
                     // height: object.height,
                     height: object.autoHeight ? "auto" : object.height,
                     zIndex: object.zIndex,
+                    // visibility: isVisible ? "visible" : "hidden",
                   }}
                   onMouseDown={(e) => handleMouseDown(object.id, e)}
                   onClick={(e) => {
@@ -435,7 +445,7 @@ const BannerArea: React.FC = () => {
                           ? object.backgroundColor
                           : undefined,
                       borderRadius: object.borderRadius,
-                      opacity: object.opacity,
+                      opacity: computeOpacity(object.opacity, isHidden),
                       borderTopStyle: object.borderTopStyle,
                       borderTopColor: object.borderTopColor,
                       borderTopWidth: object.borderTopWidth,
@@ -460,7 +470,7 @@ const BannerArea: React.FC = () => {
                         child.condition,
                         keyValuePairs
                       );
-                      if (isHidden) return null;
+                      // if (isHidden) return null;
                       if (child.type === "text") {
                         return (
                           <div
@@ -481,7 +491,8 @@ const BannerArea: React.FC = () => {
                               fontStyle: child.fontStyle,
                               textDecoration: child.textDecoration,
                               textAlign: child.textAlign,
-                              opacity: child.opacity,
+                              opacity: computeOpacity(child.opacity, isHidden),
+
                               border:
                                 selectedChildId?.groupId === object.id &&
                                 selectedChildId.childId === child.id
@@ -520,7 +531,7 @@ const BannerArea: React.FC = () => {
                               height: child.height,
                               objectFit: child.objectFit,
                               transform: `rotate(${child.rotate || 0}deg)`,
-                              opacity: child.opacity,
+                              opacity: computeOpacity(child.opacity, isHidden),
                             }}
                             onDoubleClick={(e) =>
                               handleChildClick(
@@ -640,11 +651,11 @@ const BannerArea: React.FC = () => {
                                   src,
                                   ...nestedStyles
                                 } = nestedChild;
-                                const isHidden = shouldHideObject(
-                                  condition,
-                                  keyValuePairs
-                                );
-                                if (isHidden) return null;
+                                // const isHidden = shouldHideObject(
+                                //   condition,
+                                //   keyValuePairs
+                                // );
+                                // if (isHidden) return null;
                                 if (nestedChild.type === "image") {
                                   return (
                                     <img
@@ -809,7 +820,7 @@ const BannerArea: React.FC = () => {
                       fontWeight: object.fontWeight,
                       fontStyle: object.fontStyle,
                       // textTransform: object.textTransform,
-                      opacity: object.opacity,
+                      opacity: computeOpacity(object.opacity, isHidden),
                       textDecoration: object.textDecoration,
                       textAlign: object.textAlign,
                       display: object.maxLines ? "-webkit-box" : "block",
@@ -836,7 +847,7 @@ const BannerArea: React.FC = () => {
                       width: "100%",
                       height: "100%",
                       objectFit: object.objectFit,
-                      opacity: object.opacity,
+                      opacity: computeOpacity(object.opacity, isHidden),
                     }}
                   />
                 ) : object.type === "figure" ? (
@@ -850,7 +861,7 @@ const BannerArea: React.FC = () => {
                           ? object.backgroundColor
                           : undefined,
                       borderRadius: object.borderRadius,
-                      opacity: object.opacity,
+                      opacity: computeOpacity(object.opacity, isHidden),
                       borderTopStyle: object.borderTopStyle,
                       borderTopColor: object.borderTopColor,
                       borderTopWidth: object.borderTopWidth,
