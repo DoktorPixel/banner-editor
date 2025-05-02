@@ -6,7 +6,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
+  // Button,
   Box,
   Typography,
   InputAdornment,
@@ -25,9 +25,9 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
 }) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
 
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
+  // const handleDialogOpen = () => {
+  //   setDialogOpen(true);
+  // };
 
   const handleDialogClose = () => {
     setDialogOpen(false);
@@ -130,7 +130,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
           />
         </div>
       </div>
-      <div className="grey-line"></div>
+      {/* <div className="grey-line"></div>
       <div className="padding-wrapper">
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>URL</InputLabel>
         <div className="update-image-wrapper">
@@ -157,7 +157,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
             Update image
           </Button>
         </div>
-      </div>
+      </div> */}
 
       <div className="padding-wrapper">
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
