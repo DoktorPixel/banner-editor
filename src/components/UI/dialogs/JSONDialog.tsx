@@ -37,7 +37,7 @@ const JSONDialog: React.FC<JSONDialogProps> = ({ open, onClose, onLoad }) => {
         <TextField
           autoFocus
           margin="dense"
-          label="Вставить JSON"
+          label="Insert JSON"
           fullWidth
           multiline
           rows={10}

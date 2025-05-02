@@ -16,7 +16,6 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [config, setConfig] = useState<ConfigItem[]>([]);
   const [hiddenObjectIds, setHiddenObjectIds] = useState<number[]>([]);
-  console.log("hiddenObjectIds:", hiddenObjectIds);
 
   const toggleHiddenObject = (id: number) => {
     setHiddenObjectIds((prev) =>
