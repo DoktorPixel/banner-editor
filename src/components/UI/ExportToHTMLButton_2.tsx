@@ -19,10 +19,10 @@ export const ExportToHTMLButton = () => {
       setIsLoading(true);
       const html = ExportToHTML_3(objects);
       await navigator.clipboard.writeText(html);
-      setNotification("HTML успешно скопирован в буфер обмена!");
+      setNotification("HTML successfully copied to clipboard!");
     } catch (error) {
-      console.error("Ошибка при экспорте:", error);
-      setNotification("Ошибка при копировании HTML");
+      console.error("Error while exporting:", error);
+      setNotification("Error copying HTML");
     } finally {
       setIsLoading(false);
       setTimeout(() => setNotification(""), 3000); //
