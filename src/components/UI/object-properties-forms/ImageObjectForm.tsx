@@ -6,7 +6,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
+  // Button,
   Typography,
   InputAdornment,
   Box,
@@ -26,9 +26,9 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
 }) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
 
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
+  // const handleDialogOpen = () => {
+  //   setDialogOpen(true);
+  // };
 
   const handleDialogClose = () => {
     setDialogOpen(false);
@@ -135,8 +135,8 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
           />
         </div>
       </div>
-      <div className="grey-line"></div>
-      <div className="padding-wrapper">
+      {/* <div className="grey-line"></div> */}
+      {/* <div className="padding-wrapper">
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>URL</InputLabel>
         <div className="update-image-wrapper">
           <TextField
@@ -162,7 +162,7 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
             Update image
           </Button>
         </div>
-      </div>
+      </div> */}
 
       <div className="padding-wrapper">
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
