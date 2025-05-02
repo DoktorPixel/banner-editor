@@ -14,6 +14,7 @@ import {
   ArrowDown,
 } from "../../assets/icons";
 import { VisibilityToggle } from "./button-groups/VisibilityToggle";
+import { GroupVisibilityToggle } from "./button-groups/GroupVisibilityToggle";
 
 const SidebarObjectList: React.FC = () => {
   const { objects, selectedObjectIds, selectObject, selectAllObjects } =
@@ -116,6 +117,7 @@ const SidebarObjectList: React.FC = () => {
                 </IconButton>
                 <SvgVirtual />
                 <span className="layers-list-item">Group</span>
+                <GroupVisibilityToggle objectIds={group.map((o) => o.id)} />
                 {/* <VisibilityToggle /> */}
               </ListItem>
               <Collapse
