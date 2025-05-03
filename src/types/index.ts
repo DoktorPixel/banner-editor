@@ -14,6 +14,7 @@ export interface BannerObject {
   textAlign?: React.CSSProperties["textAlign"];
   color?: string;
   src?: string;
+  dynamics?: boolean;
   width?: number;
   height?: number;
   autoWidth?: boolean;
@@ -41,7 +42,6 @@ export interface BannerObject {
   paddingLeft?: number | string;
   paddingRight?: number | string;
   abstractGroupId?: number | null;
-
   // hidden?: boolean; //
 
   // borders
@@ -81,6 +81,7 @@ export interface BannerChild {
   autoWidth?: boolean;
   autoHeight?: boolean;
   src?: string;
+  dynamics?: boolean;
   name?: string;
   objectFit?: React.CSSProperties["objectFit"];
   rotate?: number | undefined;

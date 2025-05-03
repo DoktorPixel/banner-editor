@@ -189,8 +189,8 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
               },
             }}
             type="number"
-            value={object.y || 0}
-            onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
+            value={object.x || 0}
+            onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
             fullWidth
             margin="normal"
           />

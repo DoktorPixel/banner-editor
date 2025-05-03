@@ -73,8 +73,8 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
               },
             }}
             type="number"
-            value={object.y || 0}
-            onChange={(e) => onChange("y", parseInt(e.target.value, 10))}
+            value={object.x || 0}
+            onChange={(e) => onChange("x", parseInt(e.target.value, 10))}
             fullWidth
             margin="normal"
           />
@@ -135,8 +135,22 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
           />
         </div>
       </div>
-      {/* <div className="grey-line"></div> */}
-      {/* <div className="padding-wrapper">
+
+      {object.dynamics && (
+        <div className="padding-wrapper">
+          <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>URL</InputLabel>
+          <TextField
+            type="text"
+            value={object.src}
+            onChange={(e) => onChange("src", e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      )}
+
+      {/* <div className="grey-line"></div>
+      <div className="padding-wrapper">
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>URL</InputLabel>
         <div className="update-image-wrapper">
           <TextField
