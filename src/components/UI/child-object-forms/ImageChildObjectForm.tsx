@@ -130,6 +130,20 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
           />
         </div>
       </div>
+
+      {object.dynamics && (
+        <div className="padding-wrapper">
+          <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>URL</InputLabel>
+          <TextField
+            type="text"
+            value={object.src}
+            onChange={(e) => onChange("src", e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      )}
+
       {/* <div className="grey-line"></div>
       <div className="padding-wrapper">
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>URL</InputLabel>

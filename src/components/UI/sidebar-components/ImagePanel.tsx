@@ -35,6 +35,20 @@ const ImagePanel: React.FC = () => {
     closeDialog("isImageDialogOpen");
   };
 
+  const handleAddDynamicsImage = (url: string) => {
+    addObject({
+      id: Date.now(),
+      type: "image",
+      width: 250,
+      height: 250,
+      x: 50,
+      y: 50,
+      src: url,
+      name: "",
+      dynamics: true,
+    });
+  };
+
   const handleAddFigure = () => {
     addObject({
       id: Date.now(),
@@ -58,10 +72,18 @@ const ImagePanel: React.FC = () => {
       </Button> */}
       <ImageUploader />
 
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => setIsDynamicImgsModalOpen(true)}
+      >
+        Add Dynamic Image (Modal)
+      </Button> */}
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => handleAddDynamicsImage("{{img}}")}
       >
         Add Dynamic Image
       </Button>
