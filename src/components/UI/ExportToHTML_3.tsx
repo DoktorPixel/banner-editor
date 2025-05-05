@@ -1,6 +1,8 @@
 import { BannerObject, BannerChild } from "../../types/index";
+import { useConfig } from "../../context/ConfigContext";
 
 export const ExportToHTML_3 = (objects: BannerObject[]): string => {
+  const { config } = useConfig();
   // Функция для преобразования значений в пиксели, если это число
   const toPx = (value?: number | string): string => {
     if (value === undefined) return "";
@@ -245,6 +247,10 @@ export const ExportToHTML_3 = (objects: BannerObject[]): string => {
   // Генерация HTML для всех объектов
   const objectsHTML = objects.map((obj) => generateObjectHTML(obj)).join("");
 
+  //
+  const width = config.canvasSize?.width || 1080;
+  const height = config.canvasSize?.height || 1080;
+
   // Полный HTML шаблон
   return `
  <!DOCTYPE html>
@@ -267,8 +273,8 @@ export const ExportToHTML_3 = (objects: BannerObject[]): string => {
           border: 0;
         }
         body {
-          width: 1080px;
-          height: 1080px;
+          ${width}px;
+          ${height};
           margin: 0;
           padding: 0;
           overflow: hidden;
@@ -279,8 +285,8 @@ export const ExportToHTML_3 = (objects: BannerObject[]): string => {
         }
         .banner-area {
           position: relative;
-          width: 1080px;
-          height: 1080px;
+          ${width}px;
+          ${height};
           background: rgb(255, 255, 255);
           overflow: hidden;
         }

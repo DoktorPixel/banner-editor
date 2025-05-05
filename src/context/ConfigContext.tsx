@@ -21,19 +21,31 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
       { key: "img", value: "https://placehold.co/300" },
       { key: "price", value: "1000" },
     ],
+    canvasSize: { width: 1080, height: 1080 },
   });
-  console.log("ConfigProvider hiddenObjectIds", config.hiddenObjectIds);
-  const [hiddenObjectIds, setHiddenObjectIds] = useState<number[]>([]);
-
+  console.log("canvasSize", config.canvasSize);
   const toggleHiddenObject = (id: number) => {
-    setHiddenObjectIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    setConfig((prev) => {
+      const alreadyHidden = prev.hiddenObjectIds.includes(id);
+      const updatedIds = alreadyHidden
+        ? prev.hiddenObjectIds.filter((i) => i !== id)
+        : [...prev.hiddenObjectIds, id];
+
+      return {
+        ...prev,
+        hiddenObjectIds: updatedIds,
+      };
+    });
   };
 
   return (
     <ConfigContext.Provider
-      value={{ config, setConfig, hiddenObjectIds, toggleHiddenObject }}
+      value={{
+        config,
+        setConfig,
+        hiddenObjectIds: config.hiddenObjectIds,
+        toggleHiddenObject,
+      }}
     >
       {children}
     </ConfigContext.Provider>

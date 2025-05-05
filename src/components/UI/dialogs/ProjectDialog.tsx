@@ -8,6 +8,10 @@ import {
   TextField,
   CircularProgress,
   Snackbar,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Typography,
 } from "@mui/material";
 import { uploadToS3, downloadFromS3 } from "../../../S3/s3Storage";
 import { useBanner } from "../../../context/BannerContext";
@@ -18,6 +22,11 @@ import { useSyncProjectWithFeededify } from "../../../utils/useSyncProjectWithFe
 
 const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [projectName, setProjectName] = useState("");
+  const [sizePreset, setSizePreset] = useState<
+    "square" | "portrait" | "custom"
+  >("square");
+  const [customWidth, setCustomWidth] = useState(1080);
+  const [customHeight, setCustomHeight] = useState(1080);
   const { setConfig } = useConfig();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +41,19 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   });
 
   const { addJson, setCurrentProjectName, clearHistory } = useBanner();
+
+  const width =
+    sizePreset === "square"
+      ? 1080
+      : sizePreset === "portrait"
+      ? 1080
+      : customWidth;
+  const height =
+    sizePreset === "square"
+      ? 1080
+      : sizePreset === "portrait"
+      ? 1920
+      : customHeight;
 
   const validateProjectName = (name: string): boolean => {
     if (name.length < 6) {
@@ -68,7 +90,23 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         return;
       }
 
-      const initialData: ProjectData = { objects: [] };
+      const initialData: ProjectData = {
+        objects: [],
+        config: {
+          hiddenObjectIds: [],
+          keyValuePairs: [
+            { key: "title", value: "Назва продукту" },
+            { key: "img", value: "https://placehold.co/300" },
+            { key: "price", value: "1000" },
+          ],
+          canvasSize: {
+            width,
+            height,
+          },
+        },
+      };
+
+      setConfig(initialData.config);
       await uploadToS3(key, initialData);
       // Feededify
       await sync(projectName, initialData);
@@ -106,16 +144,18 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         navigate(`/project/${projectName}`, { replace: true });
         // Feededify
         await sync(projectName, data);
-        setConfig(
-          data.config || {
-            hiddenObjectIds: [],
-            keyValuePairs: [
-              { key: "title", value: "Назва продукту" },
-              { key: "img", value: "https://placehold.co/300" },
-              { key: "price", value: "1000" },
-            ],
-          }
-        );
+        setConfig({
+          hiddenObjectIds: data.config?.hiddenObjectIds ?? [],
+          keyValuePairs: data.config?.keyValuePairs ?? [
+            { key: "title", value: "Назва продукту" },
+            { key: "img", value: "https://placehold.co/300" },
+            { key: "price", value: "1000" },
+          ],
+          canvasSize: data.config?.canvasSize ?? {
+            width: 1080,
+            height: 1080,
+          },
+        });
         setSnackbar({
           open: true,
           message: "Project uploaded successfully!",
@@ -160,6 +200,57 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             helperText={error}
             className="project-dialog-input"
           />
+
+          {/*  */}
+
+          <Typography variant="subtitle1" sx={{ mt: 2 }}>
+            Select banner size
+          </Typography>
+          <RadioGroup
+            value={sizePreset}
+            onChange={(e) => setSizePreset(e.target.value as typeof sizePreset)}
+          >
+            <FormControlLabel
+              value="square"
+              control={<Radio />}
+              label="1080x1080 (1:1)"
+            />
+            <FormControlLabel
+              value="portrait"
+              control={<Radio />}
+              label="1080x1920 (9:16)"
+            />
+            <FormControlLabel
+              value="custom"
+              control={<Radio />}
+              label="Custom"
+            />
+          </RadioGroup>
+
+          {sizePreset === "custom" && (
+            <div
+              style={{
+                display: "flex",
+                // flexDirection: "column",
+                gap: "16px",
+                marginTop: "8px",
+                maxWidth: "220px",
+              }}
+            >
+              <TextField
+                type="number"
+                label="Width"
+                value={customWidth}
+                onChange={(e) => setCustomWidth(parseInt(e.target.value))}
+              />
+              <TextField
+                type="number"
+                label="Height"
+                value={customHeight}
+                onChange={(e) => setCustomHeight(parseInt(e.target.value))}
+              />
+            </div>
+          )}
         </DialogContent>
 
         <DialogActions

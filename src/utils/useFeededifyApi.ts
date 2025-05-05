@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useCallback } from "react";
+import { ProjectData } from "../types";
 
 const API_BASE = "https://api.feededify.app/client";
 
@@ -14,10 +15,46 @@ export interface ImageItem {
 }
 
 export const useFeededifyApi = () => {
-  const createProject = useCallback(async (name: string): Promise<Project> => {
-    const response = await axios.post(`${API_BASE}/Project/create`, { name });
-    return response.data;
-  }, []);
+  // const createProject = useCallback(
+  //   async (name: string, data?: ProjectData): Promise<Project> => {
+  //     const response = await axios.post(`${API_BASE}/Project/create`, {
+  //       name,
+  //       templateConfig: data ? JSON.stringify(data) : "{}",
+  //       templateHtml: "<div></div>",
+  //     });
+  //     return response.data;
+  //   },
+  //   []
+  // );
+
+  const createProject = useCallback(
+    async (name: string, data?: ProjectData): Promise<Project> => {
+      const requestBody = {
+        name,
+        templateConfig: JSON.stringify({
+          objects: data?.objects || [],
+          dynamicImgs: data?.dynamicImgs || [],
+          config: data?.config || {},
+        }),
+        templateHtml: "<div></div>",
+      };
+
+      console.log("📤 Sending createProject request:", requestBody);
+
+      const response = await axios.post(
+        `${API_BASE}/Project/create`,
+        requestBody,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    },
+    []
+  );
 
   const getProjects = useCallback(async (): Promise<Project[]> => {
     const response = await axios.get(`${API_BASE}/Project`);

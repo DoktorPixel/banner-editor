@@ -359,6 +359,12 @@ const BannerArea: React.FC = () => {
     <div className="banner-area-container">
       <div
         className="banner-area"
+        style={{
+          width: `${config.canvasSize?.width}px`,
+          height: `${config.canvasSize?.height}px`,
+          minWidth: `${config.canvasSize?.width}px`,
+          minHeight: `${config.canvasSize?.height}px`,
+        }}
         ref={bannerRef}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
