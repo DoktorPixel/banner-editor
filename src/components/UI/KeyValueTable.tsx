@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import { TextField, IconButton, Menu, MenuItem } from "@mui/material";
 import { ThreeDots } from "../../assets/icons";
 import { AddButton } from "../../assets/icons";
-
-interface KeyValuePair {
-  key: string;
-  value: string;
-}
+import { KeyValuePair } from "../../types";
 
 interface KeyValueTableProps {
   keyValuePairs: KeyValuePair[];

@@ -39,14 +39,14 @@ const Layout: React.FC = () => {
           addJson(data.objects);
           setCurrentProjectName(projectName);
           setConfig(
-            data.config || [
-              {
-                function: "price",
-                key: "price",
-                value1: "sale_price",
-                value2: "discount",
-              },
-            ]
+            data.config || {
+              hiddenObjectIds: [],
+              keyValuePairs: [
+                { key: "title", value: "Назва продукту" },
+                { key: "img", value: "https://placehold.co/300" },
+                { key: "price", value: "1000" },
+              ],
+            }
           );
           navigate(`/project/${projectName}`, { replace: true });
           // Feededify

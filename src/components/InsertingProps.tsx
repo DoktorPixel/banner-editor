@@ -1,45 +1,36 @@
-import { useState, useEffect } from "react";
 import KeyValueTable from "./UI/KeyValueTable";
-
-interface KeyValuePair {
-  key: string;
-  value: string;
-}
+import { useConfig } from "../context/ConfigContext";
 
 const InsertingProps: React.FC = () => {
-  const [keyValuePairs, setKeyValuePairs] = useState<KeyValuePair[]>(() => {
-    const savedPairs = sessionStorage.getItem("keyValuePairs");
-    return savedPairs
-      ? JSON.parse(savedPairs)
-      : [
-          { key: "title", value: "Назва продукту" },
-          { key: "img", value: "https://placehold.co/300" },
-          { key: "price", value: "1000" },
-        ];
-  });
+  const { config, setConfig } = useConfig();
+  const keyValuePairs = config?.keyValuePairs ?? [];
 
-  useEffect(() => {
-    sessionStorage.setItem("keyValuePairs", JSON.stringify(keyValuePairs));
-  }, [keyValuePairs]);
+  const updatePairs = (newPairs: typeof keyValuePairs) => {
+    setConfig((prev) => ({
+      ...prev,
+      ...prev,
+      keyValuePairs: newPairs,
+    }));
+  };
 
   const handleKeyChange = (index: number, newKey: string) => {
     const updated = [...keyValuePairs];
     updated[index].key = newKey;
-    setKeyValuePairs(updated);
+    updatePairs(updated);
   };
 
   const handleValueChange = (index: number, newValue: string) => {
     const updated = [...keyValuePairs];
     updated[index].value = newValue;
-    setKeyValuePairs(updated);
+    updatePairs(updated);
   };
 
   const addKeyValuePair = () => {
-    setKeyValuePairs([...keyValuePairs, { key: "", value: "" }]);
+    updatePairs([...keyValuePairs, { key: "", value: "" }]);
   };
 
   const removeKeyValuePair = (index: number) => {
-    setKeyValuePairs(keyValuePairs.filter((_, i) => i !== index));
+    updatePairs(keyValuePairs.filter((_, i) => i !== index));
   };
 
   return (

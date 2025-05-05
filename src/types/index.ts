@@ -188,7 +188,7 @@ export interface DynamicImg {
 export interface ProjectData {
   objects: BannerObject[];
   dynamicImgs?: DynamicImg[];
-  config?: ConfigItem[];
+  config?: ConfigItem;
 }
 
 export interface PresetData {
@@ -199,11 +199,17 @@ export interface PresetData {
 }
 
 export interface ConfigItem {
-  key: string;
-  value1?: string;
-  value2?: string;
-  function?: string;
+  // key: string;
+  // value1?: string;
+  // value2?: string;
+  // function?: string;
   hiddenObjectIds?: number[];
+  keyValuePairs: KeyValuePair[];
+}
+
+export interface KeyValuePair {
+  key: string;
+  value: string;
 }
 
 export type ResizeDirection =
