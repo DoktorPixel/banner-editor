@@ -15,7 +15,10 @@ const AutoSaver: React.FC = () => {
   const lastDataRef = useRef<ProjectData>({
     objects: [],
     dynamicImgs: [],
-    config: [],
+    config: {
+      keyValuePairs: [],
+      hiddenObjectIds: [],
+    },
   });
 
   useEffect(() => {

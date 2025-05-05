@@ -10,7 +10,6 @@ import { useChildProperties } from "../utils/hooks";
 import { useObjectProperties } from "../utils/hooks";
 import { useSelectionBounds } from "../utils/hooks";
 import { replaceDynamicVariables, replaceDynamicText } from "../utils/hooks";
-// import { useConfig } from "../context/ConfigContext";
 import { shouldHideObject } from "../utils/hooks";
 import { computeOpacity } from "../utils/hooks";
 import { useConfig } from "../context/ConfigContext";
@@ -31,9 +30,8 @@ const BannerArea: React.FC = () => {
     setTemporaryUpdates,
     renderedObjects,
   } = useBanner();
-  const { hiddenObjectIds } = useConfig();
+  const { hiddenObjectIds, config } = useConfig();
   const { selectedChild, handleDeleteChild } = useChildProperties();
-  // const { config } = useConfig();
   const { handleDelete, handleDeleteAll } = useObjectProperties();
   const { mode } = useMode();
   const [isDragging, setIsDragging] = useState(false);
@@ -51,8 +49,7 @@ const BannerArea: React.FC = () => {
   const bannerRef = useRef<HTMLDivElement>(null);
 
   //
-  const rawPairs = sessionStorage.getItem("keyValuePairs");
-  const keyValuePairs = rawPairs ? JSON.parse(rawPairs) : [];
+  const keyValuePairs = config?.keyValuePairs ?? [];
   // console.log("keyValuePairs", keyValuePairs);
 
   const [contextMenu, setContextMenu] = useState<{

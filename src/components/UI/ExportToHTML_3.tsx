@@ -308,20 +308,18 @@ export const ExportToHTML_3 = (objects: BannerObject[]): string => {
                element.style.display = "none";
              }
            } catch (error) {
-             console.error("Ошибка при разборе data-condition:", error);
+             console.error("Error parsing data-condition", error);
            }
          });
          
          function replaceDynamicText(content, props) {
            let result = content;
  
-           // Обработка функций: {{ function(arg1, arg2) }}
            const functionRegex = /\\{\\{\\s*(\\w+)\\s*\\(([^)]*?)\\)\\s*\\}\\}/g;
            result = result.replace(functionRegex, (match, funcName, args) => {
              const argKeys = args.split(",").map(arg => arg.trim()).filter(arg => arg);
              const values = argKeys.map(key => props[key] || "");
  
-             // Нормализация чисел: замена запятых на точки
              const normalizeNumber = (value) => {
                if (!value) return value;
                return value.replace(/,/g, ".");

@@ -1,10 +1,10 @@
+// ConfigContext.tsx
 import { createContext, useContext, useState } from "react";
-
 import { ConfigItem } from "../types";
 
 interface ConfigContextType {
-  config: ConfigItem[];
-  setConfig: React.Dispatch<React.SetStateAction<ConfigItem[]>>;
+  config: ConfigItem;
+  setConfig: React.Dispatch<React.SetStateAction<ConfigItem>>;
   hiddenObjectIds: number[];
   toggleHiddenObject: (id: number) => void;
 }
@@ -14,7 +14,15 @@ const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
 export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [config, setConfig] = useState<ConfigItem[]>([]);
+  const [config, setConfig] = useState<ConfigItem>({
+    hiddenObjectIds: [],
+    keyValuePairs: [
+      { key: "title", value: "Назва продукту" },
+      { key: "img", value: "https://placehold.co/300" },
+      { key: "price", value: "1000" },
+    ],
+  });
+  console.log("ConfigProvider hiddenObjectIds", config.hiddenObjectIds);
   const [hiddenObjectIds, setHiddenObjectIds] = useState<number[]>([]);
 
   const toggleHiddenObject = (id: number) => {

@@ -107,14 +107,14 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         // Feededify
         await sync(projectName, data);
         setConfig(
-          data.config || [
-            {
-              function: "price",
-              key: "price",
-              value1: "sale_price",
-              value2: "discount",
-            },
-          ]
+          data.config || {
+            hiddenObjectIds: [],
+            keyValuePairs: [
+              { key: "title", value: "Назва продукту" },
+              { key: "img", value: "https://placehold.co/300" },
+              { key: "price", value: "1000" },
+            ],
+          }
         );
         setSnackbar({
           open: true,
