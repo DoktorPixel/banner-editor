@@ -188,7 +188,7 @@ export interface DynamicImg {
 export interface ProjectData {
   objects: BannerObject[];
   dynamicImgs?: DynamicImg[];
-  config?: ConfigItem;
+  config: ConfigItem;
 }
 
 export interface PresetData {
@@ -203,8 +203,9 @@ export interface ConfigItem {
   // value1?: string;
   // value2?: string;
   // function?: string;
-  hiddenObjectIds?: number[];
+  hiddenObjectIds: number[];
   keyValuePairs: KeyValuePair[];
+  canvasSize: { width: number; height: number };
 }
 
 export interface KeyValuePair {
