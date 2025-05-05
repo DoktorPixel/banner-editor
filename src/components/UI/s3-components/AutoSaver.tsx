@@ -18,6 +18,7 @@ const AutoSaver: React.FC = () => {
     config: {
       keyValuePairs: [],
       hiddenObjectIds: [],
+      canvasSize: { width: 1080, height: 1080 },
     },
   });
 
