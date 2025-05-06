@@ -1,17 +1,22 @@
 import axios from "axios";
 import { ProjectData } from "../types";
+import { ExportToHTML_3 } from "../components/UI/ExportToHTML_3";
+import { ConfigItem } from "../types";
 
 const API_BASE_URL = "https://api.feededify.app/client";
 
 export const syncProjectWithFeededify = async (
   projectName: string,
-  data: ProjectData
+  data: ProjectData,
+  config: ConfigItem
 ) => {
   try {
     // Проверка данных
     if (!data || !data.objects || !Array.isArray(data.objects)) {
       throw new Error("Invalid ProjectData: objects must be a valid array");
     }
+    // Генерация HTML через функцию
+    const htmlString = ExportToHTML_3(data.objects, config);
 
     // Получение списка проектов
     const response = await axios.get(`${API_BASE_URL}/Project`, {
@@ -38,8 +43,18 @@ export const syncProjectWithFeededify = async (
           dynamicImgs: data.dynamicImgs || [],
           config: data.config || {},
         }),
-        templateHtml: "<div></div>",
+        templateHtml: htmlString,
       };
+
+      const requestBodyString = {
+        name: "Test Project",
+        templateConfig: JSON.stringify({
+          objects: [{ id: 1, type: "text", x: 0, y: 0 }],
+          config: {},
+        }),
+        templateHtml: "<html><body><div>Test</div></body></html>",
+      };
+      console.log("requestBodyString:", requestBodyString);
 
       console.log("📤 Sending request to create project:", requestBody);
 

@@ -23,7 +23,6 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
     ],
     canvasSize: { width: 1080, height: 1080 },
   });
-  console.log("canvasSize", config.canvasSize);
   const toggleHiddenObject = (id: number) => {
     setConfig((prev) => {
       const alreadyHidden = prev.hiddenObjectIds.includes(id);

@@ -355,6 +355,8 @@ const BannerArea: React.FC = () => {
     handleDeleteChild,
   ]);
 
+  useEffect(() => {}, [config.canvasSize]);
+
   return (
     <div className="banner-area-container">
       <div
