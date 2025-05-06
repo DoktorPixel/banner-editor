@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Fragment } from "react";
+import { useState, useEffect, useRef, Fragment, useMemo } from "react";
 import { useBanner } from "../context/BannerContext";
 import { useMode } from "../context/ModeContext";
 import { ResizeDirection } from "../types";
@@ -30,7 +30,7 @@ const BannerArea: React.FC = () => {
     setTemporaryUpdates,
     renderedObjects,
   } = useBanner();
-  const { hiddenObjectIds, config } = useConfig();
+  const { hiddenObjectIds, config, canvasSize } = useConfig();
   const { selectedChild, handleDeleteChild } = useChildProperties();
   const { handleDelete, handleDeleteAll } = useObjectProperties();
   const { mode } = useMode();
@@ -45,18 +45,27 @@ const BannerArea: React.FC = () => {
   } | null>(null);
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
-
   const bannerRef = useRef<HTMLDivElement>(null);
-
   //
   const keyValuePairs = config?.keyValuePairs ?? [];
   // console.log("keyValuePairs", keyValuePairs);
-
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
     object: BannerObject | null;
   } | null>(null);
+  // styles
+  const bannerStyles = useMemo(
+    () => ({
+      width: `${canvasSize.width}px`,
+      height: `${canvasSize.height}px`,
+      minWidth: `${canvasSize.width}px`,
+      minHeight: `${canvasSize.height}px`,
+    }),
+    [config.canvasSize?.width, config.canvasSize?.height]
+  );
+
+  console.log("canvasSize))))", canvasSize);
 
   const handleContextMenu = (event: React.MouseEvent, object: BannerObject) => {
     event.preventDefault();
@@ -359,12 +368,7 @@ const BannerArea: React.FC = () => {
     <div className="banner-area-container">
       <div
         className="banner-area"
-        style={{
-          width: `${config.canvasSize?.width}px`,
-          height: `${config.canvasSize?.height}px`,
-          minWidth: `${config.canvasSize?.width}px`,
-          minHeight: `${config.canvasSize?.height}px`,
-        }}
+        style={bannerStyles}
         ref={bannerRef}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}

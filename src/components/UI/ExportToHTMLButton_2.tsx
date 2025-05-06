@@ -2,22 +2,23 @@ import { useState } from "react";
 import { Typography } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useBanner } from "../../context/BannerContext";
+import { useConfig } from "../../context/ConfigContext";
 
 // import { ExportToHTML_2 } from "./ExportToHTML_2";
 import { ExportToHTML_3 } from "./ExportToHTML_3";
 // import { ExportToHTML_4 } from "./ExportToHTML_4";
 
-import { useBanner } from "../../context/BannerContext";
-
 export const ExportToHTMLButton = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState("");
   const { objects } = useBanner();
+  const { config } = useConfig();
 
   const handleExport = async () => {
     try {
       setIsLoading(true);
-      const html = ExportToHTML_3(objects);
+      const html = ExportToHTML_3(objects, config);
       await navigator.clipboard.writeText(html);
       setNotification("HTML successfully copied to clipboard!");
     } catch (error) {
