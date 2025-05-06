@@ -3,12 +3,13 @@ import { ConfigItem } from "../types";
 
 interface ConfigContextType {
   config: ConfigItem;
-  setConfig: (newConfig: ConfigItem) => void;
+  setConfig: React.Dispatch<React.SetStateAction<ConfigItem>>;
   hiddenObjectIds: number[];
   toggleHiddenObject: (id: number) => void;
   updateCanvasSize: (width: number, height: number) => void;
   canvasSize: { width: number; height: number };
 }
+
 const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
 
 export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -23,6 +24,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
     ],
     canvasSize: { width: 1080, height: 1080 },
   });
+
   const toggleHiddenObject = (id: number) => {
     setConfig((prev) => {
       const alreadyHidden = prev.hiddenObjectIds.includes(id);
@@ -36,30 +38,24 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
       };
     });
   };
+
   const updateCanvasSize = (width: number, height: number) => {
     setConfig((prev) => ({
       ...prev,
       canvasSize: { width, height },
     }));
   };
+
   const canvasSizeValue = {
     width: config.canvasSize.width,
     height: config.canvasSize.height,
-  };
-
-  const updateConfig = (newConfig: ConfigItem) => {
-    setConfig({
-      ...newConfig,
-      canvasSize: { ...newConfig.canvasSize },
-      keyValuePairs: [...newConfig.keyValuePairs],
-    });
   };
 
   return (
     <ConfigContext.Provider
       value={{
         config,
-        setConfig: updateConfig,
+        setConfig,
         hiddenObjectIds: config.hiddenObjectIds,
         toggleHiddenObject,
         updateCanvasSize,
