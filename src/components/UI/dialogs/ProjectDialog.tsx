@@ -27,7 +27,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   >("square");
   const [customWidth, setCustomWidth] = useState(1080);
   const [customHeight, setCustomHeight] = useState(1080);
-  const { setConfig } = useConfig();
+  const { setConfig, updateCanvasSize } = useConfig();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -41,6 +41,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   });
 
   const { addJson, setCurrentProjectName, clearHistory } = useBanner();
+  // refactoring
 
   const width =
     sizePreset === "square"
@@ -107,6 +108,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       };
 
       setConfig(initialData.config);
+      updateCanvasSize(width, height);
       await uploadToS3(key, initialData);
       // Feededify
       await sync(projectName, initialData);
@@ -142,8 +144,6 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         addJson(data.objects);
         setCurrentProjectName(projectName);
         navigate(`/project/${projectName}`, { replace: true });
-        // Feededify
-        await sync(projectName, data);
         setConfig({
           hiddenObjectIds: data.config?.hiddenObjectIds ?? [],
           keyValuePairs: data.config?.keyValuePairs ?? [
@@ -156,10 +156,16 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             height: 1080,
           },
         });
+        updateCanvasSize(
+          data.config?.canvasSize?.width ?? 1080,
+          data.config?.canvasSize?.height ?? 1080
+        );
+        // Feededify
         setSnackbar({
           open: true,
           message: "Project uploaded successfully!",
         });
+        await sync(projectName, data);
         onClose();
       } else {
         setSnackbar({

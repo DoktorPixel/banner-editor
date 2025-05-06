@@ -46,16 +46,6 @@ export const syncProjectWithFeededify = async (
         templateHtml: htmlString,
       };
 
-      const requestBodyString = {
-        name: "Test Project",
-        templateConfig: JSON.stringify({
-          objects: [{ id: 1, type: "text", x: 0, y: 0 }],
-          config: {},
-        }),
-        templateHtml: "<html><body><div>Test</div></body></html>",
-      };
-      console.log("requestBodyString:", requestBodyString);
-
       console.log("📤 Sending request to create project:", requestBody);
 
       // Создание нового проекта
