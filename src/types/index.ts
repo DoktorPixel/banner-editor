@@ -26,6 +26,12 @@ export interface BannerObject {
     props: string[];
     state: "exist" | "noExist";
   };
+  conditionForAbstract?: {
+    type: "showIf" | "hideIf";
+    props: string[];
+    state: "exist" | "noExist";
+  };
+  abstractGroupId?: number | null;
   flexDirection?: React.CSSProperties["flexDirection"];
   justifyContent?: React.CSSProperties["justifyContent"];
   alignItems?: React.CSSProperties["alignItems"];
@@ -41,7 +47,6 @@ export interface BannerObject {
   paddingBottom?: number | string;
   paddingLeft?: number | string;
   paddingRight?: number | string;
-  abstractGroupId?: number | null;
   // hidden?: boolean; //
 
   // borders

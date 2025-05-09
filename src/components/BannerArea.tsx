@@ -9,9 +9,14 @@ import { BannerObject } from "../types";
 import { useChildProperties } from "../utils/hooks";
 import { useObjectProperties } from "../utils/hooks";
 import { useSelectionBounds } from "../utils/hooks";
-import { replaceDynamicVariables, replaceDynamicText } from "../utils/hooks";
-import { shouldHideObject } from "../utils/hooks";
-import { computeOpacity } from "../utils/hooks";
+import {
+  replaceDynamicVariables,
+  replaceDynamicText,
+  shouldHideObject,
+  shouldHideGroup,
+  computeOpacity,
+} from "../utils/hooks";
+
 import { useConfig } from "../context/ConfigContext";
 
 const BannerArea: React.FC = () => {
@@ -65,7 +70,7 @@ const BannerArea: React.FC = () => {
     [config.canvasSize?.width, config.canvasSize?.height]
   );
 
-  console.log("canvasSize))))", canvasSize);
+  // console.log("canvasSize))))", canvasSize);
 
   const handleContextMenu = (event: React.MouseEvent, object: BannerObject) => {
     event.preventDefault();
@@ -397,7 +402,9 @@ const BannerArea: React.FC = () => {
         )}
 
         {renderedObjects.map((object) => {
-          const isHidden = shouldHideObject(object.condition, keyValuePairs);
+          const isHidden =
+            shouldHideGroup(object.conditionForAbstract, keyValuePairs) ||
+            shouldHideObject(object.condition, keyValuePairs);
           const isVisible = !hiddenObjectIds.includes(object.id);
           // const effectiveOpacity =
           //   isHidden && typeof object.opacity === "number"

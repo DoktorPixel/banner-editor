@@ -246,8 +246,24 @@ export const ExportToHTML_3 = (
     return "";
   };
 
+  const generateTopLevelHTML = (obj: BannerObject): string => {
+    const objectHTML = generateObjectHTML(obj, false, false);
+
+    // Добавляем abstract-data-condition к outermost <div> (если условие есть)
+    if (obj.conditionForAbstract) {
+      const abstractConditionAttr = `abstract-data-condition='${JSON.stringify(
+        obj.conditionForAbstract
+      )}'`;
+
+      // Найдём первый открывающий <div ...> тег и вставим туда
+      return objectHTML.replace(/^<div/, `<div ${abstractConditionAttr}`);
+    }
+
+    return objectHTML;
+  };
+
   // Генерация HTML для всех объектов
-  const objectsHTML = objects.map((obj) => generateObjectHTML(obj)).join("");
+  const objectsHTML = objects.map((obj) => generateTopLevelHTML(obj)).join("");
 
   //
   const width = config.canvasSize?.width || 1080;
@@ -301,6 +317,8 @@ export const ExportToHTML_3 = (
      <script>
        document.addEventListener("DOMContentLoaded", function () {
          const props = window.props || {};
+
+         // data-condition
          document.querySelectorAll("[data-condition]").forEach((element) => {
            try {
              const condition = JSON.parse(element.getAttribute("data-condition"));
@@ -319,6 +337,27 @@ export const ExportToHTML_3 = (
              console.error("Error parsing data-condition", error);
            }
          });
+
+            // abstract-data-condition
+            document.querySelectorAll("[abstract-data-condition]").forEach((element) => {
+              try {
+                const condition = JSON.parse(element.getAttribute("abstract-data-condition"));
+                const { type, props: conditionProps, state } = condition;
+                const propsExist = conditionProps.some((prop) => props[prop] !== undefined);
+                let shouldHide = false;
+                if (state === "exist") {
+                  shouldHide = (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist);
+                } else if (state === "noExist") {
+                  shouldHide = (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist);
+                }
+                if (shouldHide) {
+                  element.style.display = "none";
+                }
+              } catch (error) {
+                console.error("Error parsing abstract-data-condition", error);
+              }
+            });
+
          
          function replaceDynamicText(content, props) {
            let result = content;

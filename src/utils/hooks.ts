@@ -69,6 +69,55 @@ export const useObjectProperties = () => {
   };
 };
 
+// export const useObjectGroupCondition = () => {
+//   const { objects, updateMultipleObjects } = useBanner();
+
+//   const updateConditionForGroup = (
+//     groupId: number,
+//     condition: BannerObject["condition"]
+//   ) => {
+//     const groupObjects = objects.filter(
+//       (obj) => obj.abstractGroupId === groupId
+//     );
+
+//     const updates: Record<number, Partial<BannerObject>> = {};
+
+//     groupObjects.forEach((obj) => {
+//       updates[obj.id] = { conditionForAbstract: condition };
+//     });
+
+//     updateMultipleObjects(updates);
+//   };
+
+//   return {
+//     updateConditionForGroup,
+//   };
+// };
+
+export const useAbstractGroupCondition = () => {
+  const { objects, updateMultipleObjects } = useBanner();
+
+  const updateGroupCondition = (
+    groupId: number,
+    condition?: BannerObject["conditionForAbstract"]
+  ) => {
+    const groupObjects = objects.filter(
+      (obj) => obj.abstractGroupId === groupId
+    );
+
+    if (groupObjects.length === 0) return;
+
+    const updates: Record<number, Partial<BannerObject>> = {};
+    groupObjects.forEach((obj) => {
+      updates[obj.id] = { conditionForAbstract: condition };
+    });
+
+    updateMultipleObjects(updates);
+  };
+
+  return { updateGroupCondition };
+};
+
 export const useChildProperties = () => {
   const {
     selectedChildId,
@@ -371,6 +420,30 @@ export const shouldHideObject = (
   if (!condition) return false;
 
   const { type, props: conditionProps, state } = condition;
+  const propsExist = conditionProps.some((prop) =>
+    keyValuePairs.some((pair) => pair.key === prop)
+  );
+
+  if (state === "exist") {
+    return (
+      (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)
+    );
+  } else if (state === "noExist") {
+    return (
+      (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist)
+    );
+  }
+
+  return false;
+};
+
+export const shouldHideGroup = (
+  conditionForAbstract: BannerObject["condition"] | undefined,
+  keyValuePairs: { key: string; value: string }[]
+): boolean => {
+  if (!conditionForAbstract) return false;
+
+  const { type, props: conditionProps, state } = conditionForAbstract;
   const propsExist = conditionProps.some((prop) =>
     keyValuePairs.some((pair) => pair.key === prop)
   );
