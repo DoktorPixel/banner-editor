@@ -363,7 +363,17 @@ const BannerArea: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Delete") {
+      const target = event.target as HTMLElement;
+
+      // Пропускаем, если фокус в input, textarea или contentEditable
+      const isInput =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable;
+
+      if (isInput) return;
+
+      if (event.key === "Delete" || event.key === "Backspace") {
         if (selectedChild) {
           handleDeleteChild(); // Удаляем потомка группы, если он выбран
         } else if (selectedObjectIds.length === 1) {

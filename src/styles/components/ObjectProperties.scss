@@ -1,10 +1,13 @@
 .object-properties {
+  flex: 1 1 0;
   padding: 10px 0;
   margin-bottom: 10px;
+  margin-right: 5px;
   border: 1px solid #ececec;
   background: #ffffff;
-  width: 320px;
-
+  min-width: 300px;
+  width: 100%;
+  max-width: 440px;
   height: auto;
   max-height: 100vh;
   overflow-y: scroll;

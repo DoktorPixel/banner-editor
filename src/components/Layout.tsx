@@ -5,8 +5,8 @@ import { useMode } from "../context/ModeContext";
 import Sidebar from "./Sidebar";
 import BannerArea from "./BannerArea";
 import ObjectProperties from "./ObjectProperties";
-import Instructions from "./Instructions";
-import InsertingProps from "./InsertingProps";
+// import Instructions from "./Instructions";
+// import InsertingProps from "./InsertingProps";
 import ProjectDialog from "./UI/dialogs/ProjectDialog";
 import { downloadFromS3 } from "../S3/s3Storage";
 import { useConfig } from "../context/ConfigContext";
@@ -97,9 +97,9 @@ const Layout: React.FC = () => {
       )}
 
       <div className="app">
-        {mode === "dev" ? <Sidebar /> : <Instructions />}
+        <Sidebar />
         <BannerArea key={mode} />
-        {mode === "dev" ? <ObjectProperties /> : <InsertingProps />}
+        <ObjectProperties />
       </div>
     </>
   );
