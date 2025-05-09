@@ -58,13 +58,11 @@ const ObjectProperties: React.FC = () => {
             />
           )}
           {selectedChild?.type === "group" && (
-            <>
-              <GroupChildObjectForm
-                object={selectedChild}
-                onChange={handleChangeChild}
-                onChangeMultiple={handleChangeMultipleChildProperties}
-              />
-            </>
+            <GroupChildObjectForm
+              object={selectedChild}
+              onChange={handleChangeChild}
+              onChangeMultiple={handleChangeMultipleChildProperties}
+            />
           )}
         </>
       ) : selectedObjectIds.length === 0 ? (
@@ -94,14 +92,12 @@ const ObjectProperties: React.FC = () => {
             }
           />
         ) : selectedObject?.type === "group" ? (
-          <>
-            <GroupObjectForm
-              object={selectedObject}
-              onChange={(key, value) =>
-                updateObjectProperty(selectedObject.id, key, value)
-              }
-            />
-          </>
+          <GroupObjectForm
+            object={selectedObject}
+            onChange={(key, value) =>
+              updateObjectProperty(selectedObject.id, key, value)
+            }
+          />
         ) : null
       ) : (
         <SelectedObjectsList objects={selectedObjects} />
@@ -131,7 +127,7 @@ const ObjectProperties: React.FC = () => {
           </Button>
         </div>
       )} */}
-      <div className="grey-line"></div>
+      {/* <div className="grey-line"></div> */}
     </Box>
   );
 };

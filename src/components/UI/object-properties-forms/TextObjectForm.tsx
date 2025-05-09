@@ -14,7 +14,6 @@ import TextAlignSelector from "../button-groups/TextAlignSelector";
 import TextDecorationSelector from "../button-groups/TextDecorationSelector";
 import FontStyleSelector from "../button-groups/FontStyleSelector";
 import { MuiColorInput } from "mui-color-input";
-// import { useObjectCondition } from "../../utils/hooks";
 import { ConditionSelector } from "../ConditionSelector";
 import ActionToggle from "../button-groups/ActionToggle";
 
@@ -45,21 +44,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           fullWidth
           margin="normal"
           multiline
-          // slotProps={{
-          //   input: {
-          //     style: {
-          //       padding: "6px",
-          //       // height: "auto",
-          //       // overflow: "auto",
-          //     },
-          //   },
-          // }}
           maxRows={5}
-          // InputProps={{
-          //   classes: {
-          //     input: "custom-textarea",
-          //   },
-          // }}
         />
       </div>
 
