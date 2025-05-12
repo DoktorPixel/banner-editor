@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { TextField, IconButton, Menu, MenuItem } from "@mui/material";
-import { ThreeDots } from "../../assets/icons";
+import React from "react";
+import { TextField, IconButton } from "@mui/material";
 import { AddButton } from "../../assets/icons";
+import { DeleteFile, AddFile } from "../../assets/icons";
 import { KeyValuePair } from "../../types";
 
 interface KeyValueTableProps {
@@ -10,6 +10,7 @@ interface KeyValueTableProps {
   handleValueChange: (index: number, value: string) => void;
   removeKeyValuePair: (index: number) => void;
   addKeyValuePair: () => void;
+  handleAddText: (text: string) => void;
 }
 
 const KeyValueTable: React.FC<KeyValueTableProps> = ({
@@ -18,26 +19,8 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({
   handleValueChange,
   removeKeyValuePair,
   addKeyValuePair,
+  handleAddText,
 }) => {
-  const [anchorEls, setAnchorEls] = useState<(null | HTMLElement)[]>(
-    Array(keyValuePairs.length).fill(null)
-  );
-
-  const handleMenuOpen = (
-    index: number,
-    event: React.MouseEvent<HTMLElement>
-  ) => {
-    const newAnchors = [...anchorEls];
-    newAnchors[index] = event.currentTarget;
-    setAnchorEls(newAnchors);
-  };
-
-  const handleMenuClose = (index: number) => {
-    const newAnchors = [...anchorEls];
-    newAnchors[index] = null;
-    setAnchorEls(newAnchors);
-  };
-
   return (
     <div className="variables-panel">
       <div className="table-header" style={{ display: "flex" }}>
@@ -52,7 +35,6 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({
           style={{
             flex: "0 0 20%",
             marginLeft: "-1px",
-            // justifyContent: "flex-start",
           }}
         >
           <IconButton onClick={addKeyValuePair}>
@@ -77,16 +59,10 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({
               slotProps={{
                 input: {
                   disableUnderline: true,
-                  sx: {
-                    padding: "6px 4px 6px 8px",
-                  },
+                  sx: { padding: "6px 4px 6px 8px" },
                 },
               }}
-              sx={{
-                "& .MuiInputBase-root": {
-                  backgroundColor: "white",
-                },
-              }}
+              sx={{ "& .MuiInputBase-root": { backgroundColor: "white" } }}
             />
           </div>
           <div className="table-cell" style={{ flex: "0 0 40%" }}>
@@ -99,16 +75,10 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({
               slotProps={{
                 input: {
                   disableUnderline: true,
-                  sx: {
-                    padding: "6px 4px 6px 8px",
-                  },
+                  sx: { padding: "6px 4px 6px 8px" },
                 },
               }}
-              sx={{
-                "& .MuiInputBase-root": {
-                  backgroundColor: "white",
-                },
-              }}
+              sx={{ "& .MuiInputBase-root": { backgroundColor: "white" } }}
             />
           </div>
           <div
@@ -116,26 +86,21 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({
             style={{
               flex: "0 0 20%",
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "space-around",
             }}
           >
-            <IconButton onClick={(e) => handleMenuOpen(index, e)}>
-              <ThreeDots />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEls[index]}
-              open={Boolean(anchorEls[index])}
-              onClose={() => handleMenuClose(index)}
+            <IconButton
+              sx={{ padding: "0" }}
+              onClick={() => handleAddText?.(`{{${pair.key}}}`)}
             >
-              <MenuItem
-                onClick={() => {
-                  removeKeyValuePair(index);
-                  handleMenuClose(index);
-                }}
-              >
-                Delete
-              </MenuItem>
-            </Menu>
+              <AddFile />
+            </IconButton>
+            <IconButton
+              sx={{ padding: "0" }}
+              onClick={() => removeKeyValuePair(index)}
+            >
+              <DeleteFile />
+            </IconButton>
           </div>
         </div>
       ))}

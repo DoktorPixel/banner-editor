@@ -80,6 +80,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   return (
     <div
       className="context-menu"
+      id="context-menu"
       style={{
         top: y,
         left: x,

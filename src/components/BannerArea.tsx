@@ -88,6 +88,24 @@ const BannerArea: React.FC = () => {
   const handleCloseContextMenu = () => {
     setContextMenu(null);
   };
+
+  useEffect(() => {
+    const handleGlobalClick = (e: MouseEvent) => {
+      // Если клик вне контекстного меню, закрываем
+      const menu = document.getElementById("context-menu");
+      if (menu && !menu.contains(e.target as Node)) {
+        setContextMenu(null);
+      }
+    };
+
+    if (contextMenu) {
+      document.addEventListener("click", handleGlobalClick);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleGlobalClick);
+    };
+  }, [contextMenu]);
   //
   // const handleObjectClick = (id: number, event: React.MouseEvent) => {
   //   if (mode === "test" || isDragging) return;
@@ -345,7 +363,17 @@ const BannerArea: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Delete") {
+      const target = event.target as HTMLElement;
+
+      // Пропускаем, если фокус в input, textarea или contentEditable
+      const isInput =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable;
+
+      if (isInput) return;
+
+      if (event.key === "Delete" || event.key === "Backspace") {
         if (selectedChild) {
           handleDeleteChild(); // Удаляем потомка группы, если он выбран
         } else if (selectedObjectIds.length === 1) {
@@ -437,6 +465,7 @@ const BannerArea: React.FC = () => {
                   onClick={(e) => {
                     handleObjectClick(object.id, e);
                     clearChildSelection();
+                    setContextMenu(null);
                   }}
                   onContextMenu={(e) => handleContextMenu(e, object)}
                   className={`banner-object ${
@@ -836,6 +865,7 @@ const BannerArea: React.FC = () => {
                 onClick={(e) => {
                   handleObjectClick(object.id, e);
                   clearChildSelection();
+                  setContextMenu(null);
                 }}
                 onContextMenu={(e) => handleContextMenu(e, object)}
                 className={`banner-object ${
