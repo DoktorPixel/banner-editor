@@ -91,7 +91,12 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({
           >
             <IconButton
               sx={{ padding: "0" }}
-              onClick={() => handleAddText?.(`{{${pair.key}}}`)}
+              onClick={() => {
+                const trimmedKey = pair.key.trim();
+                if (trimmedKey && trimmedKey !== "{{}}") {
+                  handleAddText?.(`{{${trimmedKey}}}`);
+                }
+              }}
             >
               <AddFile />
             </IconButton>
