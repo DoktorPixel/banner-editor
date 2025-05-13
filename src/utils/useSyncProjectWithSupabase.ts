@@ -13,6 +13,7 @@ export const useSyncProjectWithSupabase = () => {
 
     if (template?.id) {
       setCurrentProjectId(template.id);
+      console.log("Template id with Supabase:", template.id);
     } else {
       console.warn("Template not found or created.");
       setCurrentProjectId(null);
