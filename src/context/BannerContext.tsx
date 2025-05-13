@@ -246,7 +246,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const groupSelectedObjects = () => {
     if (selectedObjectIds.length < 2) {
-      console.warn("Для группировки нужно выделить как минимум два объекта.");
+      console.warn("To group, you need to select at least two objects.");
       return;
     }
 

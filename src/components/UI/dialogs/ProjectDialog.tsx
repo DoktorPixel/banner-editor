@@ -18,7 +18,8 @@ import { useBanner } from "../../../context/BannerContext";
 import { ProjectData } from "../../../types";
 import { useConfig } from "../../../context/ConfigContext";
 import { useNavigate } from "react-router-dom";
-import { useSyncProjectWithFeededify } from "../../../utils/useSyncProjectWithFeededify";
+// import { useSyncProjectWithFeededify } from "../../../utils/useSyncProjectWithFeededify";
+import { useSyncProjectWithSupabase } from "../../../utils/useSyncProjectWithSupabase";
 
 const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [projectName, setProjectName] = useState("");
@@ -31,7 +32,8 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { sync } = useSyncProjectWithFeededify();
+  // const { sync } = useSyncProjectWithFeededify();
+  const { sync } = useSyncProjectWithSupabase();
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -57,8 +59,8 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       : customHeight;
 
   const validateProjectName = (name: string): boolean => {
-    if (name.length < 6) {
-      setError("The project name must contain at least 6 characters.");
+    if (name.length < 4) {
+      setError("The project name must contain at least 4 characters.");
       return false;
     }
     if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
@@ -283,7 +285,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <Button
               onClick={handleCreateNewProject}
               color="primary"
-              disabled={loading || !!error || projectName.length < 6}
+              disabled={loading || !!error || projectName.length < 4}
               fullWidth
               sx={{
                 whiteSpace: "nowrap",
@@ -298,7 +300,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <Button
               onClick={handleLoadExistingProject}
               color="secondary"
-              disabled={loading || !!error || projectName.length < 6}
+              disabled={loading || !!error || projectName.length < 4}
               fullWidth
               sx={{
                 whiteSpace: "nowrap",

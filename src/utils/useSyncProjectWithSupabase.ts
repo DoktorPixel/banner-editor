@@ -1,0 +1,25 @@
+// utils/useSyncProjectWithSupabase.ts
+import { syncProjectWithSupabase } from "./syncProjectWithSupabase";
+import { useBanner } from "../context/BannerContext";
+import { ProjectData } from "../types";
+import { useConfig } from "../context/ConfigContext";
+
+export const useSyncProjectWithSupabase = () => {
+  const { setCurrentProjectId } = useBanner();
+  const { config } = useConfig();
+
+  const sync = async (templateName: string, data: ProjectData) => {
+    const template = await syncProjectWithSupabase(templateName, data, config);
+
+    if (template?.id) {
+      setCurrentProjectId(template.id);
+    } else {
+      console.warn("Template not found or created.");
+      setCurrentProjectId(null);
+    }
+
+    return template;
+  };
+
+  return { sync };
+};
