@@ -36,9 +36,30 @@ export const useSupabaseImages = () => {
     []
   );
 
+  // const getImages = useCallback(
+  //   async (templateId: string): Promise<SupabaseImageItem[]> => {
+  //     const token = await getToken();
+  //     const response = await axios.get(SUPABASE_IMAGE_API, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       params: {
+  //         template_id: templateId,
+  //       },
+  //     });
+
+  //     console.log("📦 Retrieved images:", response.data);
+  //     return response.data;
+  //   },
+  //   []
+  // );
+
+  const addCacheBuster = (url: string) => `${url}?v=${Date.now()}`;
+
   const getImages = useCallback(
     async (templateId: string): Promise<SupabaseImageItem[]> => {
       const token = await getToken();
+
       const response = await axios.get(SUPABASE_IMAGE_API, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -49,7 +70,10 @@ export const useSupabaseImages = () => {
       });
 
       console.log("📦 Retrieved images:", response.data);
-      return response.data;
+      return response.data.map((img: SupabaseImageItem) => ({
+        ...img,
+        file_url: addCacheBuster(img.file_url),
+      }));
     },
     []
   );
@@ -62,6 +86,16 @@ export const useSupabaseImages = () => {
       },
       params: { id },
     });
+
+    // await axios.post(
+    //   `${SUPABASE_IMAGE_API}?_method=DELETE`,
+    //   { id },
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   }
+    // );
     console.log("🗑️ Deleted image with id:", id);
   }, []);
 

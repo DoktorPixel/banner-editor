@@ -17,6 +17,10 @@ const ImageGallery: React.FC = () => {
   } = useBanner();
   const [images, setImages] = useState<SupabaseImageItem[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const normalizeImagePath = (url: string): string => {
+    if (url.includes("/feedmaker/")) return url;
+    return url.replace("/templates/", "/feedmaker/templates/");
+  };
 
   useEffect(() => {
     if (!currentProjectId) return;
@@ -30,7 +34,7 @@ const ImageGallery: React.FC = () => {
     const fullSrc = imageToDelete.file_url;
     await deleteImage(id);
     setImages((prev) => prev.filter((img) => img.id !== id));
-    deleteObjectsByImageSrc(fullSrc);
+    deleteObjectsByImageSrc(normalizeImagePath(fullSrc));
   };
 
   const handleDrop = async (event: DragEvent<HTMLDivElement>) => {
@@ -50,7 +54,7 @@ const ImageGallery: React.FC = () => {
         height: 250,
         x: 50,
         y: 50,
-        src: result.file_url,
+        src: normalizeImagePath(result.file_url),
         name: "",
       });
     } catch (error) {
@@ -99,13 +103,14 @@ const ImageGallery: React.FC = () => {
                   height: 250,
                   x: 50,
                   y: 50,
-                  src: fullSrc,
+                  src: normalizeImagePath(fullSrc),
                   name: "",
                 })
               }
             >
               <img
                 src={encodeURI(fullSrc)}
+                // src={`${encodeURI(fullSrc)}?v=${Date.now()}`}
                 alt={`img-${index + 1}`}
                 className="image"
               />

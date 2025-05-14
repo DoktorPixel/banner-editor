@@ -7,7 +7,10 @@ const ImageUploader: React.FC = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { uploadImage } = useSupabaseImages();
   const { currentProjectId, triggerRefresh, addObject } = useBanner();
-
+  const normalizeImagePath = (url: string): string => {
+    if (url.includes("/feedmaker/")) return url;
+    return url.replace("/templates/", "/feedmaker/templates/");
+  };
   const handleAddImage = (url: string) => {
     addObject({
       id: Date.now(),
@@ -16,7 +19,8 @@ const ImageUploader: React.FC = () => {
       height: 250,
       x: 50,
       y: 50,
-      src: url,
+      // src: url,
+      src: normalizeImagePath(url),
       name: "",
     });
   };
