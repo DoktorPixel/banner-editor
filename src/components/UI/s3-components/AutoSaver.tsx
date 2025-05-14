@@ -5,11 +5,12 @@ import { uploadToS3 } from "../../../S3/s3Storage";
 import { ProjectData } from "../../../types";
 import { debounce } from "lodash";
 import isEqual from "fast-deep-equal";
+import { useSyncProjectWithSupabase } from "../../../utils/useSyncProjectWithSupabase";
 
 const AutoSaver: React.FC = () => {
   const { objects, dynamicImgs, currentProjectName } = useBanner();
   const { config } = useConfig();
-
+  const { sync } = useSyncProjectWithSupabase();
   const [saved, setSaved] = useState(false);
 
   const lastDataRef = useRef<ProjectData>({
@@ -42,6 +43,7 @@ const AutoSaver: React.FC = () => {
 
     try {
       await uploadToS3(key, projectData);
+      await sync(currentProjectName, projectData);
       // console.log("✅ Auto-saved objects:", projectData.objects);
       lastDataRef.current = {
         objects: structuredClone(objects),

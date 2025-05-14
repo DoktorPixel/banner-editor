@@ -1,15 +1,16 @@
 import React, { useRef } from "react";
-import { useFeededifyApi } from "../../../utils/useFeededifyApi";
-import { useBanner } from "../../../context/BannerContext";
 import { Button } from "@mui/material";
-
-// const IMAGE_BASE_URL = "https://api.feededify.app/client/";
+import { useSupabaseImages } from "../../../utils/useSupabaseImages";
+import { useBanner } from "../../../context/BannerContext";
 
 const ImageUploader: React.FC = () => {
-  const { uploadImage } = useFeededifyApi();
-  const { currentProjectId, triggerRefresh, addObject } = useBanner();
   const inputRef = useRef<HTMLInputElement | null>(null);
-
+  const { uploadImage } = useSupabaseImages();
+  const { currentProjectId, triggerRefresh, addObject } = useBanner();
+  const normalizeImagePath = (url: string): string => {
+    if (url.includes("/feedmaker/")) return url;
+    return url.replace("/templates/", "/feedmaker/templates/");
+  };
   const handleAddImage = (url: string) => {
     addObject({
       id: Date.now(),
@@ -18,7 +19,8 @@ const ImageUploader: React.FC = () => {
       height: 250,
       x: 50,
       y: 50,
-      src: url,
+      // src: url,
+      src: normalizeImagePath(url),
       name: "",
     });
   };
@@ -26,11 +28,12 @@ const ImageUploader: React.FC = () => {
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !currentProjectId) return;
+
     try {
       const result = await uploadImage(file, currentProjectId);
-      event.target.value = "";
-      triggerRefresh();
-      handleAddImage(result.url);
+      event.target.value = ""; // сбрасываем значение для повторной загрузки того же файла
+      triggerRefresh(); // обновляем галерею
+      handleAddImage(result.file_url);
     } catch (error) {
       console.error("❌ Upload error:", error);
     }
@@ -42,8 +45,8 @@ const ImageUploader: React.FC = () => {
         type="file"
         ref={inputRef}
         onChange={handleUpload}
-        style={{ display: "none" }}
         accept="image/*"
+        style={{ display: "none" }}
       />
       <Button variant="contained" onClick={() => inputRef.current?.click()}>
         Add Image

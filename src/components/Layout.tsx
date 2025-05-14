@@ -11,7 +11,8 @@ import ProjectDialog from "./UI/dialogs/ProjectDialog";
 import { downloadFromS3 } from "../S3/s3Storage";
 import { useConfig } from "../context/ConfigContext";
 import { CircularProgress, Box } from "@mui/material";
-import { useSyncProjectWithFeededify } from "../utils/useSyncProjectWithFeededify";
+// import { useSyncProjectWithFeededify } from "../utils/useSyncProjectWithFeededify";
+import { useSyncProjectWithSupabase } from "../utils/useSyncProjectWithSupabase";
 
 const Layout: React.FC = () => {
   const { mode } = useMode();
@@ -21,7 +22,8 @@ const Layout: React.FC = () => {
   const { projectName } = useParams<{ projectName: string }>();
   const [isCheckingProject, setIsCheckingProject] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
-  const { sync } = useSyncProjectWithFeededify();
+  // const { sync } = useSyncProjectWithFeededify();
+  const { sync } = useSyncProjectWithSupabase();
 
   useEffect(() => {
     const tryLoadProject = async () => {

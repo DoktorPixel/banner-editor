@@ -1,12 +1,13 @@
 import React, { useEffect, useState, DragEvent } from "react";
-import { useFeededifyApi, ImageItem } from "../../../utils/useFeededifyApi";
+import {
+  useSupabaseImages,
+  SupabaseImageItem,
+} from "../../../utils/useSupabaseImages";
 import { useBanner } from "../../../context/BannerContext";
 import { DeleteBtn } from "../../../assets/icons";
 
-// const IMAGE_BASE_URL = "https://api.feededify.app/client/";
-
 const ImageGallery: React.FC = () => {
-  const { getImages, deleteImage, uploadImage } = useFeededifyApi();
+  const { getImages, deleteImage, uploadImage } = useSupabaseImages();
   const {
     currentProjectId,
     refreshCounter,
@@ -14,8 +15,12 @@ const ImageGallery: React.FC = () => {
     addObject,
     deleteObjectsByImageSrc,
   } = useBanner();
-  const [images, setImages] = useState<ImageItem[]>([]);
+  const [images, setImages] = useState<SupabaseImageItem[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const normalizeImagePath = (url: string): string => {
+    if (url.includes("/feedmaker/")) return url;
+    return url.replace("/templates/", "/feedmaker/templates/");
+  };
 
   useEffect(() => {
     if (!currentProjectId) return;
@@ -26,10 +31,10 @@ const ImageGallery: React.FC = () => {
     const imageToDelete = images.find((img) => img.id === id);
     if (!imageToDelete) return;
 
-    const fullSrc = imageToDelete.url;
+    const fullSrc = imageToDelete.file_url;
     await deleteImage(id);
     setImages((prev) => prev.filter((img) => img.id !== id));
-    deleteObjectsByImageSrc(fullSrc);
+    deleteObjectsByImageSrc(normalizeImagePath(fullSrc));
   };
 
   const handleDrop = async (event: DragEvent<HTMLDivElement>) => {
@@ -49,7 +54,7 @@ const ImageGallery: React.FC = () => {
         height: 250,
         x: 50,
         y: 50,
-        src: result.url,
+        src: normalizeImagePath(result.file_url),
         name: "",
       });
     } catch (error) {
@@ -84,7 +89,7 @@ const ImageGallery: React.FC = () => {
     >
       <div className="image-grid">
         {images.map((img, index) => {
-          const fullSrc = img.url;
+          const fullSrc = img.file_url;
 
           return (
             <div
@@ -98,13 +103,14 @@ const ImageGallery: React.FC = () => {
                   height: 250,
                   x: 50,
                   y: 50,
-                  src: fullSrc,
+                  src: normalizeImagePath(fullSrc),
                   name: "",
                 })
               }
             >
               <img
                 src={encodeURI(fullSrc)}
+                // src={`${encodeURI(fullSrc)}?v=${Date.now()}`}
                 alt={`img-${index + 1}`}
                 className="image"
               />
