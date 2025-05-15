@@ -69,55 +69,6 @@ export const useObjectProperties = () => {
   };
 };
 
-// export const useObjectGroupCondition = () => {
-//   const { objects, updateMultipleObjects } = useBanner();
-
-//   const updateConditionForGroup = (
-//     groupId: number,
-//     condition: BannerObject["condition"]
-//   ) => {
-//     const groupObjects = objects.filter(
-//       (obj) => obj.abstractGroupId === groupId
-//     );
-
-//     const updates: Record<number, Partial<BannerObject>> = {};
-
-//     groupObjects.forEach((obj) => {
-//       updates[obj.id] = { conditionForAbstract: condition };
-//     });
-
-//     updateMultipleObjects(updates);
-//   };
-
-//   return {
-//     updateConditionForGroup,
-//   };
-// };
-
-export const useAbstractGroupCondition = () => {
-  const { objects, updateMultipleObjects } = useBanner();
-
-  const updateGroupCondition = (
-    groupId: number,
-    condition?: BannerObject["conditionForAbstract"]
-  ) => {
-    const groupObjects = objects.filter(
-      (obj) => obj.abstractGroupId === groupId
-    );
-
-    if (groupObjects.length === 0) return;
-
-    const updates: Record<number, Partial<BannerObject>> = {};
-    groupObjects.forEach((obj) => {
-      updates[obj.id] = { conditionForAbstract: condition };
-    });
-
-    updateMultipleObjects(updates);
-  };
-
-  return { updateGroupCondition };
-};
-
 export const useChildProperties = () => {
   const {
     selectedChildId,
@@ -170,6 +121,126 @@ export const useChildProperties = () => {
     selectChild,
     clearChildSelection,
   };
+};
+
+export const useChildOrder = () => {
+  const { objects, reorderChildren } = useBanner();
+
+  // Получить группу и её потомков по groupId
+  const getGroupChildren = (groupId: number) => {
+    const group = objects.find((obj) => obj.id === groupId);
+    if (!group || group.type !== "group" || !group.children) {
+      return [];
+    }
+    return group.children;
+  };
+
+  // Переместить потомка на новую позицию
+  const moveChild = (groupId: number, childId: number, newPosition: number) => {
+    const children = getGroupChildren(groupId);
+    if (children.length === 0) {
+      console.warn("Группа не содержит потомков.");
+      return;
+    }
+
+    // Текущий порядок ID
+    const currentOrder = children.map((child) => child.id);
+    const currentIndex = currentOrder.indexOf(childId);
+    if (currentIndex === -1) {
+      console.warn("Указанный потомок не найден в группе.");
+      return;
+    }
+
+    // Проверяем, что newPosition в допустимых границах
+    if (newPosition < 0 || newPosition >= children.length) {
+      console.warn("Указана некорректная позиция для перемещения.");
+      return;
+    }
+
+    // Формируем новый порядок
+    const newOrder = [...currentOrder];
+    newOrder.splice(currentIndex, 1); // Удаляем childId из текущей позиции
+    newOrder.splice(newPosition, 0, childId); // Вставляем childId в новую позицию
+
+    // Вызываем reorderChildren для обновления порядка
+    reorderChildren(groupId, newOrder);
+  };
+
+  // Переместить потомка вверх (уменьшить order)
+  const moveChildUp = (groupId: number, childId: number) => {
+    const children = getGroupChildren(groupId);
+    const currentIndex = children.findIndex((child) => child.id === childId);
+    if (currentIndex <= 0) {
+      return; // Уже первый элемент или не найден
+    }
+    moveChild(groupId, childId, currentIndex - 1);
+  };
+
+  // Переместить потомка вниз (увеличить order)
+  const moveChildDown = (groupId: number, childId: number) => {
+    const children = getGroupChildren(groupId);
+    const currentIndex = children.findIndex((child) => child.id === childId);
+    if (currentIndex === -1 || currentIndex >= children.length - 1) {
+      return; // Уже последний элемент или не найден
+    }
+    moveChild(groupId, childId, currentIndex + 1);
+  };
+
+  return {
+    getGroupChildren,
+    moveChild,
+    moveChildUp,
+    moveChildDown,
+  };
+};
+
+// export const useObjectGroupCondition = () => {
+//   const { objects, updateMultipleObjects } = useBanner();
+
+//   const updateConditionForGroup = (
+//     groupId: number,
+//     condition: BannerObject["condition"]
+//   ) => {
+//     const groupObjects = objects.filter(
+//       (obj) => obj.abstractGroupId === groupId
+//     );
+
+//     const updates: Record<number, Partial<BannerObject>> = {};
+
+//     groupObjects.forEach((obj) => {
+//       updates[obj.id] = { conditionForAbstract: condition };
+//     });
+
+//     updateMultipleObjects(updates);
+//   };
+
+//   return {
+//     updateConditionForGroup,
+//   };
+// };
+
+export const useAbstractGroupCondition = () => {
+  const { objects, updateMultipleObjects } = useBanner();
+
+  const updateGroupCondition = (
+    groupId: number,
+    condition?: BannerObject["conditionForAbstract"]
+  ) => {
+    const groupObjects = objects.filter(
+      (obj) => obj.abstractGroupId === groupId
+    );
+
+    if (groupObjects.length === 0) return;
+
+    const updates: Record<number, Partial<BannerObject>> = {};
+    groupObjects.forEach((obj) => {
+      updates[obj.id] = { conditionForAbstract: condition };
+    });
+
+    updateMultipleObjects(updates);
+  };
+
+  return { updateGroupCondition };
 };
 
 // ZIndex Collision
@@ -359,14 +430,11 @@ export const replaceDynamicVariables = (
 // };
 
 export const replaceDynamicText = (
-  content: string,
+  content: string | undefined | null,
   keyValuePairs: { key: string; value: string }[]
 ): string => {
-  let result = content;
-  // console.log("content", content);
-  // console.log("keyValuePairs", keyValuePairs);
+  let result = typeof content === "string" ? content : String(content ?? "");
 
-  // {{ function(arg1, arg2) }}
   const functionRegex = /{{\s*(\w+)\s*\(\s*([\w\s,]+?)\s*\)\s*}}/g;
 
   result = result.replace(
@@ -395,11 +463,11 @@ export const replaceDynamicText = (
             const discount = ((price - salePrice) / price) * 100;
             return Math.round(discount).toString();
           }
-          return "0";
+          return "";
         }
 
         default:
-          return values[0] ?? "";
+          return values[0] || "";
       }
     }
   );

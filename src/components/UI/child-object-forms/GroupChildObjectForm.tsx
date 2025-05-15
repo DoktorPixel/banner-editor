@@ -32,6 +32,7 @@ import {
 import ActionToggle from "../button-groups/ActionToggle";
 import { ChildActionToggleMultiple } from "../button-groups/ChildActionToggleMultiple";
 import { AutoLayoutForm } from "../button-groups/AutoLayoutForm";
+import ChildOrderControls from "../button-groups/ChildOrderControls";
 
 interface GroupChildObjectFormProps {
   object: BannerChild;
@@ -607,6 +608,10 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             </Box>
           </Box>
         )}
+      </div>
+      <div className="grey-line"></div>
+      <div className="padding-wrapper">
+        <ChildOrderControls object={object} />
       </div>
     </Box>
   );
