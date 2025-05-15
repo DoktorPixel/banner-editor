@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 import { ChildConditionSelector } from "../ChildConditionSelector";
+import ChildOrderControls from "../button-groups/ChildOrderControls";
 import {
   BorderBottom,
   BorderLeft,
@@ -457,6 +458,11 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
             </Box>
           </Box>
         )}
+      </div>
+
+      <div className="grey-line"></div>
+      <div className="padding-wrapper">
+        <ChildOrderControls object={object} />
       </div>
     </Box>
   );

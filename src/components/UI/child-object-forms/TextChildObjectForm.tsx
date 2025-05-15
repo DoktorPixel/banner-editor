@@ -12,6 +12,7 @@ import ChildFontSelector from "../ChildFontSelector";
 import TextDecorationSelector from "../button-groups/TextDecorationSelector";
 import FontStyleSelector from "../button-groups/FontStyleSelector";
 import { ChildConditionSelector } from "../ChildConditionSelector";
+import ChildOrderControls from "../button-groups/ChildOrderControls";
 
 interface TextChildObjectFormProps {
   object: BannerChild;
@@ -149,14 +150,6 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
             fullWidth
             margin="normal"
           />
-          {/* <TextField
-            label="z-Index"
-            type="number"
-            value={object.zIndex || 0}
-            onChange={(e) => onChange("zIndex", parseInt(e.target.value, 10))}
-            fullWidth
-            margin="normal"
-          /> */}
           <TextField
             label="Opacity"
             type="number"
@@ -171,6 +164,10 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
             margin="normal"
           />
         </div>
+      </div>
+      <div className="grey-line"></div>
+      <div className="padding-wrapper">
+        <ChildOrderControls object={object} />
       </div>
     </Box>
   );

@@ -509,318 +509,354 @@ const BannerArea: React.FC = () => {
                       paddingRight: object.paddingRight,
                     }}
                   >
-                    {object.children?.map((child) => {
-                      const isHidden = shouldHideObject(
-                        child.condition,
-                        keyValuePairs
-                      );
-                      const isVisibleCild =
-                        isVisible && !hiddenObjectIds.includes(child.id);
-                      // if (isHidden) return null;
-                      if (child.type === "text") {
-                        return (
-                          <div
-                            key={child.id}
-                            id={`${child.id}`}
-                            data-condition={JSON.stringify(child.condition)}
-                            className={`text-field banner-object-child ${
-                              selectedChildId?.groupId === object.id &&
-                              selectedChildId.childId === child.id
-                                ? "selected"
-                                : ""
-                            }`}
-                            style={{
-                              fontSize: child.fontSize,
-                              color: child.color,
-                              fontFamily: child.fontFamily,
-                              fontWeight: child.fontWeight,
-                              fontStyle: child.fontStyle,
-                              textDecoration: child.textDecoration,
-                              textAlign: child.textAlign,
-                              opacity: computeOpacity(child.opacity, isHidden),
-                              visibility: isVisibleCild ? "visible" : "hidden",
-                              border:
+                    {object.children
+                      ?.slice()
+                      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+                      .map((child) => {
+                        const isHidden = shouldHideObject(
+                          child.condition,
+                          keyValuePairs
+                        );
+                        const isVisibleCild =
+                          isVisible && !hiddenObjectIds.includes(child.id);
+                        // if (isHidden) return null;
+                        if (child.type === "text") {
+                          return (
+                            <div
+                              key={child.id}
+                              id={`${child.id}`}
+                              data-condition={JSON.stringify(child.condition)}
+                              className={`text-field banner-object-child ${
                                 selectedChildId?.groupId === object.id &&
                                 selectedChildId.childId === child.id
-                                  ? "1px solid blue"
-                                  : "none",
-                              transform: `rotate(${child.rotate || 0}deg)`,
-                            }}
-                            onDoubleClick={(e) =>
-                              handleChildClick(
-                                object.id,
-                                child.id,
-                                e,
-                                undefined
-                              )
-                            }
-                          >
-                            {replaceDynamicText(
-                              child.content ?? "",
-                              keyValuePairs
-                            )}
-                          </div>
-                        );
-                      } else if (child.type === "image") {
-                        return (
-                          <img
-                            id={`${child.id}`}
-                            data-condition={JSON.stringify(child.condition)}
-                            key={child.id}
-                            src={replaceDynamicVariables(
-                              child.src ?? "",
-                              keyValuePairs
-                            )}
-                            alt={child.name || "image"}
-                            style={{
-                              width: child.width,
-                              height: child.height,
-                              objectFit: child.objectFit,
-                              transform: `rotate(${child.rotate || 0}deg)`,
-                              opacity: computeOpacity(child.opacity, isHidden),
-                              visibility: isVisibleCild ? "visible" : "hidden",
-                            }}
-                            onDoubleClick={(e) =>
-                              handleChildClick(
-                                object.id,
-                                child.id,
-                                e,
-                                undefined
-                              )
-                            }
-                            className={`banner-object-child image-field ${
-                              selectedChildId?.groupId === object.id &&
-                              selectedChildId.childId === child.id
-                                ? "selected"
-                                : ""
-                            }`}
-                          />
-                        );
-                      } else if (child.type === "figure") {
-                        const {
-                          id,
-                          width,
-                          height,
-                          rotate,
-                          backgroundColor,
-                          ...figureStyles
-                        } = child;
-                        return (
-                          <div
-                            key={id}
-                            id={`${child.id}`}
-                            data-condition={JSON.stringify(child.condition)}
-                            style={{
-                              transform: `rotate(${rotate ?? 0}deg)`,
-                              visibility: isVisibleCild ? "visible" : "hidden",
-                            }}
-                            onDoubleClick={(e) =>
-                              handleChildClick(
-                                object.id,
-                                child.id,
-                                e,
-                                undefined
-                              )
-                            }
-                            className={`banner-object-child ${
-                              selectedChildId?.groupId === object.id &&
-                              selectedChildId.childId === child.id
-                                ? "selected"
-                                : ""
-                            }`}
-                          >
-                            <div
+                                  ? "selected"
+                                  : ""
+                              }`}
                               style={{
-                                position: "relative",
-                                width: width ?? "100px",
-                                height: height ?? "100px",
-                                backgroundColor:
-                                  backgroundColor !== "none"
-                                    ? backgroundColor
-                                    : undefined,
-                                ...figureStyles,
+                                fontSize: child.fontSize,
+                                color: child.color,
+                                fontFamily: child.fontFamily,
+                                fontWeight: child.fontWeight,
+                                fontStyle: child.fontStyle,
+                                textDecoration: child.textDecoration,
+                                textAlign: child.textAlign,
+                                opacity: computeOpacity(
+                                  child.opacity,
+                                  isHidden
+                                ),
+                                visibility: isVisibleCild
+                                  ? "visible"
+                                  : "hidden",
+                                border:
+                                  selectedChildId?.groupId === object.id &&
+                                  selectedChildId.childId === child.id
+                                    ? "1px solid blue"
+                                    : "none",
+                                transform: `rotate(${child.rotate || 0}deg)`,
                               }}
-                            ></div>
-                          </div>
-                        );
-                      } else if (child.type === "group") {
-                        const {
-                          id,
-                          children,
-                          rotate,
-                          width,
-                          height,
-                          autoWidth,
-                          autoHeight,
-                          backgroundColor,
-                          ...groupStyles
-                        } = child;
-                        return (
-                          <div
-                            id={`${id}`}
-                            data-condition={JSON.stringify(child.condition)}
-                            style={{
-                              transform: `rotate(${rotate ?? 0}deg)`,
-                              visibility: isVisibleCild ? "visible" : "hidden",
-                            }}
-                            className={`banner-object-child ${
-                              selectedChildId?.groupId === object.id &&
-                              selectedChildId.childId === child.id
-                                ? "selected"
-                                : ""
-                            }`}
-                            onDoubleClick={(e) =>
-                              handleChildClick(
-                                object.id,
-                                child.id,
-                                e,
-                                undefined
-                              )
-                            }
-                          >
-                            <div
-                              style={{
-                                // width: "auto",
-                                width: autoWidth ? "auto" : width,
-                                height: autoHeight ? "auto" : height,
-                                backgroundColor:
-                                  backgroundColor !== "none"
-                                    ? backgroundColor
-                                    : undefined,
-                                position: "relative",
-                                ...groupStyles,
-                              }}
+                              onDoubleClick={(e) =>
+                                handleChildClick(
+                                  object.id,
+                                  child.id,
+                                  e,
+                                  undefined
+                                )
+                              }
                             >
-                              {children?.map((nestedChild) => {
-                                const isVisibleCildNested =
-                                  isVisible &&
-                                  isVisibleCild &&
-                                  !hiddenObjectIds.includes(nestedChild.id);
-                                const {
-                                  id: nestedId,
-                                  condition,
-                                  content,
-                                  rotate,
-                                  src,
-                                  ...nestedStyles
-                                } = nestedChild;
-                                // const isHidden = shouldHideObject(
-                                //   condition,
-                                //   keyValuePairs
-                                // );
-                                // if (isHidden) return null;
-                                if (nestedChild.type === "image") {
-                                  return (
-                                    <img
-                                      key={nestedId}
-                                      id={`${nestedId}`}
-                                      data-condition={JSON.stringify(condition)}
-                                      src={replaceDynamicVariables(
-                                        src ?? "",
-                                        keyValuePairs
-                                      )}
-                                      alt={"image"}
-                                      style={{
-                                        ...nestedStyles,
-                                        visibility: isVisibleCildNested
-                                          ? "visible"
-                                          : "hidden",
-                                      }}
-                                      className={`image-field banner-object-child ${
-                                        selectedChildId?.groupId === child.id &&
-                                        selectedChildId.childId ===
-                                          nestedChild.id
-                                          ? "selected-grand-child"
-                                          : ""
-                                      }`}
-                                      onDoubleClick={(e) =>
-                                        handleChildClick(
-                                          child.id,
-                                          nestedChild.id,
-                                          e,
-                                          object.id
-                                        )
-                                      }
-                                    />
-                                  );
-                                } else if (nestedChild.type === "text") {
-                                  return (
-                                    <div
-                                      id={`${nestedId}`}
-                                      data-condition={JSON.stringify(condition)}
-                                      key={nestedId}
-                                      style={{
-                                        ...nestedStyles,
-                                        transform: `rotate(${rotate ?? 0}deg)`,
-                                        position: "relative",
-                                        width: "auto",
-                                        height: "auto",
-                                        visibility: isVisibleCildNested
-                                          ? "visible"
-                                          : "hidden",
-                                      }}
-                                      className={`image-field banner-object-child ${
-                                        selectedChildId?.groupId === child.id &&
-                                        selectedChildId.childId ===
-                                          nestedChild.id
-                                          ? "selected-grand-child"
-                                          : ""
-                                      }`}
-                                      onDoubleClick={(e) =>
-                                        handleChildClick(
-                                          child.id,
-                                          nestedChild.id,
-                                          e,
-                                          object.id
-                                        )
-                                      }
-                                    >
-                                      {content}
-                                    </div>
-                                  );
-                                }
-                                // else if (nestedChild.type === "figure") {
-                                //   return (
-                                //   )
-                                // }
-                                return (
-                                  <p
-                                    id={`${nestedId}`}
-                                    data-condition={JSON.stringify(condition)}
-                                    key={nestedId}
-                                    style={{
-                                      ...nestedStyles,
-                                      transform: `rotate(${rotate ?? 0}deg)`,
-                                      position: "relative",
-                                      visibility: isVisibleCildNested
-                                        ? "visible"
-                                        : "hidden",
-                                    }}
-                                    className={`image-field banner-object-child ${
-                                      selectedChildId?.groupId === child.id &&
-                                      selectedChildId.childId === nestedChild.id
-                                        ? "selected-grand-child"
-                                        : ""
-                                    }`}
-                                    onDoubleClick={(e) =>
-                                      handleChildClick(
-                                        child.id,
-                                        nestedChild.id,
-                                        e,
-                                        object.id
-                                      )
-                                    }
-                                  >
-                                    {content}
-                                  </p>
-                                );
-                              })}
+                              {replaceDynamicText(
+                                child.content ?? "",
+                                keyValuePairs
+                              )}
                             </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })}
+                          );
+                        } else if (child.type === "image") {
+                          return (
+                            <img
+                              id={`${child.id}`}
+                              data-condition={JSON.stringify(child.condition)}
+                              key={child.id}
+                              src={replaceDynamicVariables(
+                                child.src ?? "",
+                                keyValuePairs
+                              )}
+                              alt={child.name || "image"}
+                              style={{
+                                width: child.width,
+                                height: child.height,
+                                objectFit: child.objectFit,
+                                transform: `rotate(${child.rotate || 0}deg)`,
+                                opacity: computeOpacity(
+                                  child.opacity,
+                                  isHidden
+                                ),
+                                visibility: isVisibleCild
+                                  ? "visible"
+                                  : "hidden",
+                              }}
+                              onDoubleClick={(e) =>
+                                handleChildClick(
+                                  object.id,
+                                  child.id,
+                                  e,
+                                  undefined
+                                )
+                              }
+                              className={`banner-object-child image-field ${
+                                selectedChildId?.groupId === object.id &&
+                                selectedChildId.childId === child.id
+                                  ? "selected"
+                                  : ""
+                              }`}
+                            />
+                          );
+                        } else if (child.type === "figure") {
+                          const {
+                            id,
+                            width,
+                            height,
+                            rotate,
+                            backgroundColor,
+                            ...figureStyles
+                          } = child;
+                          return (
+                            <div
+                              key={id}
+                              id={`${child.id}`}
+                              data-condition={JSON.stringify(child.condition)}
+                              style={{
+                                transform: `rotate(${rotate ?? 0}deg)`,
+                                visibility: isVisibleCild
+                                  ? "visible"
+                                  : "hidden",
+                              }}
+                              onDoubleClick={(e) =>
+                                handleChildClick(
+                                  object.id,
+                                  child.id,
+                                  e,
+                                  undefined
+                                )
+                              }
+                              className={`banner-object-child ${
+                                selectedChildId?.groupId === object.id &&
+                                selectedChildId.childId === child.id
+                                  ? "selected"
+                                  : ""
+                              }`}
+                            >
+                              <div
+                                style={{
+                                  position: "relative",
+                                  width: width ?? "100px",
+                                  height: height ?? "100px",
+                                  backgroundColor:
+                                    backgroundColor !== "none"
+                                      ? backgroundColor
+                                      : undefined,
+                                  ...figureStyles,
+                                }}
+                              ></div>
+                            </div>
+                          );
+                        } else if (child.type === "group") {
+                          const {
+                            id,
+                            children,
+                            rotate,
+                            width,
+                            height,
+                            autoWidth,
+                            autoHeight,
+                            backgroundColor,
+                            ...groupStyles
+                          } = child;
+                          return (
+                            <div
+                              id={`${id}`}
+                              data-condition={JSON.stringify(child.condition)}
+                              style={{
+                                transform: `rotate(${rotate ?? 0}deg)`,
+                                visibility: isVisibleCild
+                                  ? "visible"
+                                  : "hidden",
+                              }}
+                              className={`banner-object-child ${
+                                selectedChildId?.groupId === object.id &&
+                                selectedChildId.childId === child.id
+                                  ? "selected"
+                                  : ""
+                              }`}
+                              onDoubleClick={(e) =>
+                                handleChildClick(
+                                  object.id,
+                                  child.id,
+                                  e,
+                                  undefined
+                                )
+                              }
+                            >
+                              <div
+                                style={{
+                                  // width: "auto",
+                                  width: autoWidth ? "auto" : width,
+                                  height: autoHeight ? "auto" : height,
+                                  backgroundColor:
+                                    backgroundColor !== "none"
+                                      ? backgroundColor
+                                      : undefined,
+                                  position: "relative",
+                                  ...groupStyles,
+                                }}
+                              >
+                                {children
+                                  ?.slice()
+                                  .sort(
+                                    (a, b) => (a.order ?? 0) - (b.order ?? 0)
+                                  )
+                                  .map((nestedChild) => {
+                                    const isVisibleCildNested =
+                                      isVisible &&
+                                      isVisibleCild &&
+                                      !hiddenObjectIds.includes(nestedChild.id);
+                                    const {
+                                      id: nestedId,
+                                      condition,
+                                      content,
+                                      rotate,
+                                      src,
+                                      ...nestedStyles
+                                    } = nestedChild;
+                                    // const isHidden = shouldHideObject(
+                                    //   condition,
+                                    //   keyValuePairs
+                                    // );
+                                    // if (isHidden) return null;
+                                    if (nestedChild.type === "image") {
+                                      return (
+                                        <img
+                                          key={nestedId}
+                                          id={`${nestedId}`}
+                                          data-condition={JSON.stringify(
+                                            condition
+                                          )}
+                                          src={replaceDynamicVariables(
+                                            src ?? "",
+                                            keyValuePairs
+                                          )}
+                                          alt={"image"}
+                                          style={{
+                                            ...nestedStyles,
+                                            visibility: isVisibleCildNested
+                                              ? "visible"
+                                              : "hidden",
+                                          }}
+                                          className={`image-field banner-object-child ${
+                                            selectedChildId?.groupId ===
+                                              child.id &&
+                                            selectedChildId.childId ===
+                                              nestedChild.id
+                                              ? "selected-grand-child"
+                                              : ""
+                                          }`}
+                                          onDoubleClick={(e) =>
+                                            handleChildClick(
+                                              child.id,
+                                              nestedChild.id,
+                                              e,
+                                              object.id
+                                            )
+                                          }
+                                        />
+                                      );
+                                    } else if (nestedChild.type === "text") {
+                                      return (
+                                        <div
+                                          id={`${nestedId}`}
+                                          data-condition={JSON.stringify(
+                                            condition
+                                          )}
+                                          key={nestedId}
+                                          style={{
+                                            ...nestedStyles,
+                                            transform: `rotate(${
+                                              rotate ?? 0
+                                            }deg)`,
+                                            position: "relative",
+                                            width: "auto",
+                                            height: "auto",
+                                            visibility: isVisibleCildNested
+                                              ? "visible"
+                                              : "hidden",
+                                          }}
+                                          className={`image-field banner-object-child ${
+                                            selectedChildId?.groupId ===
+                                              child.id &&
+                                            selectedChildId.childId ===
+                                              nestedChild.id
+                                              ? "selected-grand-child"
+                                              : ""
+                                          }`}
+                                          onDoubleClick={(e) =>
+                                            handleChildClick(
+                                              child.id,
+                                              nestedChild.id,
+                                              e,
+                                              object.id
+                                            )
+                                          }
+                                        >
+                                          {content}
+                                        </div>
+                                      );
+                                    }
+                                    // else if (nestedChild.type === "figure") {
+                                    //   return (
+                                    //   )
+                                    // }
+                                    return (
+                                      <p
+                                        id={`${nestedId}`}
+                                        data-condition={JSON.stringify(
+                                          condition
+                                        )}
+                                        key={nestedId}
+                                        style={{
+                                          ...nestedStyles,
+                                          transform: `rotate(${
+                                            rotate ?? 0
+                                          }deg)`,
+                                          position: "relative",
+                                          visibility: isVisibleCildNested
+                                            ? "visible"
+                                            : "hidden",
+                                        }}
+                                        className={`image-field banner-object-child ${
+                                          selectedChildId?.groupId ===
+                                            child.id &&
+                                          selectedChildId.childId ===
+                                            nestedChild.id
+                                            ? "selected-grand-child"
+                                            : ""
+                                        }`}
+                                        onDoubleClick={(e) =>
+                                          handleChildClick(
+                                            child.id,
+                                            nestedChild.id,
+                                            e,
+                                            object.id
+                                          )
+                                        }
+                                      >
+                                        {content}
+                                      </p>
+                                    );
+                                  })}
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
                   </div>
                   <ResizeHandles
                     objectId={object.id}

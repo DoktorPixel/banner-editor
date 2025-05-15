@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import UpdateImageDialog from "../dialogs/UpdateImageDialog";
 import { ChildConditionSelector } from "../ChildConditionSelector";
+import ChildOrderControls from "../button-groups/ChildOrderControls";
 
 interface ImageChildObjectFormProps {
   object: BannerChild;
@@ -218,6 +219,11 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
             margin="normal"
           />
         </div>
+      </div>
+
+      <div className="grey-line"></div>
+      <div className="padding-wrapper">
+        <ChildOrderControls object={object} />
       </div>
 
       <UpdateImageDialog

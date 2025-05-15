@@ -123,7 +123,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addJson = (jsonData: BannerObject[]) => {
     if (!Array.isArray(jsonData)) {
-      console.error("Переданий JSON має бути масивом об'єктів.");
+      console.error("JSON transmissions contain an array of objects.");
       return;
     }
     updateHistory(jsonData);
@@ -246,7 +246,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const groupSelectedObjects = () => {
     if (selectedObjectIds.length < 2) {
-      console.warn("Для группировки нужно выделить как минимум два объекта.");
+      console.warn("To group, you need to select at least two objects.");
       return;
     }
 
@@ -275,14 +275,17 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
           ...selectedObjects.map((o) => (o.y ?? 0) + (o.height ?? 100))
         ) - minY,
       zIndex: maxZIndex + 1,
-      children: selectedObjects.map(({ id, x, y, children = [], ...rest }) => ({
-        id,
-        x: (x ?? 0) - minX, // Относительное позиционирование внутри группы
-        y: (y ?? 0) - minY,
-        children:
-          children.length > 0 ? children.map((child) => ({ ...child })) : [],
-        ...rest, // Перенос всех стилей и свойств
-      })),
+      children: selectedObjects.map(
+        ({ id, x, y, children = [], ...rest }, index) => ({
+          id,
+          x: (x ?? 0) - minX, // Относительное позиционирование внутри группы
+          y: (y ?? 0) - minY,
+          order: index, // Присваиваем order на основе индекса
+          children:
+            children.length > 0 ? children.map((child) => ({ ...child })) : [],
+          ...rest, // Перенос всех стилей и свойств
+        })
+      ),
       display: "flex",
       flexDirection: "row",
       justifyContent: "center",
@@ -324,6 +327,33 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     updateHistory([...newObjects, ...ungroupedObjects]);
 
     setSelectedObjectIds(ungroupedObjects.map((obj) => obj.id));
+  };
+
+  const reorderChildren = (groupId: number, newOrder: number[]) => {
+    const group = objects.find((obj) => obj.id === groupId);
+    if (!group || group.type !== "group" || !group.children) {
+      console.warn("Объект не является группой или не содержит потомков.");
+      return;
+    }
+
+    // Проверяем, что переданы все ID потомков и нет лишних
+    const currentChildIds = group.children.map((child) => child.id);
+    if (
+      newOrder.length !== currentChildIds.length ||
+      !newOrder.every((id) => currentChildIds.includes(id))
+    ) {
+      console.warn("Передан некорректный массив ID для нового порядка.");
+      return;
+    }
+
+    // Создаем новый массив children с обновленным order
+    const newChildren = newOrder.map((childId, index) => {
+      const child = group.children!.find((c) => c.id === childId)!;
+      return { ...child, order: index };
+    });
+
+    // Обновляем родительский объект
+    updateObject(groupId, { children: newChildren });
   };
 
   return (
@@ -373,6 +403,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         setCurrentProjectId,
         refreshCounter,
         triggerRefresh,
+        reorderChildren,
       }}
     >
       {children}

@@ -127,6 +127,7 @@ export interface BannerChild {
   borderRightColor?: string;
   borderRightWidth?: number | string;
   zIndex?: number | undefined;
+  order?: number; //
 }
 
 export interface BannerContextProps {
@@ -183,6 +184,7 @@ export interface BannerContextProps {
   setCurrentProjectId: (id: string | null) => void;
   refreshCounter: number;
   triggerRefresh: () => void;
+  reorderChildren: (groupId: number, newOrder: number[]) => void;
 }
 
 export interface DynamicImg {
