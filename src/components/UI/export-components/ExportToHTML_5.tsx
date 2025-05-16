@@ -70,6 +70,22 @@ export const ExportToHTML_5 = (
         document.addEventListener("DOMContentLoaded", function () {
           const props = window.props || {};
 
+            const normalize = (value) => {
+              if (typeof value === "string") {
+                return parseFloat(value.replace(/[^\\d.]/g, "").replace(",", "."));
+              }
+              return typeof value === "number" ? value : NaN;
+            };
+
+            const price = normalize(props.price);
+            const salePrice = normalize(props.sale_price);
+
+            if (!isNaN(price) && !isNaN(salePrice)) {
+              if (salePrice >= price) {
+                delete props.sale_price;
+              }
+            }
+
           // data-condition
           document.querySelectorAll("[data-condition]").forEach((element) => {
             try {
