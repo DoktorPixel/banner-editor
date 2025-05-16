@@ -6,8 +6,8 @@ import { useBanner } from "../../context/BannerContext";
 import { useConfig } from "../../context/ConfigContext";
 
 // import { ExportToHTML_2 } from "./ExportToHTML_2";
-import { ExportToHTML_3 } from "./ExportToHTML_3";
-// import { ExportToHTML_4 } from "./ExportToHTML_4";
+// import { ExportToHTML_3 } from "./ExportToHTML_3";
+import { ExportToHTML_5 } from "./ExportToHTML_5";
 
 export const ExportToHTMLButton = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +18,7 @@ export const ExportToHTMLButton = () => {
   const handleExport = async () => {
     try {
       setIsLoading(true);
-      const html = ExportToHTML_3(objects, config);
+      const html = ExportToHTML_5(objects, config);
       await navigator.clipboard.writeText(html);
       setNotification("HTML successfully copied to clipboard!");
     } catch (error) {

@@ -430,7 +430,7 @@ export const replaceDynamicVariables = (
 // };
 
 export const replaceDynamicText = (
-  content: string | undefined | null,
+  content: string | undefined | null | number,
   keyValuePairs: { key: string; value: string }[]
 ): string => {
   let result = typeof content === "string" ? content : String(content ?? "");
