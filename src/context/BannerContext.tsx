@@ -303,7 +303,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const ungroupSelectedObject = () => {
     if (selectedObjectIds.length !== 1) {
-      console.warn("Для розгрупування потрібно виділити лише одну групу.");
+      console.warn("To ungroup, you only need to select one group.");
       return;
     }
 
@@ -312,7 +312,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
     if (!selectedObject || selectedObject.type !== "group") {
-      console.warn("Обраний об'єкт не є групою.");
+      console.warn("The selected object is not a group.");
       return;
     }
 
@@ -332,7 +332,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const reorderChildren = (groupId: number, newOrder: number[]) => {
     const group = objects.find((obj) => obj.id === groupId);
     if (!group || group.type !== "group" || !group.children) {
-      console.warn("Объект не является группой или не содержит потомков.");
+      console.warn("The object is not a group or has no children.");
       return;
     }
 
@@ -342,7 +342,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
       newOrder.length !== currentChildIds.length ||
       !newOrder.every((id) => currentChildIds.includes(id))
     ) {
-      console.warn("Передан некорректный массив ID для нового порядка.");
+      console.warn("Invalid ID array passed for new order.");
       return;
     }
 

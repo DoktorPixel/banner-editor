@@ -4,7 +4,7 @@ export interface BannerObject {
   x: number;
   y: number;
   zIndex?: number | undefined;
-  content?: string;
+  content?: string | number;
   fontSize?: number;
   fontFamily?: string;
   fontWeight?: React.CSSProperties["fontWeight"];
@@ -70,7 +70,7 @@ export interface BannerObject {
 export interface BannerChild {
   id: number;
   type: "text" | "image" | "group" | "figure";
-  content?: string;
+  content?: string | number;
   fontSize?: number;
   fontFamily?: string;
   fontWeight?: React.CSSProperties["fontWeight"];

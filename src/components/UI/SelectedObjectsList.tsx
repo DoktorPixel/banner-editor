@@ -1,6 +1,6 @@
 import { BannerObject } from "../../types";
 import { Typography, Box } from "@mui/material";
-import { ConditionSelectorForGroup } from "./ConditionSelectorForGroup";
+import { ConditionSelectorForGroup } from "./selectors/ConditionSelectorForGroup";
 
 interface SelectedObjectsListProps {
   objects: (BannerObject | undefined)[];

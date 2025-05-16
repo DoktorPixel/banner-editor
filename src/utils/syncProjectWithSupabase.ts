@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ProjectData } from "../types";
-import { ExportToHTML_3 } from "../components/UI/ExportToHTML_3";
+import { ExportToHTML_3 } from "../components/UI/export-components/ExportToHTML_3";
 import { ConfigItem } from "../types";
 import { getToken } from "./supabaseClient";
 

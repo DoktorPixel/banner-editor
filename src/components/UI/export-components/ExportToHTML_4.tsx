@@ -1,4 +1,4 @@
-// import { BannerObject, BannerChild } from "../../types/index";
+// import { BannerObject, BannerChild } from "../../../types";
 
 // export const ExportToHTML_4 = (objects: BannerObject[]): string => {
 //   // Helper function to convert properties to CSS styles

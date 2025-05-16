@@ -10,10 +10,10 @@ import {
   IconButton,
 } from "@mui/material";
 
-import { PlusIcon, MinusIcon } from "../../assets/icons";
-import ActionToggle from "./button-groups/ActionToggle";
-import { useChildCondition } from "../../utils/hooks";
-import { useObjectProperties } from "../../utils/hooks";
+import { PlusIcon, MinusIcon } from "../../../assets/icons";
+import ActionToggle from "../button-groups/ActionToggle";
+import { useChildCondition } from "../../../utils/hooks";
+import { useObjectProperties } from "../../../utils/hooks";
 
 interface ChildConditionSelectorProps {
   childId: number;

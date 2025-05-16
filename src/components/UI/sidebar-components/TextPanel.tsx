@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import { useBanner } from "../../../context/BannerContext";
-import FontSelector2 from "../FontSelector2";
+import FontSelector2 from "../selectors/FontSelector2";
 
 const TextPanel: React.FC = () => {
   const [textContent, setTextContent] = useState("");

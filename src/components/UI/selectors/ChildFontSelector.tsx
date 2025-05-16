@@ -1,7 +1,7 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import * as WebFont from "webfontloader";
-import { fonts } from "../../constants/fonts";
+import { fonts } from "../../../constants/fonts";
 
 interface FontSelectorProps {
   value: string;

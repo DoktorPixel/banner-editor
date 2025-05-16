@@ -1,4 +1,4 @@
-import { BannerObject, BannerChild } from "../../types";
+import { BannerObject, BannerChild } from "../../../types";
 import React from "react";
 
 const styleToString = (style: React.CSSProperties = {}): string => {

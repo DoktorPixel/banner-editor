@@ -13,7 +13,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
-import { ChildConditionSelector } from "../ChildConditionSelector";
+import { ChildConditionSelector } from "../selectors/ChildConditionSelector";
 import ChildOrderControls from "../button-groups/ChildOrderControls";
 import {
   BorderBottom,

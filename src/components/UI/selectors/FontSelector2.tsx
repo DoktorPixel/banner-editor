@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import * as WebFont from "webfontloader";
 import { useState, useCallback } from "react";
-import { fonts } from "../../constants/fonts";
+import { fonts } from "../../../constants/fonts";
 import SearchIcon from "@mui/icons-material/Search";
 
 interface FontSelectorProps {

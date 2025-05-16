@@ -12,7 +12,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import UpdateImageDialog from "../dialogs/UpdateImageDialog";
-import { ChildConditionSelector } from "../ChildConditionSelector";
+import { ChildConditionSelector } from "../selectors/ChildConditionSelector";
 import ChildOrderControls from "../button-groups/ChildOrderControls";
 
 interface ImageChildObjectFormProps {

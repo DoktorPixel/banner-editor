@@ -9,52 +9,58 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { useObjectCondition } from "../../utils/hooks";
-import { PlusIcon, MinusIcon } from "../../assets/icons";
-import ActionToggle from "./button-groups/ActionToggle";
+import { PlusIcon, MinusIcon } from "../../../assets/icons";
+import ActionToggle from "../button-groups/ActionToggle";
+import { useAbstractGroupCondition } from "../../../utils/hooks";
 
-interface ConditionSelectorProps {
-  objectId: number;
-  condition?: {
-    type: "showIf" | "hideIf";
-    props: string[];
-    state: "exist" | "noExist";
-  };
+interface Condition {
+  type: "showIf" | "hideIf";
+  props: string[];
+  state: "exist" | "noExist";
 }
 
-export const ConditionSelector: FC<ConditionSelectorProps> = ({
-  objectId,
+interface ConditionSelectorForGroupProps {
+  abstractGroupId: number;
+  condition?: Condition;
+}
+
+export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
+  abstractGroupId,
   condition,
 }) => {
-  const { updateCondition } = useObjectCondition();
+  const { updateGroupCondition } = useAbstractGroupCondition();
   const [inputValue, setInputValue] = useState(
     condition?.props?.join(", ") || ""
   );
 
   const handleConditionChange = (
-    newType?: "showIf" | "hideIf",
-    newState?: "exist" | "noExist",
+    newType?: Condition["type"],
+    newState?: Condition["state"],
     newProps?: string[]
   ) => {
     const cleanedProps = Array.from(
       new Set(newProps?.map((p) => p.trim()).filter((p) => p !== ""))
     );
 
-    const updatedCondition = {
+    const updatedCondition: Condition = {
       type: newType ?? condition?.type ?? "hideIf",
       state: newState ?? condition?.state ?? "exist",
       props: cleanedProps.length > 0 ? cleanedProps : condition?.props ?? [""],
     };
 
-    updateCondition(objectId, updatedCondition);
+    updateGroupCondition(abstractGroupId, updatedCondition);
   };
 
   const handleAddCondition = () => {
-    updateCondition(objectId, { type: "showIf", state: "exist", props: [] });
+    updateGroupCondition(abstractGroupId, {
+      type: "showIf",
+      state: "exist",
+      props: [],
+    });
   };
 
   const handleRemoveCondition = () => {
-    updateCondition(objectId, undefined);
+    updateGroupCondition(abstractGroupId, undefined);
   };
 
   if (!condition) {
@@ -66,7 +72,7 @@ export const ConditionSelector: FC<ConditionSelectorProps> = ({
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography variant="subtitle2">Program visibility</Typography>
+        <Typography variant="subtitle2">Program visibility (Group)</Typography>
         <IconButton onClick={handleAddCondition}>
           <PlusIcon />
         </IconButton>
@@ -77,11 +83,12 @@ export const ConditionSelector: FC<ConditionSelectorProps> = ({
   return (
     <Box paddingLeft="10px" paddingRight="10px">
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="subtitle2">Program visibility</Typography>
+        <Typography variant="subtitle2">Program visibility (Group)</Typography>
         <IconButton onClick={handleRemoveCondition} edge="start">
           <MinusIcon />
         </IconButton>
       </Box>
+
       <div style={{ maxWidth: "134px" }}>
         <ActionToggle
           label="Action"
@@ -90,7 +97,9 @@ export const ConditionSelector: FC<ConditionSelectorProps> = ({
             { value: "showIf", label: "Show" },
           ]}
           selected={condition?.type || "hideIf"}
-          onChange={handleConditionChange}
+          onChange={(newValue) =>
+            handleConditionChange(newValue as Condition["type"])
+          }
         />
       </div>
 
@@ -140,7 +149,7 @@ export const ConditionSelector: FC<ConditionSelectorProps> = ({
               onChange={(e) =>
                 handleConditionChange(
                   undefined,
-                  e.target.value as "exist" | "noExist"
+                  e.target.value as Condition["state"]
                 )
               }
             >

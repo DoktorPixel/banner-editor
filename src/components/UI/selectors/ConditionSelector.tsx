@@ -9,58 +9,52 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { PlusIcon, MinusIcon } from "../../assets/icons";
-import ActionToggle from "./button-groups/ActionToggle";
-import { useAbstractGroupCondition } from "../../utils/hooks";
+import { useObjectCondition } from "../../../utils/hooks";
+import { PlusIcon, MinusIcon } from "../../../assets/icons";
+import ActionToggle from "../button-groups/ActionToggle";
 
-interface Condition {
-  type: "showIf" | "hideIf";
-  props: string[];
-  state: "exist" | "noExist";
+interface ConditionSelectorProps {
+  objectId: number;
+  condition?: {
+    type: "showIf" | "hideIf";
+    props: string[];
+    state: "exist" | "noExist";
+  };
 }
 
-interface ConditionSelectorForGroupProps {
-  abstractGroupId: number;
-  condition?: Condition;
-}
-
-export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
-  abstractGroupId,
+export const ConditionSelector: FC<ConditionSelectorProps> = ({
+  objectId,
   condition,
 }) => {
-  const { updateGroupCondition } = useAbstractGroupCondition();
+  const { updateCondition } = useObjectCondition();
   const [inputValue, setInputValue] = useState(
     condition?.props?.join(", ") || ""
   );
 
   const handleConditionChange = (
-    newType?: Condition["type"],
-    newState?: Condition["state"],
+    newType?: "showIf" | "hideIf",
+    newState?: "exist" | "noExist",
     newProps?: string[]
   ) => {
     const cleanedProps = Array.from(
       new Set(newProps?.map((p) => p.trim()).filter((p) => p !== ""))
     );
 
-    const updatedCondition: Condition = {
+    const updatedCondition = {
       type: newType ?? condition?.type ?? "hideIf",
       state: newState ?? condition?.state ?? "exist",
       props: cleanedProps.length > 0 ? cleanedProps : condition?.props ?? [""],
     };
 
-    updateGroupCondition(abstractGroupId, updatedCondition);
+    updateCondition(objectId, updatedCondition);
   };
 
   const handleAddCondition = () => {
-    updateGroupCondition(abstractGroupId, {
-      type: "showIf",
-      state: "exist",
-      props: [],
-    });
+    updateCondition(objectId, { type: "showIf", state: "exist", props: [] });
   };
 
   const handleRemoveCondition = () => {
-    updateGroupCondition(abstractGroupId, undefined);
+    updateCondition(objectId, undefined);
   };
 
   if (!condition) {
@@ -72,7 +66,7 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography variant="subtitle2">Program visibility (Group)</Typography>
+        <Typography variant="subtitle2">Program visibility</Typography>
         <IconButton onClick={handleAddCondition}>
           <PlusIcon />
         </IconButton>
@@ -83,12 +77,11 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
   return (
     <Box paddingLeft="10px" paddingRight="10px">
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="subtitle2">Program visibility (Group)</Typography>
+        <Typography variant="subtitle2">Program visibility</Typography>
         <IconButton onClick={handleRemoveCondition} edge="start">
           <MinusIcon />
         </IconButton>
       </Box>
-
       <div style={{ maxWidth: "134px" }}>
         <ActionToggle
           label="Action"
@@ -97,9 +90,7 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
             { value: "showIf", label: "Show" },
           ]}
           selected={condition?.type || "hideIf"}
-          onChange={(newValue) =>
-            handleConditionChange(newValue as Condition["type"])
-          }
+          onChange={handleConditionChange}
         />
       </div>
 
@@ -149,7 +140,7 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
               onChange={(e) =>
                 handleConditionChange(
                   undefined,
-                  e.target.value as Condition["state"]
+                  e.target.value as "exist" | "noExist"
                 )
               }
             >
