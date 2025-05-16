@@ -9,12 +9,12 @@ import {
   Typography,
   InputAdornment,
 } from "@mui/material";
-import FontSelector from "../FontSelector";
+import FontSelector from "../selectors/FontSelector";
 import TextAlignSelector from "../button-groups/TextAlignSelector";
 import TextDecorationSelector from "../button-groups/TextDecorationSelector";
 import FontStyleSelector from "../button-groups/FontStyleSelector";
 import { MuiColorInput } from "mui-color-input";
-import { ConditionSelector } from "../ConditionSelector";
+import { ConditionSelector } from "../selectors/ConditionSelector";
 import ActionToggle from "../button-groups/ActionToggle";
 
 interface TextObjectFormProps {

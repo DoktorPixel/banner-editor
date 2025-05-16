@@ -1,10 +1,10 @@
 // import { useState } from "react";
-// import { useBanner } from "../../context/BannerContext";
-// import { useConfig } from "../../context/ConfigContext";
+// import { useBanner } from "../../../context/BannerContext";
+// import { useConfig } from "../../../context/ConfigContext";
 // import LoadingButton from "@mui/lab/LoadingButton";
 // import SendIcon from "@mui/icons-material/Send";
 // import Typography from "@mui/material/Typography";
-// import { DynamicImg } from "../../types";
+// import { DynamicImg } from "../../../types";
 
 // const ExportInHTML: React.FC = () => {
 //   const { clearSelection, clearChildSelection, dynamicImgs } = useBanner();

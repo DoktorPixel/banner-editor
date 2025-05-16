@@ -1,5 +1,5 @@
-import { BannerObject, BannerChild } from "../../types/index";
-import { ConfigItem } from "../../types/index";
+import { BannerObject, BannerChild } from "../../../types/index";
+import { ConfigItem } from "../../../types/index";
 
 export const ExportToHTML_3 = (
   objects: BannerObject[],

@@ -8,10 +8,10 @@ import {
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 import { BannerChild } from "../../../types";
-import ChildFontSelector from "../ChildFontSelector";
+import ChildFontSelector from "../selectors/ChildFontSelector";
 import TextDecorationSelector from "../button-groups/TextDecorationSelector";
 import FontStyleSelector from "../button-groups/FontStyleSelector";
-import { ChildConditionSelector } from "../ChildConditionSelector";
+import { ChildConditionSelector } from "../selectors/ChildConditionSelector";
 import ChildOrderControls from "../button-groups/ChildOrderControls";
 
 interface TextChildObjectFormProps {

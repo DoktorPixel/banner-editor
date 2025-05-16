@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { BannerChild } from "../../../types";
 import { MuiColorInput } from "mui-color-input";
-import { ChildConditionSelector } from "../ChildConditionSelector";
+import { ChildConditionSelector } from "../selectors/ChildConditionSelector";
 import { useChildProperties } from "../../../utils/hooks";
 import {
   BorderBottom,

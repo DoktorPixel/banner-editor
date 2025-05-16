@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Typography } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useBanner } from "../../context/BannerContext";
-import { useConfig } from "../../context/ConfigContext";
+import { useBanner } from "../../../context/BannerContext";
+import { useConfig } from "../../../context/ConfigContext";
 
 // import { ExportToHTML_2 } from "./ExportToHTML_2";
 // import { ExportToHTML_3 } from "./ExportToHTML_3";

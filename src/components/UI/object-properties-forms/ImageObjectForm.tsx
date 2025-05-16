@@ -13,7 +13,7 @@ import {
   // IconButton,
 } from "@mui/material";
 import UpdateImageDialog from "../dialogs/UpdateImageDialog";
-import { ConditionSelector } from "../ConditionSelector";
+import { ConditionSelector } from "../selectors/ConditionSelector";
 
 interface ImageObjectFormProps {
   object: BannerObject;

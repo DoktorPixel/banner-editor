@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { TextField, FormControlLabel, Switch, Tooltip } from "@mui/material";
-import { BannerObject } from "../../types";
+import { BannerObject } from "../../../types";
 
 interface AutoGapInputProps {
   objectId: number;

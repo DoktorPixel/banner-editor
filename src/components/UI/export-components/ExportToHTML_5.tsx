@@ -1,5 +1,5 @@
-import { BannerObject } from "../../types/index";
-import { ConfigItem } from "../../types/index";
+import { BannerObject } from "../../../types/index";
+import { ConfigItem } from "../../../types/index";
 import { GenerateObjectsHTML } from "./GeneateObjectsHTML";
 
 export const ExportToHTML_5 = (

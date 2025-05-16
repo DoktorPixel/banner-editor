@@ -15,7 +15,7 @@ import { PlusIcon, MinusIcon } from "../../../assets/icons";
 import { BannerObject } from "../../../types";
 import { MuiColorInput } from "mui-color-input";
 import { useObjectProperties } from "../../../utils/hooks";
-import { ConditionSelector } from "../ConditionSelector";
+import { ConditionSelector } from "../selectors/ConditionSelector";
 // import { FlexDirectionSelector } from "../FlexDirectionSelector";
 // import { AutoGapInput } from "../AutoGapInput";
 import {

@@ -15,7 +15,7 @@ import { MinusIcon, PlusIcon } from "../../../assets/icons";
 import { MuiColorInput } from "mui-color-input";
 import { useState, useEffect } from "react";
 import { useObjectProperties } from "../../../utils/hooks";
-import { ConditionSelector } from "../ConditionSelector";
+import { ConditionSelector } from "../selectors/ConditionSelector";
 import {
   BorderBottom,
   BorderLeft,

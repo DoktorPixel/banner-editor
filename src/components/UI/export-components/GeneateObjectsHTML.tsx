@@ -1,4 +1,4 @@
-import { BannerObject, BannerChild } from "../../types/index";
+import { BannerObject, BannerChild } from "../../../types/index";
 
 // Функция для генерации HTML для объектов
 export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
