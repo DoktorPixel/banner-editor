@@ -1,6 +1,8 @@
 import { BannerObject } from "../../../types/index";
 import { ConfigItem } from "../../../types/index";
 import { GenerateObjectsHTML } from "./GeneateObjectsHTML";
+import { generateGoogleFontsLinks } from "../../../utils/generateGoogleFonts";
+import { extractFontsFromObjects } from "../../../utils/extractFonts";
 
 export const ExportToHTML_5 = (
   objects: BannerObject[],
@@ -12,6 +14,12 @@ export const ExportToHTML_5 = (
   const width = config.canvasSize?.width || 1080;
   const height = config.canvasSize?.height || 1080;
 
+  // Сбор всех шрифтов
+  const usedFonts = extractFontsFromObjects(objects);
+
+  // Генерация @import для используемых шрифтов
+  const fontLinks = generateGoogleFontsLinks(usedFonts);
+
   // Полный HTML шаблон
   return `
   <!DOCTYPE html>
@@ -20,6 +28,7 @@ export const ExportToHTML_5 = (
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Exported Banner</title>
+      ${fontLinks}
       <style>
         * {
           box-sizing: border-box;
