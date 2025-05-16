@@ -618,6 +618,12 @@ const BannerArea: React.FC = () => {
                             backgroundColor,
                             ...figureStyles
                           } = child;
+
+                          const cleanStyles = Object.fromEntries(
+                            Object.entries(figureStyles).filter(
+                              ([key]) => key in ({} as React.CSSProperties)
+                            )
+                          );
                           return (
                             <div
                               key={id}
@@ -653,7 +659,7 @@ const BannerArea: React.FC = () => {
                                     backgroundColor !== "none"
                                       ? backgroundColor
                                       : undefined,
-                                  ...figureStyles,
+                                  ...cleanStyles,
                                 }}
                               ></div>
                             </div>
@@ -670,6 +676,11 @@ const BannerArea: React.FC = () => {
                             backgroundColor,
                             ...groupStyles
                           } = child;
+                          const cleanStyles = Object.fromEntries(
+                            Object.entries(groupStyles).filter(
+                              ([key]) => key in ({} as React.CSSProperties)
+                            )
+                          );
                           return (
                             <div
                               id={`${id}`}
@@ -705,7 +716,7 @@ const BannerArea: React.FC = () => {
                                       ? backgroundColor
                                       : undefined,
                                   position: "relative",
-                                  ...groupStyles,
+                                  ...cleanStyles,
                                 }}
                               >
                                 {children
