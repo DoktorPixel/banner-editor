@@ -25,6 +25,13 @@ export interface BannerObject {
     type: "showIf" | "hideIf";
     props: string[];
     state: "exist" | "noExist";
+    // operator?:
+    //   | "eq"
+    //   | "not-eq"
+    //   | "more-than"
+    //   | "less-than"
+    //   | "more-or-eq"
+    //   | "less-or-eq";
   };
   conditionForAbstract?: {
     type: "showIf" | "hideIf";

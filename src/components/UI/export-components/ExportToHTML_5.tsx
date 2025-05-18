@@ -1,6 +1,8 @@
 import { BannerObject } from "../../../types/index";
 import { ConfigItem } from "../../../types/index";
 import { GenerateObjectsHTML } from "./GeneateObjectsHTML";
+import { generateGoogleFontsLinks } from "../../../utils/generateGoogleFonts";
+import { extractFontsFromObjects } from "../../../utils/extractFonts";
 
 export const ExportToHTML_5 = (
   objects: BannerObject[],
@@ -12,6 +14,12 @@ export const ExportToHTML_5 = (
   const width = config.canvasSize?.width || 1080;
   const height = config.canvasSize?.height || 1080;
 
+  // Сбор всех шрифтов
+  const usedFonts = extractFontsFromObjects(objects);
+
+  // Генерация @import для используемых шрифтов
+  const fontLinks = generateGoogleFontsLinks(usedFonts);
+
   // Полный HTML шаблон
   return `
   <!DOCTYPE html>
@@ -20,6 +28,7 @@ export const ExportToHTML_5 = (
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Exported Banner</title>
+      ${fontLinks}
       <style>
         * {
           box-sizing: border-box;
@@ -60,6 +69,25 @@ export const ExportToHTML_5 = (
       <script>
         document.addEventListener("DOMContentLoaded", function () {
           const props = window.props || {};
+
+            const normalize = (value) => {
+              if (typeof value === "string") {
+                const clean = value
+                  .replace(/[^0-9,. ]/g, "")
+                  .trim()
+                  .replace(/ +/g, "")
+                  .replace(",", ".");
+                return parseFloat(clean);
+              }
+              return typeof value === "number" ? value : NaN;
+            };
+            const price = normalize(props.price);
+            const salePrice = normalize(props.sale_price);
+            if (!isNaN(price) && !isNaN(salePrice)) {
+              if (salePrice >= price) {
+                delete props.sale_price;
+              }
+            }
 
           // data-condition
           document.querySelectorAll("[data-condition]").forEach((element) => {
@@ -138,6 +166,21 @@ export const ExportToHTML_5 = (
                   }
                   return "0";
                 }
+
+                case "min": {
+                  const numericValues = values
+                    .map(v => parseFloat(normalizeNumber(v).replace(/[^0-9.]/g, "")))
+                    .filter(n => !isNaN(n));
+
+                  if (numericValues.length === 0) return match;
+
+                  const minValue = Math.min(...numericValues);
+                  return minValue.toLocaleString("ru", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  }) + " грн";
+                }
+
                 default:
                   return match;
               }
