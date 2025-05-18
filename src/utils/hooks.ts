@@ -466,6 +466,19 @@ export const replaceDynamicText = (
           return "";
         }
 
+        case "min": {
+          const numericValues = values
+            .map((v) => parseFloat(v.replace(/[^\d.,]/g, "").replace(",", ".")))
+            .filter((n) => !isNaN(n));
+
+          if (numericValues.length === 0) return "";
+
+          const minValue = Math.min(...numericValues);
+          return (
+            minValue.toLocaleString("ru", { minimumFractionDigits: 2 }) + " грн"
+          );
+        }
+
         default:
           return values[0] || "";
       }

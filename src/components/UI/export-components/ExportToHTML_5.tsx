@@ -72,14 +72,17 @@ export const ExportToHTML_5 = (
 
             const normalize = (value) => {
               if (typeof value === "string") {
-                return parseFloat(value.replace(/[^\\d.]/g, "").replace(",", "."));
+                const clean = value
+                  .replace(/[^0-9,. ]/g, "")
+                  .trim()
+                  .replace(/ +/g, "")
+                  .replace(",", ".");
+                return parseFloat(clean);
               }
               return typeof value === "number" ? value : NaN;
             };
-
             const price = normalize(props.price);
             const salePrice = normalize(props.sale_price);
-
             if (!isNaN(price) && !isNaN(salePrice)) {
               if (salePrice >= price) {
                 delete props.sale_price;
@@ -163,6 +166,21 @@ export const ExportToHTML_5 = (
                   }
                   return "0";
                 }
+
+                case "min": {
+                  const numericValues = values
+                    .map(v => parseFloat(normalizeNumber(v).replace(/[^0-9.]/g, "")))
+                    .filter(n => !isNaN(n));
+
+                  if (numericValues.length === 0) return match;
+
+                  const minValue = Math.min(...numericValues);
+                  return minValue.toLocaleString("ru", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  }) + " грн";
+                }
+
                 default:
                   return match;
               }
