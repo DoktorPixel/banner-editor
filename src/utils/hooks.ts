@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useBanner } from "../context/BannerContext";
-import { BannerObject, BannerChild } from "../types";
+import { BannerObject, BannerChild, ObjectCondition } from "../types";
 import type { Property } from "csstype";
 // import { ConfigItem } from "../types";
 
@@ -446,19 +446,30 @@ export const replaceDynamicText = (
         return found?.value || "";
       });
 
+      const cleanNumber = (str: string) =>
+        parseFloat(
+          str
+            .replace(/\s/g, "") // убрать пробелы
+            .replace(",", ".") // заменить запятую на точку
+            .replace(/[^\d.]/g, "") // убрать все кроме цифр и точек
+        );
+
       switch (funcName) {
         case "format": {
           const value = values[0];
           const numericValue = parseFloat(value.replace(/[^\d.]/g, ""));
-          return !isNaN(numericValue)
-            ? numericValue.toLocaleString("ru") + " грн"
+          const rounded = Math.round(numericValue);
+
+          return !isNaN(rounded)
+            ? rounded.toLocaleString("ru") + " грн"
             : value;
         }
 
         case "discount": {
           const [priceStr, saleStr] = values;
-          const price = parseFloat(priceStr.replace(/[^\d.]/g, ""));
-          const salePrice = parseFloat(saleStr.replace(/[^\d.]/g, ""));
+          const price = cleanNumber(priceStr);
+          const salePrice = cleanNumber(saleStr);
+
           if (!isNaN(price) && !isNaN(salePrice) && price !== 0) {
             const discount = ((price - salePrice) / price) * 100;
             return Math.round(discount).toString();
@@ -468,15 +479,17 @@ export const replaceDynamicText = (
 
         case "min": {
           const numericValues = values
-            .map((v) => parseFloat(v.replace(/[^\d.,]/g, "").replace(",", ".")))
+            .map((v) =>
+              Math.round(
+                parseFloat(v.replace(/[^\d.,]/g, "").replace(",", "."))
+              )
+            )
             .filter((n) => !isNaN(n));
 
           if (numericValues.length === 0) return "";
 
           const minValue = Math.min(...numericValues);
-          return (
-            minValue.toLocaleString("ru", { minimumFractionDigits: 2 }) + " грн"
-          );
+          return minValue.toLocaleString("ru") + " грн";
         }
 
         default:
@@ -494,52 +507,219 @@ export const replaceDynamicText = (
   return result;
 };
 
+// export const shouldHideObject = (
+//   condition: BannerObject["condition"] | undefined,
+//   keyValuePairs: { key: string; value: string }[]
+// ): boolean => {
+//   if (!condition) return false;
+
+//   const { type, props: conditionProps, state } = condition;
+//   const propsExist = conditionProps.some((prop) =>
+//     keyValuePairs.some((pair) => pair.key === prop)
+//   );
+
+//   if (state === "exist") {
+//     return (
+//       (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)
+//     );
+//   } else if (state === "noExist") {
+//     return (
+//       (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist)
+//     );
+//   }
+
+//   return false;
+// };
+
 export const shouldHideObject = (
-  condition: BannerObject["condition"] | undefined,
+  condition: ObjectCondition | undefined,
   keyValuePairs: { key: string; value: string }[]
 ): boolean => {
-  if (!condition) return false;
-
-  const { type, props: conditionProps, state } = condition;
-  const propsExist = conditionProps.some((prop) =>
-    keyValuePairs.some((pair) => pair.key === prop)
-  );
-
-  if (state === "exist") {
-    return (
-      (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)
-    );
-  } else if (state === "noExist") {
-    return (
-      (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist)
-    );
+  // Если нет condition — не скрываем
+  if (!condition) {
+    return false;
   }
 
-  return false;
+  const { type, props: conditionProps, state, compareValue } = condition;
+
+  // 1. Если выбраны только exist / noExist (без сравнения), то проверяем «наличие ключа в keyValuePairs».
+  if (state === "exist" || state === "noExist") {
+    // Проверим, есть ли в keyValuePairs хоть один элемент, чей key === любому элементу из conditionProps.
+    const propsExist = conditionProps.some((prop) =>
+      keyValuePairs.some((pair) => pair.key === prop)
+    );
+
+    if (state === "exist") {
+      // hideIf + propsExist  OR  showIf + !propsExist
+      return (
+        (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)
+      );
+    } else {
+      // state === "noExist"
+      // hideIf + !propsExist  OR  showIf + propsExist
+      return (
+        (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist)
+      );
+    }
+  }
+
+  // 2. Если мы попали сюда — state один из операторов сравнения.
+  //    Берём первый prop: предполагаем сравнение ровно по одному ключу.
+  const propToCompare = conditionProps[0];
+  if (!propToCompare) {
+    // без имени свойства нечего сравнивать — считаем, что условие ложно, значит скрытие = false (то есть показываем)
+    return false;
+  }
+
+  // Найдём в keyValuePairs пару с key === propToCompare
+  const pair = keyValuePairs.find((p) => p.key === propToCompare);
+
+  // Если нет такой пары — воспринимаем это как «значения нет»
+  if (!pair) {
+    // «нет значения» при сравнении считается не пройденным (false)
+    // Далее формируем логику: если operator = showIf, но value не найден — считаем "условие не выполнено"
+    // то есть для showIf: !условие → скрываем; для hideIf: условие(!) → не скрываем.
+    if (type === "showIf") {
+      return true; // не нашли значение, а нам нужно показать, когда сравнение true. Поскольку false, значит скрываем
+    } else {
+      return false; // hideIf: если сравнение false, то hideIf(false) → не скрываем
+    }
+  }
+
+  const actualValue = pair.value; // строка
+  const targetValue = compareValue ?? "";
+
+  // Попробуем распарсить как числа
+  const clean = (val: string): number => {
+    return Number(val.replace(/[^\d.,-]/g, "").replace(",", "."));
+  };
+
+  const actualNum = clean(actualValue);
+  const targetNum = clean(targetValue);
+  const bothAreNumbers = !isNaN(actualNum) && !isNaN(targetNum);
+
+  // Функция для проверки сравнения (возвращает true, если «условие сравнения» выполнено)
+  const doesComparisonHold = (): boolean => {
+    switch (state) {
+      case "eq":
+        return actualValue === targetValue;
+      case "not-eq":
+        return actualValue !== targetValue;
+      case "more-than":
+        if (bothAreNumbers) {
+          return actualNum > targetNum;
+        }
+        return actualValue > targetValue; // лексикографически
+      case "less-than":
+        if (bothAreNumbers) {
+          return actualNum < targetNum;
+        }
+        return actualValue < targetValue;
+      case "more-or-eq":
+        if (bothAreNumbers) {
+          return actualNum >= targetNum;
+        }
+        return actualValue >= targetValue;
+      case "less-or-eq":
+        if (bothAreNumbers) {
+          return actualNum <= targetNum;
+        }
+        return actualValue <= targetValue;
+      default:
+        return false;
+    }
+  };
+
+  const comparisonResult = doesComparisonHold();
+
+  // Теперь аналогично «exist/noExist» веткам:
+  // Если оператор = hideIf:
+  //   — скрываем, когда comparisonResult === true;
+  // Если оператор = showIf:
+  //   — скрываем, когда comparisonResult === false.
+  if (type === "hideIf") {
+    return comparisonResult;
+  } else {
+    // type === "showIf"
+    return !comparisonResult;
+  }
 };
 
 export const shouldHideGroup = (
-  conditionForAbstract: BannerObject["condition"] | undefined,
+  conditionForAbstract:
+    | {
+        type: "showIf" | "hideIf";
+        props: string[];
+        state:
+          | "exist"
+          | "noExist"
+          | "eq"
+          | "not-eq"
+          | "more-than"
+          | "less-than"
+          | "more-or-eq"
+          | "less-or-eq";
+        compareValue?: string;
+      }
+    | undefined,
   keyValuePairs: { key: string; value: string }[]
 ): boolean => {
   if (!conditionForAbstract) return false;
 
-  const { type, props: conditionProps, state } = conditionForAbstract;
-  const propsExist = conditionProps.some((prop) =>
-    keyValuePairs.some((pair) => pair.key === prop)
-  );
+  const {
+    type,
+    props: conditionProps,
+    state,
+    compareValue,
+  } = conditionForAbstract;
 
-  if (state === "exist") {
-    return (
-      (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)
-    );
-  } else if (state === "noExist") {
-    return (
-      (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist)
-    );
-  }
+  const evaluate = () => {
+    for (const prop of conditionProps) {
+      const pair = keyValuePairs.find((kv) => kv.key === prop);
+      const value = pair?.value;
 
-  return false;
+      switch (state) {
+        case "exist":
+          if (value !== undefined) return true;
+          break;
+        case "noExist":
+          if (value === undefined) return true;
+          break;
+        case "eq":
+          if (value == compareValue) return true;
+          break;
+        case "not-eq":
+          if (value != compareValue) return true;
+          break;
+        case "more-than":
+          if (parseFloat(value ?? "") > parseFloat(compareValue ?? ""))
+            return true;
+          break;
+        case "less-than":
+          if (parseFloat(value ?? "") < parseFloat(compareValue ?? ""))
+            return true;
+          break;
+        case "more-or-eq":
+          if (parseFloat(value ?? "") >= parseFloat(compareValue ?? ""))
+            return true;
+          break;
+        case "less-or-eq":
+          if (parseFloat(value ?? "") <= parseFloat(compareValue ?? ""))
+            return true;
+          break;
+        default:
+          break;
+      }
+    }
+
+    return false;
+  };
+
+  const match = evaluate();
+  const shouldHide =
+    (type === "hideIf" && match) || (type === "showIf" && !match);
+
+  return shouldHide;
 };
 
 // export const shouldHideObject = (

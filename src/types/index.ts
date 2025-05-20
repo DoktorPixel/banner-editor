@@ -24,19 +24,30 @@ export interface BannerObject {
   condition?: {
     type: "showIf" | "hideIf";
     props: string[];
-    state: "exist" | "noExist";
-    // operator?:
-    //   | "eq"
-    //   | "not-eq"
-    //   | "more-than"
-    //   | "less-than"
-    //   | "more-or-eq"
-    //   | "less-or-eq";
+    state:
+      | "exist"
+      | "noExist"
+      | "eq"
+      | "not-eq"
+      | "more-than"
+      | "less-than"
+      | "more-or-eq"
+      | "less-or-eq";
+    compareValue?: string;
   };
   conditionForAbstract?: {
     type: "showIf" | "hideIf";
     props: string[];
-    state: "exist" | "noExist";
+    state:
+      | "exist"
+      | "noExist"
+      | "eq"
+      | "not-eq"
+      | "more-than"
+      | "less-than"
+      | "more-or-eq"
+      | "less-or-eq";
+    compareValue?: string;
   };
   abstractGroupId?: number | null;
   flexDirection?: React.CSSProperties["flexDirection"];
@@ -74,6 +85,8 @@ export interface BannerObject {
   borderRightWidth?: number | string;
 }
 
+export type ObjectCondition = BannerObject["condition"];
+
 export interface BannerChild {
   id: number;
   type: "text" | "image" | "group" | "figure";
@@ -101,7 +114,16 @@ export interface BannerChild {
   condition?: {
     type: "showIf" | "hideIf";
     props: string[];
-    state: "exist" | "noExist";
+    state:
+      | "exist"
+      | "noExist"
+      | "eq"
+      | "not-eq"
+      | "more-than"
+      | "less-than"
+      | "more-or-eq"
+      | "less-or-eq";
+    compareValue?: string;
   };
   flexDirection?: React.CSSProperties["flexDirection"];
   justifyContent?: React.CSSProperties["justifyContent"];

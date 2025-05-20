@@ -1,27 +1,37 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   Box,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   TextField,
   Typography,
-  IconButton,
 } from "@mui/material";
-
 import { PlusIcon, MinusIcon } from "../../../assets/icons";
 import ActionToggle from "../button-groups/ActionToggle";
 import { useChildCondition } from "../../../utils/hooks";
 import { useObjectProperties } from "../../../utils/hooks";
 
+export type ChildCondition = {
+  type: "showIf" | "hideIf";
+  props: string[];
+  state:
+    | "exist"
+    | "noExist"
+    | "eq"
+    | "not-eq"
+    | "more-than"
+    | "less-than"
+    | "more-or-eq"
+    | "less-or-eq";
+  compareValue?: string;
+};
+
 interface ChildConditionSelectorProps {
   childId: number;
-  condition?: {
-    type: "showIf" | "hideIf";
-    props: string[];
-    state: "exist" | "noExist";
-  };
+  condition?: ChildCondition;
 }
 
 export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
@@ -32,23 +42,53 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
   const { selectedObjectIds } = useObjectProperties();
   const groupId = selectedObjectIds[0];
 
-  const [inputValue, setInputValue] = useState(
+  const [inputPropsString, setInputPropsString] = useState(
     condition?.props?.join(", ") || ""
   );
+  const [compareValue, setCompareValue] = useState<string>(
+    condition?.compareValue || ""
+  );
+
+  useEffect(() => {
+    setInputPropsString(condition?.props?.join(", ") || "");
+    setCompareValue(condition?.compareValue || "");
+  }, [condition]);
 
   const handleConditionChange = (
     newType?: "showIf" | "hideIf",
-    newState?: "exist" | "noExist",
-    newProps?: string[]
+    newState?: ChildCondition["state"],
+    newProps?: string[],
+    newCompareValue?: string
   ) => {
-    const cleanedProps = Array.from(
-      new Set(newProps?.map((p) => p.trim()).filter((p) => p !== ""))
-    );
+    const type = newType ?? condition?.type ?? "hideIf";
+    const state = newState ?? condition?.state ?? "exist";
 
-    const updatedCondition = {
-      type: newType ?? condition?.type ?? "hideIf",
-      state: newState ?? condition?.state ?? "exist",
-      props: cleanedProps.length > 0 ? cleanedProps : condition?.props ?? [""],
+    const props =
+      newProps !== undefined
+        ? Array.from(
+            new Set(newProps.map((p) => p.trim()).filter((p) => p !== ""))
+          )
+        : condition?.props ?? [];
+
+    const updatedCondition: ChildCondition = {
+      type,
+      state,
+      props,
+      ...([
+        "eq",
+        "not-eq",
+        "more-than",
+        "less-than",
+        "more-or-eq",
+        "less-or-eq",
+      ].includes(state)
+        ? {
+            compareValue:
+              newCompareValue !== undefined
+                ? newCompareValue
+                : compareValue || condition?.compareValue || "",
+          }
+        : {}),
     };
 
     updateChildCondition(groupId, childId, updatedCondition);
@@ -83,6 +123,15 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
     );
   }
 
+  const isComparisonOperator = [
+    "eq",
+    "not-eq",
+    "more-than",
+    "less-than",
+    "more-or-eq",
+    "less-or-eq",
+  ].includes(condition.state);
+
   return (
     <Box paddingLeft="10px" paddingRight="10px">
       <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -91,74 +140,141 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
           <MinusIcon />
         </IconButton>
       </Box>
-      <div style={{ maxWidth: "134px" }}>
+
+      <Box sx={{ maxWidth: "134px", marginTop: "8px" }}>
         <ActionToggle
           label="Action"
           options={[
             { value: "hideIf", label: "Hide" },
             { value: "showIf", label: "Show" },
           ]}
-          selected={condition?.type || "hideIf"}
-          onChange={handleConditionChange}
+          selected={condition.type}
+          onChange={(newType) =>
+            handleConditionChange(newType, undefined, undefined, undefined)
+          }
         />
-      </div>
+      </Box>
 
-      <div className="auto-size" style={{ marginTop: "8px" }}>
-        <div style={{ flex: 1 }}>
-          <InputLabel sx={{ mt: "-2px", mb: -2, fontSize: "12px" }}>
+      <Box sx={{ display: "flex", gap: 2, marginTop: "12px" }}>
+        <Box sx={{ flex: 1 }}>
+          <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
             Property
           </InputLabel>
           <TextField
-            value={inputValue}
+            value={inputPropsString}
             onChange={(e) => {
               const newValue = e.target.value;
-              setInputValue(newValue);
+              setInputPropsString(newValue);
 
-              if (newValue.endsWith(",")) return;
+              if (newValue.endsWith(",") && newValue !== ",") return;
 
               const propsArray = newValue
                 .split(",")
                 .map((p) => p.trim())
                 .filter((p) => p !== "");
-              handleConditionChange(undefined, undefined, propsArray);
+
+              handleConditionChange(
+                undefined,
+                undefined,
+                propsArray,
+                undefined
+              );
             }}
             onBlur={() => {
-              const finalPropsArray = inputValue
+              const finalPropsArray = inputPropsString
                 .split(",")
                 .map((p) => p.trim())
                 .filter((p) => p !== "");
-              handleConditionChange(undefined, undefined, finalPropsArray);
+
+              handleConditionChange(
+                undefined,
+                undefined,
+                finalPropsArray,
+                undefined
+              );
             }}
             fullWidth
             margin="normal"
+            placeholder="e.g. name, value"
           />
-        </div>
-        <div style={{ flex: 1 }}>
-          <InputLabel sx={{ mt: "-2px", mb: -2, fontSize: "12px" }}>
+        </Box>
+
+        <Box sx={{ flex: 1 }}>
+          <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
             Condition
           </InputLabel>
           <FormControl fullWidth margin="normal">
             <Select
+              value={condition.state}
+              onChange={(e) => {
+                const newState = e.target.value as ChildCondition["state"];
+                handleConditionChange(
+                  undefined,
+                  newState,
+                  undefined,
+                  undefined
+                );
+              }}
               sx={{
                 backgroundColor: "#fff",
                 borderRadius: "6px",
                 border: "1px solid #E4E4E4",
-                width: "100%",
               }}
-              value={condition?.state || "exist"}
-              onChange={(e) =>
-                handleConditionChange(
-                  undefined,
-                  e.target.value as "exist" | "noExist"
-                )
-              }
             >
               <MenuItem value="exist">Exist</MenuItem>
               <MenuItem value="noExist">No exist</MenuItem>
+              <MenuItem value="eq">Equal (=)</MenuItem>
+              <MenuItem value="not-eq">Not equal (≠)</MenuItem>
+              <MenuItem value="more-than">More than (&gt;)</MenuItem>
+              <MenuItem value="less-than">Less than (&lt;)</MenuItem>
+              <MenuItem value="more-or-eq">More or equal (≥)</MenuItem>
+              <MenuItem value="less-or-eq">Less or equal (≤)</MenuItem>
             </Select>
           </FormControl>
-        </div>
-      </div>
+        </Box>
+      </Box>
+
+      {isComparisonOperator && (
+        <Box sx={{ marginTop: "8px" }}>
+          <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
+            Value to compare
+          </InputLabel>
+          <TextField
+            type={
+              ["more-than", "less-than", "more-or-eq", "less-or-eq"].includes(
+                condition.state
+              )
+                ? "number"
+                : "text"
+            }
+            value={compareValue}
+            onChange={(e) => {
+              const newVal = e.target.value;
+
+              if (
+                ["more-than", "less-than", "more-or-eq", "less-or-eq"].includes(
+                  condition.state
+                ) &&
+                isNaN(Number(newVal))
+              ) {
+                return;
+              }
+
+              setCompareValue(newVal);
+              handleConditionChange(undefined, undefined, undefined, newVal);
+            }}
+            fullWidth
+            margin="normal"
+            placeholder={
+              ["more-than", "less-than", "more-or-eq", "less-or-eq"].includes(
+                condition.state
+              )
+                ? "Enter the number"
+                : "Enter comparison value"
+            }
+          />
+        </Box>
+      )}
     </Box>
   );
 };
