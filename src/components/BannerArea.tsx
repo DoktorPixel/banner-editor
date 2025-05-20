@@ -683,6 +683,7 @@ const BannerArea: React.FC = () => {
                           );
                           return (
                             <div
+                              key={id}
                               id={`${id}`}
                               data-condition={JSON.stringify(child.condition)}
                               style={{

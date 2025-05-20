@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import {
   Box,
   FormControl,
@@ -13,11 +13,20 @@ import { PlusIcon, MinusIcon } from "../../../assets/icons";
 import ActionToggle from "../button-groups/ActionToggle";
 import { useAbstractGroupCondition } from "../../../utils/hooks";
 
-interface Condition {
+export type Condition = {
   type: "showIf" | "hideIf";
   props: string[];
-  state: "exist" | "noExist";
-}
+  state:
+    | "exist"
+    | "noExist"
+    | "eq"
+    | "not-eq"
+    | "more-than"
+    | "less-than"
+    | "more-or-eq"
+    | "less-or-eq";
+  compareValue?: string;
+};
 
 interface ConditionSelectorForGroupProps {
   abstractGroupId: number;
@@ -32,20 +41,42 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
   const [inputValue, setInputValue] = useState(
     condition?.props?.join(", ") || ""
   );
+  const [compareValue, setCompareValue] = useState(
+    condition?.compareValue || ""
+  );
+
+  const isComparisonOperator = useMemo(
+    () =>
+      [
+        "eq",
+        "not-eq",
+        "more-than",
+        "less-than",
+        "more-or-eq",
+        "less-or-eq",
+      ].includes(condition?.state || ""),
+    [condition?.state]
+  );
 
   const handleConditionChange = (
     newType?: Condition["type"],
     newState?: Condition["state"],
-    newProps?: string[]
+    newProps?: string[],
+    newCompareValue?: string
   ) => {
-    const cleanedProps = Array.from(
-      new Set(newProps?.map((p) => p.trim()).filter((p) => p !== ""))
-    );
+    const cleanedProps = Array.from(new Set(newProps ?? condition?.props ?? []))
+      .map((p) => p.trim())
+      .filter((p) => p !== "");
 
     const updatedCondition: Condition = {
       type: newType ?? condition?.type ?? "hideIf",
       state: newState ?? condition?.state ?? "exist",
-      props: cleanedProps.length > 0 ? cleanedProps : condition?.props ?? [""],
+      props: cleanedProps.length > 0 ? cleanedProps : [""],
+      ...(newCompareValue !== undefined
+        ? { compareValue: newCompareValue }
+        : condition?.compareValue
+        ? { compareValue: condition.compareValue }
+        : {}),
     };
 
     updateGroupCondition(abstractGroupId, updatedCondition);
@@ -89,7 +120,7 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
         </IconButton>
       </Box>
 
-      <div style={{ maxWidth: "134px" }}>
+      <Box sx={{ maxWidth: "134px" }}>
         <ActionToggle
           label="Action"
           options={[
@@ -101,11 +132,11 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
             handleConditionChange(newValue as Condition["type"])
           }
         />
-      </div>
+      </Box>
 
-      <div className="auto-size" style={{ marginTop: "8px" }}>
-        <div style={{ flex: 1 }}>
-          <InputLabel sx={{ mt: "-2px", mb: -2, fontSize: "12px" }}>
+      <Box display="flex" gap={2} mt={1}>
+        <Box sx={{ flex: 1 }}>
+          <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
             Property
           </InputLabel>
           <TextField
@@ -132,33 +163,78 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
             fullWidth
             margin="normal"
           />
-        </div>
-        <div style={{ flex: 1 }}>
-          <InputLabel sx={{ mt: "-2px", mb: -2, fontSize: "12px" }}>
+        </Box>
+
+        <Box sx={{ flex: 1 }}>
+          <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
             Condition
           </InputLabel>
           <FormControl fullWidth margin="normal">
             <Select
+              value={condition.state}
+              onChange={(e) => {
+                const newState = e.target.value as Condition["state"];
+                handleConditionChange(undefined, newState);
+              }}
               sx={{
                 backgroundColor: "#fff",
                 borderRadius: "6px",
                 border: "1px solid #E4E4E4",
-                width: "100%",
               }}
-              value={condition?.state || "exist"}
-              onChange={(e) =>
-                handleConditionChange(
-                  undefined,
-                  e.target.value as Condition["state"]
-                )
-              }
             >
               <MenuItem value="exist">Exist</MenuItem>
               <MenuItem value="noExist">No exist</MenuItem>
+              <MenuItem value="eq">Equal (=)</MenuItem>
+              <MenuItem value="not-eq">Not equal (≠)</MenuItem>
+              <MenuItem value="more-than">More than (&gt;)</MenuItem>
+              <MenuItem value="less-than">Less than (&lt;)</MenuItem>
+              <MenuItem value="more-or-eq">More or equal (≥)</MenuItem>
+              <MenuItem value="less-or-eq">Less or equal (≤)</MenuItem>
             </Select>
           </FormControl>
-        </div>
-      </div>
+        </Box>
+      </Box>
+
+      {isComparisonOperator && (
+        <Box sx={{ marginTop: "8px" }}>
+          <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
+            Value to compare
+          </InputLabel>
+          <TextField
+            type={
+              ["more-than", "less-than", "more-or-eq", "less-or-eq"].includes(
+                condition.state
+              )
+                ? "number"
+                : "text"
+            }
+            value={compareValue}
+            onChange={(e) => {
+              const newVal = e.target.value;
+
+              if (
+                ["more-than", "less-than", "more-or-eq", "less-or-eq"].includes(
+                  condition.state
+                ) &&
+                isNaN(Number(newVal))
+              ) {
+                return;
+              }
+              setCompareValue(newVal);
+              handleConditionChange(undefined, undefined, undefined, newVal);
+            }}
+            fullWidth
+            margin="normal"
+            placeholder={
+              ["more-than", "less-than", "more-or-eq", "less-or-eq"].includes(
+                condition.state
+              )
+                ? "Enter the number"
+                : "Enter comparison value"
+            }
+          />
+        </Box>
+      )}
     </Box>
   );
 };

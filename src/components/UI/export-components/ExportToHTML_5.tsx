@@ -93,41 +93,121 @@ export const ExportToHTML_5 = (
           document.querySelectorAll("[data-condition]").forEach((element) => {
             try {
               const condition = JSON.parse(element.getAttribute("data-condition"));
-              const { type, props: conditionProps, state } = condition;
-              const propsExist = conditionProps.some((prop) => props[prop] !== undefined);
-              let shouldHide = false;
-              if (state === "exist") {
-                shouldHide = (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist);
-              } else if (state === "noExist") {
-                shouldHide = (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist);
-              }
+              const { type, props: conditionProps, state, compareValue } = condition;
+
+              const evaluate = () => {
+                for (let prop of conditionProps) {
+                  const value = props[prop];
+
+                  switch (state) {
+                    case "exist":
+                      if (value !== undefined) return true;
+                      break;
+                    case "noExist":
+                      if (value === undefined) return true;
+                      break;
+                    case "eq":
+                      if (value == compareValue) return true;
+                      break;
+                    case "not-eq":
+                      if (value != compareValue) return true;
+                      break;
+                    case "more-than":
+                      if (parseFloat(value) > parseFloat(compareValue)) return true;
+                      break;
+                    case "less-than":
+                      if (parseFloat(value) < parseFloat(compareValue)) return true;
+                      break;
+                    case "more-or-eq":
+                      if (parseFloat(value) >= parseFloat(compareValue)) return true;
+                      break;
+                    case "less-or-eq":
+                      if (parseFloat(value) <= parseFloat(compareValue)) return true;
+                      break;
+                    default:
+                      break;
+                  }
+                }
+
+                return false;
+              };
+
+              const match = evaluate();
+              const shouldHide =
+                (type === "hideIf" && match) || (type === "showIf" && !match);
+
               if (shouldHide) {
                 element.style.display = "none";
-              }
+              } 
             } catch (error) {
               console.error("Error parsing data-condition", error);
             }
           });
 
           // abstract-data-condition
-          document.querySelectorAll("[abstract-data-condition]").forEach((element) => {
-            try {
-              const condition = JSON.parse(element.getAttribute("abstract-data-condition"));
-              const { type, props: conditionProps, state } = condition;
-              const propsExist = conditionProps.some((prop) => props[prop] !== undefined);
-              let shouldHide = false;
-              if (state === "exist") {
-                shouldHide = (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist);
-              } else if (state === "noExist") {
-                shouldHide = (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist);
+          document
+            .querySelectorAll("[abstract-data-condition]")
+            .forEach((element) => {
+              try {
+                const condition = JSON.parse(
+                  element.getAttribute("abstract-data-condition")
+                );
+                const {
+                  type,
+                  props: conditionProps,
+                  state,
+                  compareValue,
+                } = condition;
+
+                const evaluate = () => {
+                  for (let prop of conditionProps) {
+                    const value = props[prop];
+
+                    switch (state) {
+                      case "exist":
+                        if (value !== undefined) return true;
+                        break;
+                      case "noExist":
+                        if (value === undefined) return true;
+                        break;
+                      case "eq":
+                        if (value == compareValue) return true;
+                        break;
+                      case "not-eq":
+                        if (value != compareValue) return true;
+                        break;
+                      case "more-than":
+                        if (parseFloat(value) > parseFloat(compareValue)) return true;
+                        break;
+                      case "less-than":
+                        if (parseFloat(value) < parseFloat(compareValue)) return true;
+                        break;
+                      case "more-or-eq":
+                        if (parseFloat(value) >= parseFloat(compareValue)) return true;
+                        break;
+                      case "less-or-eq":
+                        if (parseFloat(value) <= parseFloat(compareValue)) return true;
+                        break;
+                      default:
+                        break;
+                    }
+                  }
+
+                  return false;
+                };
+
+                const match = evaluate();
+                const shouldHide =
+                  (type === "hideIf" && match) || (type === "showIf" && !match);
+
+                if (shouldHide) {
+                  element.style.display = "none";
+                } 
+              } catch (error) {
+                console.error("Error parsing abstract-data-condition", error);
               }
-              if (shouldHide) {
-                element.style.display = "none";
-              }
-            } catch (error) {
-              console.error("Error parsing abstract-data-condition", error);
-            }
-          });
+            });
+
 
           function replaceDynamicText(content, props) {
             let result = content;
@@ -148,10 +228,12 @@ export const ExportToHTML_5 = (
                   if (!value) return match;
                   const numericValue = parseFloat(value.replace(/[^\\d.]/g, ""));
                   if (!isNaN(numericValue)) {
-                    return numericValue.toLocaleString("ru", {
-                      minimumFractionDigits: value.includes(".") ? 1 : 0,
-                      maximumFractionDigits: 2
-                    }) + " грн";
+                  return (
+                      Math.round(numericValue).toLocaleString("ru", {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                      }) + " грн"
+                    );
                   }
                   return value;
                 }
@@ -175,10 +257,12 @@ export const ExportToHTML_5 = (
                   if (numericValues.length === 0) return match;
 
                   const minValue = Math.min(...numericValues);
-                  return minValue.toLocaleString("ru", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  }) + " грн";
+                  return (
+                    Math.round(minValue).toLocaleString("ru", {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    }) + " грн"
+                  );
                 }
 
                 default:
