@@ -9,7 +9,7 @@ import ImageUploader from "./ImageUploader";
 import ImageGallery from "./ImageGallery";
 
 const ImagePanel: React.FC = () => {
-  const { addObject, currentProjectName } = useBanner();
+  const { addObject } = useBanner();
   const [dialogState, setDialogState] = useState({
     isImageDialogOpen: false,
   });
@@ -108,7 +108,6 @@ const ImagePanel: React.FC = () => {
       <ManageDynamicImgsModal
         open={isDynamicImgsModalOpen}
         onClose={() => setIsDynamicImgsModalOpen(false)}
-        projectId={currentProjectName}
       />
 
       <div className="grey-line"></div>
