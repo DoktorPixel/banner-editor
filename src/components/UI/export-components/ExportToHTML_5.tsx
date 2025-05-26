@@ -67,7 +67,7 @@ export const ExportToHTML_5 = (
         ${objectsHTML}
       </div>
       <script>
-        document.addEventListener("DOMContentLoaded", function () {
+      function loadData() {
           const props = window.props || {};
 
             const normalize = (value) => {
@@ -291,7 +291,7 @@ export const ExportToHTML_5 = (
               console.error("Error replacing dynamic text:", error);
             }
           });
-        });
+        };
       </script>
     </body>
   </html>`;

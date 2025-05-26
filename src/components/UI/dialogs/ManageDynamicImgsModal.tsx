@@ -1,113 +1,118 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, DragEvent } from "react";
 import {
   Modal,
   Box,
   Typography,
   Button,
-  TextField,
   Grid,
   IconButton,
-  InputLabel,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import {
-  downloadFromS3,
-  updateDynamicImgsInProject,
-} from "../../../S3/s3Storage";
+import { useSupabaseImages } from "../../../utils/useSupabaseImages";
 import { useBanner } from "../../../context/BannerContext";
-import { DynamicImg } from "../../../types";
-import DragAndDropFileInput2 from "./DragAndDropFileInput2";
-import ImageCompression from "browser-image-compression";
 
 interface ManageDynamicImgsModalProps {
   open: boolean;
   onClose: () => void;
-  projectId: string | null;
+}
+
+interface UploadedImage {
+  id: string;
+  file_url: string;
+  name?: string;
 }
 
 const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
   open,
   onClose,
-  projectId,
 }) => {
-  const [loading, setLoading] = useState(false);
-  const [newDynamicImg, setNewDynamicImg] = useState<DynamicImg>({
-    name: "",
-    logoUrl: "",
-  });
+  const {
+    currentProjectId,
+    triggerRefresh,
+    addObject,
+    deleteObjectsByImageSrc,
+  } = useBanner();
+  const { getImages, deleteImage, uploadImage } = useSupabaseImages();
 
-  const { dynamicImgs, setDynamicImgs, addDynamicImg } = useBanner();
+  const [images, setImages] = useState<UploadedImage[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const normalizeImagePath = (url: string): string => {
+    if (url.includes("/feedmaker/")) return url;
+    return url.replace("/templates/", "/feedmaker/templates/");
+  };
 
   useEffect(() => {
-    const fetchDynamicImgs = async () => {
-      if (!projectId) return;
-
+    const fetchImages = async () => {
+      if (!currentProjectId) return;
       setLoading(true);
       try {
-        const projectData = await downloadFromS3(`projects/${projectId}.json`);
-        setDynamicImgs?.(projectData?.dynamicImgs || []);
+        const imgs = await getImages(currentProjectId);
+        setImages(imgs);
       } catch (error) {
-        console.error("Error uploading images to server:", error);
+        console.error("Error loading images:", error);
       } finally {
         setLoading(false);
       }
     };
 
     if (open) {
-      fetchDynamicImgs();
+      fetchImages();
     }
-  }, [open, projectId, setDynamicImgs]);
+  }, [open, currentProjectId, getImages]);
 
-  const handleAddDynamicImg = async () => {
-    if (!projectId || !newDynamicImg.name || !newDynamicImg.logoUrl) return;
+  const handleDelete = async (id: string) => {
+    const imageToDelete = images.find((img) => img.id === id);
+    if (!imageToDelete) return;
+
+    const fullSrc = imageToDelete.file_url;
+    await deleteImage(id);
+    setImages((prev) => prev.filter((img) => img.id !== id));
+    deleteObjectsByImageSrc(normalizeImagePath(fullSrc));
+  };
+
+  const handleDrop = async (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+
+    const file = event.dataTransfer.files?.[0];
+    if (!file || !currentProjectId) return;
 
     try {
-      await updateDynamicImgsInProject(projectId, [newDynamicImg]);
-      addDynamicImg?.(newDynamicImg);
-      setNewDynamicImg({ name: "", logoUrl: "" });
+      const result = await uploadImage(file, currentProjectId);
+      triggerRefresh();
+      const normalized = normalizeImagePath(result.file_url);
+      setImages((prev) => [...prev, result]);
+      addObject({
+        id: Date.now(),
+        type: "image",
+        width: 250,
+        height: 250,
+        x: 50,
+        y: 50,
+        src: normalized,
+        name: "",
+      });
     } catch (error) {
-      console.error("Error adding image:", error);
+      console.error("Upload error:", error);
     }
   };
 
-  const handleDeleteDynamicImg = async (index: number) => {
-    if (!projectId) return;
-    let updatedDynamicImgs: DynamicImg[] = [];
-    if (dynamicImgs) {
-      updatedDynamicImgs = dynamicImgs.filter((_, i) => i !== index);
-    }
-
-    try {
-      await updateDynamicImgsInProject(projectId, updatedDynamicImgs);
-      setDynamicImgs?.(updatedDynamicImgs);
-    } catch (error) {
-      console.error("Error deleting image:", error);
-    }
+  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
   };
 
-  const handleFileChange = async (file: File | null) => {
-    if (file) {
-      const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 600,
-        useWebWorker: true,
-      };
+  const handleDragEnter = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(true);
+  };
 
-      try {
-        const compressedFile = await ImageCompression(file, options);
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-          const base64 = reader.result as string;
-          setNewDynamicImg((prev) => ({ ...prev, logoUrl: base64 }));
-        };
-        reader.readAsDataURL(compressedFile);
-      } catch (error) {
-        console.error("Correction when squeezing an image:", error);
-      }
-    } else {
-      setNewDynamicImg((prev) => ({ ...prev, logoUrl: "" }));
+  const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+      setIsDragging(false);
     }
   };
 
@@ -127,112 +132,65 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
           overflow: "auto",
           maxHeight: "90vh",
         }}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
       >
         <Typography variant="h6" gutterBottom>
-          Image management
+          Manage dynamic images
         </Typography>
+
         {loading ? (
           <Typography>Loading...</Typography>
         ) : (
           <>
-            <Box>
-              <Grid container spacing={2}>
-                {dynamicImgs?.map((dynamicImg, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        gap: 1,
-                      }}
-                    >
-                      <img
-                        src={dynamicImg.logoUrl}
-                        alt={dynamicImg.name}
-                        style={{
-                          width: 100,
-                          height: 100,
-                          objectFit: "contain",
-                        }}
-                      />
-                      <Typography variant="body2" noWrap>
-                        {dynamicImg.name}
-                      </Typography>
-                      <IconButton
-                        color="error"
-                        onClick={() => handleDeleteDynamicImg(index)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-            <Box sx={{ mt: 4 }}>
-              <Typography variant="subtitle1">Add new image</Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 2,
-                  alignItems: "center",
-                  mt: 2,
-                }}
-              >
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <InputLabel sx={{ fontSize: "12px" }}>Image name</InputLabel>
-                  <TextField
-                    value={newDynamicImg.name}
-                    onChange={(e) =>
-                      setNewDynamicImg((prev) => ({
-                        ...prev,
-                        name: e.target.value,
-                      }))
-                    }
-                    fullWidth
-                  />
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <InputLabel sx={{ fontSize: "12px" }}>URL</InputLabel>
-                  <TextField
-                    value={newDynamicImg.logoUrl}
-                    onChange={(e) =>
-                      setNewDynamicImg((prev) => ({
-                        ...prev,
-                        logoUrl: e.target.value,
-                      }))
-                    }
-                    fullWidth
-                  />
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                  <DragAndDropFileInput2
-                    value={null}
-                    onChange={handleFileChange}
-                    accept="image/*"
-                  />
-
-                  <IconButton
-                    color="primary"
-                    onClick={handleAddDynamicImg}
-                    disabled={!newDynamicImg.name || !newDynamicImg.logoUrl}
+            <Grid container spacing={2}>
+              {images.map((img) => (
+                <Grid item xs={12} sm={6} md={4} key={img.id}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
                   >
-                    <AddCircleIcon />
-                  </IconButton>
-                </div>
-              </Box>
-            </Box>
+                    <img
+                      src={normalizeImagePath(img.file_url)}
+                      alt={img.name || ""}
+                      style={{ width: 100, height: 100, objectFit: "contain" }}
+                    />
+                    <Typography variant="body2" noWrap>
+                      {img.name || "Unnamed"}
+                    </Typography>
+                    <IconButton
+                      color="error"
+                      onClick={() => handleDelete(img.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+
             <Box
               sx={{
                 mt: 4,
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: 2,
+                border: "2px dashed gray",
+                borderRadius: 2,
+                padding: 3,
+                textAlign: "center",
+                backgroundColor: isDragging ? "#f0f0f0" : "transparent",
               }}
             >
+              <Typography>
+                Drag & drop an image here to upload it to the project
+              </Typography>
+            </Box>
+
+            <Box sx={{ mt: 4, display: "flex", justifyContent: "flex-end" }}>
               <Button variant="outlined" onClick={onClose}>
                 Close
               </Button>

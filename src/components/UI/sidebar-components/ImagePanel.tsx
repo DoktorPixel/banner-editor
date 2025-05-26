@@ -72,14 +72,6 @@ const ImagePanel: React.FC = () => {
       </Button> */}
       <ImageUploader />
 
-      {/* <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setIsDynamicImgsModalOpen(true)}
-      >
-        Add Dynamic Image (Modal)
-      </Button> */}
-
       <Button
         variant="contained"
         color="primary"
@@ -98,6 +90,13 @@ const ImagePanel: React.FC = () => {
 
       <SavePresetButton />
       <ApplyPresetButton />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setIsDynamicImgsModalOpen(true)}
+      >
+        Add Dynamic Image (Modal)
+      </Button>
       <ImageDialog
         open={dialogState.isImageDialogOpen}
         imageSrc={imageSrc}

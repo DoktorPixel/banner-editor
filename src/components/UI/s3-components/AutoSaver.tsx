@@ -6,6 +6,7 @@ import { ProjectData } from "../../../types";
 import { debounce } from "lodash";
 import isEqual from "fast-deep-equal";
 import { useSyncProjectWithSupabase } from "../../../utils/useSyncProjectWithSupabase";
+import { captureAndUploadPreview } from "../export-components/PreviewUploader";
 
 const AutoSaver: React.FC = () => {
   const { objects, dynamicImgs, currentProjectName } = useBanner();
@@ -42,8 +43,9 @@ const AutoSaver: React.FC = () => {
     };
 
     try {
-      await uploadToS3(key, projectData);
+      await captureAndUploadPreview(currentProjectName);
       await sync(currentProjectName, projectData);
+      await uploadToS3(key, projectData);
       // console.log("✅ Auto-saved objects:", projectData.objects);
       lastDataRef.current = {
         objects: structuredClone(objects),
