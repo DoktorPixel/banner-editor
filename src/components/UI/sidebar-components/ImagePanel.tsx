@@ -9,7 +9,7 @@ import ImageUploader from "./ImageUploader";
 import ImageGallery from "./ImageGallery";
 
 const ImagePanel: React.FC = () => {
-  const { addObject, currentProjectName } = useBanner();
+  const { addObject } = useBanner();
   const [dialogState, setDialogState] = useState({
     isImageDialogOpen: false,
   });
@@ -72,14 +72,6 @@ const ImagePanel: React.FC = () => {
       </Button> */}
       <ImageUploader />
 
-      {/* <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setIsDynamicImgsModalOpen(true)}
-      >
-        Add Dynamic Image (Modal)
-      </Button> */}
-
       <Button
         variant="contained"
         color="primary"
@@ -98,6 +90,13 @@ const ImagePanel: React.FC = () => {
 
       <SavePresetButton />
       <ApplyPresetButton />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setIsDynamicImgsModalOpen(true)}
+      >
+        Add Dynamic Image (Modal)
+      </Button>
       <ImageDialog
         open={dialogState.isImageDialogOpen}
         imageSrc={imageSrc}
@@ -109,7 +108,6 @@ const ImagePanel: React.FC = () => {
       <ManageDynamicImgsModal
         open={isDynamicImgsModalOpen}
         onClose={() => setIsDynamicImgsModalOpen(false)}
-        projectId={currentProjectName}
       />
 
       <div className="grey-line"></div>

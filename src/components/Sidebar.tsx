@@ -13,6 +13,7 @@ import UploadToS3Button from "./UI/s3-components/UploadToS3";
 import SidebarTabs from "./UI/sidebar-components/SidebarTabs";
 import { BigArrowRight, BigArrowLeft } from "../assets/icons";
 import AutoSaver from "./UI/s3-components/AutoSaver";
+import { DownloadPreviewButton } from "./UI/export-components/PreviewUploader";
 
 const Sidebar: React.FC = () => {
   const { undo, redo, canUndo, canRedo, currentProjectName, clearProject } =
@@ -63,6 +64,7 @@ const Sidebar: React.FC = () => {
         <Collapse in={open} timeout="auto" unmountOnExit>
           <UploadToS3Button />
           <Button onClick={handleUpload}>Close project</Button>
+          <DownloadPreviewButton />
         </Collapse>
         <Typography variant="h6" className="project-name">
           {currentProjectName || "Без назви"}
