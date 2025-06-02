@@ -83,7 +83,7 @@ export const syncProjectWithSupabase = async (
       config: data.config || {},
     });
 
-    console.log("📦 Updating template:", template);
+    // console.log("📦 Updating template:", template);
 
     await axios.put(`${API_BASE_URL}/update`, template, {
       headers: {
