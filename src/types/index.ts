@@ -15,6 +15,8 @@ export interface BannerObject {
   color?: string;
   src?: string;
   dynamics?: boolean;
+  dynamicsLogo?: boolean;
+  object_id?: string; // for dynamic images
   width?: number;
   height?: number;
   autoWidth?: boolean;

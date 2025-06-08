@@ -59,6 +59,7 @@ export const ExportToHTML_5 = (
           height: ${height}px;
           background: rgb(255, 255, 255);
           overflow: hidden;
+          z-index: -100;
         }
       </style>
     </head>
