@@ -9,7 +9,8 @@ import { useSyncProjectWithSupabase } from "../../../utils/useSyncProjectWithSup
 import { captureAndUploadPreview } from "../export-components/PreviewUploader";
 
 const AutoSaver: React.FC = () => {
-  const { objects, dynamicImgs, currentProjectName } = useBanner();
+  const { objects, dynamicImgs, currentProjectName, currentProjectId } =
+    useBanner();
   const { config } = useConfig();
   const { sync } = useSyncProjectWithSupabase();
   const [saved, setSaved] = useState(false);
@@ -43,7 +44,9 @@ const AutoSaver: React.FC = () => {
     };
 
     try {
-      await captureAndUploadPreview(currentProjectName);
+      if (currentProjectId) {
+        await captureAndUploadPreview(currentProjectId);
+      }
       await sync(currentProjectName, projectData);
       await uploadToS3(key, projectData);
       // console.log("✅ Auto-saved objects:", projectData.objects);

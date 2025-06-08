@@ -20,19 +20,18 @@ interface UploadedImage {
   id: string;
   file_url: string;
   name?: string;
+  template_id?: string;
+  object_id?: string;
 }
 
 const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
   open,
   onClose,
 }) => {
-  const {
-    currentProjectId,
-    triggerRefresh,
-    addObject,
-    deleteObjectsByImageSrc,
-  } = useBanner();
-  const { getImages, deleteImage, uploadImage } = useSupabaseImages();
+  const { currentProjectId, triggerRefresh, deleteObjectsByImageSrc } =
+    useBanner();
+  const { getDynamicImages, deleteDynamicImage, uploadDynamicImage } =
+    useSupabaseImages();
 
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -48,7 +47,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
       if (!currentProjectId) return;
       setLoading(true);
       try {
-        const imgs = await getImages(currentProjectId);
+        const imgs = await getDynamicImages(currentProjectId);
         setImages(imgs);
       } catch (error) {
         console.error("Error loading images:", error);
@@ -60,14 +59,14 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
     if (open) {
       fetchImages();
     }
-  }, [open, currentProjectId, getImages]);
+  }, [open, currentProjectId, getDynamicImages]);
 
   const handleDelete = async (id: string) => {
     const imageToDelete = images.find((img) => img.id === id);
     if (!imageToDelete) return;
 
     const fullSrc = imageToDelete.file_url;
-    await deleteImage(id);
+    await deleteDynamicImage(id);
     setImages((prev) => prev.filter((img) => img.id !== id));
     deleteObjectsByImageSrc(normalizeImagePath(fullSrc));
   };
@@ -80,20 +79,9 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
     if (!file || !currentProjectId) return;
 
     try {
-      const result = await uploadImage(file, currentProjectId);
+      const result = await uploadDynamicImage(file, currentProjectId);
       triggerRefresh();
-      const normalized = normalizeImagePath(result.file_url);
       setImages((prev) => [...prev, result]);
-      addObject({
-        id: Date.now(),
-        type: "image",
-        width: 250,
-        height: 250,
-        x: 50,
-        y: 50,
-        src: normalized,
-        name: "",
-      });
     } catch (error) {
       console.error("Upload error:", error);
     }
@@ -138,7 +126,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
         onDragLeave={handleDragLeave}
       >
         <Typography variant="h6" gutterBottom>
-          Manage dynamic images
+          Manage dynamic images object_id: {images[0]?.object_id}
         </Typography>
 
         {loading ? (
