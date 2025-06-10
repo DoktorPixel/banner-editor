@@ -87,7 +87,7 @@ export const updateDynamicImgsInProject = async (
         !project.dynamicImgs?.some(
           (dynamicImg) =>
             dynamicImg.name === newDynamicImg.name &&
-            dynamicImg.logoUrl === newDynamicImg.logoUrl
+            dynamicImg.file_url === newDynamicImg.file_url
         )
     ),
   ];

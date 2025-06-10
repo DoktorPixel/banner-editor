@@ -37,32 +37,60 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   //
 
-  const [dynamicImgs, setDynamicImgs] = useState<DynamicImg[]>([]);
   const [refreshCounter, setRefreshCounter] = useState(0);
   const triggerRefresh = () => setRefreshCounter((prev) => prev + 1);
 
-  const addDynamicImg = (dynamicImg: DynamicImg) => {
+  const [dynamicImgs, setDynamicImgs] = useState<DynamicImg[]>([]);
+
+  // const addDynamicImg = (dynamicImg: DynamicImg) => {
+  //   setDynamicImgs((prev) => {
+  //     const exists = prev.some(
+  //       (b) => b.name === dynamicImg.name && b.file_url === dynamicImg.file_url
+  //     );
+  //     return exists ? prev : [...prev, dynamicImg];
+  //   });
+  // };
+
+  // const updateDynamicImg = (oldName: string, updates: Partial<DynamicImg>) => {
+  //   setDynamicImgs((prev) =>
+  //     prev.map((dynamicImg) =>
+  //       dynamicImg.name === oldName ? { ...dynamicImg, ...updates } : dynamicImg
+  //     )
+  //   );
+  // };
+
+  // const deleteDynamicImg = (name: string) => {
+  //   setDynamicImgs((prevImgs) => {
+  //     const updatedImgs = prevImgs.filter((img) => img.name !== name);
+  //     return updatedImgs;
+  //   });
+  // };
+
+  const addDynamicImg = (newImg: DynamicImg) => {
     setDynamicImgs((prev) => {
-      const exists = prev.some(
-        (b) => b.name === dynamicImg.name && b.logoUrl === dynamicImg.logoUrl
-      );
-      return exists ? prev : [...prev, dynamicImg];
+      const exists = prev.some((img) => img.id === newImg.id);
+      return exists ? prev : [...prev, newImg];
     });
   };
 
-  const updateDynamicImg = (oldName: string, updates: Partial<DynamicImg>) => {
+  const updateDynamicImg = (updatedImg: DynamicImg) => {
+    if (!updatedImg.id) return;
+
     setDynamicImgs((prev) =>
-      prev.map((dynamicImg) =>
-        dynamicImg.name === oldName ? { ...dynamicImg, ...updates } : dynamicImg
+      prev.map((img) =>
+        img.id === updatedImg.id ? { ...img, ...updatedImg } : img
       )
     );
   };
 
-  const deleteDynamicImg = (name: string) => {
-    setDynamicImgs((prevImgs) => {
-      const updatedImgs = prevImgs.filter((img) => img.name !== name);
-      return updatedImgs;
-    });
+  const deleteDynamicImg = (id: string) => {
+    setDynamicImgs((prev) => prev.filter((img) => img.id !== id));
+  };
+
+  const updateDynamicImgName = (id: string, name: string) => {
+    setDynamicImgs((prev) =>
+      prev.map((img) => (img.id === id ? { ...img, name } : img))
+    );
   };
 
   //
@@ -399,6 +427,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         addDynamicImg,
         updateDynamicImg,
         deleteDynamicImg,
+        updateDynamicImgName,
+        //
         currentProjectId,
         setCurrentProjectId,
         refreshCounter,

@@ -87,7 +87,8 @@
   min-width: 40px;
 }
 
-.image-gallery-wrapper {
+.image-gallery-wrapper,
+.dynamic-images-container {
   display: flex;
   flex-direction: column;
   gap: 12px;

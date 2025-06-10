@@ -34,7 +34,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [newDynamicImg, setNewDynamicImg] = useState<DynamicImg>({
     name: "",
-    logoUrl: "",
+    file_url: "",
   });
 
   const { dynamicImgs, setDynamicImgs, addDynamicImg } = useBanner();
@@ -60,12 +60,12 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
   }, [open, projectId, setDynamicImgs]);
 
   const handleAddDynamicImg = async () => {
-    if (!projectId || !newDynamicImg.name || !newDynamicImg.logoUrl) return;
+    if (!projectId || !newDynamicImg.name || !newDynamicImg.file_url) return;
 
     try {
       await updateDynamicImgsInProject(projectId, [newDynamicImg]);
       addDynamicImg?.(newDynamicImg);
-      setNewDynamicImg({ name: "", logoUrl: "" });
+      setNewDynamicImg({ name: "", file_url: "" });
     } catch (error) {
       console.error("Error adding image:", error);
     }
@@ -100,14 +100,14 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
 
         reader.onloadend = () => {
           const base64 = reader.result as string;
-          setNewDynamicImg((prev) => ({ ...prev, logoUrl: base64 }));
+          setNewDynamicImg((prev) => ({ ...prev, file_url: base64 }));
         };
         reader.readAsDataURL(compressedFile);
       } catch (error) {
         console.error("Correction when squeezing an image:", error);
       }
     } else {
-      setNewDynamicImg((prev) => ({ ...prev, logoUrl: "" }));
+      setNewDynamicImg((prev) => ({ ...prev, file_url: "" }));
     }
   };
 
@@ -148,7 +148,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
                       }}
                     >
                       <img
-                        src={dynamicImg.logoUrl}
+                        src={dynamicImg.file_url}
                         alt={dynamicImg.name}
                         style={{
                           width: 100,
@@ -197,11 +197,11 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <InputLabel sx={{ fontSize: "12px" }}>URL</InputLabel>
                   <TextField
-                    value={newDynamicImg.logoUrl}
+                    value={newDynamicImg.file_url}
                     onChange={(e) =>
                       setNewDynamicImg((prev) => ({
                         ...prev,
-                        logoUrl: e.target.value,
+                        file_url: e.target.value,
                       }))
                     }
                     fullWidth
@@ -218,7 +218,7 @@ const ManageDynamicImgsModal: React.FC<ManageDynamicImgsModalProps> = ({
                   <IconButton
                     color="primary"
                     onClick={handleAddDynamicImg}
-                    disabled={!newDynamicImg.name || !newDynamicImg.logoUrl}
+                    disabled={!newDynamicImg.name || !newDynamicImg.file_url}
                   >
                     <AddCircleIcon />
                   </IconButton>

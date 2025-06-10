@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import { useBanner } from "../../../context/BannerContext";
 import ImageDialog from "../dialogs/ImageDialog";
-import ManageDynamicImgsModal from "../dialogs/ManageDynamicImgsModal";
+// import ManageDynamicImgsModal from "../dialogs/ManageDynamicImgsModal";
 import SavePresetButton from "../s3-components/SavePresetButton";
 import ApplyPresetButton from "../s3-components/ApplyPresetButton";
 import ImageUploader from "./ImageUploader";
 import ImageGallery from "./ImageGallery";
-// import generateObjectId from "../../../utils/useSupabaseImages";
+import { v4 as uuidv4 } from "uuid";
 
 const ImagePanel: React.FC = () => {
   const { addObject } = useBanner();
@@ -15,7 +15,7 @@ const ImagePanel: React.FC = () => {
     isImageDialogOpen: false,
   });
   const [imageSrc, setImageSrc] = useState("");
-  const [isDynamicImgsModalOpen, setIsDynamicImgsModalOpen] = useState(false);
+  // const [isDynamicImgsModalOpen, setIsDynamicImgsModalOpen] = useState(false);
   // const openDialog = (type: keyof typeof dialogState) =>
   //   setDialogState((prev) => ({ ...prev, [type]: true }));
 
@@ -50,20 +50,20 @@ const ImagePanel: React.FC = () => {
     });
   };
 
-  // const handleAddDynamicsLogo = (url: string) => {
-  //   addObject({
-  //     id: Date.now(),
-  //     type: "image",
-  //     width: 250,
-  //     height: 250,
-  //     x: 50,
-  //     y: 50,
-  //     src: url,
-  //     name: "",
-  //     dynamicsLogo: true,
-  //     object_id: generateObjectId(),
-  //   });
-  // };
+  const handleAddDynamicsLogo = (url: string) => {
+    addObject({
+      id: Date.now(),
+      type: "image",
+      width: 250,
+      height: 250,
+      x: 50,
+      y: 50,
+      src: url,
+      name: "",
+      dynamicsLogo: true,
+      object_id: uuidv4(),
+    });
+  };
 
   const handleAddFigure = () => {
     addObject({
@@ -96,13 +96,13 @@ const ImagePanel: React.FC = () => {
         Add Dynamic Image
       </Button>
 
-      {/* <Button
+      <Button
         variant="contained"
         color="primary"
         onClick={() => handleAddDynamicsLogo("{{img}}")}
       >
         Add Dynamic Logo
-      </Button> */}
+      </Button>
 
       <Button
         variant="contained"
@@ -114,13 +114,13 @@ const ImagePanel: React.FC = () => {
 
       <SavePresetButton />
       <ApplyPresetButton />
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => setIsDynamicImgsModalOpen(true)}
       >
         Add Dynamic Image (Modal)
-      </Button>
+      </Button> */}
       <ImageDialog
         open={dialogState.isImageDialogOpen}
         imageSrc={imageSrc}
@@ -129,10 +129,10 @@ const ImagePanel: React.FC = () => {
         onAdd={(src) => handleAddImage(src)}
       />
 
-      <ManageDynamicImgsModal
+      {/* <ManageDynamicImgsModal
         open={isDynamicImgsModalOpen}
         onClose={() => setIsDynamicImgsModalOpen(false)}
-      />
+      /> */}
 
       <div className="grey-line"></div>
 
