@@ -7,7 +7,7 @@ import SavePresetButton from "../s3-components/SavePresetButton";
 import ApplyPresetButton from "../s3-components/ApplyPresetButton";
 import ImageUploader from "./ImageUploader";
 import ImageGallery from "./ImageGallery";
-// import generateObjectId from "../../../utils/useSupabaseImages";
+import { v4 as uuidv4 } from "uuid";
 
 const ImagePanel: React.FC = () => {
   const { addObject } = useBanner();
@@ -50,20 +50,20 @@ const ImagePanel: React.FC = () => {
     });
   };
 
-  // const handleAddDynamicsLogo = (url: string) => {
-  //   addObject({
-  //     id: Date.now(),
-  //     type: "image",
-  //     width: 250,
-  //     height: 250,
-  //     x: 50,
-  //     y: 50,
-  //     src: url,
-  //     name: "",
-  //     dynamicsLogo: true,
-  //     object_id: generateObjectId(),
-  //   });
-  // };
+  const handleAddDynamicsLogo = (url: string) => {
+    addObject({
+      id: Date.now(),
+      type: "image",
+      width: 250,
+      height: 250,
+      x: 50,
+      y: 50,
+      src: url,
+      name: "",
+      dynamicsLogo: true,
+      object_id: uuidv4(),
+    });
+  };
 
   const handleAddFigure = () => {
     addObject({
@@ -96,13 +96,13 @@ const ImagePanel: React.FC = () => {
         Add Dynamic Image
       </Button>
 
-      {/* <Button
+      <Button
         variant="contained"
         color="primary"
         onClick={() => handleAddDynamicsLogo("{{img}}")}
       >
         Add Dynamic Logo
-      </Button> */}
+      </Button>
 
       <Button
         variant="contained"

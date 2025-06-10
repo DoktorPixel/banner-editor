@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import UpdateImageDialog from "../dialogs/UpdateImageDialog";
 import { ConditionSelector } from "../selectors/ConditionSelector";
+import ManageDynamicImgsComponent from "../dialogs/ManageDynamicImgsComponent";
 
 interface ImageObjectFormProps {
   object: BannerObject;
@@ -228,6 +229,16 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
           />
         </div>
       </div>
+
+      {object.dynamicsLogo && (
+        <div className="padding-wrapper">
+          <ManageDynamicImgsComponent
+            object_id={object.object_id}
+            logoName={object.logoName}
+            onChange={onChange as (key: string, value: string) => void}
+          />
+        </div>
+      )}
 
       <UpdateImageDialog
         open={isDialogOpen}

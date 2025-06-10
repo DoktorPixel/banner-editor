@@ -16,6 +16,7 @@ export interface BannerObject {
   src?: string;
   dynamics?: boolean;
   dynamicsLogo?: boolean;
+  logoName?: string; // for dynamic logos
   object_id?: string; // for dynamic images
   width?: number;
   height?: number;
@@ -208,8 +209,9 @@ export interface BannerContextProps {
   dynamicImgs?: DynamicImg[];
   setDynamicImgs?: React.Dispatch<React.SetStateAction<DynamicImg[]>>;
   addDynamicImg?: (dynamicImg: DynamicImg) => void;
-  updateDynamicImg?: (oldName: string, updates: Partial<DynamicImg>) => void;
+  updateDynamicImg?: (updatedImg: DynamicImg) => void;
   deleteDynamicImg?: (name: string) => void;
+  updateDynamicImgName?: (id: string, name: string) => void;
   //
   currentProjectId: string | null;
   setCurrentProjectId: (id: string | null) => void;
@@ -219,8 +221,14 @@ export interface BannerContextProps {
 }
 
 export interface DynamicImg {
+  // logoUrl?: string;
   name?: string;
-  logoUrl?: string;
+  id?: string; // for Supabase
+  object_id?: string; // for Supabase
+  file_url?: string; // for Supabase
+  template_id?: string; // for Supabase
+  user_id?: string; // for Supabase
+  created_at?: string; // for Supabase
 }
 
 export interface ProjectData {
