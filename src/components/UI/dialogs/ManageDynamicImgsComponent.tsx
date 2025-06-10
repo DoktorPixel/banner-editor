@@ -1,8 +1,8 @@
-import { useState, useEffect, DragEvent } from "react";
-import { Box, Typography, Grid, IconButton, TextField } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useState, useEffect, DragEvent, useRef } from "react";
+import { Box, Typography, Grid, TextField } from "@mui/material";
 import { useSupabaseImages } from "../../../utils/useSupabaseImages";
 import { useBanner } from "../../../context/BannerContext";
+import { DeleteBtn } from "../../../assets/icons";
 
 interface UploadedImage {
   id: string;
@@ -39,6 +39,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [localLogoName, setLocalLogoName] = useState(logoName || "");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setLocalLogoName(logoName || "");
@@ -135,6 +136,33 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     updateDynamicImgName?.(id, newName);
   };
 
+  const handleClickUploadArea = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file || !currentProjectId) return;
+
+    try {
+      const result = await uploadDynamicImage(
+        file,
+        currentProjectId,
+        object_id
+      );
+      triggerRefresh();
+      setImages((prev) => [...prev, result]);
+      addDynamicImg?.(result);
+    } catch (error) {
+      console.error("Upload error:", error);
+    } finally {
+      // Очищаем input, чтобы можно было выбрать тот же файл снова
+      event.target.value = "";
+    }
+  };
+
   return (
     <Box
       onDrop={handleDrop}
@@ -144,9 +172,10 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
       sx={{ mt: 2 }}
     >
       <Typography variant="h6" gutterBottom>
-        Dynamic logos (object_id: {images[0]?.object_id})
+        Dynamic logos
+        {/* (object_id: {images[0]?.object_id}) */}
       </Typography>
-      <Box sx={{ position: "relative", marginTop: 2, maxWidth: 200 }}>
+      <Box sx={{ position: "relative", marginTop: 2, maxWidth: 180 }}>
         <Typography
           variant="caption"
           sx={{
@@ -173,32 +202,46 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
       {loading ? (
         <Typography>Loading...</Typography>
       ) : (
-        <>
+        <div className="dynamic-images-container">
           <Box
+            onClick={handleClickUploadArea}
             sx={{
-              mt: 4,
-              border: "2px dashed gray",
+              mt: 2,
+              border: "1px dashed gray",
               borderRadius: 2,
-              padding: 3,
+              padding: 2,
               textAlign: "center",
               backgroundColor: isDragging ? "#f0f0f0" : "transparent",
+              cursor: "pointer",
             }}
           >
             <Typography>
-              Drag & drop an image here to upload it to the project
+              Click or drag & drop a dynamic image here to upload it to your
+              project.
             </Typography>
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileSelect}
+            />
           </Box>
 
           <Grid container spacing={2} sx={{ mt: 2 }}>
             {images.map((img) => (
               <Grid item xs={12} sm={6} md={4} key={img.id}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 1,
-                  }}
+                <div
+                  className="image-container"
+                  style={{ backgroundColor: "#fbfbfb" }}
+                  // sx={{
+                  //   display: "flex",
+                  //   flexDirection: "column",
+                  //   alignItems: "center",
+                  //   gap: 1,
+                  //   backgroundColor: "#f9f9f9",
+                  //   borderRadius: 2,
+                  // }}
                 >
                   <img
                     src={normalizeImagePath(img.file_url)}
@@ -209,8 +252,9 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
                       objectFit: "contain",
                       marginBottom: 5,
                     }}
+                    className="image"
                   />
-                  <Box sx={{ position: "relative" }}>
+                  <Box sx={{ position: "relative", marginTop: 1 }}>
                     <Typography
                       variant="caption"
                       sx={{
@@ -231,17 +275,20 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
                       label=""
                     />
                   </Box>
-                  <IconButton
-                    color="error"
-                    onClick={() => handleDelete(img.id)}
+                  <button
+                    className="delete-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(img.id);
+                    }}
                   >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
+                    <DeleteBtn />
+                  </button>
+                </div>
               </Grid>
             ))}
           </Grid>
-        </>
+        </div>
       )}
     </Box>
   );

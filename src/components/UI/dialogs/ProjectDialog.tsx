@@ -18,7 +18,6 @@ import { useBanner } from "../../../context/BannerContext";
 import { ProjectData } from "../../../types";
 import { useConfig } from "../../../context/ConfigContext";
 import { useNavigate } from "react-router-dom";
-// import { useSyncProjectWithFeededify } from "../../../utils/useSyncProjectWithFeededify";
 import { useSyncProjectWithSupabase } from "../../../utils/useSyncProjectWithSupabase";
 
 const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -32,7 +31,6 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  // const { sync } = useSyncProjectWithFeededify();
   const { sync } = useSyncProjectWithSupabase();
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -112,7 +110,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       setConfig(initialData.config);
       updateCanvasSize(width, height);
       await uploadToS3(key, initialData);
-      // Feededify
+      // Supabase
       await sync(projectName, initialData);
       setCurrentProjectName(projectName);
       navigate(`/project/${projectName}`, { replace: true });
