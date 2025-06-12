@@ -54,8 +54,8 @@ const ImagePanel: React.FC = () => {
     addObject({
       id: Date.now(),
       type: "image",
-      width: 250,
-      height: 250,
+      width: 200,
+      height: 150,
       x: 50,
       y: 50,
       src: url,
@@ -99,7 +99,7 @@ const ImagePanel: React.FC = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => handleAddDynamicsLogo("{{img}}")}
+        onClick={() => handleAddDynamicsLogo("{{dynamic_img}}")}
       >
         Add Dynamic Logo
       </Button>

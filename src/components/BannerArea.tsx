@@ -11,6 +11,7 @@ import { useObjectProperties } from "../utils/hooks";
 import { useSelectionBounds } from "../utils/hooks";
 import {
   replaceDynamicVariables,
+  replaceDynamicVariablesForDynamicImg,
   replaceDynamicText,
   shouldHideObject,
   shouldHideGroup,
@@ -34,6 +35,7 @@ const BannerArea: React.FC = () => {
     temporaryUpdates,
     setTemporaryUpdates,
     renderedObjects,
+    dynamicImgs,
   } = useBanner();
   const { hiddenObjectIds, config, canvasSize } = useConfig();
   const { selectedChild, handleDeleteChild } = useChildProperties();
@@ -950,9 +952,12 @@ const BannerArea: React.FC = () => {
                     id={`${object.id}`}
                     data-condition={JSON.stringify(object.condition)}
                     className="image-field"
-                    src={replaceDynamicVariables(
+                    src={replaceDynamicVariablesForDynamicImg(
                       object.src ?? "",
-                      keyValuePairs
+                      keyValuePairs,
+                      dynamicImgs ?? [],
+                      object.object_id,
+                      object.logoName
                     )}
                     alt="img"
                     style={{

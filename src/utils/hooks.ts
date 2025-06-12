@@ -1,6 +1,11 @@
 import { useCallback, useMemo } from "react";
 import { useBanner } from "../context/BannerContext";
-import { BannerObject, BannerChild, ObjectCondition } from "../types";
+import {
+  BannerObject,
+  BannerChild,
+  ObjectCondition,
+  DynamicImg,
+} from "../types";
 import type { Property } from "csstype";
 // import { ConfigItem } from "../types";
 
@@ -392,6 +397,50 @@ export const replaceDynamicVariables = (
   });
 
   return result;
+};
+
+export const replaceDynamicVariablesForDynamicImg = (
+  content: string,
+  keyValuePairs: { key: string; value: string }[],
+  dynamicImgs: DynamicImg[],
+  object_id?: string | null,
+  logoName?: string | null
+): string => {
+  let result = content;
+  const fallbackUrl =
+    "https://dummyimage.com/200x150/F1F1F1.gif&text=Fill+in+dynamic+logos+data";
+
+  // Если content не {{dynamic_img}}, или нет object_id / logoName / dynamicImgs пустой — просто заменить переменные
+  if (content !== "{{dynamic_img}}" || !object_id || dynamicImgs.length === 0) {
+    keyValuePairs.forEach(({ key, value }) => {
+      const dynamicKey = `{{${key}}}`;
+      result = result.replaceAll(dynamicKey, value);
+    });
+    return result;
+  }
+
+  // Фильтруем dynamicImgs по object_id
+  const filteredDynamicImgs = dynamicImgs.filter(
+    (img) => img.object_id === object_id
+  );
+
+  // Ищем значение logoName в keyValuePairs
+  const pair = keyValuePairs.find(({ key }) => key === logoName);
+
+  const logoNameValue = pair?.value;
+
+  // Ищем совпадение значения logoNameValue с name в filteredDynamicImgs
+  if (logoNameValue) {
+    const matchedImg = filteredDynamicImgs.find(
+      (img) => img.name === logoNameValue
+    );
+    if (matchedImg?.file_url) {
+      return matchedImg.file_url; // теперь TypeScript уверен, что это string
+    }
+  }
+
+  // Если ничего не нашли — возвращаем оригинальный content
+  return content === "{{dynamic_img}}" ? fallbackUrl : content;
 };
 
 // export const replaceDynamicText = (

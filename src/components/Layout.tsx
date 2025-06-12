@@ -16,7 +16,8 @@ import { useSyncProjectWithSupabase } from "../utils/useSyncProjectWithSupabase"
 
 const Layout: React.FC = () => {
   const { mode } = useMode();
-  const { currentProjectName, setCurrentProjectName, addJson } = useBanner();
+  const { currentProjectName, setCurrentProjectName, addJson, setDynamicImgs } =
+    useBanner();
   const { setConfig } = useConfig();
   const navigate = useNavigate();
   const { projectName } = useParams<{ projectName: string }>();
@@ -50,6 +51,7 @@ const Layout: React.FC = () => {
               ],
             }
           );
+          setDynamicImgs?.(data.dynamicImgs || []);
           navigate(`/project/${projectName}`, { replace: true });
           // Feededify
           await sync(projectName, data);
