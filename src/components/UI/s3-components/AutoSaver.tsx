@@ -48,7 +48,7 @@ const AutoSaver: React.FC = () => {
         await captureAndUploadPreview(currentProjectId);
       }
       await sync(currentProjectName, projectData);
-      // await uploadToS3(key, projectData);
+      await uploadToS3(key, projectData);
       // console.log("✅ Auto-saved objects:", projectData.objects);
       lastDataRef.current = {
         objects: structuredClone(objects),
