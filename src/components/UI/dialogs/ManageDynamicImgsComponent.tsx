@@ -247,10 +247,12 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
                     src={normalizeImagePath(img.file_url)}
                     alt={img.name || ""}
                     style={{
-                      width: 100,
-                      height: 100,
+                      width: "100%",
+                      maxHeight: 100,
                       objectFit: "contain",
+
                       marginBottom: 5,
+                      margin: "0 auto",
                     }}
                     className="image"
                   />
