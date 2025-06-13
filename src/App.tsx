@@ -15,8 +15,8 @@ const App: React.FC = () => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
+            <Route path="/:projectId" element={<Layout />} />
             <Route path="/project/:projectName" element={<Layout />} />
-
             <Route path="/" element={<Layout />} />
           </Routes>
         </ThemeProvider>

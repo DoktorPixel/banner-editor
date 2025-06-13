@@ -18,10 +18,12 @@ import { useBanner } from "../../../context/BannerContext";
 import { ProjectData } from "../../../types";
 import { useConfig } from "../../../context/ConfigContext";
 import { useNavigate } from "react-router-dom";
-import { useSyncProjectWithSupabase } from "../../../utils/useSyncProjectWithSupabase";
+// import { useSyncProjectWithSupabase } from "../../../utils/useSyncProjectWithSupabase";
+import { useSupabaseProject } from "../../../utils/useSupabaseProject";
 
 const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const [projectName, setProjectName] = useState("");
+  const [projectName] = useState("");
+  const [projectId, setProjectId] = useState("");
   const [sizePreset, setSizePreset] = useState<
     "square" | "portrait" | "custom"
   >("square");
@@ -31,7 +33,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { sync } = useSyncProjectWithSupabase();
+  // const { sync } = useSyncProjectWithSupabase();
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -40,7 +42,14 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     message: "",
   });
 
-  const { addJson, setCurrentProjectName, clearHistory } = useBanner();
+  const {
+    addJson,
+    setCurrentProjectName,
+    clearHistory,
+    setCurrentProjectId,
+    setDynamicImgs,
+  } = useBanner();
+  const { getProject } = useSupabaseProject();
   // refactoring
 
   const width =
@@ -71,6 +80,19 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       setError("The project name cannot exceed 36 characters.");
       return false;
     }
+    setError(null);
+    return true;
+  };
+
+  const validateProjectId = (id: string): boolean => {
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if (!uuidRegex.test(id)) {
+      setError("Invalid project ID. Please provide a valid UUID.");
+      return false;
+    }
+
     setError(null);
     return true;
   };
@@ -111,7 +133,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       updateCanvasSize(width, height);
       await uploadToS3(key, initialData);
       // Supabase
-      await sync(projectName, initialData);
+      // await sync(projectName, initialData);
       setCurrentProjectName(projectName);
       navigate(`/project/${projectName}`, { replace: true });
 
@@ -133,44 +155,46 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   const handleLoadExistingProject = async () => {
-    if (!validateProjectName(projectName)) return;
+    if (!validateProjectId(projectId)) return;
 
     setLoading(true);
     try {
-      const key = `projects/${projectName}.json`;
-      const data = await downloadFromS3(key);
+      const template = await getProject(projectId);
 
-      if (data && typeof data === "object" && Array.isArray(data.objects)) {
-        addJson(data.objects);
-        setCurrentProjectName(projectName);
-        navigate(`/project/${projectName}`, { replace: true });
-        setConfig({
-          hiddenObjectIds: data.config?.hiddenObjectIds ?? [],
-          keyValuePairs: data.config?.keyValuePairs ?? [
-            { key: "title", value: "Назва продукту" },
-            { key: "img", value: "https://placehold.co/300" },
-            { key: "price", value: "1000" },
-          ],
-          canvasSize: data.config?.canvasSize ?? {
-            width: 1080,
-            height: 1080,
-          },
-        });
-        updateCanvasSize(
-          data.config?.canvasSize?.width ?? 1080,
-          data.config?.canvasSize?.height ?? 1080
+      if (template?.config_dev) {
+        const parsed = JSON.parse(template.config_dev);
+        addJson(parsed.objects);
+        setDynamicImgs?.(parsed.dynamicImgs || []);
+        setConfig(
+          parsed.config || {
+            hiddenObjectIds: template.config?.hiddenObjectIds ?? [],
+            keyValuePairs: template.config?.keyValuePairs ?? [
+              { key: "title", value: "Назва продукту" },
+              { key: "img", value: "https://placehold.co/300" },
+              { key: "price", value: "1000" },
+            ],
+            canvasSize: template.config?.canvasSize ?? {
+              width: 1080,
+              height: 1080,
+            },
+          }
         );
-        // Feededify
+        setCurrentProjectId(projectId);
+        setCurrentProjectName(template.name || "Untitled Project");
+        updateCanvasSize(
+          template.config?.canvasSize?.width ?? 1080,
+          template.config?.canvasSize?.height ?? 1080
+        );
         setSnackbar({
           open: true,
           message: "Project uploaded successfully!",
         });
-        await sync(projectName, data);
+        navigate(`/${projectId}`, { replace: true });
         onClose();
       } else {
         setSnackbar({
           open: true,
-          message: "Error: Project not found, check the name.",
+          message: "Project not found. Check the ID.",
         });
       }
     } catch (error) {
@@ -196,10 +220,10 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <TextField
             fullWidth
             variant="outlined"
-            label="Project name"
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
-            onBlur={() => validateProjectName(projectName)}
+            label="Project ID"
+            value={projectId}
+            onChange={(e) => setProjectId(e.target.value)}
+            onBlur={() => validateProjectId(projectId)}
             disabled={loading}
             margin="normal"
             error={!!error}
@@ -283,7 +307,8 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <Button
               onClick={handleCreateNewProject}
               color="primary"
-              disabled={loading || !!error || projectName.length < 4}
+              disabled={true}
+              // {loading || !!error || projectName.length < 4}
               fullWidth
               sx={{
                 whiteSpace: "nowrap",
@@ -298,7 +323,7 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <Button
               onClick={handleLoadExistingProject}
               color="secondary"
-              disabled={loading || !!error || projectName.length < 4}
+              disabled={loading || !!error}
               fullWidth
               sx={{
                 whiteSpace: "nowrap",
