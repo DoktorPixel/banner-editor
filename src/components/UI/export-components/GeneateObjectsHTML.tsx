@@ -197,6 +197,15 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
     const conditionAttr = obj.condition
       ? `data-condition='${JSON.stringify(obj.condition)}'`
       : "";
+    const dynamicAttr =
+      obj.type === "image" &&
+      (obj.dynamicsLogo || obj.object_id || obj.logoName)
+        ? `data-dynamic='${JSON.stringify({
+            dynamicsLogo: obj.dynamicsLogo ?? undefined,
+            object_id: obj.object_id ?? undefined,
+            logoName: obj.logoName ?? undefined,
+          })}'`
+        : "";
     const idAttr = `id="${obj.id}"`;
     const classAttr = isChild
       ? `class="banner-object-child"`
@@ -215,11 +224,15 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         : `<div ${idAttr} ${conditionAttr} ${classAttr} style="${outerStyles}">${content}</div>`;
     } else if (obj.type === "image") {
       if (!obj.src) return "";
-      const content = `<img ${isChild ? idAttr : ""} ${conditionAttr} src="${
-        obj.src
-      }" alt="${obj.name || "image"}" class="image-field ${
+
+      const content = `<img ${
+        isChild ? idAttr : ""
+      } ${conditionAttr} ${dynamicAttr} src="${obj.src}" alt="${
+        obj.name || "image"
+      }" class="image-field ${
         isChild ? "banner-object-child" : ""
       }" style="${innerStyles}" />`;
+
       return isChild
         ? content
         : `<div ${idAttr} ${conditionAttr} ${classAttr} style="${outerStyles}">${content}</div>`;

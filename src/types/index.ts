@@ -15,7 +15,7 @@ export interface BannerObject {
   color?: string;
   src?: string;
   dynamics?: boolean;
-  dynamicsLogo?: boolean;
+  dynamicsLogo?: boolean; // for dynamic logos
   logoName?: string; // for dynamic logos
   object_id?: string; // for dynamic images
   width?: number;
@@ -110,6 +110,9 @@ export interface BannerChild {
   autoHeight?: boolean;
   src?: string;
   dynamics?: boolean;
+  dynamicsLogo?: boolean; // for dynamic logos
+  logoName?: string; // for dynamic logos
+  object_id?: string; // for dynamic images
   name?: string;
   objectFit?: React.CSSProperties["objectFit"];
   rotate?: number | undefined;
