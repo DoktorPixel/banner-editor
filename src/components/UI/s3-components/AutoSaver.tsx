@@ -1,18 +1,17 @@
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { useBanner } from "../../../context/BannerContext";
 import { useConfig } from "../../../context/ConfigContext";
-import { uploadToS3 } from "../../../S3/s3Storage";
+// import { uploadToS3 } from "../../../S3/s3Storage";
 import { ProjectData } from "../../../types";
 import { debounce } from "lodash";
 import isEqual from "fast-deep-equal";
-import { useSyncProjectWithSupabase } from "../../../utils/useSyncProjectWithSupabase";
-import { captureAndUploadPreview } from "../export-components/PreviewUploader";
+// import { captureAndUploadPreview } from "../export-components/PreviewUploader";
+import { useSupabaseProject } from "../../../utils/useSupabaseProject";
 
 const AutoSaver: React.FC = () => {
   const { objects, dynamicImgs, currentProjectName, currentProjectId } =
     useBanner();
   const { config } = useConfig();
-  const { sync } = useSyncProjectWithSupabase();
   const [saved, setSaved] = useState(false);
 
   const lastDataRef = useRef<ProjectData>({
@@ -25,6 +24,8 @@ const AutoSaver: React.FC = () => {
     },
   });
 
+  const { updateProject } = useSupabaseProject();
+
   useEffect(() => {
     lastDataRef.current = {
       objects: structuredClone(objects),
@@ -34,9 +35,8 @@ const AutoSaver: React.FC = () => {
   }, [currentProjectName]);
 
   const saveData = useCallback(async () => {
-    if (!currentProjectName) return;
+    if (!currentProjectId) return;
 
-    const key = `projects/${currentProjectName}.json`;
     const projectData: ProjectData = {
       objects,
       dynamicImgs,
@@ -44,12 +44,10 @@ const AutoSaver: React.FC = () => {
     };
 
     try {
-      if (currentProjectId) {
-        await captureAndUploadPreview(currentProjectId);
-      }
-      await sync(currentProjectName, projectData);
-      await uploadToS3(key, projectData);
-      // console.log("✅ Auto-saved objects:", projectData.objects);
+      // if (currentProjectId) {
+      //   await captureAndUploadPreview(currentProjectId);
+      // }
+      await updateProject(currentProjectId, projectData, config);
       lastDataRef.current = {
         objects: structuredClone(objects),
         dynamicImgs: structuredClone(dynamicImgs ?? []),
@@ -60,7 +58,7 @@ const AutoSaver: React.FC = () => {
     } catch (error) {
       console.error("Auto-save error:", error);
     }
-  }, [objects, dynamicImgs, config, currentProjectName]);
+  }, [objects, dynamicImgs, config, currentProjectId, updateProject]);
 
   const debouncedSave = useMemo(
     () => debounce(saveData, 1000, { leading: false, trailing: true }),

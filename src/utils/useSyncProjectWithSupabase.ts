@@ -8,8 +8,8 @@ export const useSyncProjectWithSupabase = () => {
   const { setCurrentProjectId } = useBanner();
   const { config } = useConfig();
 
-  const sync = async (templateName: string, data: ProjectData) => {
-    const template = await syncProjectWithSupabase(templateName, data, config);
+  const sync = async (templateId: string, data: ProjectData) => {
+    const template = await syncProjectWithSupabase(templateId, data, config);
 
     if (template?.id) {
       setCurrentProjectId(template.id);

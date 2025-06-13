@@ -19,7 +19,6 @@ export const ExportToHTMLButton = () => {
     try {
       setIsLoading(true);
       const html = ExportToHTML_5(objects, config, dynamicImgs);
-      console.log("Exported dynamicImgs in HTML:", dynamicImgs);
       await navigator.clipboard.writeText(html);
       setNotification("HTML successfully copied to clipboard!");
     } catch (error) {

@@ -8,7 +8,7 @@ const API_BASE_URL =
   "https://tgitxrjsbuimawihmkth.supabase.co/functions/v1/templates";
 
 export const syncProjectWithSupabase = async (
-  templateName: string,
+  templateId: string,
   data: ProjectData,
   config: ConfigItem
 ) => {
@@ -25,8 +25,10 @@ export const syncProjectWithSupabase = async (
     try {
       // Получаем шаблон по имени
       const response = await axios.get(
-        `${API_BASE_URL}?name=${encodeURIComponent(templateName)}`,
+        `${API_BASE_URL}?name=${encodeURIComponent(templateId)}`,
         // `${API_BASE_URL}78c9d526-0d73-42ac-95cd-59c2f93e2c29`,
+        // ab642da0-08be-491a-ae82-c42f094672f2     !!!
+        // f6aa0dfb-7e7a-4429-9ee1-d064f756e552
         {
           headers: {
             Authorization: `Bearer ${token}`,
