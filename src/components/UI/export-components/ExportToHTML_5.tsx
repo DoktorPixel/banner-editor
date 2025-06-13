@@ -69,7 +69,8 @@ export const ExportToHTML_5 = (
       </div>
       <script>
        const dynamicImgs = ${JSON.stringify(dynamicImgs)};
-      
+
+        // window.onload = function () {
         function loadData() {
             const props = window.props || {};
 
@@ -294,6 +295,42 @@ export const ExportToHTML_5 = (
                 console.error("Error replacing dynamic text:", error);
               }
             });
+
+            // 
+              document.querySelectorAll("img[data-dynamic]").forEach((img) => {
+                try {
+                  const { object_id, logoName } = JSON.parse(
+                    img.getAttribute("data-dynamic")
+                  );
+
+                  if (!object_id || !logoName) {
+                    img.src = fallbackUrl;
+                    return;
+                  }
+
+                  const filtered = dynamicImgs.filter(
+                    (di) => di.object_id === object_id
+                  );
+                  if (filtered.length === 0) {
+                    img.src = fallbackUrl;
+                    return;
+                  }
+
+                  const logoNameValue = props[logoName];
+                  if (typeof logoNameValue !== "string") {
+                    img.src = fallbackUrl;
+                    return;
+                  }
+
+                  const matched = filtered.find((di) => di.name === logoNameValue);
+                  img.src =
+                    matched && matched.file_url ? matched.file_url : fallbackUrl;
+                } catch (e) {
+                  console.warn("Error processing dynamic img:", e);
+                  img.src = fallbackUrl;
+                }
+              });
+            // 
           };
       </script>
     </body>

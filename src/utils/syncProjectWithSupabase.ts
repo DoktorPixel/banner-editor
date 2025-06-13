@@ -26,6 +26,7 @@ export const syncProjectWithSupabase = async (
       // Получаем шаблон по имени
       const response = await axios.get(
         `${API_BASE_URL}?name=${encodeURIComponent(templateName)}`,
+        // `${API_BASE_URL}78c9d526-0d73-42ac-95cd-59c2f93e2c29`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
