@@ -1,5 +1,14 @@
 import { useState, useEffect, DragEvent, useRef } from "react";
-import { Box, Typography, Grid, TextField } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  CircularProgress,
+  Snackbar,
+  Alert,
+  Tooltip,
+} from "@mui/material";
+
 import { useSupabaseImages } from "../../../utils/useSupabaseImages";
 import { useBanner } from "../../../context/BannerContext";
 import { DeleteBtn } from "../../../assets/icons";
@@ -38,7 +47,10 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [uploadingNewImage, setUploadingNewImage] = useState(false);
+  const [deletingIds, setDeletingIds] = useState<string[]>([]);
   const [localLogoName, setLocalLogoName] = useState(logoName || "");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -56,8 +68,6 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
       setLoading(true);
       try {
         const imgs = await getDynamicImages(currentProjectId, object_id);
-
-        // Добавляем имя из context, если оно есть
         const enrichedImgs = imgs.map((img) => {
           const ctxImg = dynamicImgs?.find((d) => d.id === img.id);
           return {
@@ -65,10 +75,10 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
             name: ctxImg?.name || img.name,
           };
         });
-
         setImages(enrichedImgs);
         enrichedImgs.forEach((img) => addDynamicImg?.(img));
       } catch (error) {
+        setErrorMessage("Ошибка при загрузке изображений.");
         console.error("Error loading images:", error);
       } finally {
         setLoading(false);
@@ -76,28 +86,32 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     };
 
     fetchImages();
-  }, [currentProjectId, object_id, getDynamicImages]);
+  }, [currentProjectId, object_id]);
 
   const handleDelete = async (id: string) => {
     if (!object_id) return;
     const imageToDelete = images.find((img) => img.id === id);
     if (!imageToDelete) return;
 
+    setDeletingIds((prev) => [...prev, id]);
     const fullSrc = imageToDelete.file_url;
-    await deleteDynamicImage(id, object_id);
-    deleteDynamicImg?.(id);
 
-    setImages((prev) => prev.filter((img) => img.id !== id));
-    deleteObjectsByImageSrc(normalizeImagePath(fullSrc));
+    try {
+      await deleteDynamicImage(id, object_id);
+      deleteDynamicImg?.(id);
+      setImages((prev) => prev.filter((img) => img.id !== id));
+      deleteObjectsByImageSrc(normalizeImagePath(fullSrc));
+    } catch (error) {
+      setErrorMessage("Error deleting image.");
+      console.error("Delete error:", error);
+    } finally {
+      setDeletingIds((prev) => prev.filter((delId) => delId !== id));
+    }
   };
 
-  const handleDrop = async (event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    setIsDragging(false);
-
-    const file = event.dataTransfer.files?.[0];
-    if (!file || !currentProjectId) return;
-
+  const handleUpload = async (file: File) => {
+    if (!currentProjectId || !object_id) return;
+    setUploadingNewImage(true);
     try {
       const result = await uploadDynamicImage(
         file,
@@ -108,7 +122,19 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
       setImages((prev) => [...prev, result]);
       addDynamicImg?.(result);
     } catch (error) {
+      setErrorMessage("Error deleting image.");
       console.error("Upload error:", error);
+    } finally {
+      setUploadingNewImage(false);
+    }
+  };
+
+  const handleDrop = async (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+    const file = event.dataTransfer.files?.[0];
+    if (file) {
+      await handleUpload(file);
     }
   };
 
@@ -129,6 +155,16 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     }
   };
 
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      await handleUpload(file);
+    }
+    event.target.value = "";
+  };
+
   const handleNameChange = (id: string, newName: string) => {
     setImages((prev) =>
       prev.map((img) => (img.id === id ? { ...img, name: newName } : img))
@@ -140,28 +176,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     fileInputRef.current?.click();
   };
 
-  const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file || !currentProjectId) return;
-
-    try {
-      const result = await uploadDynamicImage(
-        file,
-        currentProjectId,
-        object_id
-      );
-      triggerRefresh();
-      setImages((prev) => [...prev, result]);
-      addDynamicImg?.(result);
-    } catch (error) {
-      console.error("Upload error:", error);
-    } finally {
-      // Очищаем input, чтобы можно было выбрать тот же файл снова
-      event.target.value = "";
-    }
-  };
+  const handleCloseSnackbar = () => setErrorMessage(null);
 
   return (
     <Box
@@ -169,24 +184,20 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
-      sx={{ mt: 2 }}
     >
-      <Typography variant="h6" gutterBottom>
-        Dynamic logos
-        {/* (object_id: {images[0]?.object_id}) */}
-      </Typography>
-      <Box sx={{ position: "relative", marginTop: 2, maxWidth: 180 }}>
+      <Typography variant="subtitle2">Dynamic logos</Typography>
+
+      <Box sx={{ position: "relative", marginTop: 2, maxWidth: 199 }}>
         <Typography
           variant="caption"
           sx={{
             position: "absolute",
-            top: "-16px",
-            left: 8,
+            top: "-18px",
             fontSize: "0.75rem",
             color: "rgba(0, 0, 0, 0.6)",
           }}
         >
-          Logo name
+          Logo name (props)
         </Typography>
         <TextField
           size="small"
@@ -196,12 +207,17 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
             onChange?.("logoName", e.target.value);
           }}
           fullWidth
-          label=""
         />
       </Box>
-      {loading ? (
-        <Typography>Loading...</Typography>
-      ) : (
+
+      {(loading || uploadingNewImage) && (
+        <Typography sx={{ marginTop: 2 }}>
+          <CircularProgress size={15} />{" "}
+          {loading ? "Loading..." : "Uploading..."}
+        </Typography>
+      )}
+
+      {!loading && (
         <div className="dynamic-images-container">
           <Box
             onClick={handleClickUploadArea}
@@ -228,70 +244,100 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
             />
           </Box>
 
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            {images.map((img) => (
-              <Grid item xs={12} sm={6} md={4} key={img.id}>
-                <div
-                  className="image-container"
-                  style={{ backgroundColor: "#fbfbfb" }}
-                  // sx={{
-                  //   display: "flex",
-                  //   flexDirection: "column",
-                  //   alignItems: "center",
-                  //   gap: 1,
-                  //   backgroundColor: "#f9f9f9",
-                  //   borderRadius: 2,
-                  // }}
-                >
+          {images.map((img) => (
+            <div className="image-container" key={img.id}>
+              <Tooltip
+                title={
                   <img
                     src={normalizeImagePath(img.file_url)}
                     alt={img.name || ""}
-                    style={{
-                      width: "100%",
-                      maxHeight: 100,
-                      objectFit: "contain",
-
-                      marginBottom: 5,
-                      margin: "0 auto",
-                    }}
-                    className="image"
+                    style={{ maxWidth: 250, maxHeight: 250 }}
                   />
-                  <Box sx={{ position: "relative", marginTop: 1 }}>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        position: "absolute",
-                        top: "-16px",
-                        left: 8,
-                        fontSize: "0.75rem",
-                        color: "rgba(0, 0, 0, 0.6)",
-                      }}
-                    >
-                      Image name
-                    </Typography>
-                    <TextField
-                      size="small"
-                      value={img.name || ""}
-                      onChange={(e) => handleNameChange(img.id, e.target.value)}
-                      fullWidth
-                      label=""
-                    />
-                  </Box>
-                  <button
-                    className="delete-button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(img.id);
-                    }}
-                  >
-                    <DeleteBtn />
-                  </button>
-                </div>
-              </Grid>
-            ))}
-          </Grid>
+                }
+                placement="left"
+                arrow
+                slotProps={{
+                  popper: {
+                    modifiers: [
+                      {
+                        name: "offset",
+                        options: {
+                          offset: [0, 10],
+                        },
+                      },
+                    ],
+                  },
+                  tooltip: {
+                    sx: {
+                      backgroundColor: "#fbfbfb",
+                      padding: 1,
+                      // boxShadow: 3,
+                      border: "1px solid #ccc",
+                    },
+                  },
+                  arrow: {
+                    sx: {
+                      color: "#ccc",
+                    },
+                  },
+                }}
+              >
+                <img
+                  src={normalizeImagePath(img.file_url)}
+                  alt={img.name || ""}
+                  className="image"
+                  style={{ cursor: "pointer" }}
+                />
+              </Tooltip>
+              <Box sx={{ position: "relative", marginTop: 1 }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    position: "absolute",
+                    top: "-16px",
+                    left: 8,
+                    fontSize: "0.75rem",
+                    color: "rgba(0, 0, 0, 0.6)",
+                  }}
+                >
+                  Image name
+                </Typography>
+                <TextField
+                  size="small"
+                  value={img.name || ""}
+                  onChange={(e) => handleNameChange(img.id, e.target.value)}
+                  fullWidth
+                />
+              </Box>
+              <button
+                className="delete-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(img.id);
+                }}
+                disabled={deletingIds.includes(img.id)}
+              >
+                {deletingIds.includes(img.id) ? (
+                  <CircularProgress size={16} />
+                ) : (
+                  <DeleteBtn />
+                )}
+              </button>
+            </div>
+          ))}
         </div>
       )}
+
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error" variant="filled">
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
