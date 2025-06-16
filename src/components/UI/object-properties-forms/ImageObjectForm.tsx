@@ -229,6 +229,7 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
           />
         </div>
       </div>
+      <div className="grey-line"></div>
 
       {object.dynamicsLogo && (
         <div className="padding-wrapper">
