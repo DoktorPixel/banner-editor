@@ -411,7 +411,7 @@ export const replaceDynamicVariablesForDynamicImg = (
     "https://dummyimage.com/200x150/F1F1F1.gif&text=Fill+in+dynamic+logos+data";
 
   // Если content не {{dynamic_img}}, или нет object_id / logoName / dynamicImgs пустой — просто заменить переменные
-  if (content !== "{{dynamic_img}}" || !object_id || dynamicImgs.length === 0) {
+  if (content !== "{{dynamic_img}}" || !object_id) {
     keyValuePairs.forEach(({ key, value }) => {
       const dynamicKey = `{{${key}}}`;
       result = result.replaceAll(dynamicKey, value);

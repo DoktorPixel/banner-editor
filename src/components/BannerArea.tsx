@@ -220,6 +220,7 @@ const BannerArea: React.FC = () => {
             y: object.y ?? 0,
             width: object.width ?? 0,
             height: object.height ?? 0,
+            rotate: object.rotate ?? 0,
           },
         });
 
