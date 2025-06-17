@@ -276,7 +276,13 @@ export interface ResizeParams {
   resizeDirection: ResizeDirection | null;
   mouseX: number;
   mouseY: number;
-  object: { x: number; y: number; width: number; height: number };
+  object: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotate?: number;
+  };
 }
 
 export interface ResizeHandlesProps {
