@@ -160,7 +160,33 @@ const ProjectDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setLoading(true);
     try {
       const template = await getProject(projectId);
+      let parsed: ProjectData | null = null;
 
+      if (template?.config_dev?.trim()) {
+        parsed = JSON.parse(template.config_dev);
+      }
+
+      const objects = parsed?.objects ?? [];
+      const dynamicImgs = parsed?.dynamicImgs ?? [];
+      const config = parsed?.config ?? {
+        hiddenObjectIds: [],
+        keyValuePairs: [
+          { key: "title", value: "Назва продукту" },
+          { key: "img", value: "https://placehold.co/300" },
+          { key: "price", value: "1000" },
+        ],
+        canvasSize: {
+          width: 1080,
+          height: 1080,
+        },
+      };
+      addJson(objects);
+      setDynamicImgs?.(dynamicImgs);
+      setConfig(config);
+      setCurrentProjectId(projectId);
+      setCurrentProjectName(template.name || "Untitled Project");
+      navigate(`/${projectId}`, { replace: true });
+      onClose();
       if (template?.config_dev) {
         const parsed = JSON.parse(template.config_dev);
         addJson(parsed.objects);

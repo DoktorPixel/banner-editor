@@ -5,16 +5,12 @@ import { useMode } from "../context/ModeContext";
 import Sidebar from "./Sidebar";
 import BannerArea from "./BannerArea";
 import ObjectProperties from "./ObjectProperties";
-// import Instructions from "./Instructions";
-// import InsertingProps from "./InsertingProps";
 import ProjectDialog from "./UI/dialogs/ProjectDialog";
 // import { downloadFromS3 } from "../S3/s3Storage";
 import { useConfig } from "../context/ConfigContext";
 import { CircularProgress, Box } from "@mui/material";
-// import { useSyncProjectWithFeededify } from "../utils/useSyncProjectWithFeededify";
-// import { useSyncProjectWithSupabase } from "../utils/useSyncProjectWithSupabase";
-// import { syncProjectWithSupabase } from "../utils/syncProjectWithSupabase";
 import { useSupabaseProject } from "../utils/useSupabaseProject";
+import { ProjectData } from "../types";
 
 const Layout: React.FC = () => {
   const { mode } = useMode();
@@ -31,8 +27,6 @@ const Layout: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const [isCheckingProject, setIsCheckingProject] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
-  // const { sync } = useSyncProjectWithFeededify();
-  // const { sync } = useSyncProjectWithSupabase();
 
   useEffect(() => {
     const tryLoadProject = async () => {
@@ -72,18 +66,32 @@ const Layout: React.FC = () => {
 
       try {
         const template = await getProject(projectId);
+        let parsed: ProjectData | null = null;
 
-        if (template?.config_dev) {
-          const parsed = JSON.parse(template.config_dev);
-          addJson(parsed.objects);
-          setDynamicImgs?.(parsed.dynamicImgs || []);
-          setConfig(parsed.config || {});
-          setCurrentProjectId(projectId);
-          setCurrentProjectName(template.name || "Untitled Project");
-          navigate(`/${projectId}`, { replace: true });
-        } else {
-          throw new Error("Invalid config_dev format");
+        if (template?.config_dev?.trim()) {
+          parsed = JSON.parse(template.config_dev);
         }
+
+        const objects = parsed?.objects ?? [];
+        const dynamicImgs = parsed?.dynamicImgs ?? [];
+        const config = parsed?.config ?? {
+          hiddenObjectIds: [],
+          keyValuePairs: [
+            { key: "title", value: "Назва продукту" },
+            { key: "img", value: "https://placehold.co/300" },
+            { key: "price", value: "1000" },
+          ],
+          canvasSize: {
+            width: 1080,
+            height: 1080,
+          },
+        };
+        addJson(objects);
+        setDynamicImgs?.(dynamicImgs);
+        setConfig(config);
+        setCurrentProjectId(projectId);
+        setCurrentProjectName(template.name || "Untitled Project");
+        navigate(`/${projectId}`, { replace: true });
       } catch (err) {
         console.error("Project not found or error occurred:", err);
         setShowDialog(true);
