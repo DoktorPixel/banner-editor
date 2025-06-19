@@ -84,7 +84,14 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         if (obj.autoWidth) styles.push(`width: auto`);
         if (obj.autoHeight) styles.push(`height: auto`);
       }
+
       // Текстовые стили
+      // Сохраняем переводы строк и переносы
+      if (obj.type === "text") {
+        styles.push(`word-break: break-word`);
+        styles.push(`overflow: hidden`);
+      }
+
       if (obj.fontSize) styles.push(`font-size: ${toPx(obj.fontSize)}`);
       if (obj.fontFamily) styles.push(`font-family: ${obj.fontFamily}`);
       if (obj.fontWeight) styles.push(`font-weight: ${obj.fontWeight}`);
@@ -98,9 +105,12 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
       if (obj.maxLines) {
         styles.push(`display: -webkit-box`);
         styles.push(`-webkit-box-orient: vertical`);
-        styles.push(`overflow: hidden`);
         styles.push(`-webkit-line-clamp: ${obj.maxLines}`);
+        styles.push(`white-space: normal`);
+      } else {
+        styles.push(`white-space: nowrap`);
       }
+
       // Стили для фигур и изображений
       if (obj.objectFit) styles.push(`object-fit: ${obj.objectFit}; `);
 
@@ -212,13 +222,22 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
       : `class="banner-object"`;
 
     if (obj.type === "text") {
+      const rawMaxLines = obj.maxLines;
+      const maxLines =
+        typeof rawMaxLines === "number" && rawMaxLines > 0 ? rawMaxLines : 20;
+      let lines = String(obj.content || "").split("\n");
+      const isTruncated = lines.length > maxLines;
+      lines = lines.slice(0, maxLines);
+
+      const processedContent =
+        lines.map((line) => escapeHTML(line)).join("<br>") +
+        (isTruncated ? "...<br>" : "");
+
       const content = `<div ${
         isChild ? idAttr : ""
       } ${conditionAttr} class="text-field ${
         isChild ? "banner-object-child" : ""
-      }" style="${innerStyles}; display: block">${escapeHTML(
-        obj.content
-      )}</div>`;
+      }" style="${innerStyles}; ">${processedContent}</div>`;
       return isChild
         ? content
         : `<div ${idAttr} ${conditionAttr} ${classAttr} style="${outerStyles}">${content}</div>`;

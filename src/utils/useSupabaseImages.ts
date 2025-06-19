@@ -125,7 +125,7 @@ export const useSupabaseImages = () => {
         },
       });
 
-      console.log("Retrieved Dynamic images:", response.data);
+      // console.log("Retrieved Dynamic images:", response.data);
       return response.data.map((img: SupabaseImageItem) => ({
         ...img,
         file_url: addCacheBuster(img.file_url),

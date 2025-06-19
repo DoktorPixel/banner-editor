@@ -5,7 +5,7 @@ import { useBanner } from "../../../context/BannerContext";
 import { BannerObject } from "../../../types";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ExportInJSON from "../export-components/ExportInJSON";
-// import ExportInHTML from "../ExportInHTML";
+import ExportInHTML from "../export-components/ExportInHTML";
 // import { ExportToHTML_2 } from "../ExportToHTML_2";
 import { ExportToHTMLButton } from "../export-components/ExportToHTMLButton_2";
 
@@ -39,7 +39,7 @@ const DevPanel: React.FC = () => {
       </Button>
 
       <ExportInJSON />
-      {/* <ExportInHTML /> */}
+      <ExportInHTML />
       {/* <ExportToHTML_2 /> */}
       <ExportToHTMLButton />
 
