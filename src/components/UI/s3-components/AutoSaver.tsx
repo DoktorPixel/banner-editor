@@ -47,6 +47,7 @@ const AutoSaver: React.FC = () => {
       //   await captureAndUploadPreview(currentProjectId);
       // }
       await updateProject(currentProjectId, projectData, config);
+      console.log("Auto-saved project:", projectData);
       lastDataRef.current = {
         objects: structuredClone(objects),
         dynamicImgs: structuredClone(dynamicImgs ?? []),
