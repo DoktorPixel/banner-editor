@@ -5,12 +5,24 @@ import { useMode } from "../context/ModeContext";
 import Sidebar from "./Sidebar";
 import BannerArea from "./BannerArea";
 import ObjectProperties from "./ObjectProperties";
-import ProjectDialog from "./UI/dialogs/ProjectDialog";
-// import { downloadFromS3 } from "../S3/s3Storage";
 import { useConfig } from "../context/ConfigContext";
-import { CircularProgress, Box } from "@mui/material";
+import { CircularProgress, Box, Typography } from "@mui/material";
 import { useSupabaseProject } from "../utils/useSupabaseProject";
+// import { downloadFromS3 } from "../S3/s3Storage";
 import { ProjectData } from "../types";
+
+const defaultConfig = {
+  hiddenObjectIds: [],
+  keyValuePairs: [
+    { key: "title", value: "Назва продукту" },
+    { key: "img", value: "https://placehold.co/300" },
+    { key: "price", value: "1000" },
+  ],
+  canvasSize: {
+    width: 1080,
+    height: 1080,
+  },
+};
 
 const Layout: React.FC = () => {
   const { mode } = useMode();
@@ -25,14 +37,15 @@ const Layout: React.FC = () => {
   const { getProject } = useSupabaseProject();
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
+
   const [isCheckingProject, setIsCheckingProject] = useState(true);
-  const [showDialog, setShowDialog] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const tryLoadProject = async () => {
       if (!projectId) {
+        setError("Project ID missing from URL");
         setIsCheckingProject(false);
-        setShowDialog(true);
         return;
       }
 
@@ -66,47 +79,47 @@ const Layout: React.FC = () => {
 
       try {
         const template = await getProject(projectId);
-        let parsed: ProjectData | null = null;
+        if (!template) {
+          throw new Error("Project not found");
+        }
 
-        if (template?.config_dev?.trim()) {
-          parsed = JSON.parse(template.config_dev);
+        let parsed: ProjectData | null = null;
+        try {
+          if (template.config_dev?.trim()) {
+            parsed = JSON.parse(template.config_dev);
+          }
+        } catch {
+          throw new Error("Error parsing project configuration JSON");
         }
 
         const objects = parsed?.objects ?? [];
         const dynamicImgs = parsed?.dynamicImgs ?? [];
-        const config = parsed?.config ?? {
-          hiddenObjectIds: [],
-          keyValuePairs: [
-            { key: "title", value: "Назва продукту" },
-            { key: "img", value: "https://placehold.co/300" },
-            { key: "price", value: "1000" },
-          ],
-          canvasSize: {
-            width: 1080,
-            height: 1080,
-          },
-        };
+        const config = parsed?.config ?? defaultConfig;
+
         addJson(objects);
         setDynamicImgs?.(dynamicImgs);
         setConfig(config);
         setCurrentProjectId(projectId);
         setCurrentProjectName(template.name || "Untitled Project");
-        navigate(`/${projectId}`, { replace: true });
-      } catch (err) {
-        console.error("Project not found or error occurred:", err);
-        setShowDialog(true);
+
+        if (location.pathname !== `/${projectId}`) {
+          navigate(`/${projectId}`, { replace: true });
+        }
+      } catch (err: unknown) {
+        const message =
+          err instanceof Error ? err.message : "Unknown error loading project";
+        console.error("Error loading project:", err);
+        setError(message);
       } finally {
         setIsCheckingProject(false);
       }
     };
 
-    if (!projectId) {
+    if (
+      !projectId ||
+      (currentProjectId === null && location.pathname === "/")
+    ) {
       setIsCheckingProject(false);
-      setShowDialog(true);
-      return;
-    }
-
-    if (currentProjectId === null && location.pathname === "/") {
       return;
     }
 
@@ -128,18 +141,32 @@ const Layout: React.FC = () => {
     );
   }
 
-  return (
-    <>
-      {!currentProjectId && showDialog && (
-        <ProjectDialog onClose={() => setShowDialog(false)} />
-      )}
+  if (error) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+        gap={2}
+      >
+        <Typography variant="h6" color="error" textAlign="center">
+          {error}
+        </Typography>
+        <Typography variant="h6" color="info" textAlign="center">
+          Check your project ID in the URL
+        </Typography>
+      </Box>
+    );
+  }
 
-      <div className="app">
-        <Sidebar />
-        <BannerArea key={mode} />
-        <ObjectProperties />
-      </div>
-    </>
+  return (
+    <div className="app">
+      <Sidebar />
+      <BannerArea key={mode} />
+      <ObjectProperties />
+    </div>
   );
 };
 
