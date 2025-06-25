@@ -8,16 +8,22 @@ import Layout from "./components/Layout";
 import { useAuth } from "./utils/useAuth";
 
 const App: React.FC = () => {
-  useAuth();
+  const { isAuthReady } = useAuth();
   return (
     <BannerProvider>
       <ConfigProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path="/:projectId" element={<Layout />} />
-            <Route path="/project/:projectName" element={<Layout />} />
-            <Route path="/" element={<Layout />} />
+            <Route
+              path="/:projectId"
+              element={<Layout isAuthReady={isAuthReady} />}
+            />
+            <Route
+              path="/project/:projectName"
+              element={<Layout isAuthReady={isAuthReady} />}
+            />
+            <Route path="/" element={<Layout isAuthReady={isAuthReady} />} />
           </Routes>
         </ThemeProvider>
       </ConfigProvider>

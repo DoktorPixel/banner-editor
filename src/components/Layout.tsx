@@ -1,3 +1,5 @@
+// Layout.tsx
+
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useBanner } from "../context/BannerContext";
@@ -8,8 +10,11 @@ import ObjectProperties from "./ObjectProperties";
 import { useConfig } from "../context/ConfigContext";
 import { CircularProgress, Box, Typography } from "@mui/material";
 import { useSupabaseProject } from "../utils/useSupabaseProject";
-// import { downloadFromS3 } from "../S3/s3Storage";
 import { ProjectData } from "../types";
+
+interface LayoutProps {
+  isAuthReady: boolean;
+}
 
 const defaultConfig = {
   hiddenObjectIds: [],
@@ -24,7 +29,7 @@ const defaultConfig = {
   },
 };
 
-const Layout: React.FC = () => {
+const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
   const { mode } = useMode();
   const {
     currentProjectId,
@@ -42,6 +47,8 @@ const Layout: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!isAuthReady) return;
+
     const tryLoadProject = async () => {
       if (!projectId) {
         setError("Project ID missing from URL");
@@ -115,10 +122,7 @@ const Layout: React.FC = () => {
       }
     };
 
-    if (
-      !projectId ||
-      (currentProjectId === null && location.pathname === "/")
-    ) {
+    if (!projectId || location.pathname === "/") {
       setIsCheckingProject(false);
       return;
     }
@@ -126,7 +130,7 @@ const Layout: React.FC = () => {
     if (!currentProjectId) {
       tryLoadProject();
     }
-  }, [projectId, currentProjectId, navigate, setCurrentProjectId]);
+  }, [projectId, currentProjectId, navigate, setCurrentProjectId, isAuthReady]);
 
   if (isCheckingProject) {
     return (
