@@ -26,9 +26,8 @@ export const getToken = async () => {
     throw new Error("Failed to fetch session");
   }
   if (!session) {
-    console.warn("No active session found. Redirecting to login...");
-    window.location.href = "/login";
-    throw new Error("No authentication token found");
+    console.warn("No active session found.");
+    return null;
   }
   return session.access_token;
 };
