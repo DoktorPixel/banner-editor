@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
 import axios from "axios";
-import { ProjectData, ConfigItem } from "../types";
-import { ExportToHTML_3 } from "../components/UI/export-components/ExportToHTML_3";
+import { ProjectData, ConfigItem, BannerObject, DynamicImg } from "../types";
+// import { ExportToHTML_3 } from "../components/UI/export-components/ExportToHTML_3";
+import { ExportToHTML_5 } from "../components/UI/export-components/ExportToHTML_5";
 import { getToken } from "./supabaseClient";
 
 const API_BASE_URL =
@@ -33,12 +34,19 @@ export const useSupabaseProject = () => {
   }, []);
 
   const updateProject = useCallback(
-    async (templateId: string, data: ProjectData, config: ConfigItem) => {
+    async (
+      templateId: string,
+      data: ProjectData,
+      config: ConfigItem,
+      objects: BannerObject[],
+      dynamicImgs: DynamicImg[]
+    ) => {
       setLoading(true);
       setError(null);
       try {
         const token = await getToken();
-        const html = ExportToHTML_3(data.objects, config);
+        // const html = ExportToHTML_3(data.objects, config);
+        const html = ExportToHTML_5(objects, config, dynamicImgs);
         const payload = {
           id: templateId,
           html_dev: html,
