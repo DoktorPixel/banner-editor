@@ -5,7 +5,7 @@ import { useConfig } from "../../../context/ConfigContext";
 import { ProjectData } from "../../../types";
 import { debounce } from "lodash";
 import isEqual from "fast-deep-equal";
-// import { captureAndUploadPreview } from "../export-components/PreviewUploader";
+import { captureAndUploadPreview } from "../export-components/PreviewUploader";
 import { useSupabaseProject } from "../../../utils/useSupabaseProject";
 
 const AutoSaver: React.FC = () => {
@@ -43,11 +43,14 @@ const AutoSaver: React.FC = () => {
     };
 
     try {
-      // if (currentProjectId) {
-      //   await captureAndUploadPreview(currentProjectId);
-      // }
-      await updateProject(currentProjectId, projectData, config);
-      console.log("Auto-saved project:", projectData);
+      await updateProject(
+        currentProjectId,
+        projectData,
+        config,
+        objects,
+        dynamicImgs ?? []
+      );
+      // console.log("Auto-saved project:", projectData);
       lastDataRef.current = {
         objects: structuredClone(objects),
         dynamicImgs: structuredClone(dynamicImgs ?? []),
@@ -55,6 +58,9 @@ const AutoSaver: React.FC = () => {
       };
       setSaved(true);
       setTimeout(() => setSaved(false), 1000);
+      if (currentProjectId) {
+        await captureAndUploadPreview(currentProjectId);
+      }
     } catch (error) {
       console.error("Auto-save error:", error);
     }
