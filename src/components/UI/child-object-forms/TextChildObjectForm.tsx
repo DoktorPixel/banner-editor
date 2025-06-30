@@ -5,6 +5,7 @@ import {
   MenuItem,
   Select,
   FormControl,
+  Tooltip,
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 import { BannerChild } from "../../../types";
@@ -13,6 +14,7 @@ import TextDecorationSelector from "../button-groups/TextDecorationSelector";
 import FontStyleSelector from "../button-groups/FontStyleSelector";
 import { ChildConditionSelector } from "../selectors/ChildConditionSelector";
 import ChildOrderControls from "../button-groups/ChildOrderControls";
+import { SvgHelp } from "../../../assets/icons";
 
 interface TextChildObjectFormProps {
   object: BannerChild;
@@ -41,7 +43,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
         Text
       </Typography>
 
-      <div className="padding-wrapper">
+      {/* <div className="padding-wrapper">
         <TextField
           className="text-field-input"
           label="Text"
@@ -51,7 +53,59 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
           fullWidth
           margin="normal"
           multiline
-          // maxRows={5}
+          maxRows={5}
+        />
+      </div> */}
+
+      <div className="padding-wrapper">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "-18px",
+          }}
+        >
+          <label
+            htmlFor="custom-textfield"
+            style={{
+              fontSize: "12px",
+              color: "rgba(0, 0, 0, 0.6)",
+            }}
+          >
+            Text
+          </label>
+          <Tooltip
+            arrow
+            title={
+              <Typography sx={{ whiteSpace: "pre-line", fontSize: "14px" }}>
+                {
+                  "Use dynamic tags like {{price}} or functions:\n{{format(price)}},\n{{discount(price, sale_price)}},\n{{min(val1, val2)}}"
+                }
+              </Typography>
+            }
+          >
+            <span
+              style={{
+                cursor: "pointer",
+                display: "inline-block",
+                zIndex: 100,
+              }}
+            >
+              <SvgHelp width="20px" height="20px" />
+            </span>
+          </Tooltip>
+        </div>
+
+        <TextField
+          className="text-field-input"
+          name="content"
+          value={object.content || ""}
+          onChange={handleInputChange}
+          fullWidth
+          margin="normal"
+          multiline
+          maxRows={5}
         />
       </div>
 

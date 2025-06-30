@@ -27,8 +27,8 @@ export const syncProjectWithSupabase = async (
       const response = await axios.get(
         `${API_BASE_URL}?name=${encodeURIComponent(templateId)}`,
         // `${API_BASE_URL}78c9d526-0d73-42ac-95cd-59c2f93e2c29`,
-        // ab642da0-08be-491a-ae82-c42f094672f2     !!!
-        // f6aa0dfb-7e7a-4429-9ee1-d064f756e552    none
+        //
+        // 63e0c30a-7539-4cb3-aa92-3b426d7b14a0
         {
           headers: {
             Authorization: `Bearer ${token}`,

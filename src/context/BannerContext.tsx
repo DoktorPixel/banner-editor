@@ -161,13 +161,17 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     null
   );
 
+  // const selectChild = (groupId: number, childId: number, parentId?: number) => {
+  //   setSelectedChildId((prev) => {
+  //     const newSelection = { groupId, childId, parentId };
+  //     // console.log("selectedChildId (prev)", prev);
+  //     // console.log("selectedChildId (updated)", newSelection);
+  //     return newSelection;
+  //   });
+  // };
+
   const selectChild = (groupId: number, childId: number, parentId?: number) => {
-    setSelectedChildId((prev) => {
-      const newSelection = { groupId, childId, parentId };
-      console.log("selectedChildId (prev)", prev);
-      // console.log("selectedChildId (updated)", newSelection);
-      return newSelection;
-    });
+    setSelectedChildId({ groupId, childId, parentId });
   };
 
   const clearChildSelection = () => {
