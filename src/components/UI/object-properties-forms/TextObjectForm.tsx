@@ -8,6 +8,7 @@ import {
   Box,
   Typography,
   InputAdornment,
+  Tooltip,
 } from "@mui/material";
 import FontSelector from "../selectors/FontSelector";
 import TextAlignSelector from "../button-groups/TextAlignSelector";
@@ -16,6 +17,7 @@ import FontStyleSelector from "../button-groups/FontStyleSelector";
 import { MuiColorInput } from "mui-color-input";
 import { ConditionSelector } from "../selectors/ConditionSelector";
 import ActionToggle from "../button-groups/ActionToggle";
+import { SvgHelp } from "../../../assets/icons";
 
 interface TextObjectFormProps {
   object: BannerObject;
@@ -35,7 +37,59 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
       >
         Text
       </Typography>
+
       <div className="padding-wrapper">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "-18px",
+          }}
+        >
+          <label
+            htmlFor="custom-textfield"
+            style={{
+              fontSize: "12px",
+              color: "rgba(0, 0, 0, 0.6)",
+            }}
+          >
+            Text
+          </label>
+          <Tooltip
+            arrow
+            title={
+              <Typography sx={{ whiteSpace: "pre-line", fontSize: "14px" }}>
+                {
+                  "Use dynamic tags like {{price}} or functions:\n{{format(price)}},\n{{discount(price, sale_price)}},\n{{min(val1, val2)}}"
+                }
+              </Typography>
+            }
+          >
+            <span
+              style={{
+                cursor: "pointer",
+                display: "inline-block",
+                zIndex: 100,
+              }}
+            >
+              <SvgHelp width="20px" height="20px" />
+            </span>
+          </Tooltip>
+        </div>
+
+        <TextField
+          className="text-field-input"
+          value={object.content || ""}
+          onChange={(e) => onChange("content", e.target.value)}
+          fullWidth
+          margin="normal"
+          multiline
+          maxRows={5}
+        />
+      </div>
+
+      {/* <div className="padding-wrapper">
         <TextField
           className="text-field-input"
           label="Text"
@@ -46,7 +100,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           multiline
           maxRows={5}
         />
-      </div>
+      </div> */}
 
       <div className="auto-size padding-wrapper">
         {!object.autoWidth && (
