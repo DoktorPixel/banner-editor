@@ -27,4 +27,5 @@ export const fonts = [
   { label: "Quicksand", value: "Quicksand", category: "sans-serif" },
   { label: "Roboto Slab", value: "Roboto Slab", category: "serif" },
   { label: "Cairo", value: "Cairo", category: "sans-serif" },
+  { label: "Manrope", value: "Manrope", category: "sans-serif" },
 ];
