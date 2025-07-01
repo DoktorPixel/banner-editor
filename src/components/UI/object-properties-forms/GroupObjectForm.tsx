@@ -444,15 +444,24 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
 
         <div className="auto-size">
           <TextField
-            label="Opacity"
+            label="Opacity 100 to 1"
             type="number"
-            inputProps={{
-              step: 0.1,
-              min: 0,
-              max: 1,
+            slotProps={{
+              input: {
+                inputProps: {
+                  step: 1,
+                  min: 1,
+                  max: 100,
+                },
+              },
             }}
-            value={object.opacity || 1}
-            onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
+            value={Math.round((Number(object.opacity) || 1) * 100)}
+            onChange={(e) => {
+              let newValue = parseInt(e.target.value, 10);
+              if (isNaN(newValue)) newValue = 100;
+              newValue = Math.min(100, Math.max(1, newValue));
+              onChange("opacity", newValue / 100);
+            }}
             fullWidth
             margin="normal"
           />
@@ -514,6 +523,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
                 onChange={(newColor: string) =>
                   onChange("backgroundColor", newColor)
                 }
+                isAlphaHidden={true}
                 fullWidth
                 sx={{ margin: "16px 0 10px 0" }}
               />
@@ -570,6 +580,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
                 onChange={(newColor: string) =>
                   handleBorderChange("Color", newColor)
                 }
+                isAlphaHidden={true}
                 fullWidth
                 sx={{ marginTop: "20px" }}
               />
