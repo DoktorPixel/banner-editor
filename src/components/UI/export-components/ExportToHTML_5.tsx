@@ -69,6 +69,7 @@ export const ExportToHTML_5 = (
       </div>
       <script>
        const dynamicImgs = ${JSON.stringify(dynamicImgs)};
+       const fallbackUrl = "https://dummyimage.com/200x150/F1F1F1.gif&text=Fill+in+dynamic+logos+data";
 
         // window.onload = function () {
         function loadData() {
