@@ -509,9 +509,7 @@ export const replaceDynamicText = (
           const numericValue = parseFloat(value.replace(/[^\d.]/g, ""));
           const rounded = Math.round(numericValue);
 
-          return !isNaN(rounded)
-            ? rounded.toLocaleString("ru") + " грн"
-            : value;
+          return !isNaN(rounded) ? rounded.toLocaleString("ru") : value;
         }
 
         case "discount": {
@@ -538,7 +536,7 @@ export const replaceDynamicText = (
           if (numericValues.length === 0) return "";
 
           const minValue = Math.min(...numericValues);
-          return minValue.toLocaleString("ru") + " грн";
+          return minValue.toLocaleString("ru");
         }
 
         default:
