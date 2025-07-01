@@ -169,6 +169,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
           format="hex"
           value={object.color || "#000000"}
           onChange={(newColor: string) => onChange("color", newColor)}
+          isAlphaHidden={true}
           fullWidth
           sx={{ margin: "32px 0 10px 0" }}
         />
@@ -205,15 +206,24 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
             margin="normal"
           />
           <TextField
-            label="Opacity"
+            label="Opacity 100 to 1"
             type="number"
-            inputProps={{
-              step: 0.1,
-              min: 0,
-              max: 1,
+            slotProps={{
+              input: {
+                inputProps: {
+                  step: 1,
+                  min: 1,
+                  max: 100,
+                },
+              },
             }}
-            value={object.opacity || 1}
-            onChange={(e) => onChange("opacity", parseFloat(e.target.value))}
+            value={Math.round((Number(object.opacity) || 1) * 100)}
+            onChange={(e) => {
+              let newValue = parseInt(e.target.value, 10);
+              if (isNaN(newValue)) newValue = 100;
+              newValue = Math.min(100, Math.max(1, newValue));
+              onChange("opacity", newValue / 100);
+            }}
             fullWidth
             margin="normal"
           />
