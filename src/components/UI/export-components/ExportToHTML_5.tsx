@@ -236,7 +236,7 @@ export const ExportToHTML_5 = (
                         Math.round(numericValue).toLocaleString("ru", {
                           minimumFractionDigits: 0,
                           maximumFractionDigits: 0,
-                        }) + " грн"
+                        })
                       );
                     }
                     return value;
@@ -265,7 +265,7 @@ export const ExportToHTML_5 = (
                       Math.round(minValue).toLocaleString("ru", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 0,
-                      }) + " грн"
+                      })
                     );
                   }
 
