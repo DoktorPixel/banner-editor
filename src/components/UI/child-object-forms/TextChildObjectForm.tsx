@@ -80,7 +80,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
             title={
               <Typography sx={{ whiteSpace: "pre-line", fontSize: "14px" }}>
                 {
-                  "Use dynamic tags like {{price}} or functions:\n{{format(price)}},\n{{discount(price, sale_price)}},\n{{min(val1, val2)}}"
+                  "Use dynamic tags like {{title}} or functions:\n{{format(price)}},\n{{discount(price, sale_price)}},\n{{min(val1, val2)}}"
                 }
               </Typography>
             }
