@@ -87,9 +87,7 @@ export const useSupabaseImages = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const finalObjectId = objectId ?? uuidv4(); // Если objectId не передан, генерируем новый
-      // "6820ac12-1377-4541-9812-160f7464fe6c";
-      // "ca93c64d-3ce8-4697-b736-762f7998a2c1";
+      const finalObjectId = objectId ?? uuidv4();
       const url = `${SUPABASE_IMAGE_API}?template_id=${encodeURIComponent(
         templateId
       )}&object_id=${encodeURIComponent(finalObjectId)}`;

@@ -332,7 +332,7 @@ export const ExportToHTML_5 = (
                 }
               });
             // 
-          };
+          }; 
       </script>
     </body>
   </html>`;
