@@ -8,7 +8,7 @@ import {
   Alert,
   Tooltip,
 } from "@mui/material";
-import imageCompression from "browser-image-compression";
+
 import { useSupabaseImages } from "../../../utils/useSupabaseImages";
 import { useBanner } from "../../../context/BannerContext";
 import { DeleteBtn } from "../../../assets/icons";
@@ -34,7 +34,6 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
 }) => {
   const {
     currentProjectId,
-    triggerRefresh,
     deleteObjectsByImageSrc,
     dynamicImgs,
     deleteDynamicImg,
@@ -46,7 +45,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
 
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingLogo, setLoadingLogo] = useState(false);
   const [uploadingNewImage, setUploadingNewImage] = useState(false);
   const [deletingIds, setDeletingIds] = useState<string[]>([]);
   const [localLogoName, setLocalLogoName] = useState(logoName || "");
@@ -65,7 +64,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
   useEffect(() => {
     const fetchImages = async () => {
       if (!currentProjectId || !object_id) return;
-      setLoading(true);
+      setLoadingLogo(true);
       try {
         const imgs = await getDynamicImages(currentProjectId, object_id);
         const enrichedImgs = imgs.map((img) => {
@@ -81,7 +80,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
         setErrorMessage("Error loading images.");
         console.error("Error loading images:", error);
       } finally {
-        setLoading(false);
+        setLoadingLogo(false);
       }
     };
 
@@ -109,46 +108,20 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     }
   };
 
-  const compressImage = async (file: File): Promise<File> => {
-    try {
-      const options = {
-        maxSizeMB: 0.01, // 0.01 MB = 10 kB
-        maxWidthOrHeight: 512, //
-        // fileType: "image/webp", ???
-        useWebWorker: true,
-      };
-
-      const compressedFile = await imageCompression(file, options);
-
-      // console.log(`Original size: ${(file.size / 1024).toFixed(2)} kB`);
-      // console.log(
-      //   `Compressed size: ${(compressedFile.size / 1024).toFixed(2)} kB`
-      // );
-
-      return compressedFile;
-    } catch (error) {
-      console.error("Image compression error:", error);
-      // В случае ошибки возвращаем исходный файл
-      return file;
-    }
-  };
-
   const handleUpload = async (file: File) => {
     if (!currentProjectId || !object_id) return;
     setUploadingNewImage(true);
     try {
-      const compressedFile = await compressImage(file);
-
       const result = await uploadDynamicImage(
-        compressedFile,
+        file,
         currentProjectId,
         object_id
       );
-      triggerRefresh();
+      // triggerRefresh();
       setImages((prev) => [...prev, result]);
       addDynamicImg?.(result);
     } catch (error) {
-      setErrorMessage("Error uploading image.");
+      setErrorMessage("Error deleting image.");
       console.error("Upload error:", error);
     } finally {
       setUploadingNewImage(false);
@@ -236,14 +209,14 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
         />
       </Box>
 
-      {(loading || uploadingNewImage) && (
+      {(loadingLogo || uploadingNewImage) && (
         <Typography sx={{ marginTop: 2 }}>
           <CircularProgress size={15} />{" "}
-          {loading ? "Loading..." : "Uploading..."}
+          {loadingLogo ? "Loading..." : "Uploading..."}
         </Typography>
       )}
 
-      {!loading && (
+      {!loadingLogo && (
         <div className="dynamic-images-container">
           <Box
             onClick={handleClickUploadArea}
@@ -270,7 +243,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
             />
           </Box>
 
-          {images.map((img) => (
+          {[...images].reverse().map((img) => (
             <div className="image-container" key={img.id}>
               <Tooltip
                 title={
