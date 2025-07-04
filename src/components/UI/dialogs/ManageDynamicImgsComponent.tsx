@@ -34,7 +34,6 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
 }) => {
   const {
     currentProjectId,
-    triggerRefresh,
     deleteObjectsByImageSrc,
     dynamicImgs,
     deleteDynamicImg,
@@ -46,7 +45,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
 
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingLogo, setLoadingLogo] = useState(false);
   const [uploadingNewImage, setUploadingNewImage] = useState(false);
   const [deletingIds, setDeletingIds] = useState<string[]>([]);
   const [localLogoName, setLocalLogoName] = useState(logoName || "");
@@ -65,7 +64,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
   useEffect(() => {
     const fetchImages = async () => {
       if (!currentProjectId || !object_id) return;
-      setLoading(true);
+      setLoadingLogo(true);
       try {
         const imgs = await getDynamicImages(currentProjectId, object_id);
         const enrichedImgs = imgs.map((img) => {
@@ -78,10 +77,10 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
         setImages(enrichedImgs);
         enrichedImgs.forEach((img) => addDynamicImg?.(img));
       } catch (error) {
-        setErrorMessage("Ошибка при загрузке изображений.");
+        setErrorMessage("Error loading images.");
         console.error("Error loading images:", error);
       } finally {
-        setLoading(false);
+        setLoadingLogo(false);
       }
     };
 
@@ -118,7 +117,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
         currentProjectId,
         object_id
       );
-      triggerRefresh();
+      // triggerRefresh();
       setImages((prev) => [...prev, result]);
       addDynamicImg?.(result);
     } catch (error) {
@@ -210,14 +209,14 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
         />
       </Box>
 
-      {(loading || uploadingNewImage) && (
+      {(loadingLogo || uploadingNewImage) && (
         <Typography sx={{ marginTop: 2 }}>
           <CircularProgress size={15} />{" "}
-          {loading ? "Loading..." : "Uploading..."}
+          {loadingLogo ? "Loading..." : "Uploading..."}
         </Typography>
       )}
 
-      {!loading && (
+      {!loadingLogo && (
         <div className="dynamic-images-container">
           <Box
             onClick={handleClickUploadArea}
@@ -244,7 +243,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
             />
           </Box>
 
-          {images.map((img) => (
+          {[...images].reverse().map((img) => (
             <div className="image-container" key={img.id}>
               <Tooltip
                 title={

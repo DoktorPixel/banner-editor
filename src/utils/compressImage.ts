@@ -17,11 +17,11 @@ export const compressImage = async (
       useWebWorker: options.useWebWorker ?? true,
     });
 
-    console.log(
-      `✅ Compression: original ${(file.size / 1024).toFixed(
-        2
-      )} kB → compressed ${(compressedBlob.size / 1024).toFixed(2)} kB`
-    );
+    // console.log(
+    //   `✅ Compression: original ${(file.size / 1024).toFixed(
+    //     2
+    //   )} kB → compressed ${(compressedBlob.size / 1024).toFixed(2)} kB`
+    // );
 
     return new File([compressedBlob], file.name, {
       type: options.fileType || file.type,

@@ -98,7 +98,7 @@ export const useSupabaseImages = () => {
         },
       });
 
-      console.log("✅ Image uploaded:", response.data);
+      // console.log("✅ Image uploaded:", response.data);
       return response.data;
     },
     []
@@ -135,7 +135,7 @@ export const useSupabaseImages = () => {
         },
       });
 
-      console.log("✅ Dynamic image uploaded:", response.data);
+      // console.log("✅ Dynamic image uploaded:", response.data);
       return response.data;
     },
     []
@@ -156,7 +156,7 @@ export const useSupabaseImages = () => {
         },
       });
 
-      console.log("📦 Retrieved images:", response.data);
+      // console.log("📦 Retrieved images:", response.data);
       return response.data.map((img: SupabaseImageItem) => ({
         ...img,
         file_url: addCacheBuster(img.file_url),
@@ -174,7 +174,7 @@ export const useSupabaseImages = () => {
       params: { id },
     });
 
-    console.log("🗑️ Deleted image with id:", id);
+    // console.log("🗑️ Deleted image with id:", id);
   }, []);
 
   const getDynamicImages = useCallback(
@@ -220,7 +220,7 @@ export const useSupabaseImages = () => {
         },
       });
 
-      console.log("🗑️ Deleted dynamic image:", id);
+      // console.log("🗑️ Deleted dynamic image:", id);
     },
     []
   );

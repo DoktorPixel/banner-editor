@@ -1,9 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Button } from "@mui/material";
 import { useSupabaseImages } from "../../../utils/useSupabaseImages";
 import { useBanner } from "../../../context/BannerContext";
 
 const ImageUploader: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { uploadImage } = useSupabaseImages();
   const { currentProjectId, triggerRefresh, addObject } = useBanner();
@@ -28,14 +29,16 @@ const ImageUploader: React.FC = () => {
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !currentProjectId) return;
-
+    setLoading(true);
     try {
       const result = await uploadImage(file, currentProjectId);
-      event.target.value = ""; // сбрасываем значение для повторной загрузки того же файла
-      triggerRefresh(); // обновляем галерею
+      event.target.value = "";
+      triggerRefresh();
       handleAddImage(result.file_url);
     } catch (error) {
       console.error("❌ Upload error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,8 +51,12 @@ const ImageUploader: React.FC = () => {
         accept="image/*"
         style={{ display: "none" }}
       />
-      <Button variant="contained" onClick={() => inputRef.current?.click()}>
-        Add Image
+      <Button
+        variant="contained"
+        onClick={() => inputRef.current?.click()}
+        disabled={loading}
+      >
+        {loading ? "Loading..." : "Add Image"}
       </Button>
     </>
   );
