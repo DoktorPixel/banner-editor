@@ -105,7 +105,7 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
       if (obj.maxLines) {
         styles.push(`display: -webkit-box`);
         styles.push(`-webkit-box-orient: vertical`);
-        styles.push(`-webkit-line-clamp: ${obj.maxLines}`);
+        // styles.push(`-webkit-line-clamp: ${obj.maxLines}`);
         styles.push(`white-space: normal`);
       } else {
         styles.push(`white-space: nowrap`);
@@ -231,12 +231,14 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
 
       const processedContent =
         lines.map((line) => escapeHTML(line)).join("<br>") +
-        (isTruncated ? "...<br>" : "");
+        (isTruncated ? "<br>" : "");
 
       const content = `<div ${
         isChild ? idAttr : ""
       } ${conditionAttr} class="text-field ${
         isChild ? "banner-object-child" : ""
+      }" data-max-lines="${
+        obj.maxLines || ""
       }" style="${innerStyles}; ">${processedContent}</div>`;
       return isChild
         ? content
