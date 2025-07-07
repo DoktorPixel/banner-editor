@@ -214,88 +214,152 @@ export const ExportToHTML_5 = (
               });
 
 
-            function replaceDynamicText(content, props) {
-              let result = content;
+              function replaceDynamicText(
+                content,
+                props,
+                maxLines,
+                approxCharsPerLine
+              ) {
+                let result = content;
 
               const functionRegex = /\\{\\{\\s*(\\w+)\\s*\\(([^)]*?)\\)\\s*\\}\\}/g;
-              result = result.replace(functionRegex, (match, funcName, args) => {
-                const argKeys = args.split(",").map(arg => arg.trim()).filter(arg => arg);
-                const values = argKeys.map(key => props[key] || "");
+                result = result.replace(functionRegex, (match, funcName, args) => {
+                  const argKeys = args
+                    .split(",")
+                    .map((arg) => arg.trim())
+                    .filter((arg) => arg);
+                  const values = argKeys.map((key) => props[key] || "");
 
-                const normalizeNumber = (value) => {
-                  if (!value) return value;
-                  return value.replace(/,/g, ".");
-                };
+                  const normalizeNumber = (value) => {
+                    if (!value) return value;
+                    return value.replace(/,/g, ".");
+                  };
 
-                switch (funcName) {
-                  case "format": {
-                    const value = normalizeNumber(values[0]);
-                    if (!value) return match;
-                    const numericValue = parseFloat(value.replace(/[^\\d.]/g, ""));
-                    if (!isNaN(numericValue)) {
-                    return (
-                        Math.round(numericValue).toLocaleString("ru", {
+                  switch (funcName) {
+                    case "format": {
+                      const value = normalizeNumber(values[0]);
+                      if (!value) return match;
+                      const numericValue = parseFloat(value.replace(/[^\\d.]/g, ""));
+                      if (!isNaN(numericValue)) {
+                        return Math.round(numericValue).toLocaleString("ru", {
                           minimumFractionDigits: 0,
                           maximumFractionDigits: 0,
-                        })
-                      );
+                        });
+                      }
+                      return value;
                     }
-                    return value;
-                  }
-                  case "discount": {
-                    const [priceStr, saleStr] = values.map(normalizeNumber);
-                    if (!priceStr || !saleStr) return match;
+                    case "discount": {
+                      const [priceStr, saleStr] = values.map(normalizeNumber);
+                      if (!priceStr || !saleStr) return match;
                     const price = parseFloat(priceStr.replace(/[^\\d.]/g, ""));
                     const salePrice = parseFloat(saleStr.replace(/[^\\d.]/g, ""));
-                    if (!isNaN(price) && !isNaN(salePrice) && price !== 0) {
-                      const discount = ((price - salePrice) / price) * 100;
-                      return Math.round(discount).toString();
+                      if (!isNaN(price) && !isNaN(salePrice) && price !== 0) {
+                        const discount = ((price - salePrice) / price) * 100;
+                        return Math.round(discount).toString();
+                      }
+                      return "0";
                     }
-                    return "0";
-                  }
 
-                  case "min": {
-                    const numericValues = values
-                      .map(v => parseFloat(normalizeNumber(v).replace(/[^0-9.]/g, "")))
-                      .filter(n => !isNaN(n));
+                    case "min": {
+                      const numericValues = values
+                        .map((v) =>
+                          parseFloat(normalizeNumber(v).replace(/[^0-9.]/g, ""))
+                        )
+                        .filter((n) => !isNaN(n));
 
-                    if (numericValues.length === 0) return match;
+                      if (numericValues.length === 0) return match;
 
-                    const minValue = Math.min(...numericValues);
-                    return (
-                      Math.round(minValue).toLocaleString("ru", {
+                      const minValue = Math.min(...numericValues);
+                      return Math.round(minValue).toLocaleString("ru", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 0,
-                      })
-                    );
+                      });
+                    }
+
+                    default:
+                      return match;
                   }
+                });
 
-                  default:
-                    return match;
+                for (const key in props) {
+                  const dynamicKey = new RegExp(
+                    "\\{\\{\\s*" + key + "\\s*\\}\\}",
+                    "g"
+                  );
+                  result = result.replace(dynamicKey, props[key] || "");
                 }
-              });
 
-              for (const key in props) {
-                const dynamicKey = new RegExp("\\\\{\\\\{\\\\s*" + key + "\\\\s*\\\\}\\\\}", "g");
-                result = result.replace(dynamicKey, props[key] || "");
+                if (
+                  typeof maxLines === "number" &&
+                  maxLines > 0 &&
+                  approxCharsPerLine > 0
+                ) {
+                  const maxChars = maxLines * approxCharsPerLine;
+                  if (result.length > maxChars) {
+                    result = result.slice(0, maxChars) + "...";
+                  }
+                }
+
+                return result;
               }
-
-              return result;
-            }
 
             document.querySelectorAll(".text-field").forEach((element) => {
               try {
-                const content = element.textContent || "";
+                const content = element.innerHTML || "";
                 if (content) {
                   const newContent = replaceDynamicText(content, props);
                   if (newContent) {
-                    element.textContent = newContent;
+                    element.innerHTML = newContent;
                   }
                 }
               } catch (error) {
                 console.error("Error replacing dynamic text:", error);
               }
             });
+
+              function calculateApproxCharsPerLine(element) {
+                const style = getComputedStyle(element);
+                const font = style.fontWeight + " " + style.fontSize + " " + style.fontFamily;
+                const widthPx = parseFloat(style.width);
+
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                ctx.font = font;
+
+                const sampleText =
+                  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+                const textWidth = ctx.measureText(sampleText).width;
+                const avgCharWidth = textWidth / sampleText.length;
+
+                if (avgCharWidth === 0) return 100;
+                const approxCharsPerLine = Math.floor(widthPx / avgCharWidth);
+                return approxCharsPerLine;
+              }
+
+              document.querySelectorAll(".text-field").forEach((element) => {
+                try {
+                  const content = element.innerHTML || "";
+                  const maxLinesAttr = element.getAttribute("data-max-lines");
+                  const maxLines = maxLinesAttr
+                    ? parseInt(maxLinesAttr, 10)
+                    : undefined;
+
+                  const approxCharsPerLine = calculateApproxCharsPerLine(element);
+
+                  const newContent = replaceDynamicText(
+                    content,
+                    props,
+                    maxLines,
+                    approxCharsPerLine
+                  );
+                  if (newContent) {
+                    element.innerHTML = newContent;
+                  }
+                } catch (error) {
+                  console.error("Error replacing dynamic text:", error);
+                }
+              });
 
             // 
               document.querySelectorAll("img[data-dynamic]").forEach((img) => {
