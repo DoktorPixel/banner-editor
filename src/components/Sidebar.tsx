@@ -9,15 +9,26 @@ import {
   Typography,
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import UploadToS3Button from "./UI/s3-components/UploadToS3";
 import SidebarTabs from "./UI/sidebar-components/SidebarTabs";
 import { BigArrowRight, BigArrowLeft } from "../assets/icons";
-import AutoSaver from "./UI/s3-components/AutoSaver";
-import { DownloadPreviewButton } from "./UI/button-groups/DownloadPreviewButton";
+import AutoSaver from "./UI/updates-components/AutoSaver";
+// import { DownloadPreviewButton } from "./UI/button-groups/DownloadPreviewButton";
+// import {
+//   GetTemplateButton,
+//   UpdateTemplateButton,
+//   DeployTemplateButton,
+// } from "./UI/updates-components/TemplateButtons";
 
 const Sidebar: React.FC = () => {
-  const { undo, redo, canUndo, canRedo, currentProjectName, clearProject } =
-    useBanner();
+  const {
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    currentProjectName,
+    clearProject,
+    // currentProjectId,
+  } = useBanner();
 
   const [open, setOpen] = useState(false);
 
@@ -62,9 +73,25 @@ const Sidebar: React.FC = () => {
           </div>
         </Box>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <UploadToS3Button />
+          {/* <GetTemplateButton
+            templateId={currentProjectId || ""}
+            onSuccess={(data) => console.log("Loaded template:", data)}
+          /> */}
+
+          {/* <UpdateTemplateButton
+            templateId={currentProjectId || ""}
+            data={projectData}
+            config={config}
+            objects={objects}
+            dynamicImgs={dynamicImgs}
+          /> */}
+
+          {/* <DeployTemplateButton
+            templateId={currentProjectId || ""}
+            onSuccess={() => console.log("Template deployed!")}
+          /> */}
           <Button onClick={handleUpload}>Close project</Button>
-          <DownloadPreviewButton />
+          {/* <DownloadPreviewButton /> */}
         </Collapse>
         <Typography variant="h6" className="project-name">
           {currentProjectName || "Без назви"}
