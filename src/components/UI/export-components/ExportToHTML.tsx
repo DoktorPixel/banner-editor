@@ -3,24 +3,17 @@ import { GenerateObjectsHTML } from "./GeneateObjectsHTML";
 import { generateGoogleFontsLinks } from "../../../utils/generateGoogleFonts";
 import { extractFontsFromObjects } from "../../../utils/extractFonts";
 
-export const ExportToHTML_5 = (
+export const ExportToHTML = (
   objects: BannerObject[],
   config: ConfigItem,
   dynamicImgs: DynamicImg[] = []
 ): string => {
-  // Генерация HTML для всех объектов
   const objectsHTML = GenerateObjectsHTML(objects);
-
   const width = config.canvasSize?.width || 1080;
   const height = config.canvasSize?.height || 1080;
-
-  // Сбор всех шрифтов
   const usedFonts = extractFontsFromObjects(objects);
-
-  // Генерация @import для используемых шрифтов
   const fontLinks = generateGoogleFontsLinks(usedFonts);
 
-  // Полный HTML шаблон
   return `
   <!DOCTYPE html>
   <html lang="en">

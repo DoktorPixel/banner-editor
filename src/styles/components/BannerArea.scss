@@ -1,24 +1,16 @@
 .banner-area {
   flex: 0 0 auto;
   position: relative;
-  // position: sticky;
   top: 20px;
   background: #fff;
-  // border: 1px solid #ddd;
-  // width: 1080px;
-  // min-width: 1080px;
-  // height: 1080px;
-  // min-height: 1080px;
   z-index: -100;
   overflow: hidden;
-  // overflow-y: auto;
 }
 .banner-area-container {
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  // min-width: 1080px;
-  // max-height: 100vh;
+
   z-index: -100;
   margin-bottom: 10px;
 }
@@ -28,10 +20,8 @@
   cursor: grab;
 }
 
-//
 .banner-object,
 .banner-object-child {
-  // padding: 1px;
   border: 1px solid transparent;
   cursor: pointer;
 }
@@ -66,10 +56,6 @@
 .banner-area .banner-object .banner-object-child.selected-grand-child {
   border: 1px solid blue !important;
 }
-// .banner-object .banner-object-child,
-// .banner-object p {
-//   padding: 1px;
-// }
 
 .resize-handle {
   display: none;

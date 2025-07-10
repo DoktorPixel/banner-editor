@@ -7,7 +7,6 @@ import {
   DynamicImg,
 } from "../types";
 import type { Property } from "csstype";
-// import { ConfigItem } from "../types";
 
 export const useObjectProperties = () => {
   const {
@@ -130,8 +129,6 @@ export const useChildProperties = () => {
 
 export const useChildOrder = () => {
   const { objects, reorderChildren } = useBanner();
-
-  // Получить группу и её потомков по groupId
   const getGroupChildren = (groupId: number) => {
     const group = objects.find((obj) => obj.id === groupId);
     if (!group || group.type !== "group" || !group.children) {
@@ -140,53 +137,46 @@ export const useChildOrder = () => {
     return group.children;
   };
 
-  // Переместить потомка на новую позицию
   const moveChild = (groupId: number, childId: number, newPosition: number) => {
     const children = getGroupChildren(groupId);
     if (children.length === 0) {
-      console.warn("Группа не содержит потомков.");
+      console.warn("The group does not contain children.");
       return;
     }
 
-    // Текущий порядок ID
     const currentOrder = children.map((child) => child.id);
     const currentIndex = currentOrder.indexOf(childId);
     if (currentIndex === -1) {
-      console.warn("Указанный потомок не найден в группе.");
+      console.warn("The specified children was not found in the group.");
       return;
     }
 
-    // Проверяем, что newPosition в допустимых границах
     if (newPosition < 0 || newPosition >= children.length) {
-      console.warn("Указана некорректная позиция для перемещения.");
+      console.warn("Invalid position specified for movement.");
       return;
     }
 
-    // Формируем новый порядок
     const newOrder = [...currentOrder];
-    newOrder.splice(currentIndex, 1); // Удаляем childId из текущей позиции
-    newOrder.splice(newPosition, 0, childId); // Вставляем childId в новую позицию
+    newOrder.splice(currentIndex, 1);
+    newOrder.splice(newPosition, 0, childId);
 
-    // Вызываем reorderChildren для обновления порядка
     reorderChildren(groupId, newOrder);
   };
 
-  // Переместить потомка вверх (уменьшить order)
   const moveChildUp = (groupId: number, childId: number) => {
     const children = getGroupChildren(groupId);
     const currentIndex = children.findIndex((child) => child.id === childId);
     if (currentIndex <= 0) {
-      return; // Уже первый элемент или не найден
+      return;
     }
     moveChild(groupId, childId, currentIndex - 1);
   };
 
-  // Переместить потомка вниз (увеличить order)
   const moveChildDown = (groupId: number, childId: number) => {
     const children = getGroupChildren(groupId);
     const currentIndex = children.findIndex((child) => child.id === childId);
     if (currentIndex === -1 || currentIndex >= children.length - 1) {
-      return; // Уже последний элемент или не найден
+      return;
     }
     moveChild(groupId, childId, currentIndex + 1);
   };
@@ -198,31 +188,6 @@ export const useChildOrder = () => {
     moveChildDown,
   };
 };
-
-// export const useObjectGroupCondition = () => {
-//   const { objects, updateMultipleObjects } = useBanner();
-
-//   const updateConditionForGroup = (
-//     groupId: number,
-//     condition: BannerObject["condition"]
-//   ) => {
-//     const groupObjects = objects.filter(
-//       (obj) => obj.abstractGroupId === groupId
-//     );
-
-//     const updates: Record<number, Partial<BannerObject>> = {};
-
-//     groupObjects.forEach((obj) => {
-//       updates[obj.id] = { conditionForAbstract: condition };
-//     });
-
-//     updateMultipleObjects(updates);
-//   };
-
-//   return {
-//     updateConditionForGroup,
-//   };
-// };
 
 export const useAbstractGroupCondition = () => {
   const { objects, updateMultipleObjects } = useBanner();
@@ -410,7 +375,6 @@ export const replaceDynamicVariablesForDynamicImg = (
   const fallbackUrl =
     "https://dummyimage.com/200x150/F1F1F1.gif&text=Fill+in+dynamic+logos+data";
 
-  // Если content не {{dynamic_img}}, или нет object_id / logoName / dynamicImgs пустой — просто заменить переменные
   if (content !== "{{dynamic_img}}" || !object_id) {
     keyValuePairs.forEach(({ key, value }) => {
       const dynamicKey = `{{${key}}}`;
@@ -419,64 +383,24 @@ export const replaceDynamicVariablesForDynamicImg = (
     return result;
   }
 
-  // Фильтруем dynamicImgs по object_id
   const filteredDynamicImgs = dynamicImgs.filter(
     (img) => img.object_id === object_id
   );
 
-  // Ищем значение logoName в keyValuePairs
   const pair = keyValuePairs.find(({ key }) => key === logoName);
 
   const logoNameValue = pair?.value;
 
-  // Ищем совпадение значения logoNameValue с name в filteredDynamicImgs
   if (logoNameValue) {
     const matchedImg = filteredDynamicImgs.find(
       (img) => img.name === logoNameValue
     );
     if (matchedImg?.file_url) {
-      return matchedImg.file_url; // теперь TypeScript уверен, что это string
+      return matchedImg.file_url;
     }
   }
-
-  // Если ничего не нашли — возвращаем оригинальный content
   return content === "{{dynamic_img}}" ? fallbackUrl : content;
 };
-
-// export const replaceDynamicText = (
-//   content: string,
-//   keyValuePairs: { key: string; value: string }[]
-// ): string => {
-//   let result = content;
-
-//   // Обработка функций, например {{format(price)}}
-//   const functionRegex = /{{(\w+)\(([\w]+)\)}}/g;
-//   result = result.replace(functionRegex, (_, funcName, key) => {
-//     const pair = keyValuePairs.find((item) => item.key === key);
-//     if (!pair) return "";
-
-//     let value = pair.value;
-
-//     switch (funcName) {
-//       case "format":
-//         const numericValue = parseFloat(value.replace(/[^\d.]/g, ""));
-//         if (!isNaN(numericValue)) {
-//           return numericValue.toLocaleString("ru") + " грн";
-//         }
-//         return value;
-//       default:
-//         return value;
-//     }
-//   });
-
-//   // Обычные переменные: {{key}}
-//   keyValuePairs.forEach(({ key, value }) => {
-//     const dynamicKey = `{{${key}}}`;
-//     result = result.replaceAll(dynamicKey, value);
-//   });
-
-//   return result;
-// };
 
 export const replaceDynamicText = (
   content: string | undefined | null | number,
@@ -498,9 +422,9 @@ export const replaceDynamicText = (
       const cleanNumber = (str: string) =>
         parseFloat(
           str
-            .replace(/\s/g, "") // убрать пробелы
-            .replace(",", ".") // заменить запятую на точку
-            .replace(/[^\d.]/g, "") // убрать все кроме цифр и точек
+            .replace(/\s/g, "")
+            .replace(",", ".")
+            .replace(/[^\d.]/g, "")
         );
 
       switch (funcName) {
@@ -554,89 +478,50 @@ export const replaceDynamicText = (
   return result;
 };
 
-// export const shouldHideObject = (
-//   condition: BannerObject["condition"] | undefined,
-//   keyValuePairs: { key: string; value: string }[]
-// ): boolean => {
-//   if (!condition) return false;
-
-//   const { type, props: conditionProps, state } = condition;
-//   const propsExist = conditionProps.some((prop) =>
-//     keyValuePairs.some((pair) => pair.key === prop)
-//   );
-
-//   if (state === "exist") {
-//     return (
-//       (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)
-//     );
-//   } else if (state === "noExist") {
-//     return (
-//       (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist)
-//     );
-//   }
-
-//   return false;
-// };
-
 export const shouldHideObject = (
   condition: ObjectCondition | undefined,
   keyValuePairs: { key: string; value: string }[]
 ): boolean => {
-  // Если нет condition — не скрываем
   if (!condition) {
     return false;
   }
 
   const { type, props: conditionProps, state, compareValue } = condition;
 
-  // 1. Если выбраны только exist / noExist (без сравнения), то проверяем «наличие ключа в keyValuePairs».
   if (state === "exist" || state === "noExist") {
-    // Проверим, есть ли в keyValuePairs хоть один элемент, чей key === любому элементу из conditionProps.
     const propsExist = conditionProps.some((prop) =>
       keyValuePairs.some((pair) => pair.key === prop)
     );
 
     if (state === "exist") {
-      // hideIf + propsExist  OR  showIf + !propsExist
       return (
         (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)
       );
     } else {
-      // state === "noExist"
-      // hideIf + !propsExist  OR  showIf + propsExist
       return (
         (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist)
       );
     }
   }
 
-  // 2. Если мы попали сюда — state один из операторов сравнения.
-  //    Берём первый prop: предполагаем сравнение ровно по одному ключу.
   const propToCompare = conditionProps[0];
   if (!propToCompare) {
-    // без имени свойства нечего сравнивать — считаем, что условие ложно, значит скрытие = false (то есть показываем)
     return false;
   }
 
-  // Найдём в keyValuePairs пару с key === propToCompare
   const pair = keyValuePairs.find((p) => p.key === propToCompare);
 
-  // Если нет такой пары — воспринимаем это как «значения нет»
   if (!pair) {
-    // «нет значения» при сравнении считается не пройденным (false)
-    // Далее формируем логику: если operator = showIf, но value не найден — считаем "условие не выполнено"
-    // то есть для showIf: !условие → скрываем; для hideIf: условие(!) → не скрываем.
     if (type === "showIf") {
-      return true; // не нашли значение, а нам нужно показать, когда сравнение true. Поскольку false, значит скрываем
+      return true;
     } else {
-      return false; // hideIf: если сравнение false, то hideIf(false) → не скрываем
+      return false;
     }
   }
 
-  const actualValue = pair.value; // строка
+  const actualValue = pair.value;
   const targetValue = compareValue ?? "";
 
-  // Попробуем распарсить как числа
   const clean = (val: string): number => {
     return Number(val.replace(/[^\d.,-]/g, "").replace(",", "."));
   };
@@ -645,7 +530,6 @@ export const shouldHideObject = (
   const targetNum = clean(targetValue);
   const bothAreNumbers = !isNaN(actualNum) && !isNaN(targetNum);
 
-  // Функция для проверки сравнения (возвращает true, если «условие сравнения» выполнено)
   const doesComparisonHold = (): boolean => {
     switch (state) {
       case "eq":
@@ -656,7 +540,7 @@ export const shouldHideObject = (
         if (bothAreNumbers) {
           return actualNum > targetNum;
         }
-        return actualValue > targetValue; // лексикографически
+        return actualValue > targetValue;
       case "less-than":
         if (bothAreNumbers) {
           return actualNum < targetNum;
@@ -679,15 +563,9 @@ export const shouldHideObject = (
 
   const comparisonResult = doesComparisonHold();
 
-  // Теперь аналогично «exist/noExist» веткам:
-  // Если оператор = hideIf:
-  //   — скрываем, когда comparisonResult === true;
-  // Если оператор = showIf:
-  //   — скрываем, когда comparisonResult === false.
   if (type === "hideIf") {
     return comparisonResult;
   } else {
-    // type === "showIf"
     return !comparisonResult;
   }
 };
@@ -768,26 +646,6 @@ export const shouldHideGroup = (
 
   return shouldHide;
 };
-
-// export const shouldHideObject = (
-//   condition: BannerObject["condition"] | undefined,
-//   keyValuePairs: { key: string; value: string }[]
-// ): boolean => {
-//   if (!condition) return false;
-
-//   const { type, props: conditionProps, state } = condition;
-//   const propsExist = conditionProps.some((prop) =>
-//     keyValuePairs.some((pair) => pair.key === prop)
-//   );
-
-//   const isExist = state === "exist";
-//   const isHide = type === "hideIf";
-
-//   return (isExist && isHide && propsExist) ||
-//          (isExist && !isHide && !propsExist) ||
-//          (!isExist && isHide && !propsExist) ||
-//          (!isExist && !isHide && propsExist);
-// };
 
 export function computeOpacity(
   opacity: Property.Opacity | undefined,

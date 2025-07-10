@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, Fragment, useMemo } from "react";
 import { useBanner } from "../context/BannerContext";
-import { useMode } from "../context/ModeContext";
 import { ResizeDirection } from "../types";
 import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
 import ResizeHandles from "../utils/ResizeHandles";
@@ -40,7 +39,6 @@ const BannerArea: React.FC = () => {
   const { hiddenObjectIds, config, canvasSize } = useConfig();
   const { selectedChild, handleDeleteChild } = useChildProperties();
   const { handleDelete, handleDeleteAll } = useObjectProperties();
-  const { mode } = useMode();
   const [isDragging, setIsDragging] = useState(false);
   const [draggingIds, setDraggingIds] = useState<number[] | null>(null);
   const [offsets, setOffsets] = useState<
@@ -53,15 +51,13 @@ const BannerArea: React.FC = () => {
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
-  //
   const keyValuePairs = config?.keyValuePairs ?? [];
-  // console.log("keyValuePairs", keyValuePairs);
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
     object: BannerObject | null;
   } | null>(null);
-  // styles
+
   const bannerStyles = useMemo(
     () => ({
       width: `${canvasSize.width}px`,
@@ -71,8 +67,6 @@ const BannerArea: React.FC = () => {
     }),
     [config.canvasSize?.width, config.canvasSize?.height]
   );
-
-  // console.log("canvasSize))))", canvasSize);
 
   const handleContextMenu = (event: React.MouseEvent, object: BannerObject) => {
     event.preventDefault();
@@ -93,7 +87,6 @@ const BannerArea: React.FC = () => {
 
   useEffect(() => {
     const handleGlobalClick = (e: MouseEvent) => {
-      // Если клик вне контекстного меню, закрываем
       const menu = document.getElementById("context-menu");
       if (menu && !menu.contains(e.target as Node)) {
         setContextMenu(null);
@@ -108,14 +101,9 @@ const BannerArea: React.FC = () => {
       document.removeEventListener("click", handleGlobalClick);
     };
   }, [contextMenu]);
-  //
-  // const handleObjectClick = (id: number, event: React.MouseEvent) => {
-  //   if (mode === "test" || isDragging) return;
-  //   event.stopPropagation();
-  //   selectObject(id, event.ctrlKey || event.metaKey);
-  // };
+
   const handleObjectClick = (id: number, event: React.MouseEvent) => {
-    if (mode === "test" || isDragging) return;
+    if (isDragging) return;
     event.stopPropagation();
     if (mouseDownPosition) {
       const deltaX = Math.abs(event.clientX - mouseDownPosition.x);
@@ -143,14 +131,13 @@ const BannerArea: React.FC = () => {
     direction: string,
     event: React.MouseEvent
   ) => {
-    if (mode === "test") return;
     event.preventDefault();
     setResizingId(id);
     setResizeDirection(direction);
   };
 
   const handleMouseDown = (id: number, event: React.MouseEvent) => {
-    if (mode === "test" || resizingId !== null) return;
+    if (resizingId !== null) return;
     event.preventDefault();
     event.stopPropagation();
     setMouseDownPosition({ x: event.clientX, y: event.clientY });
@@ -182,8 +169,6 @@ const BannerArea: React.FC = () => {
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
-    if (mode === "test") return;
-
     if (draggingIds !== null && resizingId === null && bannerRef.current) {
       const rect = bannerRef.current.getBoundingClientRect();
 
@@ -233,8 +218,6 @@ const BannerArea: React.FC = () => {
   };
 
   const handleMouseUp = () => {
-    if (mode === "test") return;
-
     if (draggingIds !== null && Object.keys(temporaryUpdates).length > 0) {
       updateMultipleObjects(temporaryUpdates);
     }
@@ -250,24 +233,15 @@ const BannerArea: React.FC = () => {
     setIsDragging(false);
   };
 
-  //
-
-  useEffect(() => {
-    if (mode === "dev") {
-      setTemporaryUpdates({});
-    }
-  }, [mode]);
-  //
   const handleKeyDown = (event: KeyboardEvent) => {
     if (
-      mode === "test" ||
       !selectedObjectIds.length ||
       (event.target instanceof HTMLElement &&
         ["input", "textarea", "select"].includes(
           event.target.tagName.toLowerCase()
         ))
     ) {
-      return; //test
+      return;
     }
 
     const increment = event.shiftKey ? 10 : 1;
@@ -300,9 +274,7 @@ const BannerArea: React.FC = () => {
   }, [selectedObjectIds, objects]);
 
   const selectionBounds = useSelectionBounds(selectedObjectIds, objects);
-  // Начинаем перемещать все выделенные объекты
   const handleSelectionBorderMouseDown = (event: React.MouseEvent) => {
-    if (mode === "test") return;
     event.preventDefault();
     event.stopPropagation();
     if (event.target !== event.currentTarget) return;
@@ -346,29 +318,9 @@ const BannerArea: React.FC = () => {
 
   const objectRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
-  // useEffect(() => {
-  //   const handleKeyDown = (event: KeyboardEvent) => {
-  //     if (event.key === "Delete") {
-  //       if (selectedObjectIds.length === 1 && !selectedChild) {
-  //         handleDelete();
-  //       } else if (selectedObjectIds.length > 1) {
-  //         handleDeleteAll();
-  //       }
-  //     }
-  //   };
-
-  //   document.addEventListener("keydown", handleKeyDown);
-
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, [selectedObjectIds, selectedChild]);
-
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement;
-
-      // Пропускаем, если фокус в input, textarea или contentEditable
       const isInput =
         target.tagName === "INPUT" ||
         target.tagName === "TEXTAREA" ||
@@ -378,11 +330,11 @@ const BannerArea: React.FC = () => {
 
       if (event.key === "Delete" || event.key === "Backspace") {
         if (selectedChild) {
-          handleDeleteChild(); // Удаляем потомка группы, если он выбран
+          handleDeleteChild();
         } else if (selectedObjectIds.length === 1) {
-          handleDelete(); // Удаляем одиночный объект
+          handleDelete();
         } else if (selectedObjectIds.length > 1) {
-          handleDeleteAll(); // Удаляем несколько объектов
+          handleDeleteAll();
         }
       }
     };
@@ -425,8 +377,6 @@ const BannerArea: React.FC = () => {
               height: selectionBounds.height,
               border: "1px dashed rgba(191, 191, 221, 0.75)",
               pointerEvents: "none",
-              // pointerEvents: "all",
-              // cursor: "move",
             }}
             onMouseDownCapture={handleSelectionBorderMouseDown}
           />
@@ -437,14 +387,6 @@ const BannerArea: React.FC = () => {
             shouldHideGroup(object.conditionForAbstract, keyValuePairs) ||
             shouldHideObject(object.condition, keyValuePairs);
           const isVisible = !hiddenObjectIds.includes(object.id);
-          // const effectiveOpacity =
-          //   isHidden && typeof object.opacity === "number"
-          //     ? object.opacity * 0.4
-          //     : isHidden
-          //     ? 0.4
-          //     : object.opacity ?? 1;
-
-          // if (isHidden) return null;
           if (object.type === "group") {
             return (
               <Fragment key={object.id}>
@@ -456,10 +398,7 @@ const BannerArea: React.FC = () => {
                     position: "absolute",
                     left: object.x,
                     top: object.y,
-                    // width: object.width,
                     width: object.autoWidth ? "auto" : object.width,
-                    // overflow: object.autoWidth ? "visible" : "hidden",
-                    // height: object.height,
                     height: object.autoHeight ? "auto" : object.height,
                     zIndex: object.zIndex,
                     visibility: isVisible ? "visible" : "hidden",
@@ -485,8 +424,6 @@ const BannerArea: React.FC = () => {
                       alignItems: object.alignItems,
                       gap: object.gap || 0,
                       transform: `rotate(${object.rotate || 0}deg)`,
-                      //
-                      // backgroundColor: object.backgroundColor,
                       backgroundColor:
                         object.backgroundColor !== "none"
                           ? object.backgroundColor
@@ -505,7 +442,6 @@ const BannerArea: React.FC = () => {
                       borderRightStyle: object.borderRightStyle,
                       borderRightColor: object.borderRightColor,
                       borderRightWidth: object.borderRightWidth,
-                      //
                       paddingTop: object.paddingTop,
                       paddingBottom: object.paddingBottom,
                       paddingLeft: object.paddingLeft,
@@ -522,7 +458,6 @@ const BannerArea: React.FC = () => {
                         );
                         const isVisibleCild =
                           isVisible && !hiddenObjectIds.includes(child.id);
-                        // if (isHidden) return null;
                         if (child.type === "text") {
                           return (
                             <div
@@ -712,7 +647,6 @@ const BannerArea: React.FC = () => {
                             >
                               <div
                                 style={{
-                                  // width: "auto",
                                   width: autoWidth ? "auto" : width,
                                   height: autoHeight ? "auto" : height,
                                   backgroundColor:
@@ -741,11 +675,6 @@ const BannerArea: React.FC = () => {
                                       src,
                                       ...nestedStyles
                                     } = nestedChild;
-                                    // const isHidden = shouldHideObject(
-                                    //   condition,
-                                    //   keyValuePairs
-                                    // );
-                                    // if (isHidden) return null;
                                     if (nestedChild.type === "image") {
                                       return (
                                         <img
@@ -824,10 +753,7 @@ const BannerArea: React.FC = () => {
                                         </div>
                                       );
                                     }
-                                    // else if (nestedChild.type === "figure") {
-                                    //   return (
-                                    //   )
-                                    // }
+
                                     return (
                                       <p
                                         id={`${nestedId}`}
@@ -897,7 +823,6 @@ const BannerArea: React.FC = () => {
           return (
             <Fragment key={object.id}>
               <div
-                // key={object.id}
                 ref={(el) => (objectRefs.current[object.id] = el)}
                 style={{
                   position: "absolute",
@@ -934,7 +859,6 @@ const BannerArea: React.FC = () => {
                       fontFamily: object.fontFamily || "Poppins, sans-serif",
                       fontWeight: object.fontWeight,
                       fontStyle: object.fontStyle,
-                      // textTransform: object.textTransform,
                       opacity: computeOpacity(object.opacity, isHidden),
                       textDecoration: object.textDecoration,
                       textAlign: object.textAlign,
@@ -943,7 +867,6 @@ const BannerArea: React.FC = () => {
                       WebkitBoxOrient: object.maxLines ? "vertical" : undefined,
                       overflow: object.maxLines ? "hidden" : undefined,
                       whiteSpace: object.autoWidth ? "nowrap" : "pre-wrap",
-                      // whiteSpace: "pre-wrap",
                     }}
                   >
                     {replaceDynamicText(object.content ?? "", keyValuePairs)}

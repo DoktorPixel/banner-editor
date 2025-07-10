@@ -89,19 +89,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         />
       </div>
 
-      {/* <div className="padding-wrapper">
-        <TextField
-          className="text-field-input"
-          label="Text"
-          value={object.content || ""}
-          onChange={(e) => onChange("content", e.target.value)}
-          fullWidth
-          margin="normal"
-          multiline
-          maxRows={5}
-        />
-      </div> */}
-
       <div className="auto-size padding-wrapper">
         {!object.autoWidth && (
           <div
@@ -111,7 +98,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
               Max lines
             </InputLabel>
             <TextField
-              // label="Max lines"
               type="number"
               value={object.maxLines || ""}
               onChange={(e) => {

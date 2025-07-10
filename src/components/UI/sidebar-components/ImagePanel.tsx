@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import { useBanner } from "../../../context/BannerContext";
 import ImageDialog from "../dialogs/ImageDialog";
-// import ManageDynamicImgsModal from "../dialogs/ManageDynamicImgsModal";
 import SavePresetButton from "../updates-components/SavePresetButton";
 import ApplyPresetButton from "../updates-components/ApplyPresetButton";
 import ImageUploader from "./ImageUploader";
@@ -15,9 +14,6 @@ const ImagePanel: React.FC = () => {
     isImageDialogOpen: false,
   });
   const [imageSrc, setImageSrc] = useState("");
-  // const [isDynamicImgsModalOpen, setIsDynamicImgsModalOpen] = useState(false);
-  // const openDialog = (type: keyof typeof dialogState) =>
-  //   setDialogState((prev) => ({ ...prev, [type]: true }));
 
   const closeDialog = (type: keyof typeof dialogState) =>
     setDialogState((prev) => ({ ...prev, [type]: false }));
@@ -79,13 +75,6 @@ const ImagePanel: React.FC = () => {
   };
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      {/* <Button
-        variant="contained"
-        color="primary"
-        onClick={() => openDialog("isImageDialogOpen")}
-      >
-        Add Image
-      </Button> */}
       <ImageUploader />
 
       <Button
@@ -114,13 +103,6 @@ const ImagePanel: React.FC = () => {
 
       <SavePresetButton />
       <ApplyPresetButton />
-      {/* <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setIsDynamicImgsModalOpen(true)}
-      >
-        Add Dynamic Image (Modal)
-      </Button> */}
       <ImageDialog
         open={dialogState.isImageDialogOpen}
         imageSrc={imageSrc}
@@ -128,11 +110,6 @@ const ImagePanel: React.FC = () => {
         onClose={() => closeDialog("isImageDialogOpen")}
         onAdd={(src) => handleAddImage(src)}
       />
-
-      {/* <ManageDynamicImgsModal
-        open={isDynamicImgsModalOpen}
-        onClose={() => setIsDynamicImgsModalOpen(false)}
-      /> */}
 
       <div className="grey-line"></div>
 

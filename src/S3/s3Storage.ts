@@ -10,7 +10,6 @@ import { ProjectData, DynamicImg, PresetData } from "../types";
 
 const BUCKET_NAME = "my-banner-editor-bucket";
 
-// Загрузка данных в S3
 export const uploadToS3 = async (key: string, data: ProjectData) => {
   try {
     const params = {
@@ -27,7 +26,6 @@ export const uploadToS3 = async (key: string, data: ProjectData) => {
   }
 };
 
-// Загрузка данных из S3
 export const downloadFromS3 = async (
   key: string
 ): Promise<ProjectData | null> => {
@@ -54,7 +52,6 @@ export const downloadFromS3 = async (
   }
 };
 
-// Удаление объекта из S3
 export const deleteFromS3 = async (key: string) => {
   try {
     const params = {
@@ -79,7 +76,6 @@ export const updateDynamicImgsInProject = async (
     throw new Error("Проект не найден.");
   }
 
-  // Обновляем список изображений
   const updatedDynamicImgs = [
     ...(project.dynamicImgs || []),
     ...newDynamicImgs.filter(
@@ -101,7 +97,6 @@ export const updateDynamicImgsInProject = async (
   console.log("Зображення успішно оновлено у проекті.");
 };
 
-// Загрузка пресета в S3
 export const uploadPresetToS3 = async (preset: PresetData) => {
   try {
     const key = `presets/${preset.id}.json`;
@@ -121,7 +116,6 @@ export const uploadPresetToS3 = async (preset: PresetData) => {
   }
 };
 
-// Получение пресета из S3
 export const downloadPresetFromS3 = async (
   presetId: string
 ): Promise<PresetData | null> => {
@@ -144,7 +138,6 @@ export const downloadPresetFromS3 = async (
   }
 };
 
-// Применение пресета к проекту
 export const applyPresetToProject = async (
   projectId: string,
   presetId: string
@@ -162,7 +155,6 @@ export const applyPresetToProject = async (
     throw new Error("Пресет не знайдено.");
   }
 
-  // Добавляем объекты пресета в проект
   const updatedProject: ProjectData = {
     ...project,
     objects: [...project.objects, ...preset.objects],
@@ -172,7 +164,6 @@ export const applyPresetToProject = async (
   console.log(`Пресет ${preset.name} успішно доданий до проекту ${projectId}`);
 };
 
-// Получение списка пресетов из S3
 export const fetchPresetsList = async (): Promise<
   { id: string; name: string; previewUrl: string }[]
 > => {
@@ -188,7 +179,6 @@ export const fetchPresetsList = async (): Promise<
       response.Contents?.map(async (item) => {
         const id = item.Key?.replace("presets/", "").replace(".json", "") || "";
 
-        // Загружаем JSON пресета
         const presetData = await downloadPresetFromS3(id);
 
         return {

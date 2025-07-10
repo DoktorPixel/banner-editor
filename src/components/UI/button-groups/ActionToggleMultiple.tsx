@@ -113,11 +113,9 @@ export const ActionToggleMultiple: React.FC<ActionToggleMultipleProps> = ({
           Gap
         </InputLabel>
         <TextField
-          // label="gap"
           type="number"
           value={isAuto ? "" : gapValue ?? ""}
           onChange={handleGapChange}
-          // fullWidth
           margin="normal"
           disabled={isAuto}
           sx={{ maxWidth: "60px", height: "35px" }}

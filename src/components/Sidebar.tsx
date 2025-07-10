@@ -12,7 +12,6 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import SidebarTabs from "./UI/sidebar-components/SidebarTabs";
 import { BigArrowRight, BigArrowLeft } from "../assets/icons";
 import AutoSaver from "./UI/updates-components/AutoSaver";
-// import { DownloadPreviewButton } from "./UI/button-groups/DownloadPreviewButton";
 import { DeployTemplateButton } from "./UI/updates-components/TemplateButtons";
 
 const Sidebar: React.FC = () => {
@@ -71,7 +70,6 @@ const Sidebar: React.FC = () => {
         <Collapse in={open} timeout="auto" unmountOnExit>
           <DeployTemplateButton templateId={currentProjectId || ""} />
           <Button onClick={handleUpload}>Close project</Button>
-          {/* <DownloadPreviewButton /> */}
         </Collapse>
         <Typography variant="h6" className="project-name">
           {currentProjectName || "Без назви"}

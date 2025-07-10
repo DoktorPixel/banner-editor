@@ -1,9 +1,6 @@
-// Layout.tsx
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useBanner } from "../context/BannerContext";
-import { useMode } from "../context/ModeContext";
 import Sidebar from "./Sidebar";
 import BannerArea from "./BannerArea";
 import ObjectProperties from "./ObjectProperties";
@@ -30,7 +27,6 @@ const defaultConfig = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
-  const { mode } = useMode();
   const {
     currentProjectId,
     setCurrentProjectId,
@@ -55,34 +51,6 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
         setIsCheckingProject(false);
         return;
       }
-
-      // try {
-      //   const key = `${projectId}.json`;
-      //   const data = await downloadFromS3(key);
-
-      //   if (data && typeof data === "object" && Array.isArray(data.objects)) {
-      //     addJson(data.objects);
-      //     setCurrentProjectId(projectId);
-      //     setConfig(
-      //       data.config || {
-      //         hiddenObjectIds: [],
-      //         keyValuePairs: [
-      //           { key: "title", value: "Назва продукту" },
-      //           { key: "img", value: "https://placehold.co/300" },
-      //           { key: "price", value: "1000" },
-      //         ],
-      //       }
-      //     );
-      //     setDynamicImgs?.(data.dynamicImgs || []);
-      //     navigate(`/${projectId}`, { replace: true });
-
-      //     // await sync(projectId, data);
-      //     // await syncProjectWithSupabase(projectId, data, config);
-      //   } else {
-      //     throw new Error("Invalid project data");
-      //   }
-
-      //
 
       try {
         const template = await getProject(projectId);
@@ -168,7 +136,7 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
   return (
     <div className="app">
       <Sidebar />
-      <BannerArea key={mode} />
+      <BannerArea />
       <ObjectProperties />
     </div>
   );

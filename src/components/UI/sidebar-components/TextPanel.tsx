@@ -44,10 +44,8 @@ const TextPanel: React.FC = () => {
         value={textContent}
         onChange={(e) => setTextContent(e.target.value)}
         fullWidth
-        // rows={2}
         maxRows={5}
         multiline
-        // sx={{ backgroundColor: "#F1F1F1" }}
       />
 
       <Button

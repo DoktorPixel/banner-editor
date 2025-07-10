@@ -4,10 +4,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useBanner } from "../../../context/BannerContext";
 import { useConfig } from "../../../context/ConfigContext";
-
-// import { ExportToHTML_2 } from "./ExportToHTML_2";
-// import { ExportToHTML_3 } from "./ExportToHTML_3";
-import { ExportToHTML_5 } from "./ExportToHTML_5";
+import { ExportToHTML } from "./ExportToHTML";
 
 export const ExportToHTMLButton = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +15,7 @@ export const ExportToHTMLButton = () => {
   const handleExport = async () => {
     try {
       setIsLoading(true);
-      const html = ExportToHTML_5(objects, config, dynamicImgs);
+      const html = ExportToHTML(objects, config, dynamicImgs);
       await navigator.clipboard.writeText(html);
       setNotification("HTML successfully copied to clipboard!");
     } catch (error) {
@@ -26,7 +23,7 @@ export const ExportToHTMLButton = () => {
       setNotification("Error copying HTML");
     } finally {
       setIsLoading(false);
-      setTimeout(() => setNotification(""), 3000); //
+      setTimeout(() => setNotification(""), 3000);
     }
   };
 

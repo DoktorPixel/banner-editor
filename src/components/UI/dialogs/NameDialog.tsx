@@ -23,23 +23,31 @@ const NameDialog: React.FC<NameDialogProps> = ({
   onSave,
 }) => (
   <Dialog open={open} onClose={onClose}>
-    <DialogTitle>Редагувати назву</DialogTitle>
+    <DialogTitle>Edit title</DialogTitle>
     <DialogContent>
       <TextField
         autoFocus
         margin="dense"
-        label="Назва"
+        label="Name"
         fullWidth
         value={name}
         onChange={onChange}
+        slotProps={{
+          input: {
+            sx: {
+              height: 54,
+              padding: "2px",
+            },
+          },
+        }}
       />
     </DialogContent>
     <DialogActions>
       <Button onClick={onClose} color="secondary">
-        Відмінити
+        Cancel
       </Button>
       <Button onClick={onSave} color="primary">
-        Зберегти
+        Save
       </Button>
     </DialogActions>
   </Dialog>

@@ -473,7 +473,6 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
               <MuiColorInput
                 label="Color"
                 format="hex"
-                // value={object.backgroundColor || "none"}
                 value={
                   object.backgroundColor === "none"
                     ? ""
@@ -488,7 +487,6 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
               />
             </div>
           ) : (
-            //
             <Box
               display="flex"
               alignItems="center"

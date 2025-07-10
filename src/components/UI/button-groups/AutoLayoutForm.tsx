@@ -184,11 +184,9 @@ export const AutoLayoutForm: React.FC<AutoLayoutFormProps> = ({
                 key={index}
                 sx={{
                   maxWidth: 118,
-                  // borderRadius: 0,
                   border: "2px solid #F1F1F1",
                   padding: "7px 10px",
                   minWidth: "39px",
-                  // borderRadius: isActive(item) ? "14px" : "0px",
                   backgroundColor: isActive(item) ? "white" : "#F1F1F1",
                   "&:hover": {
                     backgroundColor: isActive(item) ? "#e3e3e3" : "#f5f5f5",

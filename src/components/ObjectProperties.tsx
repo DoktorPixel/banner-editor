@@ -4,9 +4,7 @@ import { TextObjectForm } from "./UI/object-properties-forms/TextObjectForm";
 import { ImageObjectForm } from "./UI/object-properties-forms/ImageObjectForm";
 import { GroupObjectForm } from "./UI/object-properties-forms/GroupObjectForm";
 import { FigureObjectForm } from "./UI/object-properties-forms/FigureObjectForm";
-// import { ChildObjectForm } from "./UI/ChildObjectForm";
 import { SelectedObjectsList } from "./UI/SelectedObjectsList";
-//
 import { TextChildObjectForm } from "./UI/child-object-forms/TextChildObjectForm";
 import { ImageChildObjectForm } from "./UI/child-object-forms/ImageChildObjectForm";
 import { FigureChildObjectForm } from "./UI/child-object-forms/FigureChildObjectForm";
@@ -17,10 +15,7 @@ const ObjectProperties: React.FC = () => {
     selectedObject,
     selectedObjects,
     selectedObjectIds,
-    // handleDelete,
-    // handleDeleteAll,
     updateObjectProperty,
-    //
   } = useObjectProperties();
 
   const {
@@ -102,32 +97,6 @@ const ObjectProperties: React.FC = () => {
       ) : (
         <SelectedObjectsList objects={selectedObjects} />
       )}
-
-      {/* {selectedObjectIds.length === 1 && !selectedChild && (
-        <div className="padding-wrapper">
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleDelete}
-            sx={{ marginTop: "20px" }}
-          >
-            Delete object
-          </Button>
-        </div>
-      )}
-      {selectedObjectIds.length > 1 && (
-        <div className="padding-wrapper">
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleDeleteAll}
-            sx={{ marginTop: "20px" }}
-          >
-            Delete selected objects
-          </Button>
-        </div>
-      )} */}
-      {/* <div className="grey-line"></div> */}
     </Box>
   );
 };

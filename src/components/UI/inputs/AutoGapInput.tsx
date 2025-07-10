@@ -60,7 +60,6 @@ export const AutoGapInput: React.FC<AutoGapInputProps> = ({
     <div className="auto-size">
       <Tooltip title="gap, px" placement="top" arrow>
         <TextField
-          // label="gap"
           type="number"
           value={isAuto ? "" : gapValue ?? ""}
           onChange={handleGapChange}

@@ -117,7 +117,6 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
         currentProjectId,
         object_id
       );
-      // triggerRefresh();
       setImages((prev) => [...prev, result]);
       addDynamicImg?.(result);
     } catch (error) {
@@ -270,7 +269,6 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
                     sx: {
                       backgroundColor: "#fbfbfb",
                       padding: 1,
-                      // boxShadow: 3,
                       border: "1px solid #ccc",
                     },
                   },

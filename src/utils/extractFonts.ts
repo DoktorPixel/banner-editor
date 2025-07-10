@@ -1,8 +1,5 @@
 import { BannerObject, BannerChild } from "../types";
 
-/**
- * Рекурсивно извлекает fontFamily из всех объектов и их детей
- */
 export function extractFontsFromObjects(
   objects: (BannerObject | BannerChild)[]
 ): string[] {
@@ -18,5 +15,5 @@ export function extractFontsFromObjects(
     }
   }
 
-  return Array.from(new Set(fonts)); // убираем дубликаты сразу
+  return Array.from(new Set(fonts));
 }

@@ -20,7 +20,6 @@ const ImageUploader: React.FC = () => {
       height: 250,
       x: 50,
       y: 50,
-      // src: url,
       src: normalizeImagePath(url),
       name: "",
     });

@@ -81,10 +81,7 @@ const SidebarObjectList: React.FC = () => {
           delete groupedObjects[obj.abstractGroupId];
 
           return (
-            <Box
-              key={`group-${obj.abstractGroupId}`}
-              // sx={{ marginBottom: "5px" }}
-            >
+            <Box key={`group-${obj.abstractGroupId}`}>
               <ListItem
                 component="div"
                 sx={{
@@ -118,7 +115,6 @@ const SidebarObjectList: React.FC = () => {
                 <SvgVirtual />
                 <span className="layers-list-item">Group</span>
                 <GroupVisibilityToggle objectIds={group.map((o) => o.id)} />
-                {/* <VisibilityToggle /> */}
               </ListItem>
               <Collapse
                 in={openGroups[obj.abstractGroupId]}

@@ -108,11 +108,9 @@ export const ChildActionToggleMultiple: React.FC<ChildActionToggleMultiple> = ({
           Gap
         </InputLabel>
         <TextField
-          // label="gap"
           type="number"
           value={isAuto ? "" : gapValue ?? ""}
           onChange={handleGapChange}
-          // fullWidth
           margin="normal"
           disabled={isAuto}
           sx={{ maxWidth: "60px", height: "35px" }}
