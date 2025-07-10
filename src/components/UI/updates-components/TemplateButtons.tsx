@@ -1,4 +1,3 @@
-// src/components/TemplateButtons.tsx
 import { Button } from "@mui/material";
 import { ConfigItem, BannerObject, DynamicImg } from "../../../types";
 import { useSupabaseProject } from "../../../utils/useSupabaseProject";
@@ -11,7 +10,6 @@ type Props = {
   onSuccess?: (data?: unknown) => void;
 };
 
-// Кнопка: опубликовать (deploy)
 export const DeployTemplateButton: React.FC<Props> = ({
   templateId,
   onSuccess,
@@ -29,12 +27,7 @@ export const DeployTemplateButton: React.FC<Props> = ({
   };
 
   return (
-    <Button
-      // variant="contained"
-      // color="success"
-      onClick={handleClick}
-      disabled={loading}
-    >
+    <Button onClick={handleClick} disabled={loading}>
       {loading ? "Deploying..." : "Publish Template"}
     </Button>
   );

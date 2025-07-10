@@ -58,7 +58,6 @@ const SidebarTabs: React.FC = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                // maxWidth: "30px",
               }}
             >
               {tab.icon}

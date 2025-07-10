@@ -43,20 +43,6 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
         Text
       </Typography>
 
-      {/* <div className="padding-wrapper">
-        <TextField
-          className="text-field-input"
-          label="Text"
-          name="content"
-          value={object.content || ""}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-          multiline
-          maxRows={5}
-        />
-      </div> */}
-
       <div className="padding-wrapper">
         <div
           style={{

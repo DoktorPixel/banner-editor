@@ -119,8 +119,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
       </Button>
 
       <Button
-        // variant="contained"
-        // color="primary"
         onClick={groupSelectedObjects}
         disabled={selectedObjectIds.length < 2}
         style={{
@@ -133,8 +131,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         Group
       </Button>
       <Button
-        // variant="contained"
-        // color="secondary"
         onClick={ungroupSelectedObject}
         disabled={
           selectedObjectIds.length !== 1 ||
@@ -147,8 +143,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
       </Button>
 
       <Button
-        // variant="contained"
-        // color="secondary"
         onClick={groupSelectedObjectsAbstract}
         disabled={
           selectedObjectIds.length < 2 ||
@@ -164,8 +158,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         Group Virtual
       </Button>
       <Button
-        // variant="contained"
-        // color="secondary"
         onClick={ungroupSelectedObjectsAbstract}
         disabled={
           selectedObjectIds.length < 2 ||

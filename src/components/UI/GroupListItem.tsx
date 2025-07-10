@@ -87,17 +87,13 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
                 component="li"
                 onClick={(e) => handleChildClick(group.id, child, e)}
                 sx={{
-                  // pl: 4,
                   cursor: "pointer",
                   backgroundColor:
                     selectedChildId?.childId === child.id
                       ? "lightgray"
                       : "white",
                   "&:hover": { backgroundColor: "#f5f5f5" },
-                  // padding: "5px 0 5px 0",
                   padding: "5px 0 5px 36px",
-                  // display: "flex",
-                  // alignItems: "center",
                 }}
               >
                 {child.type === "text" && <SvgText />}

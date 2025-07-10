@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { useBanner } from "../../../context/BannerContext";
 import { useConfig } from "../../../context/ConfigContext";
-// import { uploadToS3 } from "../../../S3/s3Storage";
 import { ProjectData } from "../../../types";
 import { debounce } from "lodash";
 import isEqual from "fast-deep-equal";

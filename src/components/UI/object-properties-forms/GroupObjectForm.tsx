@@ -16,8 +16,6 @@ import { BannerObject } from "../../../types";
 import { MuiColorInput } from "mui-color-input";
 import { useObjectProperties } from "../../../utils/hooks";
 import { ConditionSelector } from "../selectors/ConditionSelector";
-// import { FlexDirectionSelector } from "../FlexDirectionSelector";
-// import { AutoGapInput } from "../AutoGapInput";
 import {
   BorderBottom,
   BorderLeft,
@@ -514,7 +512,6 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
               <MuiColorInput
                 label="Color"
                 format="hex"
-                // value={object.backgroundColor || "none"}
                 value={
                   object.backgroundColor === "none"
                     ? ""

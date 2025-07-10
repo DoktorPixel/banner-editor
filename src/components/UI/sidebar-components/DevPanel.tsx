@@ -5,16 +5,13 @@ import { useBanner } from "../../../context/BannerContext";
 import { BannerObject } from "../../../types";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ExportInJSON from "../export-components/ExportInJSON";
-// import ExportInHTML from "../export-components/ExportInHTML";
-// import { ExportToHTML_2 } from "../ExportToHTML_2";
-import { ExportToHTMLButton } from "../export-components/ExportToHTMLButton_2";
+import { ExportToHTMLButton } from "../export-components/ExportToHTMLButton";
 
 const DevPanel: React.FC = () => {
   const { addJson } = useBanner();
   const [dialogState, setDialogState] = useState({
-    isTextDialogOpen: false,
     isImageDialogOpen: false,
-    isClearHistoryDialogOpen: false,
+
     isJsonDialogOpen: false,
   });
 
@@ -39,8 +36,6 @@ const DevPanel: React.FC = () => {
       </Button>
 
       <ExportInJSON />
-      {/* <ExportInHTML /> */}
-      {/* <ExportToHTML_2 /> */}
       <ExportToHTMLButton />
 
       <JSONDialog

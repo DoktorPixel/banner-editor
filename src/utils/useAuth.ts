@@ -1,4 +1,3 @@
-// utils/useAuth.ts
 import { useEffect, useState } from "react";
 import { signIn, supabase } from "./supabaseClient";
 

@@ -6,11 +6,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  // Button,
   Typography,
   InputAdornment,
   Box,
-  // IconButton,
 } from "@mui/material";
 import UpdateImageDialog from "../dialogs/UpdateImageDialog";
 import { ConditionSelector } from "../selectors/ConditionSelector";
@@ -26,11 +24,6 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
   onChange,
 }) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
-
-  // const handleDialogOpen = () => {
-  //   setDialogOpen(true);
-  // };
-
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
@@ -150,35 +143,6 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         </div>
       )}
 
-      {/* <div className="grey-line"></div>
-      <div className="padding-wrapper">
-        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>URL</InputLabel>
-        <div className="update-image-wrapper">
-          <TextField
-            value={object.src || ""}
-            onChange={(e) => handleInputChange("src", e.target.value)}
-            fullWidth
-            margin="normal"
-            disabled
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleDialogOpen}
-            fullWidth
-            style={{
-              padding: "2px 8px",
-              fontSize: "11px",
-              height: "32px",
-              top: "3px",
-              lineHeight: "1.2",
-            }}
-          >
-            Update image
-          </Button>
-        </div>
-      </div> */}
-
       <div className="padding-wrapper">
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
           Object Fit
@@ -206,14 +170,6 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
             fullWidth
             margin="normal"
           />
-          {/* <TextField
-            label="z-Index"
-            type="number"
-            value={object.zIndex || 0}
-            onChange={(e) => onChange("zIndex", parseInt(e.target.value, 10))}
-            fullWidth
-            margin="normal"
-          /> */}
           <TextField
             label="Opacity 100 to 1"
             type="number"

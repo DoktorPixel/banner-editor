@@ -64,21 +64,9 @@ const FontSelector2: React.FC<FontSelectorProps> = ({
 
       <List
         sx={{
-          // height: "50%",
           maxHeight: "calc(100vh - 380px)",
           overflowY: "scroll",
           borderRadius: 1,
-
-          // "&::-webkit-scrollbar": {
-          //   width: "5px",
-          // },
-          // "&::-webkit-scrollbar-thumb": {
-          //   backgroundColor: "#F1F1F1",
-          //   borderRadius: "6px",
-          // },
-          // "&::-webkit-scrollbar-thumb:hover": {
-          //   backgroundColor: "#CFCACA",
-          // },
         }}
       >
         {filteredFonts.map((font) => {

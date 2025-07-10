@@ -44,9 +44,7 @@ const ApplyPresetButton: React.FC = () => {
     ): T => ({
       ...obj,
       id: Date.now() + Math.random(),
-      // ...("abstractGroupId" in obj
-      //   ? { abstractGroupId: Date.now() + Math.random() }
-      //   : {}),
+
       children: obj.children ? obj.children.map(updateObjectIds) : undefined,
     });
 

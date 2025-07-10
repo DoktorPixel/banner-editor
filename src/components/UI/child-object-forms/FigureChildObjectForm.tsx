@@ -324,7 +324,6 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
               <MuiColorInput
                 label="Color"
                 format="hex"
-                // value={object.backgroundColor || "none"}
                 value={
                   object.backgroundColor === "none"
                     ? ""
