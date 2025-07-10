@@ -13,11 +13,7 @@ import SidebarTabs from "./UI/sidebar-components/SidebarTabs";
 import { BigArrowRight, BigArrowLeft } from "../assets/icons";
 import AutoSaver from "./UI/updates-components/AutoSaver";
 // import { DownloadPreviewButton } from "./UI/button-groups/DownloadPreviewButton";
-// import {
-//   GetTemplateButton,
-//   UpdateTemplateButton,
-//   DeployTemplateButton,
-// } from "./UI/updates-components/TemplateButtons";
+import { DeployTemplateButton } from "./UI/updates-components/TemplateButtons";
 
 const Sidebar: React.FC = () => {
   const {
@@ -27,7 +23,7 @@ const Sidebar: React.FC = () => {
     canRedo,
     currentProjectName,
     clearProject,
-    // currentProjectId,
+    currentProjectId,
   } = useBanner();
 
   const [open, setOpen] = useState(false);
@@ -73,23 +69,7 @@ const Sidebar: React.FC = () => {
           </div>
         </Box>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          {/* <GetTemplateButton
-            templateId={currentProjectId || ""}
-            onSuccess={(data) => console.log("Loaded template:", data)}
-          /> */}
-
-          {/* <UpdateTemplateButton
-            templateId={currentProjectId || ""}
-            data={projectData}
-            config={config}
-            objects={objects}
-            dynamicImgs={dynamicImgs}
-          /> */}
-
-          {/* <DeployTemplateButton
-            templateId={currentProjectId || ""}
-            onSuccess={() => console.log("Template deployed!")}
-          /> */}
+          <DeployTemplateButton templateId={currentProjectId || ""} />
           <Button onClick={handleUpload}>Close project</Button>
           {/* <DownloadPreviewButton /> */}
         </Collapse>

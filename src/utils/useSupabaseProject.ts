@@ -17,12 +17,15 @@ export const useSupabaseProject = () => {
     setError(null);
     try {
       const token = await getToken();
-      const response = await axios.get(`${API_BASE_URL}?id=${templateId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
+      const response = await axios.get(
+        `${API_BASE_URL}?template_id=${templateId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
       return response.data;
     } catch (err: unknown) {
       console.error("❌ Failed to load project:", err);
@@ -98,10 +101,37 @@ export const useSupabaseProject = () => {
     }
   }, []);
 
+  const deployTemplate = useCallback(async (templateId: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = await getToken();
+      // const payload = {
+      //   templateId: templateId,
+      // };
+
+      await axios.get(`${API_BASE_URL}/deploy?template_id=${templateId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      return true;
+    } catch (err: unknown) {
+      console.error("❌ Failed to deploy template:", err);
+      setError("Failed to deploy template.");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     getProject,
     updateProject,
     publishProject,
+    deployTemplate,
     loading,
     error,
   };
