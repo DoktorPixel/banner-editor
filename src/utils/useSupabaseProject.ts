@@ -25,6 +25,10 @@ export const useSupabaseProject = () => {
           },
         }
       );
+      // console.log(
+      //   "Project loaded successfully:",
+      //   JSON.parse(response.data.config_dev)
+      // );
       return response.data;
     } catch (err: unknown) {
       console.error("❌ Failed to load project:", err);

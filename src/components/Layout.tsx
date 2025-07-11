@@ -35,7 +35,7 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
     setDynamicImgs,
     setCurrentProjectName,
   } = useBanner();
-  const { setConfig } = useConfig();
+  const { setConfig, updateCanvasSize } = useConfig();
   const { getProject } = useSupabaseProject();
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
@@ -58,7 +58,6 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
         if (!template) {
           throw new Error("Project not found");
         }
-
         let parsed: ProjectData | null = null;
         try {
           if (template.config_dev?.trim()) {
@@ -70,14 +69,24 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
 
         const objects = parsed?.objects ?? [];
         const dynamicImgs = parsed?.dynamicImgs ?? [];
-        const config = parsed?.config ?? defaultConfig;
+        if (parsed?.config?.canvasSize) {
+          setConfig(parsed.config);
+        } else if (parsed?.dimensions) {
+          const { width, height } = parsed.dimensions;
+          const newConfig = {
+            ...defaultConfig,
+            canvasSize: { width, height },
+          };
+          setConfig(newConfig);
+          updateCanvasSize(width, height);
+        } else {
+          setConfig(defaultConfig);
+        }
 
         addJson(objects);
         setDynamicImgs?.(dynamicImgs);
-        setConfig(config);
         setCurrentProjectId(projectId);
         setCurrentProjectName(template.name || "Untitled Project");
-
         if (location.pathname !== `/${projectId}`) {
           navigate(`/${projectId}`, { replace: true });
         }

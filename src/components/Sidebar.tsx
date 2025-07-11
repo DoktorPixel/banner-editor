@@ -69,7 +69,7 @@ const Sidebar: React.FC = () => {
           <Button onClick={handleUpload}>Close project</Button>
         </Collapse> */}
         <Typography variant="h6" className="project-name">
-          {currentProjectName || "Без назви"}
+          {currentProjectName || "No name"}
         </Typography>
       </div>
       <div className="grey-line"></div>
