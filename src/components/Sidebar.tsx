@@ -1,29 +1,35 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { useBanner } from "../context/BannerContext";
 import {
-  Button,
+  // Button,
   Stack,
-  Collapse,
+  // Collapse,
   IconButton,
   Box,
   Typography,
 } from "@mui/material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
+// import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import SidebarTabs from "./UI/sidebar-components/SidebarTabs";
 import { BigArrowRight, BigArrowLeft } from "../assets/icons";
 import AutoSaver from "./UI/updates-components/AutoSaver";
 
 const Sidebar: React.FC = () => {
-  const { undo, redo, canUndo, canRedo, currentProjectName, clearProject } =
-    useBanner();
+  const {
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    currentProjectName,
+    // clearProject
+  } = useBanner();
 
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
-  const handleToggle = () => setOpen(!open);
+  // const handleToggle = () => setOpen(!open);
 
-  const handleUpload = async () => {
-    clearProject();
-  };
+  // const handleUpload = async () => {
+  //   clearProject();
+  // };
 
   return (
     <Stack spacing={2} className="sidebar">
@@ -44,9 +50,9 @@ const Sidebar: React.FC = () => {
             }}
           >
             <Typography sx={{ lineHeight: "1" }}>FeedMaker</Typography>
-            <IconButton size="small" edge="start" onClick={handleToggle}>
+            {/* <IconButton size="small" edge="start" onClick={handleToggle}>
               {open ? <ExpandLess /> : <ExpandMore />}
-            </IconButton>
+            </IconButton> */}
             <AutoSaver />
           </div>
 
@@ -59,9 +65,9 @@ const Sidebar: React.FC = () => {
             </IconButton>
           </div>
         </Box>
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        {/* <Collapse in={open} timeout="auto" unmountOnExit>
           <Button onClick={handleUpload}>Close project</Button>
-        </Collapse>
+        </Collapse> */}
         <Typography variant="h6" className="project-name">
           {currentProjectName || "Без назви"}
         </Typography>
