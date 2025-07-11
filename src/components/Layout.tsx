@@ -18,7 +18,8 @@ const defaultConfig = {
   keyValuePairs: [
     { key: "title", value: "Назва продукту" },
     { key: "img", value: "https://placehold.co/300" },
-    { key: "price", value: "1000" },
+    { key: "price", value: "1000 UAH" },
+    { key: "sale_price", value: "800 UAH" },
   ],
   canvasSize: {
     width: 1080,
