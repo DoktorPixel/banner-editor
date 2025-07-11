@@ -15,6 +15,14 @@
     display: flex;
     flex-direction: column;
   }
+
+  .object-properties-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+  }
 }
 
 .text-align {
@@ -65,4 +73,10 @@
   margin-top: 8px;
   max-width: 78px;
   max-height: 33px;
+}
+
+.language-switcher {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
