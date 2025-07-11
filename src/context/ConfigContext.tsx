@@ -21,6 +21,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
       { key: "title", value: "Назва продукту" },
       { key: "img", value: "https://placehold.co/300" },
       { key: "price", value: "1000" },
+      { key: "sale_price", value: "800 UAH" },
     ],
     canvasSize: { width: 1080, height: 1080 },
   });
