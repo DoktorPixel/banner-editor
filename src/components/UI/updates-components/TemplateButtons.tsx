@@ -61,14 +61,14 @@ export const DeployTemplateButton: React.FC = () => {
 
       {/* Диалог подтверждения */}
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-        <DialogTitle>Confirm publication</DialogTitle>
+        <DialogTitle sx={{ margin: "0 auto" }}>Confirm publication</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Are you sure you want to publish the project? This action cannot be
             undone.
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ margin: "0 auto", paddingBottom: "22px" }}>
           <Button onClick={() => setConfirmOpen(false)} disabled={loading}>
             Cancel
           </Button>

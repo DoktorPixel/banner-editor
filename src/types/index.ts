@@ -238,6 +238,7 @@ export interface ProjectData {
   objects: BannerObject[];
   dynamicImgs?: DynamicImg[];
   config: ConfigItem;
+  dimensions?: { width: number; height: number };
 }
 
 export interface PresetData {
