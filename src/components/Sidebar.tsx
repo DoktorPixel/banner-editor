@@ -12,18 +12,10 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import SidebarTabs from "./UI/sidebar-components/SidebarTabs";
 import { BigArrowRight, BigArrowLeft } from "../assets/icons";
 import AutoSaver from "./UI/updates-components/AutoSaver";
-import { DeployTemplateButton } from "./UI/updates-components/TemplateButtons";
 
 const Sidebar: React.FC = () => {
-  const {
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-    currentProjectName,
-    clearProject,
-    currentProjectId,
-  } = useBanner();
+  const { undo, redo, canUndo, canRedo, currentProjectName, clearProject } =
+    useBanner();
 
   const [open, setOpen] = useState(false);
 
@@ -68,7 +60,6 @@ const Sidebar: React.FC = () => {
           </div>
         </Box>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <DeployTemplateButton templateId={currentProjectId || ""} />
           <Button onClick={handleUpload}>Close project</Button>
         </Collapse>
         <Typography variant="h6" className="project-name">

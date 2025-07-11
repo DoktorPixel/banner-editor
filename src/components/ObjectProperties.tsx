@@ -9,6 +9,8 @@ import { TextChildObjectForm } from "./UI/child-object-forms/TextChildObjectForm
 import { ImageChildObjectForm } from "./UI/child-object-forms/ImageChildObjectForm";
 import { FigureChildObjectForm } from "./UI/child-object-forms/FigureChildObjectForm";
 import { GroupChildObjectForm } from "./UI/child-object-forms/GroupChildObjectForm";
+import { DeployTemplateButton } from "./UI/updates-components/TemplateButtons";
+import LanguageSwitcher from "./UI/selectors/LanguageSwitcher";
 
 const ObjectProperties: React.FC = () => {
   const {
@@ -26,6 +28,12 @@ const ObjectProperties: React.FC = () => {
 
   return (
     <Box className="object-properties">
+      <Box className="object-properties-header">
+        <DeployTemplateButton />
+        <LanguageSwitcher />
+      </Box>
+
+      <div className="grey-line"></div>
       <Typography variant="h5" className="padding-wrapper">
         Object properties
       </Typography>
