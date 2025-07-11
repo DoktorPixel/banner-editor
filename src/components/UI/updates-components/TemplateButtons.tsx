@@ -54,7 +54,7 @@ export const DeployTemplateButton: React.FC = () => {
         disabled={loading}
         variant="contained"
         color="primary"
-        sx={{ textTransform: "none", padding: "3px 6px" }}
+        sx={{ textTransform: "none", padding: "4px 6px 2px 6px" }}
       >
         {loading ? "Deploying..." : "Publish Template"}
       </Button>

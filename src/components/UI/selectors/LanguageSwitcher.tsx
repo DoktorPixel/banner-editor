@@ -22,11 +22,15 @@ const LanguageSwitcher: React.FC = () => {
 
   return (
     <div className="language-switcher">
-      <LanguageOutlinedIcon color="primary" sx={{ fontSize: 30 }} />
+      <LanguageOutlinedIcon color="primary" sx={{ fontSize: 32 }} />
       <Button
         onClick={handleClick}
         variant="contained"
-        sx={{ textTransform: "none", padding: "2px 8px", minWidth: "auto" }}
+        sx={{
+          textTransform: "none",
+          padding: "4px 8px 2px 8px",
+          minWidth: "auto",
+        }}
       >
         {language}
       </Button>
