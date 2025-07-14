@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useBanner } from "../context/BannerContext";
 import Sidebar from "./Sidebar";
@@ -6,7 +6,7 @@ import BannerArea from "./BannerArea";
 import ObjectProperties from "./ObjectProperties";
 import { useConfig } from "../context/ConfigContext";
 import { CircularProgress, Box, Typography } from "@mui/material";
-import { useSupabaseProject } from "../utils/useSupabaseProject";
+import { useProject } from "../utils/useSupabaseProject";
 import { ProjectData } from "../types";
 
 interface LayoutProps {
@@ -36,81 +36,65 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
     setCurrentProjectName,
   } = useBanner();
   const { setConfig, updateCanvasSize } = useConfig();
-  const { getProject } = useSupabaseProject();
   const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
 
-  const [isCheckingProject, setIsCheckingProject] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: template, isLoading, error } = useProject(projectId ?? "");
 
   useEffect(() => {
     if (!isAuthReady) return;
 
-    const tryLoadProject = async () => {
-      if (!projectId) {
-        setError("Project ID missing from URL");
-        setIsCheckingProject(false);
-        return;
-      }
-
+    if (template && !currentProjectId) {
+      let parsed: ProjectData | null = null;
       try {
-        const template = await getProject(projectId);
-        if (!template) {
-          throw new Error("Project not found");
+        if (template.config_dev?.trim()) {
+          parsed = JSON.parse(template.config_dev);
         }
-        let parsed: ProjectData | null = null;
-        try {
-          if (template.config_dev?.trim()) {
-            parsed = JSON.parse(template.config_dev);
-          }
-        } catch {
-          throw new Error("Error parsing project configuration JSON");
-        }
-
-        const objects = parsed?.objects ?? [];
-        const dynamicImgs = parsed?.dynamicImgs ?? [];
-        if (parsed?.config?.canvasSize) {
-          setConfig(parsed.config);
-        } else if (parsed?.dimensions) {
-          const { width, height } = parsed.dimensions;
-          const newConfig = {
-            ...defaultConfig,
-            canvasSize: { width, height },
-          };
-          setConfig(newConfig);
-          updateCanvasSize(width, height);
-        } else {
-          setConfig(defaultConfig);
-        }
-
-        addJson(objects);
-        setDynamicImgs?.(dynamicImgs);
-        setCurrentProjectId(projectId);
-        setCurrentProjectName(template.name || "Untitled Project");
-        if (location.pathname !== `/${projectId}`) {
-          navigate(`/${projectId}`, { replace: true });
-        }
-      } catch (err: unknown) {
-        const message =
-          err instanceof Error ? err.message : "Unknown error loading project";
-        console.error("Error loading project:", err);
-        setError(message);
-      } finally {
-        setIsCheckingProject(false);
+      } catch {
+        console.error("Error parsing project configuration JSON");
       }
-    };
 
-    if (!projectId || location.pathname === "/") {
-      setIsCheckingProject(false);
-      return;
+      const objects = parsed?.objects ?? [];
+      const dynamicImgs = parsed?.dynamicImgs ?? [];
+
+      if (parsed?.config?.canvasSize) {
+        setConfig(parsed.config);
+      } else if (parsed?.dimensions) {
+        const { width, height } = parsed.dimensions;
+        const newConfig = {
+          ...defaultConfig,
+          canvasSize: { width, height },
+        };
+        setConfig(newConfig);
+        updateCanvasSize(width, height);
+      } else {
+        setConfig(defaultConfig);
+      }
+
+      addJson(objects);
+      setDynamicImgs?.(dynamicImgs);
+      setCurrentProjectId(projectId!);
+      setCurrentProjectName(template.name || "Untitled Project");
+
+      if (location.pathname !== `/${projectId}`) {
+        navigate(`/${projectId}`, { replace: true });
+      }
     }
+  }, [
+    template,
+    currentProjectId,
+    setCurrentProjectId,
+    addJson,
+    setDynamicImgs,
+    setCurrentProjectName,
+    setConfig,
+    updateCanvasSize,
+    navigate,
+    projectId,
+    isAuthReady,
+  ]);
 
-    if (!currentProjectId) {
-      tryLoadProject();
-    }
-  }, [projectId, currentProjectId, navigate, setCurrentProjectId, isAuthReady]);
-
-  if (isCheckingProject) {
+  if (!isAuthReady || isLoading) {
     return (
       <Box
         display="flex"
@@ -123,7 +107,7 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
     );
   }
 
-  if (error) {
+  if (error || !template) {
     return (
       <Box
         display="flex"
@@ -134,7 +118,9 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
         gap={2}
       >
         <Typography variant="h6" color="error" textAlign="center">
-          {error}
+          {error instanceof Error
+            ? error.message
+            : "Unknown error loading project"}
         </Typography>
         <Typography variant="h6" color="info" textAlign="center">
           Check your project ID in the URL

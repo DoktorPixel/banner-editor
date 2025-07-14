@@ -1,137 +1,65 @@
-import { useCallback, useState } from "react";
-import axios from "axios";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiClient } from "../api/apiClient";
 import { ProjectData, ConfigItem, BannerObject, DynamicImg } from "../types";
 import { ExportToHTML } from "../components/UI/export-components/ExportToHTML";
-import { getToken } from "./supabaseClient";
-
-const API_BASE_URL =
-  "https://tgitxrjsbuimawihmkth.supabase.co/functions/v1/templates";
 
 export const useSupabaseProject = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<null | string>(null);
-
-  const getProject = useCallback(async (templateId: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const token = await getToken();
-      const response = await axios.get(
-        `${API_BASE_URL}?template_id=${templateId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        }
-      );
-      // console.log(
-      //   "Project loaded successfully:",
-      //   JSON.parse(response.data.config_dev)
-      // );
-      return response.data;
-    } catch (err: unknown) {
-      console.error("❌ Failed to load project:", err);
-      setError("Failed to load project.");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const updateProject = useCallback(
-    async (
-      templateId: string,
-      data: ProjectData,
-      config: ConfigItem,
-      objects: BannerObject[],
-      dynamicImgs: DynamicImg[]
-    ) => {
-      setLoading(true);
-      setError(null);
-      try {
-        const token = await getToken();
-        const html = ExportToHTML(objects, config, dynamicImgs);
-        const payload = {
-          id: templateId,
-          html_dev: html,
-          config_dev: JSON.stringify({
-            objects: data.objects,
-            dynamicImgs: data.dynamicImgs || [],
-            config,
-          }),
-        };
-
-        await axios.put(`${API_BASE_URL}/update`, payload, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        return true;
-      } catch (err: unknown) {
-        console.error("❌ Failed to update project:", err);
-        setError("Failed to update project.");
-        throw err;
-      } finally {
-        setLoading(false);
-      }
+  const updateProject = useMutation({
+    mutationFn: async ({
+      templateId,
+      data,
+      config,
+      objects,
+      dynamicImgs,
+    }: {
+      templateId: string;
+      data: ProjectData;
+      config: ConfigItem;
+      objects: BannerObject[];
+      dynamicImgs: DynamicImg[];
+    }) => {
+      const html = ExportToHTML(objects, config, dynamicImgs);
+      const payload = {
+        id: templateId,
+        html_dev: html,
+        config_dev: JSON.stringify({
+          objects: data.objects,
+          dynamicImgs: data.dynamicImgs || [],
+          config,
+        }),
+      };
+      await apiClient.put("/update", payload);
+      return true;
     },
-    []
-  );
+  });
 
-  const publishProject = useCallback(async (templateId: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const token = await getToken();
-
-      await axios.post(`${API_BASE_URL}/publish?id=${templateId}`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+  const publishProject = useMutation({
+    mutationFn: async (templateId: string) => {
+      await apiClient.post(`/publish?id=${templateId}`, null);
       return true;
-    } catch (err: unknown) {
-      console.error("❌ Failed to publish project:", err);
-      setError("Failed to publish project.");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+  });
 
-  const deployTemplate = useCallback(async (templateId: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const token = await getToken();
-
-      await axios.get(`${API_BASE_URL}/deploy?template_id=${templateId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
+  const deployTemplate = useMutation({
+    mutationFn: async (templateId: string) => {
+      await apiClient.post(`/deploy?template_id=${templateId}`, {});
       return true;
-    } catch (err: unknown) {
-      console.error("❌ Failed to deploy template:", err);
-      setError("Failed to deploy template.");
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+  });
 
   return {
-    getProject,
     updateProject,
     publishProject,
     deployTemplate,
-    loading,
-    error,
   };
 };
+
+export const useProject = (templateId: string) =>
+  useQuery({
+    queryKey: ["project", templateId],
+    queryFn: async () => {
+      const res = await apiClient.get(`?template_id=${templateId}`);
+      return res.data;
+    },
+    enabled: !!templateId,
+  });
