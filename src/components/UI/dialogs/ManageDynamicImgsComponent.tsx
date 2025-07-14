@@ -12,6 +12,13 @@ import {
 import { useSupabaseImages } from "../../../utils/useSupabaseImages";
 import { useBanner } from "../../../context/BannerContext";
 import { DeleteBtn } from "../../../assets/icons";
+import { SupabaseImageItem } from "../../../types";
+
+interface ManageDynamicImgsComponentProps {
+  object_id?: string;
+  logoName?: string;
+  onChange?: (key: string, value: string) => void;
+}
 
 interface UploadedImage {
   id: string;
@@ -19,12 +26,6 @@ interface UploadedImage {
   name?: string;
   template_id?: string;
   object_id?: string;
-}
-
-interface ManageDynamicImgsComponentProps {
-  object_id?: string;
-  logoName?: string;
-  onChange?: (key: string, value: string) => void;
 }
 
 const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
@@ -40,18 +41,19 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     addDynamicImg,
     updateDynamicImgName,
   } = useBanner();
-  const { getDynamicImages, deleteDynamicImage, uploadDynamicImage } =
-    useSupabaseImages();
-
-  const [images, setImages] = useState<UploadedImage[]>([]);
+  const { useImages, deleteImage, uploadImage } = useSupabaseImages();
+  const [image, setImage] = useState<UploadedImage[]>([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [loadingLogo, setLoadingLogo] = useState(false);
   const [uploadingNewImage, setUploadingNewImage] = useState(false);
   const [deletingIds, setDeletingIds] = useState<string[]>([]);
   const [localLogoName, setLocalLogoName] = useState(logoName || "");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+  const {
+    data: images,
+    isLoading: loadingLogo,
+    error,
+  } = useImages(currentProjectId ?? "", object_id);
   useEffect(() => {
     setLocalLogoName(logoName || "");
   }, [logoName]);
@@ -61,44 +63,37 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     return url.replace("/templates/", "/feedmaker/templates/");
   };
 
+  // Синхронизация изображений с контекстом useBanner
   useEffect(() => {
-    const fetchImages = async () => {
-      if (!currentProjectId || !object_id) return;
-      setLoadingLogo(true);
-      try {
-        const imgs = await getDynamicImages(currentProjectId, object_id);
-        const enrichedImgs = imgs.map((img) => {
-          const ctxImg = dynamicImgs?.find((d) => d.id === img.id);
-          return {
-            ...img,
-            name: ctxImg?.name || img.name,
-          };
-        });
-        setImages(enrichedImgs);
-        enrichedImgs.forEach((img) => addDynamicImg?.(img));
-      } catch (error) {
-        setErrorMessage("Error loading images.");
-        console.error("Error loading images:", error);
-      } finally {
-        setLoadingLogo(false);
-      }
-    };
-
-    fetchImages();
-  }, [currentProjectId, object_id]);
+    if (images && dynamicImgs) {
+      const enrichedImgs = images.map((img) => {
+        const ctxImg = dynamicImgs.find((d) => d.id === img.id);
+        return {
+          ...img,
+          name: ctxImg?.name || img.name,
+        };
+      });
+      enrichedImgs.forEach((img) => addDynamicImg?.(img));
+      setImage(enrichedImgs);
+    }
+    if (error) {
+      setErrorMessage("Error loading images.");
+      console.error("Error loading images:", error);
+    }
+  }, [images, dynamicImgs, addDynamicImg, error]);
 
   const handleDelete = async (id: string) => {
-    if (!object_id) return;
-    const imageToDelete = images.find((img) => img.id === id);
+    if (!object_id || !currentProjectId) return;
+    const imageToDelete = images?.find((img) => img.id === id);
     if (!imageToDelete) return;
 
     setDeletingIds((prev) => [...prev, id]);
     const fullSrc = imageToDelete.file_url;
 
     try {
-      await deleteDynamicImage(id, object_id);
+      await deleteImage({ id, objectId: object_id });
       deleteDynamicImg?.(id);
-      setImages((prev) => prev.filter((img) => img.id !== id));
+      setImage((prev) => prev.filter((img) => img.id !== id));
       deleteObjectsByImageSrc(normalizeImagePath(fullSrc));
     } catch (error) {
       setErrorMessage("Error deleting image.");
@@ -112,15 +107,16 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     if (!currentProjectId || !object_id) return;
     setUploadingNewImage(true);
     try {
-      const result = await uploadDynamicImage(
+      const result: SupabaseImageItem = await uploadImage({
         file,
-        currentProjectId,
-        object_id
-      );
-      setImages((prev) => [...prev, result]);
+        templateId: currentProjectId,
+        objectId: object_id,
+        compress: true,
+      });
       addDynamicImg?.(result);
+      setImage((prev) => [...prev, result]);
     } catch (error) {
-      setErrorMessage("Error deleting image.");
+      setErrorMessage("Error uploading image.");
       console.error("Upload error:", error);
     } finally {
       setUploadingNewImage(false);
@@ -164,7 +160,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
   };
 
   const handleNameChange = (id: string, newName: string) => {
-    setImages((prev) =>
+    setImage((prev) =>
       prev.map((img) => (img.id === id ? { ...img, name: newName } : img))
     );
     updateDynamicImgName?.(id, newName);
@@ -242,86 +238,92 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
             />
           </Box>
 
-          {[...images].reverse().map((img) => (
-            <div className="image-container" key={img.id}>
-              <Tooltip
-                title={
+          {image && image.length > 0 ? (
+            [...image].reverse().map((img) => (
+              <div className="image-container" key={img.id}>
+                <Tooltip
+                  title={
+                    <img
+                      src={normalizeImagePath(img.file_url)}
+                      alt={img.name || ""}
+                      style={{ maxWidth: 250, maxHeight: 250 }}
+                    />
+                  }
+                  placement="left"
+                  arrow
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10],
+                          },
+                        },
+                      ],
+                    },
+                    tooltip: {
+                      sx: {
+                        backgroundColor: "#fbfbfb",
+                        padding: 1,
+                        border: "1px solid #ccc",
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        color: "#ccc",
+                      },
+                    },
+                  }}
+                >
                   <img
                     src={normalizeImagePath(img.file_url)}
                     alt={img.name || ""}
-                    style={{ maxWidth: 250, maxHeight: 250 }}
+                    className="image"
+                    style={{ cursor: "pointer" }}
                   />
-                }
-                placement="left"
-                arrow
-                slotProps={{
-                  popper: {
-                    modifiers: [
-                      {
-                        name: "offset",
-                        options: {
-                          offset: [0, 10],
-                        },
-                      },
-                    ],
-                  },
-                  tooltip: {
-                    sx: {
-                      backgroundColor: "#fbfbfb",
-                      padding: 1,
-                      border: "1px solid #ccc",
-                    },
-                  },
-                  arrow: {
-                    sx: {
-                      color: "#ccc",
-                    },
-                  },
-                }}
-              >
-                <img
-                  src={normalizeImagePath(img.file_url)}
-                  alt={img.name || ""}
-                  className="image"
-                  style={{ cursor: "pointer" }}
-                />
-              </Tooltip>
-              <Box sx={{ position: "relative", marginTop: 1 }}>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    position: "absolute",
-                    top: "-16px",
-                    left: 8,
-                    fontSize: "0.75rem",
-                    color: "rgba(0, 0, 0, 0.6)",
+                </Tooltip>
+                <Box sx={{ position: "relative", marginTop: 1 }}>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      position: "absolute",
+                      top: "-16px",
+                      left: 8,
+                      fontSize: "0.75rem",
+                      color: "rgba(0, 0, 0, 0.6)",
+                    }}
+                  >
+                    Image name
+                  </Typography>
+                  <TextField
+                    size="small"
+                    value={img.name || ""}
+                    onChange={(e) => handleNameChange(img.id, e.target.value)}
+                    fullWidth
+                  />
+                </Box>
+                <button
+                  className="delete-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(img.id);
                   }}
+                  disabled={deletingIds.includes(img.id)}
                 >
-                  Image name
-                </Typography>
-                <TextField
-                  size="small"
-                  value={img.name || ""}
-                  onChange={(e) => handleNameChange(img.id, e.target.value)}
-                  fullWidth
-                />
-              </Box>
-              <button
-                className="delete-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(img.id);
-                }}
-                disabled={deletingIds.includes(img.id)}
-              >
-                {deletingIds.includes(img.id) ? (
-                  <CircularProgress size={16} />
-                ) : (
-                  <DeleteBtn />
-                )}
-              </button>
-            </div>
-          ))}
+                  {deletingIds.includes(img.id) ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <DeleteBtn />
+                  )}
+                </button>
+              </div>
+            ))
+          ) : (
+            <Typography sx={{ mt: 2, color: "text.secondary" }}>
+              No dynamic images uploaded yet.
+            </Typography>
+          )}
         </div>
       )}
 
