@@ -448,6 +448,18 @@ export const replaceDynamicText = (
           return "";
         }
 
+        case "discountCurrency": {
+          const [priceStr, saleStr] = values;
+          const price = cleanNumber(priceStr);
+          const salePrice = cleanNumber(saleStr);
+
+          if (!isNaN(price) && !isNaN(salePrice)) {
+            const difference = price - salePrice;
+            return Math.round(difference).toLocaleString("ru");
+          }
+          return "";
+        }
+
         case "min": {
           const numericValues = values
             .map((v) =>

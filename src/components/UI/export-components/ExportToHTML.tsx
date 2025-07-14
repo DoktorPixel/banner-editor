@@ -253,6 +253,18 @@ export const ExportToHTML = (
                       return "0";
                     }
 
+                    case "discountCurrency": {
+                      const [priceStr, saleStr] = values.map(normalizeNumber);
+                      if (!priceStr || !saleStr) return match;
+                    const price = parseFloat(priceStr.replace(/[^\\d.]/g, ""));
+                    const salePrice = parseFloat(saleStr.replace(/[^\\d.]/g, ""));
+                      if (!isNaN(price) && !isNaN(salePrice)) {
+                          const difference = price - salePrice;
+                          return Math.round(difference).toString();
+                      }
+                      return "0";
+                    }
+
                     case "min": {
                       const numericValues = values
                         .map((v) =>

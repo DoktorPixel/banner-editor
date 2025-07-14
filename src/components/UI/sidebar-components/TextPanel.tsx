@@ -81,7 +81,11 @@ const TextPanel: React.FC = () => {
         <Typography variant="subtitle2" mb={1}>
           Quick add dynamic variables:
         </Typography>
-        <Tooltip title="{{...}}" placement="right" arrow>
+        <Tooltip
+          title="{{...}} instead of ... insert a dynamic value"
+          placement="right"
+          arrow
+        >
           <span>
             <Button
               variant="outlined"
@@ -96,7 +100,11 @@ const TextPanel: React.FC = () => {
           </span>
         </Tooltip>
 
-        <Tooltip title="{{format(price)}}" placement="right" arrow>
+        <Tooltip
+          title="{{format(price)}} formats the price, without currency"
+          placement="right"
+          arrow
+        >
           <span>
             <Button
               variant="outlined"
@@ -111,7 +119,11 @@ const TextPanel: React.FC = () => {
           </span>
         </Tooltip>
 
-        <Tooltip title="{{format(sale_price)}}" placement="right" arrow>
+        <Tooltip
+          title="{{format(sale_price)}} formats the sale_price, without currency"
+          placement="right"
+          arrow
+        >
           <span>
             <Button
               variant="outlined"
@@ -130,7 +142,7 @@ const TextPanel: React.FC = () => {
         </Tooltip>
 
         <Tooltip
-          title="{{discount(price, sale_price)}}"
+          title="{{discount(price, sale_price)}} Calculate discount in %"
           placement="right"
           arrow
         >
@@ -139,19 +151,45 @@ const TextPanel: React.FC = () => {
               variant="outlined"
               onClick={() =>
                 handleAddDynamicObject(
-                  "{{discount(price, sale_price)}}",
+                  "- {{discount(price, sale_price)}} %",
                   "Discount"
                 )
               }
               disabled={disabledButton === "Discount"}
               fullWidth
             >
-              Discount
+              Discount in %
             </Button>
           </span>
         </Tooltip>
 
-        <Tooltip title="{{min(price, sale_price)}}" placement="right" arrow>
+        <Tooltip
+          title="{{discountCurrency(price, sale_price)}}  Calculate discount in Currency"
+          placement="right"
+          arrow
+        >
+          <span>
+            <Button
+              variant="outlined"
+              onClick={() =>
+                handleAddDynamicObject(
+                  "- {{discountCurrency(price, sale_price)}}",
+                  "DiscountCurrency"
+                )
+              }
+              disabled={disabledButton === "DiscountCurrency"}
+              fullWidth
+            >
+              Discount in Currency
+            </Button>
+          </span>
+        </Tooltip>
+
+        <Tooltip
+          title="{{min(price, sale_price)}} returns the minimum of two values"
+          placement="right"
+          arrow
+        >
           <span>
             <Button
               variant="outlined"
