@@ -107,7 +107,10 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
     );
   }
 
-  if (error || !template) {
+  if (
+    error
+    // || !template
+  ) {
     return (
       <Box
         display="flex"

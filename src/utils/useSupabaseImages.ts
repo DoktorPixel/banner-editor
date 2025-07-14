@@ -1,170 +1,54 @@
-import axios from "axios";
-import { useCallback } from "react";
-import { getToken } from "./supabaseClient";
-import { compressImage } from "./compressImage";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { uploadImage, getImages, deleteImage } from "../utils/imageService";
 
-const SUPABASE_IMAGE_API =
-  "https://tgitxrjsbuimawihmkth.supabase.co/functions/v1/images";
-
-export interface SupabaseImageItem {
-  id: string;
-  file_url: string;
-  object_id?: string;
-  template_id?: string;
-  user_id?: string;
-  created_at?: string;
-  name?: string;
+interface UploadImageArgs {
+  file: File;
+  templateId: string;
+  objectId?: string;
+  compress?: boolean;
 }
+
+interface DeleteImageArgs {
+  id: string;
+  objectId?: string;
+}
+
+export const useImages = (templateId: string, objectId?: string) =>
+  useQuery({
+    queryKey: ["images", templateId, objectId],
+    queryFn: () => getImages(templateId, objectId),
+    enabled: !!templateId,
+  });
+
+export const useUploadImage = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ file, templateId, objectId, compress }: UploadImageArgs) =>
+      uploadImage(file, templateId, objectId, compress),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["images"] });
+    },
+  });
+};
+
+export const useDeleteImage = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, objectId }: DeleteImageArgs) =>
+      deleteImage(id, objectId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["images"] });
+    },
+  });
+};
+
 export const useSupabaseImages = () => {
-  const uploadImage = useCallback(
-    async (
-      file: File,
-      templateId: string,
-      compress: boolean = true
-    ): Promise<SupabaseImageItem> => {
-      const token = await getToken();
-
-      const fileToUpload = compress
-        ? await compressImage(file, {
-            maxSizeMB: 0.512,
-            maxWidthOrHeight: 1600,
-            useWebWorker: true,
-          })
-        : file;
-
-      const formData = new FormData();
-      formData.append("file", fileToUpload);
-
-      const url = `${SUPABASE_IMAGE_API}?template_id=${encodeURIComponent(
-        templateId
-      )}`;
-
-      const response = await axios.post(url, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      return response.data;
-    },
-    []
-  );
-
-  const uploadDynamicImage = useCallback(
-    async (
-      file: File,
-      templateId: string,
-      objectId: string,
-      compress: boolean = true
-    ): Promise<SupabaseImageItem> => {
-      const token = await getToken();
-
-      const fileToUpload = compress
-        ? await compressImage(file, {
-            maxSizeMB: 0.01,
-            maxWidthOrHeight: 512,
-            useWebWorker: true,
-          })
-        : file;
-
-      const formData = new FormData();
-      formData.append("file", fileToUpload);
-
-      const url = `${SUPABASE_IMAGE_API}?template_id=${encodeURIComponent(
-        templateId
-      )}&object_id=${encodeURIComponent(objectId)}`;
-
-      const response = await axios.post(url, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      return response.data;
-    },
-    []
-  );
-
-  const addCacheBuster = (url: string) => `${url}?v=${Date.now()}`;
-
-  const getImages = useCallback(
-    async (templateId: string): Promise<SupabaseImageItem[]> => {
-      const token = await getToken();
-
-      const response = await axios.get(SUPABASE_IMAGE_API, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          template_id: templateId,
-        },
-      });
-
-      return response.data.map((img: SupabaseImageItem) => ({
-        ...img,
-        file_url: addCacheBuster(img.file_url),
-      }));
-    },
-    []
-  );
-
-  const deleteImage = useCallback(async (id: string): Promise<void> => {
-    const token = await getToken();
-    await axios.delete(SUPABASE_IMAGE_API, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: { id },
-    });
-  }, []);
-
-  const getDynamicImages = useCallback(
-    async (
-      templateId: string,
-      objectId: string
-    ): Promise<SupabaseImageItem[]> => {
-      const token = await getToken();
-
-      const response = await axios.get(SUPABASE_IMAGE_API, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          template_id: templateId,
-          object_id: objectId,
-        },
-      });
-      return response.data.map((img: SupabaseImageItem) => ({
-        ...img,
-        file_url: addCacheBuster(img.file_url),
-      }));
-    },
-    []
-  );
-
-  const deleteDynamicImage = useCallback(
-    async (id: string, objectId: string): Promise<void> => {
-      const token = await getToken();
-
-      await axios.delete(SUPABASE_IMAGE_API, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          id,
-          object_id: objectId,
-        },
-      });
-    },
-    []
-  );
+  const uploadMutation = useUploadImage();
+  const deleteMutation = useDeleteImage();
 
   return {
-    uploadImage,
-    getImages,
-    deleteImage,
-    uploadDynamicImage,
-    getDynamicImages,
-    deleteDynamicImage,
+    uploadImage: uploadMutation.mutateAsync,
+    deleteImage: deleteMutation.mutateAsync,
+    useImages,
   };
 };

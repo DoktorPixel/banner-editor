@@ -249,10 +249,6 @@ export interface PresetData {
 }
 
 export interface ConfigItem {
-  // key: string;
-  // value1?: string;
-  // value2?: string;
-  // function?: string;
   hiddenObjectIds: number[];
   keyValuePairs: KeyValuePair[];
   canvasSize: { width: number; height: number };
@@ -294,4 +290,14 @@ export interface ResizeHandlesProps {
     direction: ResizeDirection,
     event: React.MouseEvent
   ) => void;
+}
+
+export interface SupabaseImageItem {
+  id: string;
+  file_url: string;
+  object_id?: string;
+  template_id?: string;
+  user_id?: string;
+  created_at?: string;
+  name?: string;
 }

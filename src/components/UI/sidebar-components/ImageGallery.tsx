@@ -1,40 +1,33 @@
-import React, { useEffect, useState, DragEvent } from "react";
-import {
-  useSupabaseImages,
-  SupabaseImageItem,
-} from "../../../utils/useSupabaseImages";
+import React, { DragEvent, useState } from "react";
+import { useSupabaseImages } from "../../../utils/useSupabaseImages";
 import { useBanner } from "../../../context/BannerContext";
 import { DeleteBtn } from "../../../assets/icons";
 import { CircularProgress } from "@mui/material";
 
 const ImageGallery: React.FC = () => {
-  const { getImages, deleteImage, uploadImage } = useSupabaseImages();
   const {
     currentProjectId,
-    refreshCounter,
+    // refreshCounter,
     triggerRefresh,
     addObject,
     deleteObjectsByImageSrc,
   } = useBanner();
 
-  const [images, setImages] = useState<SupabaseImageItem[]>([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [deletingIds, setDeletingIds] = useState<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
 
   const normalizeImagePath = (url: string): string => {
     if (url.includes("/feedmaker/")) return url;
     return url.replace("/templates/", "/feedmaker/templates/");
   };
 
-  useEffect(() => {
-    if (!currentProjectId) return;
-    setIsLoading(true);
-    getImages(currentProjectId)
-      .then(setImages)
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
-  }, [currentProjectId, getImages, refreshCounter]);
+  const { data: images = [], isLoading } = useSupabaseImages().useImages(
+    currentProjectId!,
+    undefined
+  );
+
+  const { uploadImage, deleteImage } = useSupabaseImages();
 
   const handleDelete = async (id: string) => {
     const imageToDelete = images.find((img) => img.id === id);
@@ -42,8 +35,7 @@ const ImageGallery: React.FC = () => {
 
     setDeletingIds((prev) => [...prev, id]);
     try {
-      await deleteImage(id);
-      setImages((prev) => prev.filter((img) => img.id !== id));
+      await deleteImage({ id });
       deleteObjectsByImageSrc(normalizeImagePath(imageToDelete.file_url));
     } catch (error) {
       console.error("❌ Delete error:", error);
@@ -54,15 +46,17 @@ const ImageGallery: React.FC = () => {
 
   const handleDrop = async (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.stopPropagation();
     setIsDragging(false);
 
     const file = event.dataTransfer.files?.[0];
     if (!file || !currentProjectId) return;
 
-    setIsLoading(true);
+    setIsUploading(true);
     try {
-      const result = await uploadImage(file, currentProjectId);
+      const result = await uploadImage({
+        file,
+        templateId: currentProjectId,
+      });
       triggerRefresh();
       addObject({
         id: Date.now(),
@@ -77,23 +71,23 @@ const ImageGallery: React.FC = () => {
     } catch (error) {
       console.error("❌ Upload error:", error);
     } finally {
-      setIsLoading(false);
+      setIsUploading(false);
     }
   };
 
-  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "copy";
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
   };
 
-  const handleDragEnter = (event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
+  const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
     setIsDragging(true);
   };
 
-  const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
       setIsDragging(false);
     }
   };
@@ -106,7 +100,7 @@ const ImageGallery: React.FC = () => {
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
     >
-      {isLoading && (
+      {(isLoading || isUploading) && (
         <div className="gallery-loading-overlay">
           <CircularProgress />
         </div>
@@ -115,7 +109,6 @@ const ImageGallery: React.FC = () => {
       <div className="image-grid">
         {images.map((img, index) => {
           const fullSrc = img.file_url;
-
           return (
             <div
               key={img.id}

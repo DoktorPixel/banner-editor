@@ -66,7 +66,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
             title={
               <Typography sx={{ whiteSpace: "pre-line", fontSize: "14px" }}>
                 {
-                  "Use dynamic tags to insert product data:\n{{...}} – Insert dynamic variable like 'title'\n{{format(price)}} — Price without currency\n{{discount(price, sale_price)}} — Discount amount or %\n{{min(price, sale_price)}} — Minimum of two values"
+                  "Use dynamic tags to insert product data:\n{{...}} – Insert dynamic variable like 'title'\n{{format(price)}} — Price without currency \n{{discount(price, sale_price)}} — Discount in % \n{{discountCurrency(price, sale_price)}} — Discount in Currency \n{{min(price, sale_price)}} — Minimum of two values"
                 }
               </Typography>
             }

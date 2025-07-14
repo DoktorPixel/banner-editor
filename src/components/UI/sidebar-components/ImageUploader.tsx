@@ -30,7 +30,7 @@ const ImageUploader: React.FC = () => {
     if (!file || !currentProjectId) return;
     setLoading(true);
     try {
-      const result = await uploadImage(file, currentProjectId);
+      const result = await uploadImage({ file, templateId: currentProjectId });
       event.target.value = "";
       triggerRefresh();
       handleAddImage(result.file_url);
