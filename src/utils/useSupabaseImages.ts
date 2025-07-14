@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useCallback } from "react";
 import { getToken } from "./supabaseClient";
-import { v4 as uuidv4 } from "uuid";
 import { compressImage } from "./compressImage";
 
 const SUPABASE_IMAGE_API =
@@ -164,7 +163,6 @@ export const useSupabaseImages = () => {
     uploadImage,
     getImages,
     deleteImage,
-    generateObjectId: uuidv4,
     uploadDynamicImage,
     getDynamicImages,
     deleteDynamicImage,

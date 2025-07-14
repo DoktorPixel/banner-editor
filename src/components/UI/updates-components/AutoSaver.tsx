@@ -22,6 +22,7 @@ const AutoSaver: React.FC = () => {
       canvasSize: { width: 1080, height: 1080 },
     },
   });
+
   const { updateProject } = useSupabaseProject();
 
   useEffect(() => {
@@ -42,21 +43,25 @@ const AutoSaver: React.FC = () => {
     };
 
     try {
-      await updateProject(
-        currentProjectId,
-        projectData,
+      await updateProject.mutateAsync({
+        templateId: currentProjectId,
+        data: projectData,
         config,
         objects,
-        dynamicImgs ?? []
-      );
+        dynamicImgs: dynamicImgs ?? [],
+      });
+
       console.log("Auto-saved project:", projectData);
+
       lastDataRef.current = {
         objects: structuredClone(objects),
         dynamicImgs: structuredClone(dynamicImgs ?? []),
         config: structuredClone(config ?? []),
       };
+
       setSaved(true);
       setTimeout(() => setSaved(false), 1000);
+
       if (currentProjectId) {
         await captureAndUploadPreview(currentProjectId);
       }
@@ -80,6 +85,7 @@ const AutoSaver: React.FC = () => {
       config ?? [],
       lastDataRef.current.config ?? []
     );
+
     const hasChanges = objectsChanged || imgsChanged || configChanged;
 
     if (hasChanges) {

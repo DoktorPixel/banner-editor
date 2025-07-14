@@ -14,7 +14,7 @@ import { useBanner } from "../../../context/BannerContext";
 
 export const DeployTemplateButton: React.FC = () => {
   const { currentProjectId } = useBanner();
-  const { deployTemplate, loading } = useSupabaseProject();
+  const { deployTemplate } = useSupabaseProject();
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [snackbar, setSnackbar] = useState<{
@@ -28,20 +28,22 @@ export const DeployTemplateButton: React.FC = () => {
   });
 
   const handleDeploy = async () => {
+    if (!currentProjectId) return;
+
     try {
-      await deployTemplate(currentProjectId || "");
+      await deployTemplate.mutateAsync(currentProjectId);
       setSnackbar({
         open: true,
         message: "✅ Template successfully published!",
         severity: "success",
       });
     } catch (error) {
+      console.error("❌ Failed to publish template:", error);
       setSnackbar({
         open: true,
         message: "❌ Failed to publish template.",
         severity: "error",
       });
-      console.error("❌ Failed to load project:", error);
     } finally {
       setConfirmOpen(false);
     }
@@ -51,15 +53,14 @@ export const DeployTemplateButton: React.FC = () => {
     <>
       <Button
         onClick={() => setConfirmOpen(true)}
-        disabled={loading}
+        disabled={deployTemplate.isPending}
         variant="contained"
         color="primary"
         sx={{ textTransform: "none", padding: "4px 6px 2px 6px" }}
       >
-        {loading ? "Deploying..." : "Publish Template"}
+        {deployTemplate.isPending ? "Deploying..." : "Publish Template"}
       </Button>
 
-      {/* Диалог подтверждения */}
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
         <DialogTitle sx={{ margin: "0 auto" }}>Confirm publication</DialogTitle>
         <DialogContent>
@@ -69,16 +70,19 @@ export const DeployTemplateButton: React.FC = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ margin: "0 auto", paddingBottom: "22px" }}>
-          <Button onClick={() => setConfirmOpen(false)} disabled={loading}>
+          <Button
+            onClick={() => setConfirmOpen(false)}
+            disabled={deployTemplate.isPending}
+          >
             Cancel
           </Button>
           <Button
             onClick={handleDeploy}
-            disabled={loading}
+            disabled={deployTemplate.isPending}
             color="primary"
             variant="contained"
           >
-            {loading ? "Deploying..." : "Publish"}
+            {deployTemplate.isPending ? "Deploying..." : "Publish"}
           </Button>
         </DialogActions>
       </Dialog>
