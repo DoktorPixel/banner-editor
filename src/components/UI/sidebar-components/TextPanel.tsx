@@ -151,7 +151,7 @@ const TextPanel: React.FC = () => {
               variant="outlined"
               onClick={() =>
                 handleAddDynamicObject(
-                  "- {{discount(price, sale_price)}} %",
+                  "{{discount(price, sale_price)}} %",
                   "Discount"
                 )
               }
@@ -173,7 +173,7 @@ const TextPanel: React.FC = () => {
               variant="outlined"
               onClick={() =>
                 handleAddDynamicObject(
-                  "- {{discountCurrency(price, sale_price)}}",
+                  "{{discountCurrency(price, sale_price)}}",
                   "DiscountCurrency"
                 )
               }
