@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Menu, MenuItem, Button } from "@mui/material";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import { changeLanguage } from "../../../i18n/useT";
+import { useTranslation } from "react-i18next";
 
 const LanguageSwitcher: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [language, setLanguage] = useState<"en" | "ua">("en");
+  const { i18n } = useTranslation();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -18,7 +19,7 @@ const LanguageSwitcher: React.FC = () => {
   const handleSelect = (lang: "en" | "ua") => {
     setLanguage(lang);
     handleClose();
-    changeLanguage(lang);
+    i18n.changeLanguage(lang);
   };
 
   return (

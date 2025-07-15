@@ -2,12 +2,14 @@ import React, { useRef, useState } from "react";
 import { Button } from "@mui/material";
 import { useSupabaseImages } from "../../../utils/useSupabaseImages";
 import { useBanner } from "../../../context/BannerContext";
+import { useTranslation } from "react-i18next";
 
 const ImageUploader: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { uploadImage } = useSupabaseImages();
   const { currentProjectId, triggerRefresh, addObject } = useBanner();
+  const { t } = useTranslation();
   const normalizeImagePath = (url: string): string => {
     if (url.includes("/feedmaker/")) return url;
     return url.replace("/templates/", "/feedmaker/templates/");
@@ -55,7 +57,7 @@ const ImageUploader: React.FC = () => {
         onClick={() => inputRef.current?.click()}
         disabled={loading}
       >
-        {loading ? "Loading..." : "Add Image"}
+        {loading ? t("loading") : t("imagePanelButtons.addImage")}
       </Button>
     </>
   );

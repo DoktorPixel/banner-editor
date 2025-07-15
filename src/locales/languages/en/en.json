@@ -1,0 +1,47 @@
+{
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "warning": "Warning",
+  "info": "Info",
+  "ok": "OK",
+  "cancel": "Cancel",
+  "yes": "Yes",
+  "no": "No",
+  "delete": "Delete",
+  "edit": "Edit",
+  "save": "Save",
+  "close": "Close",
+  "sidebarTabs": {
+    "text": "Text",
+    "image": "Image",
+    "layers": "Layers",
+    "variables": "Variables",
+    "dev": "Dev"
+  },
+  "textPanel": {
+    "title": "Quickly add dynamic variables:",
+    "inputPlaceholder": "Enter text here",
+    "addTextButton": "Add text",
+    "dynamicPlaceholderTooltip": "{{...}} instead of ... insert a dynamic value",
+    "formattedPriceTooltip": "{{format(price)}} formats the price, without currency",
+    "formattedSalePriceTooltip": "{{format(sale_price)}} formats the sale price, without currency",
+    "discountTooltip": "{{discount(price, sale_price)}} calculates discount in %",
+    "discountCurrencyTooltip": "{{discountCurrency(price, sale_price)}} calculates discount in currency",
+    "actualPriceTooltip": "{{min(price, sale_price)}} returns the minimum of two values",
+    "dynamicPlaceholderButton": "Dynamic Placeholder",
+    "formattedPriceButton": "Formatted Price",
+    "formattedSalePriceButton": "Formatted Sale Price",
+    "discountButton": "Discount in %",
+    "discountCurrencyButton": "Discount in Currency",
+    "actualPriceButton": "Actual Price"
+  },
+  "imagePanelButtons": {
+    "addImage": "Add Image",
+    "addDynamicImage": "Add Dynamic Image",
+    "addDynamicLogo": "Add Dynamic Logo",
+    "addFigure": "Add Figure",
+    "saveAsPreset": "Save As Preset",
+    "addPreset": "Add Preset"
+  }
+}
