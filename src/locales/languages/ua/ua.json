@@ -1,0 +1,47 @@
+{
+  "loading": "Завантаження...",
+  "error": "Помилка",
+  "success": "Успіх",
+  "warning": "Попередження",
+  "info": "Інформація",
+  "ok": "ОК",
+  "cancel": "Скасувати",
+  "yes": "Так",
+  "no": "Ні",
+  "delete": "Видалити",
+  "edit": "Редагувати",
+  "save": "Зберегти",
+  "close": "Закрити",
+  "sidebarTabs": {
+    "text": "Текст",
+    "image": "Зображення",
+    "layers": "Шари",
+    "variables": "Змінні",
+    "dev": "Розробка"
+  },
+  "textPanel": {
+    "title": "Швидко додати динамічні змінні:",
+    "inputPlaceholder": "Введіть текст тут",
+    "addTextButton": "Додати текст",
+    "dynamicPlaceholderTooltip": "{{...}} замість ... вставте динамічне значення",
+    "formattedPriceTooltip": "{{format(price)}} форматує ціну без валюти",
+    "formattedSalePriceTooltip": "{{format(sale_price)}} форматує ціну зі знижкою без валюти",
+    "discountTooltip": "{{discount(price, sale_price)}} обчислює знижку у відсотках",
+    "discountCurrencyTooltip": "{{discountCurrency(price, sale_price)}} обчислює знижку у валюті",
+    "actualPriceTooltip": "{{min(price, sale_price)}} повертає мінімальне значення з двох",
+    "dynamicPlaceholderButton": "Динамічний заповнювач",
+    "formattedPriceButton": "Відформатована ціна",
+    "formattedSalePriceButton": "Відформатована ціна зі знижкою",
+    "discountButton": "Знижка у відсотках",
+    "discountCurrencyButton": "Знижка у валюті",
+    "actualPriceButton": "Актуальна ціна"
+  },
+  "imagePanelButtons": {
+    "addImage": "Додати зображення",
+    "addDynamicImage": "Додати динамічне зображення",
+    "addDynamicLogo": "Додати динамічний логотип",
+    "addFigure": "Додати фігуру",
+    "saveAsPreset": "Зберегти як пресет",
+    "addPreset": "Додати пресет"
+  }
+}

@@ -12,6 +12,7 @@ import {
 import { fetchPresetsList, downloadPresetFromS3 } from "../../../S3/s3Storage";
 import { useBanner } from "../../../context/BannerContext";
 import { BannerObject, BannerChild } from "../../../types";
+import { useTranslation } from "react-i18next";
 
 const ApplyPresetButton: React.FC = () => {
   const { objects, updateHistory } = useBanner();
@@ -20,7 +21,7 @@ const ApplyPresetButton: React.FC = () => {
     { id: string; name: string; previewUrl: string }[]
   >([]);
   const [loading, setLoading] = useState(false);
-
+  const { t } = useTranslation();
   const fetchPresets = async () => {
     setLoading(true);
     const presetsList = await fetchPresetsList();
@@ -58,7 +59,7 @@ const ApplyPresetButton: React.FC = () => {
   return (
     <>
       <Button variant="contained" color="primary" onClick={handleOpen}>
-        Add preset
+        {t("imagePanelButtons.addPreset")}
       </Button>
 
       <Dialog open={open} onClose={handleClose}>

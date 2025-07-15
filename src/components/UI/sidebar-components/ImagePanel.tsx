@@ -7,6 +7,7 @@ import ApplyPresetButton from "../updates-components/ApplyPresetButton";
 import ImageUploader from "./ImageUploader";
 import ImageGallery from "./ImageGallery";
 import { v4 as uuidv4 } from "uuid";
+import { useTranslation } from "react-i18next";
 
 const ImagePanel: React.FC = () => {
   const { addObject } = useBanner();
@@ -14,6 +15,7 @@ const ImagePanel: React.FC = () => {
     isImageDialogOpen: false,
   });
   const [imageSrc, setImageSrc] = useState("");
+  const { t } = useTranslation();
 
   const closeDialog = (type: keyof typeof dialogState) =>
     setDialogState((prev) => ({ ...prev, [type]: false }));
@@ -82,7 +84,7 @@ const ImagePanel: React.FC = () => {
         color="primary"
         onClick={() => handleAddDynamicsImage("{{img}}")}
       >
-        Add Dynamic Image
+        {t("imagePanelButtons.addDynamicImage")}
       </Button>
 
       <Button
@@ -90,7 +92,7 @@ const ImagePanel: React.FC = () => {
         color="primary"
         onClick={() => handleAddDynamicsLogo("{{dynamic_img}}")}
       >
-        Add Dynamic Logo
+        {t("imagePanelButtons.addDynamicLogo")}
       </Button>
 
       <Button
@@ -98,7 +100,7 @@ const ImagePanel: React.FC = () => {
         color="primary"
         onClick={() => handleAddFigure()}
       >
-        Add Figure
+        {t("imagePanelButtons.addFigure")}
       </Button>
 
       <SavePresetButton />

@@ -12,18 +12,22 @@ import ImagePanel from "./ImagePanel";
 import LayersPanel from "./LayersPanel";
 import VariablesPanel from "./VariablesPanel";
 import DevPanel from "./DevPanel";
-
-const tabs = [
-  { id: "text", label: "Text", icon: <SidebarText /> },
-  { id: "image", label: "Image", icon: <SidebarImage /> },
-  { id: "layers", label: "Layers", icon: <SidebarLayers /> },
-  { id: "variables", label: "Variables", icon: <SidebarVariables /> },
-  { id: "dev", label: "Dev", icon: <SidebarDev /> },
-];
+import { useTranslation } from "react-i18next";
 
 const SidebarTabs: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("text");
-
+  const { t } = useTranslation();
+  const tabs = [
+    { id: "text", label: t("sidebarTabs.text"), icon: <SidebarText /> },
+    { id: "image", label: t("sidebarTabs.image"), icon: <SidebarImage /> },
+    { id: "layers", label: t("sidebarTabs.layers"), icon: <SidebarLayers /> },
+    {
+      id: "variables",
+      label: t("sidebarTabs.variables"),
+      icon: <SidebarVariables />,
+    },
+    { id: "dev", label: t("sidebarTabs.dev"), icon: <SidebarDev /> },
+  ];
   return (
     <div className="sidebar-tabs">
       <Box
@@ -47,8 +51,8 @@ const SidebarTabs: React.FC = () => {
               backgroundColor: activeTab === tab.id ? "#EEEEEE" : "transparent",
               borderRadius: "5px",
               padding: "5px 5px 0 5px",
-              width: "50px",
-              maxWidth: "30px",
+              // width: "50px",
+              // maxWidth: "30px",
               minWidth: "56px",
             }}
           >

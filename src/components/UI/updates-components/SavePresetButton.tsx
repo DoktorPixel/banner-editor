@@ -3,11 +3,13 @@ import { Button } from "@mui/material";
 import { uploadPresetToS3 } from "../../../S3/s3Storage";
 import { useBanner } from "../../../context/BannerContext";
 import { CircularProgress, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const SavePresetButton: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
   const { objects, selectedObjectIds } = useBanner();
+  const { t } = useTranslation();
 
   const handleSavePreset = async () => {
     if (selectedObjectIds.length < 2) {
@@ -51,7 +53,7 @@ const SavePresetButton: React.FC = () => {
         disabled={selectedObjectIds.length < 2 || isLoading}
         startIcon={isLoading && <CircularProgress size={20} />}
       >
-        {isLoading ? "Loading..." : "Save as preset"}
+        {isLoading ? t("loading") : t("imagePanelButtons.saveAsPreset")}
       </Button>
       {notification && (
         <Typography
