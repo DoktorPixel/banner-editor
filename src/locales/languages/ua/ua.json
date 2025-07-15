@@ -12,6 +12,10 @@
   "edit": "Редагувати",
   "save": "Зберегти",
   "close": "Закрити",
+  "property": "Властивість",
+  "copying": "Копіювання...",
+  "sending": "Відправка...",
+  "value": "Значення",
   "sidebarTabs": {
     "text": "Текст",
     "image": "Зображення",
@@ -43,5 +47,27 @@
     "addFigure": "Додати фігуру",
     "saveAsPreset": "Зберегти як пресет",
     "addPreset": "Додати пресет"
+  },
+  "layersPanel": {
+    "group": "Група",
+    "layout": "Компонування"
+  },
+  "dialogs": {
+    "nameDialog": {
+      "title": "Редагувати назву",
+      "placeholder": "Назва"
+    }
+  },
+  "objectTypes": {
+    "text": "Текст",
+    "image": "Зображення",
+    "group": "Компонування",
+    "figure": "Фігура",
+    "default": "Об'єкт"
+  },
+  "devPanelButtons": {
+    "importJSON": "Імпорт з JSON",
+    "exportInJSON": "Експорт у JSON",
+    "exportInHTML": "Експорт у HTML"
   }
 }

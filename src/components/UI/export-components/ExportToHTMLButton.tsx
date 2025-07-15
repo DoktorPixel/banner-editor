@@ -5,13 +5,14 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useBanner } from "../../../context/BannerContext";
 import { useConfig } from "../../../context/ConfigContext";
 import { ExportToHTML } from "./ExportToHTML";
+import { useTranslation } from "react-i18next";
 
 export const ExportToHTMLButton = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState("");
   const { objects, dynamicImgs } = useBanner();
   const { config } = useConfig();
-
+  const { t } = useTranslation();
   const handleExport = async () => {
     try {
       setIsLoading(true);
@@ -36,7 +37,7 @@ export const ExportToHTMLButton = () => {
         loading={isLoading}
         endIcon={<ContentCopyIcon />}
       >
-        {isLoading ? "Copying..." : "Export in HTML"}
+        {isLoading ? t("coping") : t("devPanelButtons.exportInHTML")}
       </LoadingButton>
 
       {notification && (

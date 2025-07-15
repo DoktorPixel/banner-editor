@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { BannerObject } from "../../../types";
-
+import { useTranslation } from "react-i18next";
 interface JSONDialogProps {
   open: boolean;
   onClose: () => void;
@@ -17,7 +17,7 @@ interface JSONDialogProps {
 
 const JSONDialog: React.FC<JSONDialogProps> = ({ open, onClose, onLoad }) => {
   const [jsonContent, setJsonContent] = useState<string>("");
-
+  const { t } = useTranslation();
   const handleLoad = () => {
     try {
       const parsedJson = JSON.parse(jsonContent);
@@ -32,7 +32,7 @@ const JSONDialog: React.FC<JSONDialogProps> = ({ open, onClose, onLoad }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle>Import JSON</DialogTitle>
+      <DialogTitle> {t("devPanelButtons.importJSON")}</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
@@ -47,10 +47,10 @@ const JSONDialog: React.FC<JSONDialogProps> = ({ open, onClose, onLoad }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          {t("cancel")}
         </Button>
         <Button onClick={handleLoad} color="primary">
-          Download
+          {t("download")}
         </Button>
       </DialogActions>
     </Dialog>

@@ -6,6 +6,7 @@ import { BannerObject } from "../../../types";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ExportInJSON from "../export-components/ExportInJSON";
 import { ExportToHTMLButton } from "../export-components/ExportToHTMLButton";
+import { useTranslation } from "react-i18next";
 
 const DevPanel: React.FC = () => {
   const { addJson } = useBanner();
@@ -14,7 +15,7 @@ const DevPanel: React.FC = () => {
 
     isJsonDialogOpen: false,
   });
-
+  const { t } = useTranslation();
   const openDialog = (type: keyof typeof dialogState) =>
     setDialogState((prev) => ({ ...prev, [type]: true }));
 
@@ -32,7 +33,8 @@ const DevPanel: React.FC = () => {
         color="primary"
         onClick={() => openDialog("isJsonDialogOpen")}
       >
-        Import JSON <CloudUploadIcon sx={{ marginLeft: "10px" }} />
+        {t("devPanelButtons.importJSON")}
+        <CloudUploadIcon sx={{ marginLeft: "10px" }} />
       </Button>
 
       <ExportInJSON />

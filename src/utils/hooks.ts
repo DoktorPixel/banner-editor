@@ -7,6 +7,7 @@ import {
   DynamicImg,
 } from "../types";
 import type { Property } from "csstype";
+import { useTranslation } from "react-i18next";
 
 export const useObjectProperties = () => {
   const {
@@ -271,19 +272,23 @@ export const stepBackwardWithCollision = (
   updateObject(object.id, { zIndex: minZIndex - 1 });
 };
 
-export const getObjectTypeLabel = (type: BannerObject["type"]) => {
-  switch (type) {
-    case "text":
-      return "Text";
-    case "image":
-      return "Image";
-    case "figure":
-      return "Figure";
-    case "group":
-      return "Layout";
-    default:
-      return "Object";
-  }
+export const useObjectTypeLabel = () => {
+  const { t } = useTranslation();
+
+  return (type: BannerObject["type"]) => {
+    switch (type) {
+      case "text":
+        return t("objectTypes.text");
+      case "image":
+        return t("objectTypes.image");
+      case "figure":
+        return t("objectTypes.figure");
+      case "group":
+        return t("objectTypes.group");
+      default:
+        return t("objectTypes.default");
+    }
+  };
 };
 
 export const useObjectCondition = () => {
