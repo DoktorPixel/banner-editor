@@ -3,6 +3,7 @@ import { TextField, IconButton } from "@mui/material";
 import { AddButton } from "../../assets/icons";
 import { DeleteFile, AddFile } from "../../assets/icons";
 import { KeyValuePair } from "../../types";
+import { useTranslation } from "react-i18next";
 
 interface KeyValueTableProps {
   keyValuePairs: KeyValuePair[];
@@ -21,14 +22,15 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({
   addKeyValuePair,
   handleAddText,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="variables-panel">
       <div className="table-header" style={{ display: "flex" }}>
         <div className="table-cell" style={{ flex: "0 0 40%", padding: "8px" }}>
-          Property
+          {t("property")}
         </div>
         <div className="table-cell" style={{ flex: "0 0 40%", padding: "8px" }}>
-          Value
+          {t("value")}
         </div>
         <div
           className="table-cell table-actions"

@@ -3,12 +3,12 @@ import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
 import Typography from "@mui/material/Typography";
-
+import { useTranslation } from "react-i18next";
 const ExportInJSON: React.FC = () => {
   const { objects, clearSelection, clearChildSelection } = useBanner();
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
-
+  const { t } = useTranslation();
   const handleExport = async () => {
     setIsLoading(true);
 
@@ -39,10 +39,10 @@ const ExportInJSON: React.FC = () => {
         loading={isLoading}
       >
         {isLoading ? (
-          "Отправка..."
+          t("sending")
         ) : (
           <>
-            Export in JSON
+            {t("devPanelButtons.exportInJSON")}
             <SendIcon sx={{ marginLeft: "10px" }} />
           </>
         )}

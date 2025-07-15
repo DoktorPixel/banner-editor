@@ -9,7 +9,7 @@ import {
   SvgText,
 } from "../../assets/icons";
 import { BannerChild } from "../../types";
-import { useChildProperties, getObjectTypeLabel } from "../../utils/hooks";
+import { useChildProperties, useObjectTypeLabel } from "../../utils/hooks";
 import { VisibilityToggle } from "./button-groups/VisibilityToggle";
 
 interface ChildGroupListItemProps {
@@ -23,7 +23,7 @@ const ChildGroupListItem: React.FC<ChildGroupListItemProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const { selectChild, selectedChildId } = useChildProperties();
-
+  const getObjectTypeLabel = useObjectTypeLabel();
   const handleToggle = () => setOpen(!open);
 
   const handleChildClick = (event: React.MouseEvent) => {

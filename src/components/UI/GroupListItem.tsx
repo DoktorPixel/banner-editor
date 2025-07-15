@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ListItem, Collapse, List, IconButton } from "@mui/material";
 import { BannerObject, BannerChild } from "../../types";
-import { useChildProperties, getObjectTypeLabel } from "../../utils/hooks";
+import { useChildProperties, useObjectTypeLabel } from "../../utils/hooks";
 import ChildGroupListItem from "./ChildGroupListItem";
 import {
   SvgLayout,
@@ -12,6 +12,7 @@ import {
   SvgText,
 } from "../../assets/icons";
 import { VisibilityToggle } from "./button-groups/VisibilityToggle";
+import { useTranslation } from "react-i18next";
 
 interface GroupListItemProps {
   group: BannerObject;
@@ -28,9 +29,9 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const { selectChild, selectedChildId } = useChildProperties();
-
+  const { t } = useTranslation();
   const handleToggle = () => setOpen(!open);
-
+  const getObjectTypeLabel = useObjectTypeLabel();
   const handleChildClick = (
     groupId: number,
     child: BannerChild,
@@ -68,7 +69,7 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
         </IconButton>
         {open ? <SvgLayoutOpen /> : <SvgLayout />}
         <span className="layers-list-item">
-          {group.name?.substring(0, 10) || "Layout"}
+          {group.name?.substring(0, 10) || t("layersPanel.layout")}
           <VisibilityToggle objectId={group.id} />
         </span>
       </ListItem>

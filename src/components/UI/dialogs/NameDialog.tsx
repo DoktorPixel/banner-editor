@@ -6,6 +6,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 interface NameDialogProps {
   open: boolean;
@@ -21,36 +22,40 @@ const NameDialog: React.FC<NameDialogProps> = ({
   onChange,
   onClose,
   onSave,
-}) => (
-  <Dialog open={open} onClose={onClose}>
-    <DialogTitle>Edit title</DialogTitle>
-    <DialogContent>
-      <TextField
-        autoFocus
-        margin="dense"
-        label="Name"
-        fullWidth
-        value={name}
-        onChange={onChange}
-        slotProps={{
-          input: {
-            sx: {
-              height: 54,
-              padding: "2px",
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>{t("dialogs.nameDialog.title")}</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          label={t("dialogs.nameDialog.placeholder") ?? "Name"}
+          fullWidth
+          value={name}
+          onChange={onChange}
+          slotProps={{
+            input: {
+              sx: {
+                height: 54,
+                padding: "2px",
+              },
             },
-          },
-        }}
-      />
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={onClose} color="secondary">
-        Cancel
-      </Button>
-      <Button onClick={onSave} color="primary">
-        Save
-      </Button>
-    </DialogActions>
-  </Dialog>
-);
+          }}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="secondary">
+          {t("cancel") ?? "Cancel"}
+        </Button>
+        <Button onClick={onSave} color="primary">
+          {t("save") ?? "Save"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 export default NameDialog;

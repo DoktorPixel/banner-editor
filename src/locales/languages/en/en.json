@@ -12,6 +12,11 @@
   "edit": "Edit",
   "save": "Save",
   "close": "Close",
+  "copying": "Copying...",
+  "sending": "Sending...",
+  "download": "Download",
+  "property": "Property",
+  "value": "Value",
   "sidebarTabs": {
     "text": "Text",
     "image": "Image",
@@ -43,5 +48,28 @@
     "addFigure": "Add Figure",
     "saveAsPreset": "Save As Preset",
     "addPreset": "Add Preset"
+  },
+  "layersPanel": {
+    "group": "Group",
+    "layout": "Layout"
+  },
+
+  "dialogs": {
+    "nameDialog": {
+      "title": "Edit title",
+      "placeholder": "Name"
+    }
+  },
+  "objectTypes": {
+    "text": "Text",
+    "image": "Image",
+    "group": "Layout",
+    "figure": "Figure",
+    "default": "Object"
+  },
+  "devPanelButtons": {
+    "importJSON": "Import JSON",
+    "exportInJSON": "Export in JSON",
+    "exportInHTML": "Export in HTML"
   }
 }

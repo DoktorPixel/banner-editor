@@ -2,7 +2,7 @@ import { List, ListItem, Collapse, IconButton, Box } from "@mui/material";
 import { useState } from "react";
 import GroupListItem from "./GroupListItem";
 import { BannerObject } from "../../types";
-import { getObjectTypeLabel } from "../../utils/hooks";
+import { useObjectTypeLabel } from "../../utils/hooks";
 import { useBanner } from "../../context/BannerContext";
 import { useObjectProperties } from "../../utils/hooks";
 import NameDialog from "./dialogs/NameDialog";
@@ -15,6 +15,7 @@ import {
 } from "../../assets/icons";
 import { VisibilityToggle } from "./button-groups/VisibilityToggle";
 import { GroupVisibilityToggle } from "./button-groups/GroupVisibilityToggle";
+import { useTranslation } from "react-i18next";
 
 const SidebarObjectList: React.FC = () => {
   const { objects, selectedObjectIds, selectObject, selectAllObjects } =
@@ -25,9 +26,9 @@ const SidebarObjectList: React.FC = () => {
     currentName: "",
     objectId: null as number | null,
   });
-
+  const getObjectTypeLabel = useObjectTypeLabel();
   const [openGroups, setOpenGroups] = useState<Record<number, boolean>>({});
-
+  const { t } = useTranslation();
   const toggleGroup = (groupId: number) => {
     setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
   };
@@ -113,7 +114,9 @@ const SidebarObjectList: React.FC = () => {
                   )}
                 </IconButton>
                 <SvgVirtual />
-                <span className="layers-list-item">Group</span>
+                <span className="layers-list-item">
+                  {t("layersPanel.group")}
+                </span>
                 <GroupVisibilityToggle objectIds={group.map((o) => o.id)} />
               </ListItem>
               <Collapse
