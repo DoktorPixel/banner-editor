@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Box, Button, TextField, Typography, Tooltip } from "@mui/material";
 import { useBanner } from "../../../context/BannerContext";
+import { useT } from "../../../i18n/useT";
 
 const TextPanel: React.FC = () => {
   const [textContent, setTextContent] = useState("");
   const [disabledButton, setDisabledButton] = useState<string | null>(null);
   const { addObject } = useBanner();
+  const t = useT();
 
   const handleAddText = () => {
     if (!textContent.trim()) return;
@@ -79,7 +81,7 @@ const TextPanel: React.FC = () => {
         }}
       >
         <Typography variant="subtitle2" mb={1}>
-          Quick add dynamic variables:
+          {t("textPanel").title}
         </Typography>
         <Tooltip
           title="{{...}} instead of ... insert a dynamic value"
