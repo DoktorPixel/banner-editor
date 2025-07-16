@@ -18,6 +18,7 @@ import {
 } from "../utils/hooks";
 
 import { useConfig } from "../context/ConfigContext";
+import { useTranslation } from "react-i18next";
 
 const BannerArea: React.FC = () => {
   const {
@@ -57,7 +58,10 @@ const BannerArea: React.FC = () => {
     y: number;
     object: BannerObject | null;
   } | null>(null);
-
+  const { t } = useTranslation();
+  const fallbackText = encodeURIComponent(
+    t("dialogs.dynamicImageDialog.fillIn")
+  );
   const bannerStyles = useMemo(
     () => ({
       width: `${canvasSize.width}px`,
@@ -881,7 +885,8 @@ const BannerArea: React.FC = () => {
                       keyValuePairs,
                       dynamicImgs ?? [],
                       object.object_id,
-                      object.logoName
+                      object.logoName,
+                      fallbackText
                     )}
                     alt="img"
                     style={{

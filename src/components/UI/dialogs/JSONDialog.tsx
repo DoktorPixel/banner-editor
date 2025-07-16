@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { BannerObject } from "../../../types";
 import { useTranslation } from "react-i18next";
+
 interface JSONDialogProps {
   open: boolean;
   onClose: () => void;

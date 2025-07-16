@@ -11,6 +11,7 @@ import { FigureChildObjectForm } from "./UI/child-object-forms/FigureChildObject
 import { GroupChildObjectForm } from "./UI/child-object-forms/GroupChildObjectForm";
 import { DeployTemplateButton } from "./UI/updates-components/TemplateButtons";
 import LanguageSwitcher from "./UI/selectors/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 const ObjectProperties: React.FC = () => {
   const {
@@ -25,7 +26,7 @@ const ObjectProperties: React.FC = () => {
     handleChangeChild,
     handleChangeMultipleChildProperties,
   } = useChildProperties();
-
+  const { t } = useTranslation();
   return (
     <Box className="object-properties">
       <Box className="object-properties-header">
@@ -35,7 +36,7 @@ const ObjectProperties: React.FC = () => {
 
       <div className="grey-line"></div>
       <Typography variant="h5" className="padding-wrapper">
-        Object properties
+        {t("sidebar.objectProperties")}
       </Typography>
       <div className="grey-line"></div>
 
@@ -70,7 +71,7 @@ const ObjectProperties: React.FC = () => {
         </>
       ) : selectedObjectIds.length === 0 ? (
         <div className="padding-wrapper">
-          <Typography>Select an object to edit</Typography>
+          <Typography> {t("sidebar.selectObject")} </Typography>
         </div>
       ) : selectedObjectIds.length === 1 ? (
         selectedObject?.type === "text" ? (

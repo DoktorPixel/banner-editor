@@ -18,7 +18,7 @@ import { MuiColorInput } from "mui-color-input";
 import { ConditionSelector } from "../selectors/ConditionSelector";
 import ActionToggle from "../button-groups/ActionToggle";
 import { SvgHelp } from "../../../assets/icons";
-
+import { useTranslation } from "react-i18next";
 interface TextObjectFormProps {
   object: BannerObject;
   onChange: (key: keyof BannerObject, value: string | number | boolean) => void;
@@ -28,6 +28,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
   object,
   onChange,
 }) => {
+  const { t } = useTranslation();
   return (
     <Box>
       <Typography
@@ -35,7 +36,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         className="padding-wrapper"
         sx={{ mb: 1 }}
       >
-        Text
+        {t("sidebar.text")}
       </Typography>
 
       <div className="padding-wrapper">

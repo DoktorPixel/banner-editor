@@ -374,11 +374,14 @@ export const replaceDynamicVariablesForDynamicImg = (
   keyValuePairs: { key: string; value: string }[],
   dynamicImgs: DynamicImg[],
   object_id?: string | null,
-  logoName?: string | null
+  logoName?: string | null,
+  fallbackText?: string
 ): string => {
   let result = content;
-  const fallbackUrl =
-    "https://dummyimage.com/200x150/F1F1F1.gif&text=Fill+in+dynamic+logos+data";
+
+  const fallbackUrl = `https://dummyimage.com/600x400/F1F1F1.gif&text=${
+    fallbackText || "Fill+in+dynamic+logos+data"
+  }`;
 
   if (content !== "{{dynamic_img}}" || !object_id) {
     keyValuePairs.forEach(({ key, value }) => {
