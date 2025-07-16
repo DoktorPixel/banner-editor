@@ -15,6 +15,7 @@ import FontStyleSelector from "../button-groups/FontStyleSelector";
 import { ChildConditionSelector } from "../selectors/ChildConditionSelector";
 import ChildOrderControls from "../button-groups/ChildOrderControls";
 import { SvgHelp } from "../../../assets/icons";
+import { useTranslation } from "react-i18next";
 
 interface TextChildObjectFormProps {
   object: BannerChild;
@@ -32,7 +33,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
     const parsedValue = isNaN(Number(value)) ? value : Number(value);
     onChange(name as keyof BannerChild, parsedValue);
   };
-
+  const { t } = useTranslation();
   return (
     <Box className="child-object-form">
       <Typography
@@ -40,7 +41,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
         className="padding-wrapper"
         sx={{ mb: 2 }}
       >
-        Text
+        {t("sidebar.text")}
       </Typography>
 
       <div className="padding-wrapper">
@@ -59,15 +60,13 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
               color: "rgba(0, 0, 0, 0.6)",
             }}
           >
-            Text
+            {t("sidebar.text")}
           </label>
           <Tooltip
             arrow
             title={
               <Typography sx={{ whiteSpace: "pre-line", fontSize: "14px" }}>
-                {
-                  "Use dynamic tags to insert product data:\n{{...}} – Insert dynamic variable like 'title'\n{{format(price)}} — Price without currency \n{{discount(price, sale_price)}} — Discount in % \n{{discountCurrency(price, sale_price)}} — Discount in Currency \n{{min(price, sale_price)}} — Minimum of two values"
-                }
+                {t("sidebar.dynamicTagsHelp")}
               </Typography>
             }
           >
@@ -104,7 +103,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
       <div className="grey-line"></div>
 
       <div className="padding-wrapper">
-        <Typography variant="subtitle2">Typography</Typography>
+        <Typography variant="subtitle2">{t("sidebar.typography")}</Typography>
         <ChildFontSelector
           value={object.fontFamily || "Poppins"}
           onChange={(font) => onChange("fontFamily", font)}
@@ -124,13 +123,19 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
                 },
               }}
             >
-              <MenuItem value="300">Light (300)</MenuItem>
-              <MenuItem value="400">Regular (400)</MenuItem>
-              <MenuItem value="500">Medium (500)</MenuItem>
-              <MenuItem value="600">SemiBold (600)</MenuItem>
-              <MenuItem value="700">Bold (700)</MenuItem>
-              <MenuItem value="800">ExtraBold (800)</MenuItem>
-              <MenuItem value="900">Black (900)</MenuItem>
+              <MenuItem value="300">{t("sidebar.fontWeights.light")}</MenuItem>
+              <MenuItem value="400">
+                {t("sidebar.fontWeights.regular")}
+              </MenuItem>
+              <MenuItem value="500">{t("sidebar.fontWeights.medium")}</MenuItem>
+              <MenuItem value="600">
+                {t("sidebar.fontWeights.semiBold")}
+              </MenuItem>
+              <MenuItem value="700">{t("sidebar.fontWeights.bold")}</MenuItem>
+              <MenuItem value="800">
+                {t("sidebar.fontWeights.extraBold")}
+              </MenuItem>
+              <MenuItem value="900">{t("sidebar.fontWeights.black")}</MenuItem>
             </Select>
           </FormControl>
 
@@ -151,7 +156,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
         </div>
 
         <MuiColorInput
-          label="Color"
+          label={t("sidebar.color")}
           format="hex"
           value={object.color || "#000000"}
           onChange={(newColor: string) => onChange("color", newColor)}
@@ -179,12 +184,12 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
 
       <div className="padding-wrapper" style={{ marginTop: "10px" }}>
         <Typography variant="subtitle2" sx={{ mb: "10px" }}>
-          Appearance
+          {t("sidebar.appearance")}
         </Typography>
 
         <div className="auto-size">
           <TextField
-            label="Rotate"
+            label={t("sidebar.rotate")}
             type="number"
             value={object.rotate || 0}
             onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
@@ -192,7 +197,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
             margin="normal"
           />
           <TextField
-            label="Opacity 100 to 1"
+            label={t("sidebar.opacity")}
             type="number"
             slotProps={{
               input: {

@@ -13,6 +13,7 @@ import {
 import UpdateImageDialog from "../dialogs/UpdateImageDialog";
 import { ChildConditionSelector } from "../selectors/ChildConditionSelector";
 import ChildOrderControls from "../button-groups/ChildOrderControls";
+import { useTranslation } from "react-i18next";
 
 interface ImageChildObjectFormProps {
   object: BannerChild;
@@ -27,7 +28,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
-
+  const { t } = useTranslation();
   const handleUpdateUrl = (newUrl: string) => {
     onChange("src", newUrl);
   };
@@ -39,7 +40,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
         className="padding-wrapper"
         sx={{ mb: 1 }}
       >
-        Nsted image
+        {t("sidebar.nestedImage")}
       </Typography>
 
       <div className="grey-line"></div>
@@ -49,9 +50,9 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
       />
       <div className="grey-line"></div>
       <div className="padding-wrapper">
-        <Typography variant="subtitle2">General</Typography>
+        <Typography variant="subtitle2">{t("sidebar.general")}</Typography>
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
-          Position
+          {t("selectors.position")}
         </InputLabel>
         <div className="auto-size">
           <TextField
@@ -87,8 +88,10 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
       </div>
       <div className="grey-line"></div>
       <div className="padding-wrapper">
-        <Typography variant="subtitle2">Layout</Typography>
-        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>Size</InputLabel>
+        <Typography variant="subtitle2"> {t("sidebar.layouts")}</Typography>
+        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
+          {t("sidebar.size")}
+        </InputLabel>
         <div className="auto-size">
           <TextField
             slotProps={{
@@ -141,29 +144,31 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
 
       <div className="padding-wrapper">
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
-          Object Fit
+          {t("sidebar.objectFit.label")}
         </InputLabel>
         <FormControl fullWidth margin="normal">
           <Select
             value={object.objectFit || "fill"}
             onChange={(e) => onChange("objectFit", e.target.value)}
           >
-            <MenuItem value="fill">Fill</MenuItem>
-            <MenuItem value="contain">Contain</MenuItem>
-            <MenuItem value="cover">Cover</MenuItem>
-            <MenuItem value="none">None</MenuItem>
+            <MenuItem value="fill">{t("sidebar.objectFit.fill")}</MenuItem>
+            <MenuItem value="contain">
+              {t("sidebar.objectFit.contain")}
+            </MenuItem>
+            <MenuItem value="cover">{t("sidebar.objectFit.cover")}</MenuItem>
+            <MenuItem value="none">{t("sidebar.objectFit.none")}</MenuItem>
           </Select>
         </FormControl>
       </div>
       <div className="grey-line"></div>
       <div className="padding-wrapper" style={{ marginTop: "10px" }}>
         <Typography variant="subtitle2" sx={{ mb: "10px" }}>
-          Appearance
+          {t("sidebar.appearance")}
         </Typography>
 
         <div className="auto-size">
           <TextField
-            label="Rotate"
+            label={t("sidebar.rotate")}
             type="number"
             value={object.rotate || 0}
             onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
@@ -171,7 +176,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
             margin="normal"
           />
           <TextField
-            label="Opacity 100 to 1"
+            label={t("sidebar.opacity")}
             type="number"
             slotProps={{
               input: {

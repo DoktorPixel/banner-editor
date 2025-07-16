@@ -31,7 +31,7 @@ function ActionToggle<T extends string>({
             sx={{
               flex: 1,
               width: "100%",
-              minWidth: "42px",
+              // minWidth: "42px",
               minHeight: "30px",
               height: "29px",
               padding: "4px 6px",
@@ -128,8 +128,8 @@ export const ActionToggleMultiple: React.FC<ActionToggleMultipleProps> = ({
         </InputLabel>
         <ActionToggle
           options={[
-            { value: "auto", label: "Auto" },
-            { value: "fixed", label: "Fixed" },
+            { value: "auto", label: t("sidebar.auto") },
+            { value: "fixed", label: t("sidebar.fixed") },
           ]}
           selected={isAuto ? "auto" : "fixed"}
           onChange={(value) => handleToggleChange(value as "auto" | "fixed")}

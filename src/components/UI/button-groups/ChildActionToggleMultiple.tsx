@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormControl, Button, TextField, InputLabel } from "@mui/material";
 import { BannerObject } from "../../../types";
+import { useTranslation } from "react-i18next";
 
 interface ActionToggleProps<T extends string> {
   options: { value: T; label: React.ReactNode }[];
@@ -30,7 +31,7 @@ function ActionToggle<T extends string>({
             sx={{
               flex: 1,
               width: "100%",
-              minWidth: "42px",
+              // minWidth: "42px",
               minHeight: "30px",
               height: "29px",
               padding: "4px 6px",
@@ -64,7 +65,7 @@ export const ChildActionToggleMultiple: React.FC<ChildActionToggleMultiple> = ({
   const [gapValue, setGapValue] = useState<number | undefined>(
     value !== undefined ? parseInt(value as string, 10) : undefined
   );
-
+  const { t } = useTranslation();
   const [isAuto, setIsAuto] = useState(gapValue === undefined);
 
   useEffect(() => {
@@ -105,7 +106,7 @@ export const ChildActionToggleMultiple: React.FC<ChildActionToggleMultiple> = ({
     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <InputLabel sx={{ mt: 1, mb: "-15px", fontSize: "12px" }}>
-          Gap
+          {t("selectors.gap")}
         </InputLabel>
         <TextField
           type="number"
@@ -118,12 +119,12 @@ export const ChildActionToggleMultiple: React.FC<ChildActionToggleMultiple> = ({
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <InputLabel sx={{ mt: 1, mb: "-6px", fontSize: "12px" }}>
-          Position
+          {t("selectors.position")}
         </InputLabel>
         <ActionToggle
           options={[
-            { value: "auto", label: "Auto" },
-            { value: "fixed", label: "Fixed" },
+            { value: "auto", label: t("sidebar.auto") },
+            { value: "fixed", label: t("sidebar.fixed") },
           ]}
           selected={isAuto ? "auto" : "fixed"}
           onChange={(value) => handleToggleChange(value as "auto" | "fixed")}

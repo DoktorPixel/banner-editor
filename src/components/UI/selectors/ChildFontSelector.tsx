@@ -2,6 +2,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import * as WebFont from "webfontloader";
 import { fonts } from "../../../constants/fonts";
+import { useTranslation } from "react-i18next";
 
 interface FontSelectorProps {
   value: string;
@@ -29,7 +30,7 @@ const ChildFontSelector: React.FC<FontSelectorProps> = ({
 
     onChange(font);
   };
-
+  const { t } = useTranslation();
   return (
     <Autocomplete
       options={fonts}
@@ -40,7 +41,7 @@ const ChildFontSelector: React.FC<FontSelectorProps> = ({
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Font"
+          label={t("sidebar.font")}
           variant="outlined"
           slotProps={{
             input: {
