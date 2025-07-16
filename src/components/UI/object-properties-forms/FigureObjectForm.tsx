@@ -22,6 +22,7 @@ import {
   BorderRight,
   BorderTop,
 } from "../../../assets/icons";
+import { useTranslation } from "react-i18next";
 
 interface FigureObjectFormProps {
   object: BannerObject;
@@ -37,7 +38,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
 }) => {
   const [isBorderEditing, setIsBorderEditing] = useState<boolean>(false);
   const { updateObjectMultipleProperties } = useObjectProperties();
-
+  const { t } = useTranslation();
   const [borderSides, setBorderSides] = useState({
     top: true,
     bottom: true,
@@ -155,7 +156,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
         className="padding-wrapper"
         sx={{ mb: 1 }}
       >
-        Figure
+        {t("sidebar.figure")}
       </Typography>
 
       <div className="grey-line"></div>

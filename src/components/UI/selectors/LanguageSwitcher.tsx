@@ -38,7 +38,7 @@ const LanguageSwitcher: React.FC = () => {
       </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={() => handleSelect("en")}>(en) English</MenuItem>
-        <MenuItem onClick={() => handleSelect("ua")}>(ua) Ukrainian</MenuItem>
+        <MenuItem onClick={() => handleSelect("ua")}>(ua) Українська</MenuItem>
       </Menu>
     </div>
   );

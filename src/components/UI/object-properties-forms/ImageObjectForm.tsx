@@ -13,7 +13,7 @@ import {
 import UpdateImageDialog from "../dialogs/UpdateImageDialog";
 import { ConditionSelector } from "../selectors/ConditionSelector";
 import ManageDynamicImgsComponent from "../dialogs/ManageDynamicImgsComponent";
-
+import { useTranslation } from "react-i18next";
 interface ImageObjectFormProps {
   object: BannerObject;
   onChange: (key: keyof BannerObject, value: string | number) => void;
@@ -27,7 +27,7 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
-
+  const { t } = useTranslation();
   const handleUpdateUrl = (newUrl: string) => {
     onChange("src", newUrl);
   };
@@ -46,7 +46,7 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
         className="padding-wrapper"
         sx={{ mb: 1 }}
       >
-        Image
+        {t("sidebar.image")}
       </Typography>
 
       <div className="grey-line"></div>

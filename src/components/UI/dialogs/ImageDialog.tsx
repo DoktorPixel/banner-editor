@@ -14,7 +14,8 @@ import {
 } from "@mui/material";
 import ImageCompression from "browser-image-compression";
 import ClearIcon from "@mui/icons-material/Clear";
-import DragAndDropFileInput from "./DragAndDropFileInput";
+import DragAndDropFileInput from "../inputs/DragAndDropFileInput";
+import { useTranslation } from "react-i18next";
 
 interface ImageDialogProps {
   open: boolean;
@@ -34,7 +35,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
   const [maxWidthOrHeight, setMaxWidthOrHeight] = useState<number>(600);
-
+  const { t } = useTranslation();
   useEffect(() => {
     if (!open) {
       resetFields();
@@ -105,12 +106,15 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add image</DialogTitle>
+      <DialogTitle> {t("imageDialog.title")}</DialogTitle>
       <DialogContent>
         <Typography variant="body2" gutterBottom>
-          Upload image via URL or select file:
+          {t("imageDialog.subTitle")}
         </Typography>
-        <InputLabel sx={{ mt: 1, mb: -1, fontSize: "12px" }}>URL</InputLabel>
+        <InputLabel sx={{ mt: 1, mb: -1, fontSize: "12px" }}>
+          {" "}
+          {t("imageDialog.inputLabel")}
+        </InputLabel>
         <Box display="flex" alignItems="center" mb={2}>
           <TextField
             margin="dense"
@@ -134,7 +138,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
           }}
         >
           <Typography gutterBottom>
-            Maximum width (pixels): {maxWidthOrHeight}
+            {t("imageDialog.maximumWidth")} {maxWidthOrHeight}
           </Typography>
           <Slider
             value={maxWidthOrHeight}
@@ -174,10 +178,10 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          {t("cancel")}
         </Button>
         <Button onClick={handleAdd} color="primary" disabled={!preview}>
-          Add
+          {t("add")}
         </Button>
       </DialogActions>
     </Dialog>

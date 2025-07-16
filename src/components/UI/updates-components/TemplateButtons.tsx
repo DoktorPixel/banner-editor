@@ -11,11 +11,12 @@ import {
 } from "@mui/material";
 import { useSupabaseProject } from "../../../utils/useSupabaseProject";
 import { useBanner } from "../../../context/BannerContext";
+import { useTranslation } from "react-i18next";
 
 export const DeployTemplateButton: React.FC = () => {
   const { currentProjectId } = useBanner();
   const { deployTemplate } = useSupabaseProject();
-
+  const { t } = useTranslation();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -34,14 +35,14 @@ export const DeployTemplateButton: React.FC = () => {
       await deployTemplate.mutateAsync(currentProjectId);
       setSnackbar({
         open: true,
-        message: "✅ Template successfully published!",
+        message: `✅ ${t("deployTemplate.successMessage")} `,
         severity: "success",
       });
     } catch (error) {
       console.error("❌ Failed to publish template:", error);
       setSnackbar({
         open: true,
-        message: "❌ Failed to publish template.",
+        message: `❌ ${t("deployTemplate.errorMessage")} `,
         severity: "error",
       });
     } finally {
@@ -58,23 +59,25 @@ export const DeployTemplateButton: React.FC = () => {
         color="primary"
         sx={{ textTransform: "none", padding: "4px 6px 2px 6px" }}
       >
-        {deployTemplate.isPending ? "Deploying..." : "Publish Template"}
+        {deployTemplate.isPending
+          ? t("deployTemplate.deploying")
+          : t("deployTemplate.publishTemplate")}
       </Button>
 
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-        <DialogTitle sx={{ margin: "0 auto" }}>Confirm publication</DialogTitle>
+        <DialogTitle sx={{ margin: "0 auto" }}>
+          {" "}
+          {t("deployTemplate.title")}
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to publish the project? This action cannot be
-            undone.
-          </DialogContentText>
+          <DialogContentText>{t("deployTemplate.subTitle")}</DialogContentText>
         </DialogContent>
         <DialogActions sx={{ margin: "0 auto", paddingBottom: "22px" }}>
           <Button
             onClick={() => setConfirmOpen(false)}
             disabled={deployTemplate.isPending}
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <Button
             onClick={handleDeploy}
@@ -82,7 +85,9 @@ export const DeployTemplateButton: React.FC = () => {
             color="primary"
             variant="contained"
           >
-            {deployTemplate.isPending ? "Deploying..." : "Publish"}
+            {deployTemplate.isPending
+              ? t("deployTemplate.deploying")
+              : t("publish")}
           </Button>
         </DialogActions>
       </Dialog>

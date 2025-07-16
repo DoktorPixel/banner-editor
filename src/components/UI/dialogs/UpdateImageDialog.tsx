@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import ImageCompression from "browser-image-compression";
 import ClearIcon from "@mui/icons-material/Clear";
-import DragAndDropFileInput from "./DragAndDropFileInput";
+import DragAndDropFileInput from "../inputs/DragAndDropFileInput";
 
 interface UpdateImageDialogProps {
   open: boolean;

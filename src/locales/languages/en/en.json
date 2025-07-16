@@ -1,5 +1,6 @@
 {
   "loading": "Loading...",
+  "uploading": "Uploading...",
   "error": "Error",
   "success": "Success",
   "warning": "Warning",
@@ -10,12 +11,14 @@
   "no": "No",
   "delete": "Delete",
   "edit": "Edit",
+  "add": "Add",
   "save": "Save",
   "close": "Close",
   "copying": "Copying...",
   "sending": "Sending...",
   "download": "Download",
   "property": "Property",
+  "publish": "Publish",
   "value": "Value",
   "sidebarTabs": {
     "text": "Text",
@@ -58,6 +61,21 @@
     "nameDialog": {
       "title": "Edit title",
       "placeholder": "Name"
+    },
+
+    "imageDialog": {
+      "title": "Add image",
+      "subTitle": "Upload image via URL or select file:",
+      "inputLabel": "Image URL",
+      "maximumWidth": "Maximum width (pixels):"
+    },
+    "dynamicImageDialog": {
+      "dynamicLogos": "Dynamic logos",
+      "logoName": "Logo name (props)",
+      "subTitle": "Click or drag & drop a dynamic image here",
+      "imageName": "Image name",
+      "noImages": "No dynamic images uploaded yet.",
+      "fillIn": "Fill in dynamic logos data"
     }
   },
   "objectTypes": {
@@ -71,5 +89,45 @@
     "importJSON": "Import JSON",
     "exportInJSON": "Export in JSON",
     "exportInHTML": "Export in HTML"
+  },
+
+  "sidebar": {
+    "objectProperties": "Object properties",
+    "selectObject": "Select an object to edit",
+    "text": "Text",
+    "image": "Image",
+    "figure": "Figure",
+    "layout": "Layout"
+  },
+  "deployTemplate": {
+    "title": "Confirm publication",
+    "subTitle": "Are you sure you want to publish the project? This action cannot be undone.",
+    "deploying": "Deploying...",
+    "publishTemplate": "Publish Template",
+    "successMessage": "Template successfully published!",
+    "errorMessage": "Failed to publish template."
+  },
+
+  "selectors": {
+    "gap": "Gap",
+    "position": "Position",
+    "direction": "Direction"
+  },
+
+  "Object properties": {
+    "name": "Name",
+    "type": "Type",
+    "width": "Width",
+    "height": "Height",
+    "color": "Color",
+    "backgroundColor": "Background Color",
+    "fontSize": "Font Size",
+    "fontFamily": "Font Family",
+    "textAlign": "Text Align",
+    "textDecoration": "Text Decoration",
+    "borderRadius": "Border Radius",
+    "borderWidth": "Border Width",
+    "borderColor": "Border Color",
+    "opacity": "Opacity"
   }
 }

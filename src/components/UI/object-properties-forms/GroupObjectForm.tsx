@@ -31,7 +31,7 @@ import {
 import ActionToggle from "../button-groups/ActionToggle";
 import { ActionToggleMultiple } from "../button-groups/ActionToggleMultiple";
 import { AutoLayoutForm } from "../button-groups/AutoLayoutForm";
-
+import { useTranslation } from "react-i18next";
 interface TextObjectFormProps {
   object: BannerObject;
   onChange: (
@@ -47,7 +47,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
   const [isBorderEditing, setIsBorderEditing] = useState<boolean>(false);
   const { updateObjectMultipleProperties, selectedObject } =
     useObjectProperties();
-
+  const { t } = useTranslation();
   const [borderSides, setBorderSides] = useState({
     top: true,
     bottom: true,
@@ -165,7 +165,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         className="padding-wrapper"
         sx={{ mb: 1 }}
       >
-        Layout
+        {t("sidebar.layout")}
       </Typography>
       <div className="grey-line"></div>
 

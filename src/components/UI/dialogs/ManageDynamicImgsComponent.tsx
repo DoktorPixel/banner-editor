@@ -13,6 +13,7 @@ import { useSupabaseImages } from "../../../utils/useSupabaseImages";
 import { useBanner } from "../../../context/BannerContext";
 import { DeleteBtn } from "../../../assets/icons";
 import { SupabaseImageItem } from "../../../types";
+import { useTranslation } from "react-i18next";
 
 interface ManageDynamicImgsComponentProps {
   object_id?: string;
@@ -49,6 +50,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
   const [localLogoName, setLocalLogoName] = useState(logoName || "");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { t } = useTranslation();
   const {
     data: images,
     isLoading: loadingLogo,
@@ -63,7 +65,6 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     return url.replace("/templates/", "/feedmaker/templates/");
   };
 
-  // Синхронизация изображений с контекстом useBanner
   useEffect(() => {
     if (images && dynamicImgs) {
       const enrichedImgs = images.map((img) => {
@@ -179,7 +180,10 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
     >
-      <Typography variant="subtitle2">Dynamic logos</Typography>
+      <Typography variant="subtitle2">
+        {" "}
+        {t("dialogs.dynamicImageDialog.dynamicLogos")}
+      </Typography>
 
       <Box sx={{ position: "relative", marginTop: 2, maxWidth: 199 }}>
         <Typography
@@ -191,7 +195,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
             color: "rgba(0, 0, 0, 0.6)",
           }}
         >
-          Logo name (props)
+          {t("dialogs.dynamicImageDialog.logoName")}
         </Typography>
         <TextField
           size="small"
@@ -207,7 +211,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
       {(loadingLogo || uploadingNewImage) && (
         <Typography sx={{ marginTop: 2 }}>
           <CircularProgress size={15} />{" "}
-          {loadingLogo ? "Loading..." : "Uploading..."}
+          {loadingLogo ? t("loading") : t("uploading")}
         </Typography>
       )}
 
@@ -225,10 +229,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
               cursor: "pointer",
             }}
           >
-            <Typography>
-              Click or drag & drop a dynamic image here to upload it to your
-              project.
-            </Typography>
+            <Typography>{t("dialogs.dynamicImageDialog.subTitle")}</Typography>
             <input
               type="file"
               accept="image/*"
@@ -294,7 +295,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
                       color: "rgba(0, 0, 0, 0.6)",
                     }}
                   >
-                    Image name
+                    {t("dialogs.dynamicImageDialog.imageName")}
                   </Typography>
                   <TextField
                     size="small"
@@ -321,7 +322,7 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
             ))
           ) : (
             <Typography sx={{ mt: 2, color: "text.secondary" }}>
-              No dynamic images uploaded yet.
+              {t("dialogs.dynamicImageDialog.noImages")}
             </Typography>
           )}
         </div>

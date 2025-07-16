@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormControl, Button, TextField, InputLabel } from "@mui/material";
 import { BannerObject } from "../../../types";
+import { useTranslation } from "react-i18next";
 
 interface ActionToggleProps<T extends string> {
   options: { value: T; label: React.ReactNode }[];
@@ -71,7 +72,7 @@ export const ActionToggleMultiple: React.FC<ActionToggleMultipleProps> = ({
   );
 
   const [isAuto, setIsAuto] = useState(gapValue === undefined);
-
+  const { t } = useTranslation();
   useEffect(() => {
     const parsedValue =
       value !== undefined ? parseInt(value as string, 10) : undefined;
@@ -110,7 +111,7 @@ export const ActionToggleMultiple: React.FC<ActionToggleMultipleProps> = ({
     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <InputLabel sx={{ mt: 1, mb: "-15px", fontSize: "12px" }}>
-          Gap
+          {t("selectors.gap")}
         </InputLabel>
         <TextField
           type="number"
@@ -123,7 +124,7 @@ export const ActionToggleMultiple: React.FC<ActionToggleMultipleProps> = ({
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <InputLabel sx={{ mt: 1, mb: "-6px", fontSize: "12px" }}>
-          Position
+          {t("selectors.position")}
         </InputLabel>
         <ActionToggle
           options={[
