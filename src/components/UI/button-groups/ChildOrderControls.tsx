@@ -4,6 +4,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { useChildOrder, useChildProperties } from "../../../utils/hooks";
 import { BannerChild } from "../../../types";
+import { useTranslation } from "react-i18next";
 
 interface ChildOrderControlsProps {
   object: BannerChild;
@@ -14,7 +15,7 @@ export const ChildOrderControls: React.FC<ChildOrderControlsProps> = ({
 }) => {
   const { selectedChildId } = useChildProperties();
   const { getGroupChildren, moveChildUp, moveChildDown } = useChildOrder();
-
+  const { t } = useTranslation();
   const groupChildren = selectedChildId
     ? getGroupChildren(selectedChildId.groupId)
     : [];
@@ -46,7 +47,7 @@ export const ChildOrderControls: React.FC<ChildOrderControlsProps> = ({
         marginTop: "10px",
       }}
     >
-      <Typography variant="subtitle2">Order</Typography>
+      <Typography variant="subtitle2">{t("sidebar.order")}</Typography>
       <IconButton onClick={handleMoveUp} disabled={!canMoveUp} title="Move Up">
         <ArrowUpwardIcon />
       </IconButton>

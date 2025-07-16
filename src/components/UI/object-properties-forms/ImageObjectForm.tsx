@@ -14,6 +14,7 @@ import UpdateImageDialog from "../dialogs/UpdateImageDialog";
 import { ConditionSelector } from "../selectors/ConditionSelector";
 import ManageDynamicImgsComponent from "../dialogs/ManageDynamicImgsComponent";
 import { useTranslation } from "react-i18next";
+
 interface ImageObjectFormProps {
   object: BannerObject;
   onChange: (key: keyof BannerObject, value: string | number) => void;
@@ -53,9 +54,9 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
       <ConditionSelector objectId={object.id} condition={object.condition} />
       <div className="grey-line"></div>
       <div className="padding-wrapper">
-        <Typography variant="subtitle2">General</Typography>
+        <Typography variant="subtitle2">{t("sidebar.general")}</Typography>
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
-          Position
+          {t("selectors.position")}
         </InputLabel>
         <div className="auto-size">
           <TextField
@@ -91,8 +92,10 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
       </div>
       <div className="grey-line"></div>
       <div className="padding-wrapper">
-        <Typography variant="subtitle2">Layout</Typography>
-        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>Size</InputLabel>
+        <Typography variant="subtitle2"> {t("sidebar.layouts")}</Typography>
+        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
+          {t("sidebar.size")}
+        </InputLabel>
         <div className="auto-size">
           <TextField
             slotProps={{
@@ -145,17 +148,19 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
 
       <div className="padding-wrapper">
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
-          Object Fit
+          {t("sidebar.objectFit.label")}
         </InputLabel>
         <FormControl fullWidth margin="normal">
           <Select
             value={object.objectFit || "fill"}
             onChange={(e) => handleInputChange("objectFit", e.target.value)}
           >
-            <MenuItem value="fill">Fill</MenuItem>
-            <MenuItem value="contain">Contain</MenuItem>
-            <MenuItem value="cover">Cover</MenuItem>
-            <MenuItem value="none">None</MenuItem>
+            <MenuItem value="fill">{t("sidebar.objectFit.fill")}</MenuItem>
+            <MenuItem value="contain">
+              {t("sidebar.objectFit.contain")}
+            </MenuItem>
+            <MenuItem value="cover">{t("sidebar.objectFit.cover")}</MenuItem>
+            <MenuItem value="none">{t("sidebar.objectFit.none")}</MenuItem>
           </Select>
         </FormControl>
       </div>
@@ -163,7 +168,7 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
       <div className="padding-wrapper" style={{ marginTop: "10px" }}>
         <div className="auto-size">
           <TextField
-            label="Rotate"
+            label={t("sidebar.rotate")}
             type="number"
             value={object.rotate || 0}
             onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
@@ -171,7 +176,7 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
             margin="normal"
           />
           <TextField
-            label="Opacity 100 to 1"
+            label={t("sidebar.opacity")}
             type="number"
             slotProps={{
               input: {

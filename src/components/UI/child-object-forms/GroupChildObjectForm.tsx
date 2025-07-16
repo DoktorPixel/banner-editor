@@ -33,6 +33,7 @@ import ActionToggle from "../button-groups/ActionToggle";
 import { ChildActionToggleMultiple } from "../button-groups/ChildActionToggleMultiple";
 import { AutoLayoutForm } from "../button-groups/AutoLayoutForm";
 import ChildOrderControls from "../button-groups/ChildOrderControls";
+import { useTranslation } from "react-i18next";
 
 interface GroupChildObjectFormProps {
   object: BannerChild;
@@ -57,7 +58,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
   });
   const { selectedChild, handleChangeMultipleChildProperties } =
     useChildProperties();
-
+  const { t } = useTranslation();
   const toggleBorderSide = (side: "top" | "bottom" | "left" | "right") => {
     const isActive = borderSides[side];
 
@@ -179,8 +180,10 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
       <div className="grey-line"></div>
 
       <div className="padding-wrapper">
-        <Typography variant="subtitle2">Layout</Typography>
-        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>Size</InputLabel>
+        <Typography variant="subtitle2"> {t("sidebar.layouts")}</Typography>
+        <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
+          {t("sidebar.size")}
+        </InputLabel>
         <div className="auto-size">
           <TextField
             slotProps={{
@@ -219,7 +222,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
 
         <div style={{ maxWidth: "196px" }}>
           <ActionToggle
-            label="Resizing"
+            label={t("sidebar.width")}
             options={[
               { value: "auto", label: "Dynamic W" },
               { value: "fixed", label: "Fixed W" },
@@ -231,9 +234,10 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
 
         <div style={{ maxWidth: "196px" }}>
           <ActionToggle
+            label={t("sidebar.height")}
             options={[
-              { value: "auto", label: "Dynamic H" },
-              { value: "fixed", label: "Fixed H" },
+              { value: "auto", label: t("sidebar.auto") },
+              { value: "fixed", label: t("sidebar.fixed") },
             ]}
             selected={object.autoHeight ? "auto" : "fixed"}
             onChange={(value) => onChange("autoHeight", value === "auto")}
@@ -243,7 +247,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         <div style={{ display: "flex", alignItems: "center", gap: "30px" }}>
           <div style={{ maxWidth: "90px" }}>
             <ActionToggle
-              label="Direction"
+              label={t("selectors.direction")}
               options={[
                 { value: "row", label: <ArrowRight1 /> },
                 { value: "column", label: <ArrowDown1 /> },
@@ -263,7 +267,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         </div>
 
         <InputLabel sx={{ mt: 1, mb: "2px", fontSize: "12px" }}>
-          Alignment
+          {t("sidebar.alignment")}
         </InputLabel>
 
         <AutoLayoutForm
@@ -288,7 +292,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
 
         <div>
           <InputLabel sx={{ mt: 1, mb: "2px", fontSize: "12px" }}>
-            Padding
+            {t("sidebar.padding")}
           </InputLabel>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
@@ -399,12 +403,12 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
 
       <div className="padding-wrapper">
         <Typography variant="subtitle2" sx={{ mb: "10px" }}>
-          Appearance
+          {t("sidebar.appearance")}
         </Typography>
 
         <div className="auto-size">
           <TextField
-            label="Opacity 100 to 1"
+            label={t("sidebar.opacity")}
             type="number"
             slotProps={{
               input: {
@@ -427,7 +431,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
           />
 
           <TextField
-            label="Border radius"
+            label={t("sidebar.borderRadius")}
             type="number"
             value={object.borderRadius || 0}
             onChange={(e) => {
@@ -441,7 +445,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
 
         <div className="auto-size" style={{ width: "calc(50% - 5px)" }}>
           <TextField
-            label="Rotate"
+            label={t("sidebar.rotate")}
             type="number"
             value={object.rotate || 0}
             onChange={(e) => onChange("rotate", parseInt(e.target.value, 10))}
@@ -460,7 +464,9 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <Typography variant="subtitle2">Background </Typography>
+                <Typography variant="subtitle2">
+                  {t("sidebar.backgroundColor")}{" "}
+                </Typography>
                 <IconButton
                   onClick={() => {
                     onChange("backgroundColor", "none");
@@ -471,7 +477,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
               </Box>
 
               <MuiColorInput
-                label="Color"
+                label={t("sidebar.color")}
                 format="hex"
                 value={
                   object.backgroundColor === "none"
@@ -492,7 +498,9 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <Typography variant="subtitle2">Background</Typography>
+              <Typography variant="subtitle2">
+                {t("sidebar.backgroundColor")}
+              </Typography>
               <IconButton
                 onClick={() => onChange("backgroundColor", "#F1F1F1")}
               >
@@ -512,7 +520,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="subtitle2">Stroke</Typography>
+            <Typography variant="subtitle2">{t("sidebar.stroke")}</Typography>
             <IconButton onClick={handleAddBorder}>
               <PlusIcon />
             </IconButton>
@@ -524,14 +532,14 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <Typography variant="subtitle2">Stroke</Typography>
+              <Typography variant="subtitle2">{t("sidebar.stroke")}</Typography>
               <IconButton onClick={() => handleBorderToggle(false)}>
                 <MinusIcon />
               </IconButton>
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <MuiColorInput
-                label="Color"
+                label={t("sidebar.color")}
                 format="hex"
                 value={object.borderTopColor || "#000000"}
                 onChange={(newColor: string) =>
@@ -545,7 +553,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
               <div className="auto-size" style={{ marginBottom: "10px" }}>
                 <div style={{ flex: 1 }}>
                   <InputLabel sx={{ mb: "2px", fontSize: "12px" }}>
-                    Style
+                    {t("sidebar.style")}
                   </InputLabel>
                   <Select
                     value={object.borderTopStyle || "solid"}
@@ -554,16 +562,24 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
                     }
                     fullWidth
                   >
-                    <MenuItem value="solid">Solid</MenuItem>
-                    <MenuItem value="dotted">Dotted</MenuItem>
-                    <MenuItem value="dashed">Dashed</MenuItem>
-                    <MenuItem value="double">Double</MenuItem>
+                    <MenuItem value="solid">
+                      {t("sidebar.borderStyles.solid")}
+                    </MenuItem>
+                    <MenuItem value="dotted">
+                      {t("sidebar.borderStyles.dotted")}
+                    </MenuItem>
+                    <MenuItem value="dashed">
+                      {t("sidebar.borderStyles.dashed")}
+                    </MenuItem>
+                    <MenuItem value="double">
+                      {t("sidebar.borderStyles.double")}
+                    </MenuItem>
                   </Select>
                 </div>
 
                 <div style={{ flex: 1 }}>
                   <InputLabel sx={{ mb: "2px", fontSize: "12px" }}>
-                    Weight
+                    {t("sidebar.weight")}
                   </InputLabel>
                   <TextField
                     type="number"

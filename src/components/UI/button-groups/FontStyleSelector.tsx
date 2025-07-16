@@ -1,5 +1,6 @@
 import { ButtonGroup, Button, InputLabel } from "@mui/material";
 import { TextNormal, TextItalic } from "../../../assets/icons";
+import { useTranslation } from "react-i18next";
 
 interface FontStyleSelectorProps {
   value: string;
@@ -10,9 +11,12 @@ const FontStyleSelector: React.FC<FontStyleSelectorProps> = ({
   value,
   onChange,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="font-style">
-      <InputLabel sx={{ mb: "5px", fontSize: "12px" }}>Font style</InputLabel>
+      <InputLabel sx={{ mb: "5px", fontSize: "12px" }}>
+        {t("sidebar.fontStyle")}
+      </InputLabel>
       <ButtonGroup size="small" sx={{ boxShadow: "none" }}>
         <Button
           onClick={() => onChange("normal")}

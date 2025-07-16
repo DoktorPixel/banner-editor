@@ -4,6 +4,7 @@ import {
   TextAlignRight,
   TextAlignCenter,
 } from "../../../assets/icons";
+import { useTranslation } from "react-i18next";
 
 interface TextAlignSelectorProps {
   value: string;
@@ -14,9 +15,12 @@ const TextAlignSelector: React.FC<TextAlignSelectorProps> = ({
   value,
   onChange,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="text-align">
-      <InputLabel sx={{ mb: "5px", fontSize: "12px" }}>Alignment</InputLabel>
+      <InputLabel sx={{ mb: "5px", fontSize: "12px" }}>
+        {t("sidebar.alignment")}
+      </InputLabel>
       <ButtonGroup color="primary" size="small" sx={{ boxShadow: "none" }}>
         <Button
           onClick={() => onChange("left")}

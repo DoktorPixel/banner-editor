@@ -12,6 +12,7 @@ import {
 import { PlusIcon, MinusIcon } from "../../../assets/icons";
 import ActionToggle from "../button-groups/ActionToggle";
 import { useAbstractGroupCondition } from "../../../utils/hooks";
+import { useTranslation } from "react-i18next";
 
 export type Condition = {
   type: "showIf" | "hideIf";
@@ -44,7 +45,7 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
   const [compareValue, setCompareValue] = useState(
     condition?.compareValue || ""
   );
-
+  const { t } = useTranslation();
   const isComparisonOperator = useMemo(
     () =>
       [
@@ -103,7 +104,10 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography variant="subtitle2">Program visibility (Group)</Typography>
+        <Typography variant="subtitle2">
+          {" "}
+          {t("sidebar.groupProgramVisibility")}
+        </Typography>
         <IconButton onClick={handleAddCondition}>
           <PlusIcon />
         </IconButton>
@@ -114,18 +118,21 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
   return (
     <Box paddingLeft="10px" paddingRight="10px">
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="subtitle2">Program visibility (Group)</Typography>
+        <Typography variant="subtitle2">
+          {" "}
+          {t("sidebar.groupProgramVisibility")}{" "}
+        </Typography>
         <IconButton onClick={handleRemoveCondition} edge="start">
           <MinusIcon />
         </IconButton>
       </Box>
 
-      <Box sx={{ maxWidth: "134px" }}>
+      <Box sx={{ maxWidth: "170px" }}>
         <ActionToggle
-          label="Action"
+          label={t("sidebar.action")}
           options={[
-            { value: "hideIf", label: "Hide" },
-            { value: "showIf", label: "Show" },
+            { value: "hideIf", label: t("sidebar.hide") },
+            { value: "showIf", label: t("sidebar.show") },
           ]}
           selected={condition?.type || "hideIf"}
           onChange={(newValue) =>
@@ -137,7 +144,7 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
       <Box display="flex" gap={2} mt={1}>
         <Box sx={{ flex: 1 }}>
           <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
-            Property
+            {t("sidebar.property")}
           </InputLabel>
           <TextField
             value={inputValue}
@@ -167,7 +174,7 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
 
         <Box sx={{ flex: 1 }}>
           <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
-            Condition
+            {t("sidebar.condition")}
           </InputLabel>
           <FormControl fullWidth margin="normal">
             <Select
@@ -182,14 +189,14 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
                 border: "1px solid #E4E4E4",
               }}
             >
-              <MenuItem value="exist">Exist</MenuItem>
-              <MenuItem value="noExist">No exist</MenuItem>
-              <MenuItem value="eq">Equal (=)</MenuItem>
-              <MenuItem value="not-eq">Not equal (≠)</MenuItem>
-              <MenuItem value="more-than">More than (&gt;)</MenuItem>
-              <MenuItem value="less-than">Less than (&lt;)</MenuItem>
-              <MenuItem value="more-or-eq">More or equal (≥)</MenuItem>
-              <MenuItem value="less-or-eq">Less or equal (≤)</MenuItem>
+              <MenuItem value="exist">{t("sidebar.exist")}</MenuItem>
+              <MenuItem value="noExist">{t("sidebar.noExist")}</MenuItem>
+              <MenuItem value="eq">{t("sidebar.equal")}</MenuItem>
+              <MenuItem value="not-eq">{t("sidebar.notEqual")}</MenuItem>
+              <MenuItem value="more-than">{t("sidebar.moreThan")}</MenuItem>
+              <MenuItem value="less-than">{t("sidebar.lessThan")}</MenuItem>
+              <MenuItem value="more-or-eq">{t("sidebar.moreOrEqual")}</MenuItem>
+              <MenuItem value="less-or-eq">{t("sidebar.lessOrEqual")}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -198,7 +205,7 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
       {isComparisonOperator && (
         <Box sx={{ marginTop: "8px" }}>
           <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
-            Value to compare
+            {t("sidebar.valueToCompare")}
           </InputLabel>
           <TextField
             type={
@@ -211,7 +218,6 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
             value={compareValue}
             onChange={(e) => {
               const newVal = e.target.value;
-
               if (
                 ["more-than", "less-than", "more-or-eq", "less-or-eq"].includes(
                   condition.state
@@ -229,8 +235,8 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
               ["more-than", "less-than", "more-or-eq", "less-or-eq"].includes(
                 condition.state
               )
-                ? "Enter the number"
-                : "Enter comparison value"
+                ? t("sidebar.enterNumber")
+                : t("sidebar.enterComparisonValue")
             }
           />
         </Box>

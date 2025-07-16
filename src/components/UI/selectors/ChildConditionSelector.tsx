@@ -13,6 +13,7 @@ import { PlusIcon, MinusIcon } from "../../../assets/icons";
 import ActionToggle from "../button-groups/ActionToggle";
 import { useChildCondition } from "../../../utils/hooks";
 import { useObjectProperties } from "../../../utils/hooks";
+import { useTranslation } from "react-i18next";
 
 export type ChildCondition = {
   type: "showIf" | "hideIf";
@@ -41,7 +42,7 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
   const { updateChildCondition } = useChildCondition();
   const { selectedObjectIds } = useObjectProperties();
   const groupId = selectedObjectIds[0];
-
+  const { t } = useTranslation();
   const [inputPropsString, setInputPropsString] = useState(
     condition?.props?.join(", ") || ""
   );
@@ -115,7 +116,9 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography variant="subtitle2">Program visibility</Typography>
+        <Typography variant="subtitle2">
+          {t("sidebar.programVisibility")}
+        </Typography>
         <IconButton onClick={handleAddCondition}>
           <PlusIcon />
         </IconButton>
@@ -135,18 +138,21 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
   return (
     <Box paddingLeft="10px" paddingRight="10px">
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="subtitle2">Program visibility</Typography>
+        <Typography variant="subtitle2">
+          {" "}
+          {t("sidebar.programVisibility")}
+        </Typography>
         <IconButton onClick={handleRemoveCondition} edge="start">
           <MinusIcon />
         </IconButton>
       </Box>
 
-      <Box sx={{ maxWidth: "134px", marginTop: "8px" }}>
+      <Box sx={{ maxWidth: "170px", marginTop: "8px" }}>
         <ActionToggle
-          label="Action"
+          label={t("sidebar.action")}
           options={[
-            { value: "hideIf", label: "Hide" },
-            { value: "showIf", label: "Show" },
+            { value: "hideIf", label: t("sidebar.hide") },
+            { value: "showIf", label: t("sidebar.show") },
           ]}
           selected={condition.type}
           onChange={(newType) =>
@@ -158,7 +164,7 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
       <Box sx={{ display: "flex", gap: 2, marginTop: "12px" }}>
         <Box sx={{ flex: 1 }}>
           <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
-            Property
+            {t("sidebar.property")}
           </InputLabel>
           <TextField
             value={inputPropsString}
@@ -195,13 +201,13 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
             }}
             fullWidth
             margin="normal"
-            placeholder="e.g. name, value"
+            placeholder={t("sidebar.conditionPlaceholder")}
           />
         </Box>
 
         <Box sx={{ flex: 1 }}>
           <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
-            Condition
+            {t("sidebar.condition")}
           </InputLabel>
           <FormControl fullWidth margin="normal">
             <Select
@@ -221,14 +227,14 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
                 border: "1px solid #E4E4E4",
               }}
             >
-              <MenuItem value="exist">Exist</MenuItem>
-              <MenuItem value="noExist">No exist</MenuItem>
-              <MenuItem value="eq">Equal (=)</MenuItem>
-              <MenuItem value="not-eq">Not equal (≠)</MenuItem>
-              <MenuItem value="more-than">More than (&gt;)</MenuItem>
-              <MenuItem value="less-than">Less than (&lt;)</MenuItem>
-              <MenuItem value="more-or-eq">More or equal (≥)</MenuItem>
-              <MenuItem value="less-or-eq">Less or equal (≤)</MenuItem>
+              <MenuItem value="exist">{t("sidebar.exist")}</MenuItem>
+              <MenuItem value="noExist">{t("sidebar.noExist")}</MenuItem>
+              <MenuItem value="eq">{t("sidebar.equal")}</MenuItem>
+              <MenuItem value="not-eq">{t("sidebar.notEqual")}</MenuItem>
+              <MenuItem value="more-than">{t("sidebar.moreThan")}</MenuItem>
+              <MenuItem value="less-than">{t("sidebar.lessThan")}</MenuItem>
+              <MenuItem value="more-or-eq">{t("sidebar.moreOrEqual")}</MenuItem>
+              <MenuItem value="less-or-eq">{t("sidebar.lessOrEqual")}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -237,7 +243,7 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
       {isComparisonOperator && (
         <Box sx={{ marginTop: "8px" }}>
           <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
-            Value to compare
+            {t("sidebar.valueToCompare")}
           </InputLabel>
           <TextField
             type={
@@ -250,7 +256,6 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
             value={compareValue}
             onChange={(e) => {
               const newVal = e.target.value;
-
               if (
                 ["more-than", "less-than", "more-or-eq", "less-or-eq"].includes(
                   condition.state
@@ -259,7 +264,6 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
               ) {
                 return;
               }
-
               setCompareValue(newVal);
               handleConditionChange(undefined, undefined, undefined, newVal);
             }}
@@ -269,8 +273,8 @@ export const ChildConditionSelector: FC<ChildConditionSelectorProps> = ({
               ["more-than", "less-than", "more-or-eq", "less-or-eq"].includes(
                 condition.state
               )
-                ? "Enter the number"
-                : "Enter comparison value"
+                ? t("sidebar.enterNumber")
+                : t("sidebar.enterComparisonValue")
             }
           />
         </Box>

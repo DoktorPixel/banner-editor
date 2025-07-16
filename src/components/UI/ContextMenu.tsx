@@ -6,6 +6,7 @@ import {
   stepBackwardWithCollision,
 } from "../../utils/hooks";
 import { useBanner } from "../../context/BannerContext";
+import { useTranslation } from "react-i18next";
 
 interface ContextMenuProps {
   x: number;
@@ -35,6 +36,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
     updateObject(object.id, { zIndex: maxZIndex + 1 });
     onClose();
   };
+  const { t } = useTranslation();
 
   const sendToBack = () => {
     const minZIndex = Math.min(...objects.map((obj) => obj.zIndex || 0));
@@ -91,7 +93,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
         {/* перенести вперед */}
-        Move Forward
+        {t("contextMenu.moveForward")}
       </Button>
 
       <Button
@@ -99,7 +101,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
         {/* на передній план */}
-        Bring to Front
+        {t("contextMenu.bringToFront")}
       </Button>
 
       <Button
@@ -107,7 +109,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
         {/* перенести назад */}
-        Move Backward
+        {t("contextMenu.moveBackward")}
       </Button>
 
       <Button
@@ -115,7 +117,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
         {/* на задній план */}
-        Send to Back
+        {t("contextMenu.sendToBack")}
       </Button>
 
       <Button
@@ -128,7 +130,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
           minWidth: "10px",
         }}
       >
-        Group
+        {t("contextMenu.group")}
       </Button>
       <Button
         onClick={ungroupSelectedObject}
@@ -139,7 +141,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         }
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
-        Ungroup
+        {t("contextMenu.ungroup")}
       </Button>
 
       <Button
@@ -155,7 +157,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         }
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
-        Group Virtual
+        {t("contextMenu.groupVirtual")}
       </Button>
       <Button
         onClick={ungroupSelectedObjectsAbstract}
@@ -168,7 +170,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         }
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
-        Ungroup Virtual
+        {t("contextMenu.ungroupVirtual")}
       </Button>
     </div>
   );

@@ -5,6 +5,7 @@ import {
   TextDecorationNone,
   TextUnderline,
 } from "../../../assets/icons";
+import { useTranslation } from "react-i18next";
 
 interface TextDecorationSelectorProps {
   value: string;
@@ -15,10 +16,11 @@ const TextDecorationSelector: React.FC<TextDecorationSelectorProps> = ({
   value,
   onChange,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="text-decoration">
       <InputLabel sx={{ mb: "5px", fontSize: "12px" }}>
-        Font decoration
+        {t("sidebar.textDecoration")}
       </InputLabel>
       <ButtonGroup color="primary" size="small" sx={{ boxShadow: "none" }}>
         <Button
