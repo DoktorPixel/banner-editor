@@ -12,7 +12,8 @@ export const useAuth = () => {
 
       if (!session) {
         try {
-          await signIn("michael.studenets+1@gmail.com", "$Ms123456");
+          // await signIn("michael.studenets+1@gmail.com", "$Ms123456");
+          await signIn("vladprytula.work@gmail.com", "Password1111");
           console.log("Successfully signed in");
         } catch (error) {
           console.error("Auto-sign-in failed:", error);

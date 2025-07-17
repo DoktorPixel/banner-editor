@@ -10,7 +10,9 @@ import {
   InputAdornment,
   Tooltip,
 } from "@mui/material";
+import { useBanner } from "../../../context/BannerContext";
 import FontSelector from "../selectors/FontSelector";
+import { CustomFontSelector } from "../selectors/CustomFontSelector";
 import TextAlignSelector from "../button-groups/TextAlignSelector";
 import TextDecorationSelector from "../button-groups/TextDecorationSelector";
 import FontStyleSelector from "../button-groups/FontStyleSelector";
@@ -29,6 +31,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
   object,
   onChange,
 }) => {
+  const { currentProjectId } = useBanner();
   const { t } = useTranslation();
   return (
     <Box>
@@ -274,7 +277,8 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           sx={{ margin: "32px 0 10px 0" }}
         />
       </div>
-
+      <div className="grey-line"></div>
+      <CustomFontSelector templateId={currentProjectId || ""} />
       <div className="grey-line"></div>
       <div className="padding-wrapper">
         <TextAlignSelector
