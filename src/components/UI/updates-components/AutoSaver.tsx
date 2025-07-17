@@ -6,13 +6,14 @@ import { debounce } from "lodash";
 import isEqual from "fast-deep-equal";
 import { captureAndUploadPreview } from "../export-components/PreviewUploader";
 import { useSupabaseProject } from "../../../utils/useSupabaseProject";
+import { useTranslation } from "react-i18next";
 
 const AutoSaver: React.FC = () => {
   const { objects, dynamicImgs, currentProjectName, currentProjectId } =
     useBanner();
   const { config } = useConfig();
   const [saved, setSaved] = useState(false);
-
+  const { t } = useTranslation();
   const lastDataRef = useRef<ProjectData>({
     objects: [],
     dynamicImgs: [],
@@ -110,7 +111,7 @@ const AutoSaver: React.FC = () => {
         fontWeight: 500,
       }}
     >
-      Saved
+      {t("saved")}
     </div>
   ) : null;
 };
