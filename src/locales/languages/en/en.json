@@ -210,5 +210,20 @@
     "ungroup": "Ungroup",
     "groupVirtual": "Group Virtual",
     "ungroupVirtual": "Ungroup Virtual"
+  },
+
+  "customFont": {
+    "title": "Custom Fonts",
+    "manage": "Manage Custom Fonts",
+    "fontName": "Font Name",
+    "uploadPrompt": "Click or drag font file here (.woff2, .woff, .ttf, .otf)",
+    "selectedFile": "Selected file",
+    "upload": "Upload Font",
+    "reset": "Reset",
+    "format": "Format",
+    "empty": "No custom fonts uploaded.",
+    "uploadSuccess": "Font uploaded successfully",
+    "deleteSuccess": "Font deleted successfully",
+    "unexpectedError": "Unexpected error"
   }
 }
