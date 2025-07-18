@@ -19,6 +19,7 @@ import {
   useUploadFont,
   useDeleteFont,
 } from "../../../utils/useFonts";
+import { useConfig } from "../../../context/ConfigContext";
 
 interface Props {
   templateId: string;
@@ -33,16 +34,72 @@ export const CustomFontSelector: FC<Props> = ({ templateId }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
+  const { setCustomFonts } = useConfig();
 
   const {
     data: fonts,
     isLoading: isLoadingFonts,
     refetch,
   } = useFonts(templateId);
+  // console.log("Fonts data:", fonts);
   const uploadFont = useUploadFont(templateId);
   const deleteFont = useDeleteFont(templateId);
 
   const handleToggle = () => setOpen((prev) => !prev);
+
+  const handleUpload = async () => {
+    if (!selectedFile || !fontName.trim()) return;
+    const cleanFontFamily = fontName.replace(/\s+/g, "");
+
+    uploadFont.mutate(
+      {
+        file: selectedFile,
+        font_name: fontName.trim(),
+        font_family: cleanFontFamily,
+      },
+      {
+        onSuccess: async () => {
+          setFontName("");
+          setSelectedFile(null);
+          setSuccessMessage(t("customFont.uploadSuccess"));
+          const updated = await refetch();
+          setCustomFonts(updated.data || []);
+        },
+        onError: (error: unknown) => {
+          if (error instanceof Error) {
+            setErrorMessage(error.message);
+          } else {
+            setErrorMessage(t("customFont.unexpectedError"));
+          }
+        },
+      }
+    );
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleDelete = (fontId: string) => {
+    deleteFont.mutate(fontId, {
+      onSuccess: async () => {
+        setSuccessMessage(t("customFont.deleteSuccess"));
+        const updated = await refetch();
+        setCustomFonts(updated.data || []);
+      },
+      onError: (error: unknown) => {
+        if (error instanceof Error) {
+          setErrorMessage(error.message);
+        } else {
+          setErrorMessage(t("customFont.unexpectedError"));
+        }
+      },
+    });
+  };
+
+  const handleReset = () => {
+    setFontName("");
+    setSelectedFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -67,58 +124,6 @@ export const CustomFontSelector: FC<Props> = ({ templateId }) => {
 
   const handleDragLeave = () => {
     setIsDragging(false);
-  };
-
-  const handleUpload = async () => {
-    if (!selectedFile || !fontName.trim()) return;
-    const cleanFontFamily = fontName.replace(/\s+/g, "");
-
-    uploadFont.mutate(
-      {
-        file: selectedFile,
-        font_name: fontName.trim(),
-        font_family: cleanFontFamily,
-      },
-      {
-        onSuccess: () => {
-          setFontName("");
-          setSelectedFile(null);
-          setSuccessMessage(t("customFont.uploadSuccess"));
-          refetch();
-        },
-        onError: (error: unknown) => {
-          if (error instanceof Error) {
-            setErrorMessage(error.message);
-          } else {
-            setErrorMessage(t("customFont.unexpectedError"));
-          }
-        },
-      }
-    );
-
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
-
-  const handleReset = () => {
-    setFontName("");
-    setSelectedFile(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
-
-  const handleDelete = (fontId: string) => {
-    deleteFont.mutate(fontId, {
-      onSuccess: () => {
-        setSuccessMessage(t("customFont.deleteSuccess"));
-        refetch();
-      },
-      onError: (error: unknown) => {
-        if (error instanceof Error) {
-          setErrorMessage(error.message);
-        } else {
-          setErrorMessage(t("customFont.unexpectedError"));
-        }
-      },
-    });
   };
 
   const handleCloseSnackbar = () => {

@@ -20,7 +20,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   }>({});
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
   const objects = history[currentStep] || [];
-  // console.log("objects:", objects);
 
   const renderedObjects = useMemo(() => {
     return objects.map((obj) => ({
@@ -41,30 +40,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const triggerRefresh = () => setRefreshCounter((prev) => prev + 1);
 
   const [dynamicImgs, setDynamicImgs] = useState<DynamicImg[]>([]);
-
-  // const addDynamicImg = (dynamicImg: DynamicImg) => {
-  //   setDynamicImgs((prev) => {
-  //     const exists = prev.some(
-  //       (b) => b.name === dynamicImg.name && b.file_url === dynamicImg.file_url
-  //     );
-  //     return exists ? prev : [...prev, dynamicImg];
-  //   });
-  // };
-
-  // const updateDynamicImg = (oldName: string, updates: Partial<DynamicImg>) => {
-  //   setDynamicImgs((prev) =>
-  //     prev.map((dynamicImg) =>
-  //       dynamicImg.name === oldName ? { ...dynamicImg, ...updates } : dynamicImg
-  //     )
-  //   );
-  // };
-
-  // const deleteDynamicImg = (name: string) => {
-  //   setDynamicImgs((prevImgs) => {
-  //     const updatedImgs = prevImgs.filter((img) => img.name !== name);
-  //     return updatedImgs;
-  //   });
-  // };
 
   const addDynamicImg = (newImg: DynamicImg) => {
     setDynamicImgs((prev) => {
@@ -161,15 +136,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     null
   );
 
-  // const selectChild = (groupId: number, childId: number, parentId?: number) => {
-  //   setSelectedChildId((prev) => {
-  //     const newSelection = { groupId, childId, parentId };
-  //     // console.log("selectedChildId (prev)", prev);
-  //     // console.log("selectedChildId (updated)", newSelection);
-  //     return newSelection;
-  //   });
-  // };
-
   const selectChild = (groupId: number, childId: number, parentId?: number) => {
     setSelectedChildId({ groupId, childId, parentId });
   };
@@ -236,7 +202,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const selectObject = (id: number, toggle = false) => {
     setSelectedObjectIds((prev) => {
       if (toggle) {
-        // console.log("selectedObjectIds", selectedObjectIds);
         return prev.includes(id)
           ? prev.filter((objId) => objId !== id)
           : [...prev, id];
@@ -246,7 +211,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  // выделение все объектов abstractGroup (сам объект + его группа)
   const selectAllObjects = (id: number, toggle = false) => {
     setSelectedObjectIds((prev) => {
       const selectedObj = objects.find((obj) => obj.id === id);
@@ -368,7 +332,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    // Проверяем, что переданы все ID потомков и нет лишних
     const currentChildIds = group.children.map((child) => child.id);
     if (
       newOrder.length !== currentChildIds.length ||
@@ -378,13 +341,11 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    // Создаем новый массив children с обновленным order
     const newChildren = newOrder.map((childId, index) => {
       const child = group.children!.find((c) => c.id === childId)!;
       return { ...child, order: index };
     });
 
-    // Обновляем родительский объект
     updateObject(groupId, { children: newChildren });
   };
 

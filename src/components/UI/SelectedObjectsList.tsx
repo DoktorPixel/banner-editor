@@ -9,7 +9,7 @@ interface SelectedObjectsListProps {
 export const SelectedObjectsList: React.FC<SelectedObjectsListProps> = ({
   objects,
 }) => {
-  console.log("Selected objects:", objects);
+  // console.log("Selected objects:", objects);
   const validObjects = objects.filter(Boolean) as BannerObject[];
 
   const abstractGroupId = validObjects[0]?.abstractGroupId ?? null;

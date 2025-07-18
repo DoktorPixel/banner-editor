@@ -1,14 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fontsApiClient } from "../api/fontsApi";
 
-export interface CustomFont {
-  id: string;
-  created_at: string;
-  file_url: string;
-  font_family: string;
-  font_format: string;
-  font_name: string;
-}
+import { CustomFont } from "../types";
 
 export const useFonts = (templateId: string) => {
   return useQuery<CustomFont[]>({

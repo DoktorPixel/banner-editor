@@ -19,6 +19,7 @@ import {
 
 import { useConfig } from "../context/ConfigContext";
 import { useTranslation } from "react-i18next";
+import { useInjectCustomFonts } from "../utils/InjectCustomFonts";
 
 const BannerArea: React.FC = () => {
   const {
@@ -62,6 +63,7 @@ const BannerArea: React.FC = () => {
   const fallbackText = encodeURIComponent(
     t("dialogs.dynamicImageDialog.fillIn")
   );
+  useInjectCustomFonts(config);
   const bannerStyles = useMemo(
     () => ({
       width: `${canvasSize.width}px`,

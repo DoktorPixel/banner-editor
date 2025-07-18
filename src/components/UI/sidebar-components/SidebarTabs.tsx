@@ -51,8 +51,6 @@ const SidebarTabs: React.FC = () => {
               backgroundColor: activeTab === tab.id ? "#EEEEEE" : "transparent",
               borderRadius: "5px",
               padding: "5px 5px 0 5px",
-              // width: "50px",
-              // maxWidth: "30px",
               minWidth: "56px",
             }}
           >

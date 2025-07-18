@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import * as WebFont from "webfontloader";
 import { fonts } from "../../../constants/fonts";
 import { useTranslation } from "react-i18next";
+import { useConfig } from "../../../context/ConfigContext";
 
 interface FontSelectorProps {
   value: string;
@@ -13,6 +14,16 @@ const ChildFontSelector: React.FC<FontSelectorProps> = ({
   value,
   onChange,
 }) => {
+  const { config } = useConfig();
+
+  const customFontOptions = (config.customFonts || []).map((font) => ({
+    label: font.font_name,
+    value: font.font_family,
+    category: "custom" as const,
+  }));
+
+  const allFonts = [...fonts, ...customFontOptions];
+
   const handleFontChange = (
     event: React.SyntheticEvent,
     selectedOption: { label: string; value: string } | null
@@ -33,9 +44,9 @@ const ChildFontSelector: React.FC<FontSelectorProps> = ({
   const { t } = useTranslation();
   return (
     <Autocomplete
-      options={fonts}
+      options={allFonts}
       getOptionLabel={(option) => option.label}
-      value={fonts.find((font) => font.value === value) || null}
+      value={allFonts.find((font) => font.value === value) || null}
       onChange={handleFontChange}
       style={{ marginTop: "30px" }}
       renderInput={(params) => (

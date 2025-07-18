@@ -52,7 +52,7 @@ const AutoSaver: React.FC = () => {
         dynamicImgs: dynamicImgs ?? [],
       });
 
-      console.log("Auto-saved project:", projectData);
+      // console.log("Auto-saved project:", projectData);
 
       lastDataRef.current = {
         objects: structuredClone(objects),
