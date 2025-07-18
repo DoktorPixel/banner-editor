@@ -1,8 +1,6 @@
 import { BannerObject, BannerChild } from "../../../types/index";
 
-// Функция для генерации HTML для объектов
 export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
-  // Функция для экранирования HTML для защиты от XSS
   const escapeHTML = (str: unknown): string => {
     const safeStr = typeof str === "string" ? str : String(str || "");
     return safeStr
@@ -13,13 +11,11 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
       .replace(/'/g, "&#39;");
   };
 
-  // Функция для преобразования значений в пиксели
   const toPx = (value?: number | string): string => {
     if (value === undefined) return "";
     return typeof value === "number" ? `${value}px` : value;
   };
 
-  // Функция для преобразования цвета в RGB, если это HEX
   const toRGB = (color?: string): string => {
     if (!color || !color.startsWith("#")) return color || "";
     const hex = color.replace("#", "");
@@ -30,7 +26,6 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
     return `rgb(${r}, ${g}, ${b})`;
   };
 
-  // Функция для генерации CSS-стилей
   const generateStyles = (
     obj: BannerObject | BannerChild,
     isChild: boolean = false,
@@ -40,7 +35,6 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
   ): string => {
     const styles: string[] = [];
 
-    // Стили для внешнего контейнера
     if (isOuter) {
       if (!isChild) {
         styles.push(`position: absolute`);
@@ -75,7 +69,6 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         styles.push(`transform: rotate(${obj.rotate}deg)`);
       }
     } else {
-      // Стили для внутреннего элемента
       if ((isText || obj.type === "figure") && !isGroupChild) {
         if (obj.width !== undefined && !obj.autoWidth)
           styles.push(`width: ${toPx(obj.width)}`);
@@ -85,8 +78,6 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         if (obj.autoHeight) styles.push(`height: auto`);
       }
 
-      // Текстовые стили
-      // Сохраняем переводы строк и переносы
       if (obj.type === "text") {
         styles.push(`word-break: break-word`);
         styles.push(`overflow: hidden`);
@@ -111,7 +102,6 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         styles.push(`white-space: nowrap`);
       }
 
-      // Стили для фигур и изображений
       if (obj.objectFit) styles.push(`object-fit: ${obj.objectFit}; `);
 
       if (obj.type === "image" || obj.type === "figure") {
@@ -119,7 +109,6 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
       }
     }
 
-    // Общие стили
     if (obj.backgroundColor)
       styles.push(`background-color: ${toRGB(obj.backgroundColor)}`);
     if (obj.borderRadius)
@@ -132,7 +121,6 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
     if (obj.paddingRight)
       styles.push(`padding-right: ${toPx(obj.paddingRight)}`);
 
-    // Бордеры
     const borderProps = [
       {
         side: "top",
@@ -184,7 +172,6 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
     return styles.join("; ");
   };
 
-  // Функция для генерации HTML для объекта или ребенка
   const generateObjectHTML = (
     obj: BannerObject | BannerChild,
     isChild: boolean = false,
@@ -278,7 +265,6 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
     return "";
   };
 
-  // Функция для генерации HTML верхнего уровня с учётом conditionForAbstract
   const generateTopLevelHTML = (obj: BannerObject): string => {
     const objectHTML = generateObjectHTML(obj, false, false);
     if (obj.conditionForAbstract) {
@@ -290,9 +276,8 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
     return objectHTML;
   };
 
-  // Генерация HTML для всех объектов
   return objects
-    .sort((a, b) => (a.zIndex ?? 0) - (b.zIndex ?? 0)) // Сортировка по zIndex
-    .map((obj) => generateTopLevelHTML(obj)) // Используем generateTopLevelHTML вместо generateObjectHTML
+    .sort((a, b) => (a.zIndex ?? 0) - (b.zIndex ?? 0))
+    .map((obj) => generateTopLevelHTML(obj))
     .join("");
 };

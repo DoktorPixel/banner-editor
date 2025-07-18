@@ -2,6 +2,7 @@ import { BannerObject, ConfigItem, DynamicImg } from "../../../types/index";
 import { GenerateObjectsHTML } from "./GeneateObjectsHTML";
 import { generateGoogleFontsLinks } from "../../../utils/generateGoogleFonts";
 import { extractFontsFromObjects } from "../../../utils/extractFonts";
+import { generateCustomFontLinks } from "../../../utils/generateCustomFontLinks";
 
 export const ExportToHTML = (
   objects: BannerObject[],
@@ -13,7 +14,7 @@ export const ExportToHTML = (
   const height = config.canvasSize?.height || 1080;
   const usedFonts = extractFontsFromObjects(objects);
   const fontLinks = generateGoogleFontsLinks(usedFonts);
-
+  const fontFaceCSS = generateCustomFontLinks(config);
   return `
   <!DOCTYPE html>
   <html lang="en">
@@ -23,6 +24,7 @@ export const ExportToHTML = (
       <title>Exported Banner</title>
       ${fontLinks}
       <style>
+      ${fontFaceCSS}
         * {
           box-sizing: border-box;
           font-family: Inter, sans-serif;

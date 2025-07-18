@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { ConfigItem } from "../types";
+import { ConfigItem, CustomFont } from "../types";
 
 interface ConfigContextType {
   config: ConfigItem;
@@ -8,6 +8,9 @@ interface ConfigContextType {
   toggleHiddenObject: (id: number) => void;
   updateCanvasSize: (width: number, height: number) => void;
   canvasSize: { width: number; height: number };
+  setCustomFonts: (fonts: CustomFont[]) => void;
+  addCustomFont: (font: CustomFont) => void;
+  removeCustomFont: (fontId: string) => void;
 }
 
 const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
@@ -24,6 +27,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
       { key: "sale_price", value: "800 UAH" },
     ],
     canvasSize: { width: 1080, height: 1080 },
+    customFonts: [],
   });
 
   const toggleHiddenObject = (id: number) => {
@@ -32,11 +36,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
       const updatedIds = alreadyHidden
         ? prev.hiddenObjectIds.filter((i) => i !== id)
         : [...prev.hiddenObjectIds, id];
-
-      return {
-        ...prev,
-        hiddenObjectIds: updatedIds,
-      };
+      return { ...prev, hiddenObjectIds: updatedIds };
     });
   };
 
@@ -47,9 +47,22 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
     }));
   };
 
-  const canvasSizeValue = {
-    width: config.canvasSize.width,
-    height: config.canvasSize.height,
+  const setCustomFonts = (fonts: CustomFont[]) => {
+    setConfig((prev) => ({ ...prev, customFonts: fonts }));
+  };
+
+  const addCustomFont = (font: CustomFont) => {
+    setConfig((prev) => ({
+      ...prev,
+      customFonts: [...(prev.customFonts ?? []), font],
+    }));
+  };
+
+  const removeCustomFont = (fontId: string) => {
+    setConfig((prev) => ({
+      ...prev,
+      customFonts: (prev.customFonts ?? []).filter((f) => f.id !== fontId),
+    }));
   };
 
   return (
@@ -60,7 +73,10 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
         hiddenObjectIds: config.hiddenObjectIds,
         toggleHiddenObject,
         updateCanvasSize,
-        canvasSize: canvasSizeValue,
+        canvasSize: config.canvasSize,
+        setCustomFonts,
+        addCustomFont,
+        removeCustomFont,
       }}
     >
       {children}

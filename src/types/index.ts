@@ -252,6 +252,16 @@ export interface ConfigItem {
   hiddenObjectIds: number[];
   keyValuePairs: KeyValuePair[];
   canvasSize: { width: number; height: number };
+  customFonts?: CustomFont[];
+}
+
+export interface CustomFont {
+  id: string;
+  created_at: string;
+  file_url: string;
+  font_family: string;
+  font_format: string;
+  font_name: string;
 }
 
 export interface KeyValuePair {

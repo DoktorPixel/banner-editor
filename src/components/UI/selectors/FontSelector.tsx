@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import * as WebFont from "webfontloader";
 import { fonts } from "../../../constants/fonts";
 import { useTranslation } from "react-i18next";
+import { useConfig } from "../../../context/ConfigContext";
 
 interface FontSelectorProps {
   value: string;
@@ -10,30 +11,41 @@ interface FontSelectorProps {
 }
 
 const FontSelector: React.FC<FontSelectorProps> = ({ value, onChange }) => {
+  const { t } = useTranslation();
+  const { config } = useConfig();
+
+  const customFontOptions = (config.customFonts || []).map((font) => ({
+    label: font.font_name,
+    value: font.font_family,
+    category: "custom" as const,
+  }));
+
+  const allFonts = [...fonts, ...customFontOptions];
+
   const handleFontChange = (
-    event: React.SyntheticEvent<Element, Event>,
-    selectedOption: { label: string; value: string } | null
+    event: React.SyntheticEvent,
+    selectedOption: { label: string; value: string; category: string } | null
   ) => {
     if (!selectedOption) return;
 
     const font = selectedOption.value;
 
-    WebFont.load({
-      google: {
-        families: ["Roboto", "Open Sans"],
-        text: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZа бвгдеёжзийклмнопрстуфхцчшщыьэюя",
-      },
-    });
+    if (selectedOption.category !== "custom") {
+      WebFont.load({
+        google: {
+          families: [font],
+        },
+      });
+    }
 
     onChange(font);
   };
 
-  const { t } = useTranslation();
   return (
     <Autocomplete
-      options={fonts}
+      options={allFonts}
       getOptionLabel={(option) => option.label}
-      value={fonts.find((font) => font.value === value) || null}
+      value={allFonts.find((font) => font.value === value) || null}
       onChange={handleFontChange}
       style={{ marginTop: "30px" }}
       renderInput={(params) => (

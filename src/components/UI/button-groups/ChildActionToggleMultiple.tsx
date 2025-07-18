@@ -31,7 +31,6 @@ function ActionToggle<T extends string>({
             sx={{
               flex: 1,
               width: "100%",
-              // minWidth: "42px",
               minHeight: "30px",
               height: "29px",
               padding: "4px 6px",
