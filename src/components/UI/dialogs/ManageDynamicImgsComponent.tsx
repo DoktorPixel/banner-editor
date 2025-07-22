@@ -286,15 +286,12 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
                     },
                   }}
                 >
-                  <div className="image-item">
-                    <img
-                      src={normalizeImagePath(img.file_url)}
-                      alt={img.name || ""}
-                      className="image"
-                      style={{ cursor: "pointer" }}
-                    />
-                    name : {img.name}
-                  </div>
+                  <img
+                    src={normalizeImagePath(img.file_url)}
+                    alt={img.name || ""}
+                    className="image"
+                    style={{ cursor: "pointer" }}
+                  />
                 </Tooltip>
                 <Box sx={{ position: "relative", marginTop: 1 }}>
                   <Typography
