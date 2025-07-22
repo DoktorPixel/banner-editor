@@ -50,6 +50,7 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
         if (template.config_dev?.trim()) {
           parsed = JSON.parse(template.config_dev);
         }
+        console.log("Parsed project configuration:", parsed);
       } catch {
         console.error("Error parsing project configuration JSON");
       }

@@ -42,7 +42,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [dynamicImgs, setDynamicImgs] = useState<DynamicImg[]>([]);
 
   const addDynamicImg = (newImg: DynamicImg) => {
-    setDynamicImgs((prev) => {
+    setDynamicImgs((prev = []) => {
       const exists = prev.some((img) => img.id === newImg.id);
       return exists ? prev : [...prev, newImg];
     });
