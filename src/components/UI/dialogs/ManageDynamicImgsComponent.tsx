@@ -36,13 +36,14 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
 }) => {
   const {
     currentProjectId,
-    deleteObjectsByImageSrc,
     dynamicImgs,
     deleteDynamicImg,
     addDynamicImg,
     updateDynamicImgName,
   } = useBanner();
+
   const { useImages, deleteImage, uploadImage } = useSupabaseImages();
+
   const [image, setImage] = useState<UploadedImage[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadingNewImage, setUploadingNewImage] = useState(false);
@@ -51,11 +52,14 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { t } = useTranslation();
+
   const {
     data: images,
     isLoading: loadingLogo,
     error,
   } = useImages(currentProjectId ?? "", object_id);
+  // console.log("data useImages:", images);
+  // console.log("dynamicImgs :", dynamicImgs);
   useEffect(() => {
     setLocalLogoName(logoName || "");
   }, [logoName]);
@@ -66,22 +70,30 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
   };
 
   useEffect(() => {
-    if (images && dynamicImgs) {
-      const enrichedImgs = images.map((img) => {
-        const ctxImg = dynamicImgs.find((d) => d.id === img.id);
-        return {
-          ...img,
-          name: ctxImg?.name || img.name,
-        };
-      });
-      enrichedImgs.forEach((img) => addDynamicImg?.(img));
-      setImage(enrichedImgs);
-    }
+    if (!images || !dynamicImgs) return;
+
+    const dynamicImgsMap = new Map(dynamicImgs.map((d) => [d.id, d]));
+    const imagesMap = new Map(images.map((img) => [img.id, img]));
+    const enrichedImgs = images.map((img) => ({
+      ...img,
+      name: dynamicImgsMap.get(img.id)?.name || img.name,
+    }));
+
+    const newImgs = enrichedImgs.filter((img) => !dynamicImgsMap.has(img.id));
+    newImgs.forEach((img) => addDynamicImg?.(img));
+
+    const deadImgs = dynamicImgs.filter(
+      (d) => d.object_id === object_id && !imagesMap.has(d.id)
+    );
+    deadImgs.forEach((img) => deleteDynamicImg?.(img.id));
+
+    setImage(enrichedImgs);
+
     if (error) {
       setErrorMessage("Error loading images.");
       console.error("Error loading images:", error);
     }
-  }, [images, dynamicImgs, addDynamicImg, error]);
+  }, [images, dynamicImgs, object_id, addDynamicImg, deleteDynamicImg, error]);
 
   const handleDelete = async (id: string) => {
     if (!object_id || !currentProjectId) return;
@@ -89,13 +101,11 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     if (!imageToDelete) return;
 
     setDeletingIds((prev) => [...prev, id]);
-    const fullSrc = imageToDelete.file_url;
 
     try {
-      await deleteImage({ id, objectId: object_id });
       deleteDynamicImg?.(id);
+      await deleteImage({ id, objectId: object_id });
       setImage((prev) => prev.filter((img) => img.id !== id));
-      deleteObjectsByImageSrc(normalizeImagePath(fullSrc));
     } catch (error) {
       setErrorMessage("Error deleting image.");
       console.error("Delete error:", error);
@@ -181,7 +191,6 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
       onDragLeave={handleDragLeave}
     >
       <Typography variant="subtitle2">
-        {" "}
         {t("dialogs.dynamicImageDialog.dynamicLogos")}
       </Typography>
 
@@ -277,12 +286,15 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
                     },
                   }}
                 >
-                  <img
-                    src={normalizeImagePath(img.file_url)}
-                    alt={img.name || ""}
-                    className="image"
-                    style={{ cursor: "pointer" }}
-                  />
+                  <div className="image-item">
+                    <img
+                      src={normalizeImagePath(img.file_url)}
+                      alt={img.name || ""}
+                      className="image"
+                      style={{ cursor: "pointer" }}
+                    />
+                    name : {img.name}
+                  </div>
                 </Tooltip>
                 <Box sx={{ position: "relative", marginTop: 1 }}>
                   <Typography

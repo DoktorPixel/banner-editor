@@ -226,7 +226,7 @@ export interface BannerContextProps {
 export interface DynamicImg {
   // logoUrl?: string;
   name?: string;
-  id?: string; // for Supabase
+  id: string; // for Supabase
   object_id?: string; // for Supabase
   file_url?: string; // for Supabase
   template_id?: string; // for Supabase
