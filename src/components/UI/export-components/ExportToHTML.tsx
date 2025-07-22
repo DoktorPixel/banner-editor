@@ -64,7 +64,7 @@ export const ExportToHTML = (
       </div>
       <script>
        const dynamicImgs = ${JSON.stringify(dynamicImgs)};
-       const fallbackUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAOb+acQAAAAASUVORK5CYII=";
+       const fallbackUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/xcAAgMBgDgmIwUAAAAASUVORK5CYII=";
 
 
         // window.onload = function () {
