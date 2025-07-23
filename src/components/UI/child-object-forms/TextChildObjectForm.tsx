@@ -41,7 +41,7 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
         className="padding-wrapper"
         sx={{ mb: 2 }}
       >
-        {t("sidebar.text")}
+        {t("sidebar.nestedText")}
       </Typography>
 
       <div className="padding-wrapper">

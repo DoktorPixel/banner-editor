@@ -125,6 +125,8 @@
     "general": "Загальне",
     "nestedFigure": "Вкладена фігура",
     "nestedImage": "Вкладене зображення",
+    "nestedText": "Вкладений текст",
+    "nestedLayout": "Вкладена Група",
     "alignment": "Вирівнювання",
     "padding": "Відступи",
     "appearance": "Вигляд",

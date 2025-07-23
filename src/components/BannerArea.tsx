@@ -1,25 +1,28 @@
 import { useState, useEffect, useRef, Fragment, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useBanner } from "../context/BannerContext";
 import { ResizeDirection } from "../types";
 import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
 import ResizeHandles from "../utils/ResizeHandles";
 import ContextMenu from "./UI/ContextMenu";
 import { BannerObject } from "../types";
-import { useChildProperties } from "../utils/hooks";
-import { useObjectProperties } from "../utils/hooks";
-import { useSelectionBounds } from "../utils/hooks";
 import {
-  replaceDynamicVariables,
-  replaceDynamicVariablesForDynamicImg,
-  replaceDynamicText,
+  useChildProperties,
+  useObjectProperties,
+  useSelectionBounds,
   shouldHideObject,
   shouldHideGroup,
   computeOpacity,
 } from "../utils/hooks";
-
 import { useConfig } from "../context/ConfigContext";
-import { useTranslation } from "react-i18next";
+
 import { useInjectCustomFonts } from "../utils/InjectCustomFonts";
+import {
+  TextObject,
+  ImageObject,
+  FigureObject,
+  GroupObjectChildren,
+} from "./UI/area-objects";
 
 const BannerArea: React.FC = () => {
   const {
@@ -32,7 +35,6 @@ const BannerArea: React.FC = () => {
     selectedChildId,
     selectChild,
     clearChildSelection,
-    //
     temporaryUpdates,
     setTemporaryUpdates,
     renderedObjects,
@@ -454,356 +456,14 @@ const BannerArea: React.FC = () => {
                       paddingRight: object.paddingRight,
                     }}
                   >
-                    {object.children
-                      ?.slice()
-                      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-                      .map((child) => {
-                        const isHidden = shouldHideObject(
-                          child.condition,
-                          keyValuePairs
-                        );
-                        const isVisibleCild =
-                          isVisible && !hiddenObjectIds.includes(child.id);
-                        if (child.type === "text") {
-                          return (
-                            <div
-                              key={child.id}
-                              id={`${child.id}`}
-                              data-condition={JSON.stringify(child.condition)}
-                              className={`text-field banner-object-child ${
-                                selectedChildId?.groupId === object.id &&
-                                selectedChildId.childId === child.id
-                                  ? "selected"
-                                  : ""
-                              }`}
-                              style={{
-                                fontSize: child.fontSize,
-                                color: child.color,
-                                fontFamily: child.fontFamily,
-                                fontWeight: child.fontWeight,
-                                fontStyle: child.fontStyle,
-                                textDecoration: child.textDecoration,
-                                textAlign: child.textAlign,
-                                opacity: computeOpacity(
-                                  child.opacity,
-                                  isHidden
-                                ),
-                                visibility: isVisibleCild
-                                  ? "visible"
-                                  : "hidden",
-                                border:
-                                  selectedChildId?.groupId === object.id &&
-                                  selectedChildId.childId === child.id
-                                    ? "1px solid blue"
-                                    : "none",
-                                transform: `rotate(${child.rotate || 0}deg)`,
-                              }}
-                              onDoubleClick={(e) =>
-                                handleChildClick(
-                                  object.id,
-                                  child.id,
-                                  e,
-                                  undefined
-                                )
-                              }
-                            >
-                              {replaceDynamicText(
-                                child.content ?? "",
-                                keyValuePairs
-                              )}
-                            </div>
-                          );
-                        } else if (child.type === "image") {
-                          return (
-                            <img
-                              id={`${child.id}`}
-                              data-condition={JSON.stringify(child.condition)}
-                              key={child.id}
-                              src={replaceDynamicVariables(
-                                child.src ?? "",
-                                keyValuePairs
-                              )}
-                              alt={child.name || "image"}
-                              style={{
-                                width: child.width,
-                                height: child.height,
-                                objectFit: child.objectFit,
-                                transform: `rotate(${child.rotate || 0}deg)`,
-                                opacity: computeOpacity(
-                                  child.opacity,
-                                  isHidden
-                                ),
-                                visibility: isVisibleCild
-                                  ? "visible"
-                                  : "hidden",
-                              }}
-                              onDoubleClick={(e) =>
-                                handleChildClick(
-                                  object.id,
-                                  child.id,
-                                  e,
-                                  undefined
-                                )
-                              }
-                              className={`banner-object-child image-field ${
-                                selectedChildId?.groupId === object.id &&
-                                selectedChildId.childId === child.id
-                                  ? "selected"
-                                  : ""
-                              }`}
-                            />
-                          );
-                        } else if (child.type === "figure") {
-                          const {
-                            id,
-                            width,
-                            height,
-                            rotate,
-                            backgroundColor,
-                            ...figureStyles
-                          } = child;
-
-                          const cleanStyles = Object.fromEntries(
-                            Object.entries(figureStyles).filter(
-                              ([key]) => key in ({} as React.CSSProperties)
-                            )
-                          );
-                          return (
-                            <div
-                              key={id}
-                              id={`${child.id}`}
-                              data-condition={JSON.stringify(child.condition)}
-                              style={{
-                                transform: `rotate(${rotate ?? 0}deg)`,
-                                visibility: isVisibleCild
-                                  ? "visible"
-                                  : "hidden",
-                              }}
-                              onDoubleClick={(e) =>
-                                handleChildClick(
-                                  object.id,
-                                  child.id,
-                                  e,
-                                  undefined
-                                )
-                              }
-                              className={`banner-object-child ${
-                                selectedChildId?.groupId === object.id &&
-                                selectedChildId.childId === child.id
-                                  ? "selected"
-                                  : ""
-                              }`}
-                            >
-                              <div
-                                style={{
-                                  position: "relative",
-                                  width: width ?? "100px",
-                                  height: height ?? "100px",
-                                  backgroundColor:
-                                    backgroundColor !== "none"
-                                      ? backgroundColor
-                                      : undefined,
-                                  ...cleanStyles,
-                                }}
-                              ></div>
-                            </div>
-                          );
-                        } else if (child.type === "group") {
-                          const {
-                            id,
-                            children,
-                            rotate,
-                            width,
-                            height,
-                            autoWidth,
-                            autoHeight,
-                            backgroundColor,
-                            ...groupStyles
-                          } = child;
-                          const cleanStyles = Object.fromEntries(
-                            Object.entries(groupStyles).filter(
-                              ([key]) => key in ({} as React.CSSProperties)
-                            )
-                          );
-                          return (
-                            <div
-                              key={id}
-                              id={`${id}`}
-                              data-condition={JSON.stringify(child.condition)}
-                              style={{
-                                transform: `rotate(${rotate ?? 0}deg)`,
-                                visibility: isVisibleCild
-                                  ? "visible"
-                                  : "hidden",
-                              }}
-                              className={`banner-object-child ${
-                                selectedChildId?.groupId === object.id &&
-                                selectedChildId.childId === child.id
-                                  ? "selected"
-                                  : ""
-                              }`}
-                              onDoubleClick={(e) =>
-                                handleChildClick(
-                                  object.id,
-                                  child.id,
-                                  e,
-                                  undefined
-                                )
-                              }
-                            >
-                              <div
-                                style={{
-                                  width: autoWidth ? "auto" : width,
-                                  height: autoHeight ? "auto" : height,
-                                  backgroundColor:
-                                    backgroundColor !== "none"
-                                      ? backgroundColor
-                                      : undefined,
-                                  position: "relative",
-                                  ...cleanStyles,
-                                }}
-                              >
-                                {children
-                                  ?.slice()
-                                  .sort(
-                                    (a, b) => (a.order ?? 0) - (b.order ?? 0)
-                                  )
-                                  .map((nestedChild) => {
-                                    const isVisibleCildNested =
-                                      isVisible &&
-                                      isVisibleCild &&
-                                      !hiddenObjectIds.includes(nestedChild.id);
-                                    const {
-                                      id: nestedId,
-                                      condition,
-                                      content,
-                                      rotate,
-                                      src,
-                                      ...nestedStyles
-                                    } = nestedChild;
-                                    if (nestedChild.type === "image") {
-                                      return (
-                                        <img
-                                          key={nestedId}
-                                          id={`${nestedId}`}
-                                          data-condition={JSON.stringify(
-                                            condition
-                                          )}
-                                          src={replaceDynamicVariables(
-                                            src ?? "",
-                                            keyValuePairs
-                                          )}
-                                          alt={"image"}
-                                          style={{
-                                            ...nestedStyles,
-                                            visibility: isVisibleCildNested
-                                              ? "visible"
-                                              : "hidden",
-                                          }}
-                                          className={`image-field banner-object-child ${
-                                            selectedChildId?.groupId ===
-                                              child.id &&
-                                            selectedChildId.childId ===
-                                              nestedChild.id
-                                              ? "selected-grand-child"
-                                              : ""
-                                          }`}
-                                          onDoubleClick={(e) =>
-                                            handleChildClick(
-                                              child.id,
-                                              nestedChild.id,
-                                              e,
-                                              object.id
-                                            )
-                                          }
-                                        />
-                                      );
-                                    } else if (nestedChild.type === "text") {
-                                      return (
-                                        <div
-                                          id={`${nestedId}`}
-                                          data-condition={JSON.stringify(
-                                            condition
-                                          )}
-                                          key={nestedId}
-                                          style={{
-                                            ...nestedStyles,
-                                            transform: `rotate(${
-                                              rotate ?? 0
-                                            }deg)`,
-                                            position: "relative",
-                                            width: "auto",
-                                            height: "auto",
-                                            visibility: isVisibleCildNested
-                                              ? "visible"
-                                              : "hidden",
-                                          }}
-                                          className={`image-field banner-object-child ${
-                                            selectedChildId?.groupId ===
-                                              child.id &&
-                                            selectedChildId.childId ===
-                                              nestedChild.id
-                                              ? "selected-grand-child"
-                                              : ""
-                                          }`}
-                                          onDoubleClick={(e) =>
-                                            handleChildClick(
-                                              child.id,
-                                              nestedChild.id,
-                                              e,
-                                              object.id
-                                            )
-                                          }
-                                        >
-                                          {content}
-                                        </div>
-                                      );
-                                    }
-
-                                    return (
-                                      <p
-                                        id={`${nestedId}`}
-                                        data-condition={JSON.stringify(
-                                          condition
-                                        )}
-                                        key={nestedId}
-                                        style={{
-                                          ...nestedStyles,
-                                          transform: `rotate(${
-                                            rotate ?? 0
-                                          }deg)`,
-                                          position: "relative",
-                                          visibility: isVisibleCildNested
-                                            ? "visible"
-                                            : "hidden",
-                                        }}
-                                        className={`image-field banner-object-child ${
-                                          selectedChildId?.groupId ===
-                                            child.id &&
-                                          selectedChildId.childId ===
-                                            nestedChild.id
-                                            ? "selected-grand-child"
-                                            : ""
-                                        }`}
-                                        onDoubleClick={(e) =>
-                                          handleChildClick(
-                                            child.id,
-                                            nestedChild.id,
-                                            e,
-                                            object.id
-                                          )
-                                        }
-                                      >
-                                        {content}
-                                      </p>
-                                    );
-                                  })}
-                              </div>
-                            </div>
-                          );
-                        }
-                        return null;
-                      })}
+                    <GroupObjectChildren
+                      object={object}
+                      isVisible={isVisible}
+                      hiddenObjectIds={hiddenObjectIds}
+                      keyValuePairs={keyValuePairs}
+                      selectedChildId={selectedChildId}
+                      handleChildClick={handleChildClick}
+                    />
                   </div>
                   <ResizeHandles
                     objectId={object.id}
@@ -835,7 +495,6 @@ const BannerArea: React.FC = () => {
                   left: object.x,
                   top: object.y,
                   width: object.autoWidth ? "auto" : object.width,
-
                   height: object.height,
                   zIndex: object.zIndex,
                   cursor: "move",
@@ -855,75 +514,21 @@ const BannerArea: React.FC = () => {
                 }`}
               >
                 {object.type === "text" ? (
-                  <div
-                    id={`${object.id}`}
-                    data-condition={JSON.stringify(object.condition)}
-                    className="text-field"
-                    style={{
-                      fontSize: object.fontSize,
-                      color: object.color,
-                      fontFamily: object.fontFamily || "Poppins, sans-serif",
-                      fontWeight: object.fontWeight,
-                      fontStyle: object.fontStyle,
-                      opacity: computeOpacity(object.opacity, isHidden),
-                      textDecoration: object.textDecoration,
-                      textAlign: object.textAlign,
-                      display: object.maxLines ? "-webkit-box" : "block",
-                      WebkitLineClamp: object.maxLines,
-                      WebkitBoxOrient: object.maxLines ? "vertical" : undefined,
-                      overflow: object.maxLines ? "hidden" : undefined,
-                      whiteSpace: object.autoWidth ? "nowrap" : "pre-wrap",
-                    }}
-                  >
-                    {replaceDynamicText(object.content ?? "", keyValuePairs)}
-                  </div>
+                  <TextObject
+                    object={object}
+                    isHidden={isHidden}
+                    keyValuePairs={keyValuePairs}
+                  />
                 ) : object.type === "image" ? (
-                  <img
-                    id={`${object.id}`}
-                    data-condition={JSON.stringify(object.condition)}
-                    className="image-field"
-                    src={replaceDynamicVariablesForDynamicImg(
-                      object.src ?? "",
-                      keyValuePairs,
-                      dynamicImgs ?? [],
-                      object.object_id,
-                      object.logoName,
-                      fallbackText
-                    )}
-                    alt="img"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: object.objectFit,
-                      opacity: computeOpacity(object.opacity, isHidden),
-                    }}
+                  <ImageObject
+                    object={object}
+                    isHidden={isHidden}
+                    keyValuePairs={keyValuePairs}
+                    dynamicImgs={dynamicImgs}
+                    fallbackText={fallbackText}
                   />
                 ) : object.type === "figure" ? (
-                  <div
-                    id={`${object.id}`}
-                    data-condition={JSON.stringify(object.condition)}
-                    className="banner-figure"
-                    style={{
-                      backgroundColor:
-                        object.backgroundColor !== "none"
-                          ? object.backgroundColor
-                          : undefined,
-                      borderRadius: object.borderRadius,
-                      opacity: computeOpacity(object.opacity, isHidden),
-                      borderTopStyle: object.borderTopStyle,
-                      borderTopColor: object.borderTopColor,
-                      borderTopWidth: object.borderTopWidth,
-                      borderBottomStyle: object.borderBottomStyle,
-                      borderBottomColor: object.borderBottomColor,
-                      borderBottomWidth: object.borderBottomWidth,
-                      borderLeftStyle: object.borderLeftStyle,
-                      borderLeftColor: object.borderLeftColor,
-                      borderLeftWidth: object.borderLeftWidth,
-                      borderRightStyle: object.borderRightStyle,
-                      borderRightColor: object.borderRightColor,
-                      borderRightWidth: object.borderRightWidth,
-                    }}
-                  ></div>
+                  <FigureObject object={object} isHidden={isHidden} />
                 ) : null}
 
                 <ResizeHandles
