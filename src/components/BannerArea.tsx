@@ -5,7 +5,6 @@ import { ResizeDirection } from "../types";
 import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
 import ResizeHandles from "../utils/ResizeHandles";
 import ContextMenu from "./UI/ContextMenu";
-import { BannerObject } from "../types";
 import {
   useChildProperties,
   useObjectProperties,
@@ -15,7 +14,6 @@ import {
   computeOpacity,
 } from "../utils/hooks";
 import { useConfig } from "../context/ConfigContext";
-
 import { useInjectCustomFonts } from "../utils/InjectCustomFonts";
 import {
   TextObject,
@@ -23,6 +21,7 @@ import {
   FigureObject,
   GroupObjectChildren,
 } from "./UI/area-objects";
+import { useContextMenu } from "../utils/useContextMenu";
 
 const BannerArea: React.FC = () => {
   const {
@@ -43,6 +42,10 @@ const BannerArea: React.FC = () => {
   const { hiddenObjectIds, config, canvasSize } = useConfig();
   const { selectedChild, handleDeleteChild } = useChildProperties();
   const { handleDelete, handleDeleteAll } = useObjectProperties();
+  const bannerRef = useRef<HTMLDivElement>(null);
+  const { contextMenu, openContextMenu, closeContextMenu } =
+    useContextMenu(bannerRef);
+
   const [isDragging, setIsDragging] = useState(false);
   const [draggingIds, setDraggingIds] = useState<number[] | null>(null);
   const [offsets, setOffsets] = useState<
@@ -54,18 +57,14 @@ const BannerArea: React.FC = () => {
   } | null>(null);
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<string | null>(null);
-  const bannerRef = useRef<HTMLDivElement>(null);
+
   const keyValuePairs = config?.keyValuePairs ?? [];
-  const [contextMenu, setContextMenu] = useState<{
-    x: number;
-    y: number;
-    object: BannerObject | null;
-  } | null>(null);
   const { t } = useTranslation();
   const fallbackText = encodeURIComponent(
     t("dialogs.dynamicImageDialog.fillIn")
   );
   useInjectCustomFonts(config);
+
   const bannerStyles = useMemo(
     () => ({
       width: `${canvasSize.width}px`,
@@ -75,40 +74,6 @@ const BannerArea: React.FC = () => {
     }),
     [config.canvasSize?.width, config.canvasSize?.height]
   );
-
-  const handleContextMenu = (event: React.MouseEvent, object: BannerObject) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (bannerRef.current) {
-      setContextMenu({
-        x: event.clientX,
-        y: event.clientY,
-        object: object,
-      });
-    }
-  };
-
-  const handleCloseContextMenu = () => {
-    setContextMenu(null);
-  };
-
-  useEffect(() => {
-    const handleGlobalClick = (e: MouseEvent) => {
-      const menu = document.getElementById("context-menu");
-      if (menu && !menu.contains(e.target as Node)) {
-        setContextMenu(null);
-      }
-    };
-
-    if (contextMenu) {
-      document.addEventListener("click", handleGlobalClick);
-    }
-
-    return () => {
-      document.removeEventListener("click", handleGlobalClick);
-    };
-  }, [contextMenu]);
 
   const handleObjectClick = (id: number, event: React.MouseEvent) => {
     if (isDragging) return;
@@ -150,7 +115,6 @@ const BannerArea: React.FC = () => {
     event.stopPropagation();
     setMouseDownPosition({ x: event.clientX, y: event.clientY });
 
-    // Если объект уже выделен, не сбрасываем выделение
     const isSelected = selectedObjectIds.includes(id);
     const shouldKeepSelection = event.ctrlKey || event.metaKey || isSelected;
 
@@ -371,7 +335,8 @@ const BannerArea: React.FC = () => {
         onClick={() => {
           clearSelection();
           clearChildSelection();
-          setContextMenu(null);
+          // setContextMenu(null);
+          closeContextMenu();
         }}
       >
         {selectionBounds && !isDragging && (
@@ -415,9 +380,10 @@ const BannerArea: React.FC = () => {
                   onClick={(e) => {
                     handleObjectClick(object.id, e);
                     clearChildSelection();
-                    setContextMenu(null);
+                    // setContextMenu(null);
+                    closeContextMenu();
                   }}
-                  onContextMenu={(e) => handleContextMenu(e, object)}
+                  onContextMenu={(e) => openContextMenu(e, object)}
                   className={`banner-object ${
                     selectedObjectIds.includes(object.id) ? "selected" : ""
                   }`}
@@ -472,12 +438,12 @@ const BannerArea: React.FC = () => {
                   />
                 </div>
 
-                {contextMenu && contextMenu.object?.id === object.id && (
+                {contextMenu?.object?.id === object.id && (
                   <ContextMenu
                     x={contextMenu.x}
                     y={contextMenu.y}
                     object={contextMenu.object}
-                    onClose={handleCloseContextMenu}
+                    onClose={closeContextMenu}
                     objects={objects}
                     updateObject={updateObject}
                   />
@@ -506,9 +472,10 @@ const BannerArea: React.FC = () => {
                 onClick={(e) => {
                   handleObjectClick(object.id, e);
                   clearChildSelection();
-                  setContextMenu(null);
+                  // setContextMenu(null);
+                  closeContextMenu();
                 }}
-                onContextMenu={(e) => handleContextMenu(e, object)}
+                onContextMenu={(e) => openContextMenu(e, object)}
                 className={`banner-object ${
                   selectedObjectIds.includes(object.id) ? "selected" : ""
                 }`}
@@ -537,12 +504,12 @@ const BannerArea: React.FC = () => {
                   handleResizeMouseDown={handleResizeMouseDown}
                 />
               </div>
-              {contextMenu && contextMenu.object?.id === object.id && (
+              {contextMenu?.object?.id === object.id && (
                 <ContextMenu
                   x={contextMenu.x}
                   y={contextMenu.y}
                   object={contextMenu.object}
-                  onClose={handleCloseContextMenu}
+                  onClose={closeContextMenu}
                   objects={objects}
                   updateObject={updateObject}
                 />
