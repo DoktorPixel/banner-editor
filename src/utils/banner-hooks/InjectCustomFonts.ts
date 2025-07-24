@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { generateCustomFontLinks } from "../utils/generateCustomFontLinks";
-import { ConfigItem } from "../types";
+import { generateCustomFontLinks } from "../generateCustomFontLinks";
+import { ConfigItem } from "../../types";
 
 export const useInjectCustomFonts = (config: ConfigItem) => {
   useEffect(() => {

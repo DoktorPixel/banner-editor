@@ -1,65 +1,64 @@
-import { useState, useEffect, useRef, Fragment, useMemo } from "react";
+import { useRef, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useBanner } from "../context/BannerContext";
-import { ResizeDirection } from "../types";
-import { calculateResizeUpdates } from "../utils/calculateResizeUpdates";
-import ResizeHandles from "../utils/ResizeHandles";
-import ContextMenu from "./UI/ContextMenu";
+import { useConfig } from "../context/ConfigContext";
+import {
+  useContextMenu,
+  useInjectCustomFonts,
+  useObjectSelection,
+  useDragAndResize,
+  useSelectionBox,
+  useArrowKeyMovement,
+  useDeleteKeys,
+  useAutoSizeUpdate,
+  ResizeHandles,
+} from "../utils/banner-hooks";
 import {
   useChildProperties,
   useObjectProperties,
-  useSelectionBounds,
   shouldHideObject,
   shouldHideGroup,
   computeOpacity,
 } from "../utils/hooks";
-import { useConfig } from "../context/ConfigContext";
-import { useInjectCustomFonts } from "../utils/InjectCustomFonts";
+import ContextMenu from "./UI/ContextMenu";
 import {
   TextObject,
   ImageObject,
   FigureObject,
   GroupObjectChildren,
 } from "./UI/area-objects";
-import { useContextMenu } from "../utils/useContextMenu";
 
 const BannerArea: React.FC = () => {
+  //  1. Основные зависимости и контексты
   const {
     objects,
     updateObject,
     updateMultipleObjects,
     selectedObjectIds,
-    selectObject,
     clearSelection,
     selectedChildId,
-    selectChild,
     clearChildSelection,
     temporaryUpdates,
     setTemporaryUpdates,
     renderedObjects,
     dynamicImgs,
   } = useBanner();
+
   const { hiddenObjectIds, config, canvasSize } = useConfig();
   const { selectedChild, handleDeleteChild } = useChildProperties();
   const { handleDelete, handleDeleteAll } = useObjectProperties();
+  const { t } = useTranslation();
+
+  // 2. Состояния и ссылки
   const bannerRef = useRef<HTMLDivElement>(null);
+  const objectRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
+  // 3. Контекстное меню
   const { contextMenu, openContextMenu, closeContextMenu } =
     useContextMenu(bannerRef);
 
-  const [isDragging, setIsDragging] = useState(false);
-  const [draggingIds, setDraggingIds] = useState<number[] | null>(null);
-  const [offsets, setOffsets] = useState<
-    Record<number, { x: number; y: number }>
-  >({});
-  const [mouseDownPosition, setMouseDownPosition] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-  const [resizingId, setResizingId] = useState<number | null>(null);
-  const [resizeDirection, setResizeDirection] = useState<string | null>(null);
-
+  // 4. Кастомные значения и генерация стилей
   const keyValuePairs = config?.keyValuePairs ?? [];
-  const { t } = useTranslation();
   const fallbackText = encodeURIComponent(
     t("dialogs.dynamicImageDialog.fillIn")
   );
@@ -75,254 +74,63 @@ const BannerArea: React.FC = () => {
     [config.canvasSize?.width, config.canvasSize?.height]
   );
 
-  const handleObjectClick = (id: number, event: React.MouseEvent) => {
-    if (isDragging) return;
-    event.stopPropagation();
-    if (mouseDownPosition) {
-      const deltaX = Math.abs(event.clientX - mouseDownPosition.x);
-      const deltaY = Math.abs(event.clientY - mouseDownPosition.y);
+  // 6. Обработка drag & resize
+  const {
+    isDragging,
+    setIsDragging,
+    setDraggingIds,
+    setOffsets,
+    handleMouseDown,
+    handleResizeMouseDown,
+    handleMouseMove,
+    handleMouseUp,
+    setMouseDownPosition,
+    mouseDownPosition,
+  } = useDragAndResize({
+    bannerRef,
+    objects,
+    selectedObjectIds,
+    updateObject,
+    updateMultipleObjects,
+    setTemporaryUpdates,
+    temporaryUpdates,
+  });
 
-      if (deltaX < 5 && deltaY < 5) {
-        selectObject(id, event.ctrlKey || event.metaKey);
-      }
-    }
-    setMouseDownPosition(null);
-  };
+  // 5. Обработчики выделения
+  const { handleObjectClick, handleChildClick } = useObjectSelection(
+    isDragging,
+    mouseDownPosition,
+    setMouseDownPosition
+  );
 
-  const handleChildClick = (
-    groupId: number,
-    childId: number,
-    event: React.MouseEvent,
-    parentId?: number
-  ) => {
-    event.stopPropagation();
-    selectChild(groupId, childId, parentId);
-  };
+  // 7. Выделение рамкой
+  const { selectionBounds, handleSelectionBorderMouseDown } = useSelectionBox({
+    bannerRef,
+    selectedObjectIds,
+    objects,
+    setDraggingIds,
+    setIsDragging,
+    setOffsets,
+  });
 
-  const handleResizeMouseDown = (
-    id: number,
-    direction: string,
-    event: React.MouseEvent
-  ) => {
-    event.preventDefault();
-    setResizingId(id);
-    setResizeDirection(direction);
-  };
+  // 8. Обработка клавиатуры: стрелки (перемещение)
+  useArrowKeyMovement({
+    selectedObjectIds,
+    objects,
+    updateObject,
+  });
 
-  const handleMouseDown = (id: number, event: React.MouseEvent) => {
-    if (resizingId !== null) return;
-    event.preventDefault();
-    event.stopPropagation();
-    setMouseDownPosition({ x: event.clientX, y: event.clientY });
-
-    const isSelected = selectedObjectIds.includes(id);
-    const shouldKeepSelection = event.ctrlKey || event.metaKey || isSelected;
-
-    const movingObjects = shouldKeepSelection ? [...selectedObjectIds] : [id];
-
-    setDraggingIds(movingObjects);
-    setIsDragging(true);
-
-    const newOffsets: Record<number, { x: number; y: number }> = {};
-    if (bannerRef.current) {
-      const rect = bannerRef.current.getBoundingClientRect();
-
-      movingObjects.forEach((objId) => {
-        const obj = objects.find((o) => o.id === objId);
-        if (obj) {
-          newOffsets[objId] = {
-            x: event.clientX - (rect.left + obj.x),
-            y: event.clientY - (rect.top + obj.y),
-          };
-        }
-      });
-    }
-    setOffsets(newOffsets);
-  };
-
-  const handleMouseMove = (event: React.MouseEvent) => {
-    if (draggingIds !== null && resizingId === null && bannerRef.current) {
-      const rect = bannerRef.current.getBoundingClientRect();
-
-      setTemporaryUpdates((prev) => {
-        const newUpdates = { ...prev };
-
-        draggingIds.forEach((id) => {
-          const obj = objects.find((o) => o.id === id);
-          if (obj) {
-            newUpdates[id] = {
-              x: event.clientX - rect.left - offsets[id].x,
-              y: event.clientY - rect.top - offsets[id].y,
-            };
-          }
-        });
-
-        return newUpdates;
-      });
-    }
-
-    if (resizingId !== null && bannerRef.current) {
-      const object = objects.find((obj) => obj.id === resizingId);
-      if (object) {
-        const rect = bannerRef.current.getBoundingClientRect();
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
-
-        const updates = calculateResizeUpdates({
-          resizeDirection: resizeDirection as ResizeDirection,
-          mouseX,
-          mouseY,
-          object: {
-            x: object.x ?? 0,
-            y: object.y ?? 0,
-            width: object.width ?? 0,
-            height: object.height ?? 0,
-            rotate: object.rotate ?? 0,
-          },
-        });
-
-        setTemporaryUpdates((prev) => ({
-          ...prev,
-          [resizingId]: { ...temporaryUpdates[resizingId], ...updates },
-        }));
-      }
-    }
-  };
-
-  const handleMouseUp = () => {
-    if (draggingIds !== null && Object.keys(temporaryUpdates).length > 0) {
-      updateMultipleObjects(temporaryUpdates);
-    }
-
-    if (resizingId !== null && temporaryUpdates[resizingId]) {
-      updateObject(resizingId, temporaryUpdates[resizingId]);
-    }
-
-    setDraggingIds(null);
-    setResizingId(null);
-    setResizeDirection(null);
-    setTemporaryUpdates({});
-    setIsDragging(false);
-  };
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (
-      !selectedObjectIds.length ||
-      (event.target instanceof HTMLElement &&
-        ["input", "textarea", "select"].includes(
-          event.target.tagName.toLowerCase()
-        ))
-    ) {
-      return;
-    }
-
-    const increment = event.shiftKey ? 10 : 1;
-    let deltaX = 0;
-    let deltaY = 0;
-
-    if (event.key === "ArrowUp") deltaY = -increment;
-    if (event.key === "ArrowDown") deltaY = increment;
-    if (event.key === "ArrowLeft") deltaX = -increment;
-    if (event.key === "ArrowRight") deltaX = increment;
-
-    if (deltaX !== 0 || deltaY !== 0) {
-      selectedObjectIds.forEach((id) => {
-        const object = objects.find((obj) => obj.id === id);
-        if (object) {
-          updateObject(id, {
-            x: (object.x || 0) + deltaX,
-            y: (object.y || 0) + deltaY,
-          });
-        }
-      });
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [selectedObjectIds, objects]);
-
-  const selectionBounds = useSelectionBounds(selectedObjectIds, objects);
-  const handleSelectionBorderMouseDown = (event: React.MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (event.target !== event.currentTarget) return;
-
-    setDraggingIds([...selectedObjectIds]);
-    setIsDragging(true);
-
-    const newOffsets: Record<number, { x: number; y: number }> = {};
-    if (bannerRef.current) {
-      const rect = bannerRef.current.getBoundingClientRect();
-
-      selectedObjectIds.forEach((id) => {
-        const obj = objects.find((o) => o.id === id);
-        if (obj) {
-          newOffsets[id] = {
-            x: event.clientX - (rect.left + obj.x),
-            y: event.clientY - (rect.top + obj.y),
-          };
-        }
-      });
-    }
-    setOffsets(newOffsets);
-  };
-
-  useEffect(() => {
-    objects.forEach((object) => {
-      if (object.autoWidth && objectRefs.current[object.id]) {
-        const realWidth = objectRefs.current[object.id]!.offsetWidth;
-        if (object.width !== realWidth) {
-          updateObject(object.id, { width: realWidth });
-        }
-      }
-      if (object.autoHeight && objectRefs.current[object.id]) {
-        const realHeight = objectRefs.current[object.id]!.offsetHeight;
-        if (object.height !== realHeight) {
-          updateObject(object.id, { height: realHeight });
-        }
-      }
-    });
-  }, [updateObject, objects]);
-
-  const objectRefs = useRef<Record<number, HTMLDivElement | null>>({});
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement;
-      const isInput =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
-
-      if (isInput) return;
-
-      if (event.key === "Delete" || event.key === "Backspace") {
-        if (selectedChild) {
-          handleDeleteChild();
-        } else if (selectedObjectIds.length === 1) {
-          handleDelete();
-        } else if (selectedObjectIds.length > 1) {
-          handleDeleteAll();
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [
+  // 9. Обработка клавиатуры: удаление объектов
+  useDeleteKeys({
     selectedObjectIds,
     selectedChild,
     handleDelete,
     handleDeleteAll,
     handleDeleteChild,
-  ]);
+  });
+
+  // 10. Автоматическое обновление размеров
+  useAutoSizeUpdate({ objects, objectRefs, updateObject });
 
   return (
     <div className="banner-area-container">
@@ -335,7 +143,6 @@ const BannerArea: React.FC = () => {
         onClick={() => {
           clearSelection();
           clearChildSelection();
-          // setContextMenu(null);
           closeContextMenu();
         }}
       >
@@ -380,7 +187,6 @@ const BannerArea: React.FC = () => {
                   onClick={(e) => {
                     handleObjectClick(object.id, e);
                     clearChildSelection();
-                    // setContextMenu(null);
                     closeContextMenu();
                   }}
                   onContextMenu={(e) => openContextMenu(e, object)}
@@ -472,7 +278,6 @@ const BannerArea: React.FC = () => {
                 onClick={(e) => {
                   handleObjectClick(object.id, e);
                   clearChildSelection();
-                  // setContextMenu(null);
                   closeContextMenu();
                 }}
                 onContextMenu={(e) => openContextMenu(e, object)}

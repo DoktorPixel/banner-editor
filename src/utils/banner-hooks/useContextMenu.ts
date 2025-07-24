@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BannerObject } from "../types";
+import { BannerObject } from "../../types";
 
 interface ContextMenuState {
   x: number;
