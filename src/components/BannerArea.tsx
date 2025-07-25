@@ -27,6 +27,7 @@ import {
   FigureObject,
   GroupObjectChildren,
 } from "./UI/area-objects";
+import { Slider } from "@mui/material";
 
 const BannerArea: React.FC = () => {
   //  1. Основные зависимости и контексты
@@ -42,6 +43,8 @@ const BannerArea: React.FC = () => {
     setTemporaryUpdates,
     renderedObjects,
     dynamicImgs,
+    scale,
+    setScale,
   } = useBanner();
 
   const { hiddenObjectIds, config, canvasSize } = useConfig();
@@ -70,8 +73,9 @@ const BannerArea: React.FC = () => {
       height: `${canvasSize.height}px`,
       minWidth: `${canvasSize.width}px`,
       minHeight: `${canvasSize.height}px`,
+      transform: `scale(${scale})`,
     }),
-    [config.canvasSize?.width, config.canvasSize?.height]
+    [config.canvasSize?.width, config.canvasSize?.height, scale]
   );
 
   // 6. Обработка drag & resize
@@ -94,6 +98,7 @@ const BannerArea: React.FC = () => {
     updateMultipleObjects,
     setTemporaryUpdates,
     temporaryUpdates,
+    // scale,
   });
 
   // 5. Обработчики выделения
@@ -134,6 +139,17 @@ const BannerArea: React.FC = () => {
 
   return (
     <div className="banner-area-container">
+      <Slider
+        size="small"
+        valueLabelDisplay="on"
+        value={Math.round(scale * 100)}
+        min={40}
+        max={200}
+        step={2}
+        onChange={(_, newValue) => setScale((newValue as number) / 100)}
+        aria-labelledby="zoom-slider"
+        valueLabelFormat={(value) => `${value}%`}
+      />
       <div
         className="banner-area"
         style={bannerStyles}

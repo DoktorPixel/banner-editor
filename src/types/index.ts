@@ -221,6 +221,8 @@ export interface BannerContextProps {
   refreshCounter: number;
   triggerRefresh: () => void;
   reorderChildren: (groupId: number, newOrder: number[]) => void;
+  scale: number;
+  setScale: (value: number) => void;
 }
 
 export interface DynamicImg {

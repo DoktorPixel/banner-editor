@@ -19,6 +19,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     [key: number]: Partial<BannerObject>;
   }>({});
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
+  const [scale, setScale] = useState<number>(1);
   const objects = history[currentStep] || [];
 
   const renderedObjects = useMemo(() => {
@@ -399,6 +400,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         refreshCounter,
         triggerRefresh,
         reorderChildren,
+        scale,
+        setScale,
       }}
     >
       {children}
