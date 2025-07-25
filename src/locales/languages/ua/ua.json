@@ -125,6 +125,8 @@
     "general": "Загальне",
     "nestedFigure": "Вкладена фігура",
     "nestedImage": "Вкладене зображення",
+    "nestedText": "Вкладений текст",
+    "nestedLayout": "Вкладена Група",
     "alignment": "Вирівнювання",
     "padding": "Відступи",
     "appearance": "Вигляд",
@@ -158,6 +160,7 @@
     },
     "weight": "Товщина",
     "order": "Порядок",
+    "zoomInput": "Зум (%)",
     "objectFit": {
       "label": "Заповнення об'єкта",
       "fill": "Заповнити",

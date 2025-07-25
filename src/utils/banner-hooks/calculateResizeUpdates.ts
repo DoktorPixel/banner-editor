@@ -1,4 +1,4 @@
-import { ResizeParams } from "../types";
+import { ResizeParams } from "../../types";
 
 export const calculateResizeUpdates = ({
   resizeDirection,

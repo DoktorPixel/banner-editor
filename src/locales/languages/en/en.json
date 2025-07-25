@@ -127,7 +127,9 @@
     "enterComparisonValue": "Enter comparison value",
     "general": "General",
     "nestedFigure": "Nested figure",
-    "nestedImage": " Nsted image",
+    "nestedImage": " Nested image",
+    "nestedText": "Nested text",
+    "nestedLayout": "Nested layout",
     "alignment": "Alignment",
     "padding": "Padding",
     "appearance": "Appearance",
@@ -161,6 +163,7 @@
     },
     "weight": "Weight",
     "order": "Order",
+    "zoomInput": "Zoom (%)",
     "objectFit": {
       "label": "Object Fit",
       "fill": "Fill",

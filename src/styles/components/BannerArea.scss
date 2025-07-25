@@ -4,7 +4,9 @@
   top: 20px;
   background: #fff;
   z-index: -100;
-  overflow: hidden;
+  // overflow: hidden;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 .banner-area-container {
   position: relative;
@@ -24,6 +26,8 @@
 .banner-object-child {
   border: 1px solid transparent;
   cursor: pointer;
+  // transform: translate3d(0, 0, 0); /* включает GPU */
+  // will-change: transform;
 }
 .banner-object:hover {
   border: 1px solid #ccc;

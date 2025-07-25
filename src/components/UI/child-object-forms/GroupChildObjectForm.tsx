@@ -169,7 +169,7 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
         className="padding-wrapper"
         sx={{ mb: 1 }}
       >
-        Nested layout
+        {t("sidebar.nestedLayout")}
       </Typography>
       <div className="grey-line"></div>
 

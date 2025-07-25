@@ -237,7 +237,7 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         isChild ? idAttr : ""
       } ${conditionAttr} ${dynamicAttr} src="${obj.src}" alt="${
         obj.name || "image"
-      }" class="image-field ${
+      }" loading="eager" class="image-field ${
         isChild ? "banner-object-child" : ""
       }" style="${innerStyles}" />`;
 
