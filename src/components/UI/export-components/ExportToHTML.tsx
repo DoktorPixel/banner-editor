@@ -379,7 +379,7 @@ export const ExportToHTML = (
                     );
                     if (!object_id || !logoName) {
                       img.src = fallbackUrl;
-                      img.style.opacity = "0";
+                      img.style.display = "none";
                       img.onload = img.onerror = () => resolve();
                       return;
                     }
@@ -388,14 +388,14 @@ export const ExportToHTML = (
                     );
                     if (filtered.length === 0) {
                       img.src = fallbackUrl;
-                      img.style.opacity = "0";
+                      img.style.display = "none";
                       img.onload = img.onerror = () => resolve();
                       return;
                     }
                     const logoNameValue = props[logoName];
                     if (typeof logoNameValue !== "string") {
                       img.src = fallbackUrl;
-                      img.style.opacity = "0";
+                      img.style.display = "none";
                       img.onload = img.onerror = () => resolve();
                       return;
                     }
@@ -405,14 +405,14 @@ export const ExportToHTML = (
                     img.onload = () => resolve();
                     img.onerror = () => {
                       img.src = fallbackUrl;
-                      img.style.opacity = "0";
+                      img.style.display = "none";
                       resolve();
                     };
                     img.src = finalSrc;
                   } catch (e) {
                     console.warn("Error processing dynamic img:", e);
                     img.src = fallbackUrl;
-                    img.style.opacity = "0";
+                    img.style.display = "none";
                     img.onload = img.onerror = () => resolve();
                   }
                 });
