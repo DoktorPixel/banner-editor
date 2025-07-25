@@ -67,9 +67,10 @@ export const ExportToHTML = (
        const fallbackUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/xcAAgMBgDgmIwUAAAAASUVORK5CYII=";
 
 
-        // window.onload = function () {
-        function loadData() {
+        // window.onload = async function () {
+       async function loadData() {
             const props = window.props || {};
+            const promises = [];
 
               const normalize = (value) => {
                 if (typeof value === "string") {
@@ -370,7 +371,8 @@ export const ExportToHTML = (
               });
 
             // 
-              document.querySelectorAll("img[data-dynamic]").forEach((img) => {
+            document.querySelectorAll("img[data-dynamic]").forEach((img) => {
+              const p = new Promise((resolve) => {
                 try {
                   const { object_id, logoName } = JSON.parse(
                     img.getAttribute("data-dynamic")
@@ -378,6 +380,7 @@ export const ExportToHTML = (
 
                   if (!object_id || !logoName) {
                     img.src = fallbackUrl;
+                    img.onload = img.onerror = () => resolve();
                     return;
                   }
 
@@ -386,23 +389,40 @@ export const ExportToHTML = (
                   );
                   if (filtered.length === 0) {
                     img.src = fallbackUrl;
+                    img.onload = img.onerror = () => resolve();
                     return;
                   }
 
                   const logoNameValue = props[logoName];
                   if (typeof logoNameValue !== "string") {
                     img.src = fallbackUrl;
+                    img.onload = img.onerror = () => resolve();
                     return;
                   }
 
                   const matched = filtered.find((di) => di.name === logoNameValue);
-                  img.src =
-                    matched && matched.file_url ? matched.file_url : fallbackUrl;
+                  const finalSrc = matched?.file_url || fallbackUrl;
+
+                  img.onload = () => resolve();
+                  img.onerror = () => {
+                    img.src = fallbackUrl;
+                    resolve();
+                  };
+                  img.src = finalSrc;
                 } catch (e) {
                   console.warn("Error processing dynamic img:", e);
                   img.src = fallbackUrl;
+                  img.onload = img.onerror = () => resolve();
                 }
               });
+
+              promises.push(p);
+            });
+
+              await Promise.all(promises);
+              window.allImagesLoaded = true;
+              console.log("✅ All dynamic images loaded");
+
             // 
           }; 
       </script>
