@@ -371,53 +371,54 @@ export const ExportToHTML = (
               });
 
             // 
-            document.querySelectorAll("img[data-dynamic]").forEach((img) => {
-              const p = new Promise((resolve) => {
-                try {
-                  const { object_id, logoName } = JSON.parse(
-                    img.getAttribute("data-dynamic")
-                  );
+              document.querySelectorAll("img[data-dynamic]").forEach((img) => {
+                const p = new Promise((resolve) => {
+                  try {
+                    const { object_id, logoName } = JSON.parse(
+                      img.getAttribute("data-dynamic")
+                    );
+                    if (!object_id || !logoName) {
+                      img.src = fallbackUrl;
+                      img.style.opacity = "0";
+                      img.onload = img.onerror = () => resolve();
+                      return;
+                    }
+                    const filtered = dynamicImgs.filter(
+                      (di) => di.object_id === object_id
+                    );
+                    if (filtered.length === 0) {
+                      img.src = fallbackUrl;
+                      img.style.opacity = "0";
+                      img.onload = img.onerror = () => resolve();
+                      return;
+                    }
+                    const logoNameValue = props[logoName];
+                    if (typeof logoNameValue !== "string") {
+                      img.src = fallbackUrl;
+                      img.style.opacity = "0";
+                      img.onload = img.onerror = () => resolve();
+                      return;
+                    }
+                    const matched = filtered.find((di) => di.name === logoNameValue);
+                    const finalSrc = matched?.file_url || fallbackUrl;
 
-                  if (!object_id || !logoName) {
+                    img.onload = () => resolve();
+                    img.onerror = () => {
+                      img.src = fallbackUrl;
+                      img.style.opacity = "0";
+                      resolve();
+                    };
+                    img.src = finalSrc;
+                  } catch (e) {
+                    console.warn("Error processing dynamic img:", e);
                     img.src = fallbackUrl;
+                    img.style.opacity = "0";
                     img.onload = img.onerror = () => resolve();
-                    return;
                   }
+                });
 
-                  const filtered = dynamicImgs.filter(
-                    (di) => di.object_id === object_id
-                  );
-                  if (filtered.length === 0) {
-                    img.src = fallbackUrl;
-                    img.onload = img.onerror = () => resolve();
-                    return;
-                  }
-
-                  const logoNameValue = props[logoName];
-                  if (typeof logoNameValue !== "string") {
-                    img.src = fallbackUrl;
-                    img.onload = img.onerror = () => resolve();
-                    return;
-                  }
-
-                  const matched = filtered.find((di) => di.name === logoNameValue);
-                  const finalSrc = matched?.file_url || fallbackUrl;
-
-                  img.onload = () => resolve();
-                  img.onerror = () => {
-                    img.src = fallbackUrl;
-                    resolve();
-                  };
-                  img.src = finalSrc;
-                } catch (e) {
-                  console.warn("Error processing dynamic img:", e);
-                  img.src = fallbackUrl;
-                  img.onload = img.onerror = () => resolve();
-                }
+                promises.push(p);
               });
-
-              promises.push(p);
-            });
 
               await Promise.all(promises);
               window.allImagesLoaded = true;

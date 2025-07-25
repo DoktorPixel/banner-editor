@@ -51,7 +51,7 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         if (obj.autoHeight) styles.push(`height: auto`);
       }
       if (obj.type === "image") {
-        styles.push(`overflow: hidden`);
+        styles.push(`overflow: hidden `);
       }
       if (obj.type === "image" || obj.type === "figure") {
         styles.push(`cursor: move`);
@@ -239,7 +239,7 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         obj.name || "image"
       }" loading="eager" class="image-field ${
         isChild ? "banner-object-child" : ""
-      }" style="${innerStyles}" />`;
+      }" style="${innerStyles} ; background: transparent; " />`;
 
       return isChild
         ? content
