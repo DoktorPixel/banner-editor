@@ -14,6 +14,7 @@ type UseDragAndResizeParams = {
     React.SetStateAction<Record<number, Partial<BannerObject>>>
   >;
   temporaryUpdates: Record<number, Partial<BannerObject>>;
+  scale: number;
 };
 
 export const useDragAndResize = ({
@@ -24,6 +25,7 @@ export const useDragAndResize = ({
   updateMultipleObjects,
   setTemporaryUpdates,
   temporaryUpdates,
+  scale = 1,
 }: UseDragAndResizeParams) => {
   const [isDragging, setIsDragging] = useState(false);
   const [draggingIds, setDraggingIds] = useState<number[] | null>(null);
@@ -37,6 +39,16 @@ export const useDragAndResize = ({
   const [resizingId, setResizingId] = useState<number | null>(null);
   const [resizeDirection, setResizeDirection] =
     useState<ResizeDirection | null>(null);
+
+  const getScaledPosition = useCallback(
+    (clientX: number, clientY: number, rect: DOMRect) => {
+      return {
+        x: (clientX - rect.left) / scale,
+        y: (clientY - rect.top) / scale,
+      };
+    },
+    [scale]
+  );
 
   const handleMouseDown = useCallback(
     (id: number, event: React.MouseEvent) => {
@@ -56,19 +68,27 @@ export const useDragAndResize = ({
       const newOffsets: Record<number, { x: number; y: number }> = {};
       const rect = bannerRef.current?.getBoundingClientRect();
       if (rect) {
+        const scaledPos = getScaledPosition(event.clientX, event.clientY, rect);
         movingObjects.forEach((objId) => {
           const obj = objects.find((o) => o.id === objId);
           if (obj) {
             newOffsets[objId] = {
-              x: event.clientX - (rect.left + obj.x),
-              y: event.clientY - (rect.top + obj.y),
+              x: scaledPos.x - obj.x,
+              y: scaledPos.y - obj.y,
             };
           }
         });
       }
       setOffsets(newOffsets);
     },
-    [resizingId, selectedObjectIds, bannerRef, objects]
+    [
+      resizingId,
+      selectedObjectIds,
+      bannerRef,
+      objects,
+      scale,
+      getScaledPosition,
+    ]
   );
 
   const handleResizeMouseDown = useCallback(
@@ -86,14 +106,15 @@ export const useDragAndResize = ({
       if (!rect) return;
 
       if (draggingIds && resizingId === null) {
+        const scaledPos = getScaledPosition(event.clientX, event.clientY, rect);
         setTemporaryUpdates((prev) => {
           const updates = { ...prev };
           draggingIds.forEach((id) => {
             const obj = objects.find((o) => o.id === id);
             if (obj) {
               updates[id] = {
-                x: event.clientX - rect.left - offsets[id].x,
-                y: event.clientY - rect.top - offsets[id].y,
+                x: scaledPos.x - offsets[id].x,
+                y: scaledPos.y - offsets[id].y,
               };
             }
           });
@@ -105,13 +126,12 @@ export const useDragAndResize = ({
         const object = objects.find((obj) => obj.id === resizingId);
         if (!object) return;
 
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
+        const scaledPos = getScaledPosition(event.clientX, event.clientY, rect);
 
         const updates = calculateResizeUpdates({
           resizeDirection: resizeDirection!,
-          mouseX,
-          mouseY,
+          mouseX: scaledPos.x,
+          mouseY: scaledPos.y,
           object: {
             x: object.x ?? 0,
             y: object.y ?? 0,
@@ -136,6 +156,7 @@ export const useDragAndResize = ({
       offsets,
       setTemporaryUpdates,
       temporaryUpdates,
+      getScaledPosition,
     ]
   );
 

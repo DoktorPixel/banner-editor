@@ -26,6 +26,8 @@
 .banner-object-child {
   border: 1px solid transparent;
   cursor: pointer;
+  // transform: translate3d(0, 0, 0); /* включает GPU */
+  // will-change: transform;
 }
 .banner-object:hover {
   border: 1px solid #ccc;
