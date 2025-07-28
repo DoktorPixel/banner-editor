@@ -9,3 +9,4 @@ export { useDragAndResize } from "./useDragAndResize";
 export { useObjectSelection } from "./useObjectSelection";
 export { useSelectionBox } from "./useSelectionBox";
 export { useZoom } from "./useZoom";
+export { RightClickDragScroll } from "./RightClickDragScroll";
