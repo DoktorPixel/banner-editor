@@ -12,6 +12,7 @@ import {
   useDeleteKeys,
   useAutoSizeUpdate,
   ResizeHandles,
+  RightClickDragScroll,
 } from "../utils/banner-hooks";
 import {
   useChildProperties,
@@ -52,6 +53,7 @@ const BannerArea: React.FC = () => {
 
   // 2. Состояния и ссылки
   const bannerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const objectRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   // 3. Контекстное меню
@@ -72,6 +74,7 @@ const BannerArea: React.FC = () => {
       minWidth: `${canvasSize.width}px`,
       minHeight: `${canvasSize.height}px`,
       transform: `scale(${scale})`,
+      transformOrigin: scale >= 1 ? "top left" : "center",
     }),
     [config.canvasSize?.width, config.canvasSize?.height, scale]
   );
@@ -136,7 +139,8 @@ const BannerArea: React.FC = () => {
   useAutoSizeUpdate({ objects, objectRefs, updateObject });
 
   return (
-    <div className="banner-area-container">
+    <div className="banner-area-container" ref={containerRef}>
+      <RightClickDragScroll containerRef={containerRef} />
       <div
         className="banner-area"
         style={bannerStyles}

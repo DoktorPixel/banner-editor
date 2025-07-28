@@ -1,3 +1,17 @@
+.banner-area-container {
+  position: relative;
+  // overflow-y: auto;
+  // overflow-x: hidden;
+  overflow-y: auto;
+  overflow-x: auto;
+
+  z-index: -100;
+  margin-bottom: 10px;
+
+  cursor: default;
+  user-select: none;
+}
+
 .banner-area {
   flex: 0 0 auto;
   position: relative;
@@ -5,16 +19,9 @@
   background: #fff;
   z-index: -100;
   overflow: hidden;
-  // overflow-y: auto;
-  // overflow-x: auto;
-}
-.banner-area-container {
-  position: relative;
   overflow-y: auto;
-  overflow-x: hidden;
-
-  z-index: -100;
-  margin-bottom: 10px;
+  overflow-x: auto;
+  // transform-origin: top left;
 }
 
 .object {
