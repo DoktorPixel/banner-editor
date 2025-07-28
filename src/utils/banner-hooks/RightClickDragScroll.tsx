@@ -11,7 +11,7 @@ export const RightClickDragScroll = ({
   const lastPos = useRef({ x: 0, y: 0 });
   const wasRightClickDown = useRef(false);
   const moved = useRef(false);
-  const DRAG_THRESHOLD = 3; // минимальное расстояние для активации drag
+  const DRAG_THRESHOLD = 3;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -52,13 +52,13 @@ export const RightClickDragScroll = ({
       wasRightClickDown.current = false;
       setTimeout(() => {
         moved.current = false;
-      }, 0); // сброс после завершения
+      }, 0);
     };
 
     const handleContextMenu = (e: MouseEvent) => {
       if (moved.current) {
         e.preventDefault();
-        moved.current = false; // сброс после предотвращения
+        moved.current = false;
       }
     };
 

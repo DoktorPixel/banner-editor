@@ -342,7 +342,7 @@ export const ExportToHTML = (
                 const avgCharWidth = textWidth / sampleText.length;
 
                 if (avgCharWidth === 0) return 100;
-                const approxCharsPerLine = Math.floor(widthPx / avgCharWidth);
+                const approxCharsPerLine = Math.floor((widthPx / avgCharWidth) * 0.92);
                 return approxCharsPerLine;
               }
 
