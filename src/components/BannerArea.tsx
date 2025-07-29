@@ -57,8 +57,10 @@ const BannerArea: React.FC = () => {
   const objectRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   // 3. Контекстное меню
-  const { contextMenu, openContextMenu, closeContextMenu } =
-    useContextMenu(bannerRef);
+  const { contextMenu, openContextMenu, closeContextMenu } = useContextMenu(
+    bannerRef,
+    scale
+  );
 
   // 4. Кастомные значения и генерация стилей
   const keyValuePairs = config?.keyValuePairs ?? [];
