@@ -26,6 +26,61 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
     return `rgb(${r}, ${g}, ${b})`;
   };
 
+  const generateBorderStyles = (obj: BannerObject | BannerChild): string => {
+    if (obj.type !== "figure" && obj.type !== "group") return "";
+
+    const borderProps = [
+      {
+        side: "top",
+        width: obj.borderTopWidth,
+        style: obj.borderTopStyle,
+        color: obj.borderTopColor,
+      },
+      {
+        side: "bottom",
+        width: obj.borderBottomWidth,
+        style: obj.borderBottomStyle,
+        color: obj.borderBottomColor,
+      },
+      {
+        side: "left",
+        width: obj.borderLeftWidth,
+        style: obj.borderLeftStyle,
+        color: obj.borderLeftColor,
+      },
+      {
+        side: "right",
+        width: obj.borderRightWidth,
+        style: obj.borderRightStyle,
+        color: obj.borderRightColor,
+      },
+    ];
+
+    const definedBorders = borderProps.filter(
+      (b) => b.width && b.style && b.color
+    );
+
+    if (
+      definedBorders.length === 4 &&
+      definedBorders.every(
+        (b) =>
+          b.width === definedBorders[0].width &&
+          b.style === definedBorders[0].style &&
+          b.color === definedBorders[0].color
+      )
+    ) {
+      const { width, style, color } = definedBorders[0];
+      return `border: ${toPx(width)} ${style} ${toRGB(color)};`;
+    }
+
+    return definedBorders
+      .map(
+        (b) =>
+          `border-${b.side}: ${toPx(b.width)} ${b.style} ${toRGB(b.color)};`
+      )
+      .join("");
+  };
+
   const generateStyles = (
     obj: BannerObject | BannerChild,
     isChild: boolean = false,
@@ -42,6 +97,7 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         if (obj.y !== undefined) styles.push(`top: ${toPx(obj.y)}`);
         if (obj.zIndex !== undefined) styles.push(`z-index: ${obj.zIndex}`);
       }
+
       if (obj.type === "image" || obj.type === "group") {
         if (obj.width !== undefined && !obj.autoWidth)
           styles.push(`width: ${toPx(obj.width)}`);
@@ -50,12 +106,11 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         if (obj.autoWidth) styles.push(`width: auto`);
         if (obj.autoHeight) styles.push(`height: auto`);
       }
-      if (obj.type === "image") {
-        styles.push(`overflow: hidden `);
-      }
-      if (obj.type === "image" || obj.type === "figure") {
+
+      if (obj.type === "image") styles.push(`overflow: hidden`);
+      if (obj.type === "image" || obj.type === "figure")
         styles.push(`cursor: move`);
-      }
+
       if (obj.type === "group") {
         if (obj.display) styles.push(`display: ${obj.display}`);
         if (obj.flexDirection)
@@ -64,10 +119,11 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
           styles.push(`justify-content: ${obj.justifyContent}`);
         if (obj.alignItems) styles.push(`align-items: ${obj.alignItems}`);
         if (obj.gap) styles.push(`gap: ${toPx(obj.gap)}`);
+        styles.push(generateBorderStyles(obj)); // border for group (outer)
       }
-      if (obj.rotate !== undefined) {
+
+      if (obj.rotate !== undefined)
         styles.push(`transform: rotate(${obj.rotate}deg)`);
-      }
     } else {
       if ((isText || obj.type === "figure") && !isGroupChild) {
         if (obj.width !== undefined && !obj.autoWidth)
@@ -96,16 +152,19 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
       if (obj.maxLines) {
         styles.push(`display: -webkit-box`);
         styles.push(`-webkit-box-orient: vertical`);
-        // styles.push(`-webkit-line-clamp: ${obj.maxLines}`);
         styles.push(`white-space: normal`);
       } else {
         styles.push(`white-space: nowrap`);
       }
 
-      if (obj.objectFit) styles.push(`object-fit: ${obj.objectFit}; `);
+      if (obj.objectFit) styles.push(`object-fit: ${obj.objectFit}`);
 
       if (obj.type === "image" || obj.type === "figure") {
-        styles.push(` width: ${obj.width}px; height: ${obj.height}px;`);
+        styles.push(`width: ${toPx(obj.width)}; height: ${toPx(obj.height)};`);
+      }
+
+      if (obj.type === "figure") {
+        styles.push(generateBorderStyles(obj)); // border for figure (inner)
       }
     }
 
@@ -121,61 +180,13 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
     if (obj.paddingRight)
       styles.push(`padding-right: ${toPx(obj.paddingRight)}`);
 
-    const borderProps = [
-      {
-        side: "top",
-        width: obj.borderTopWidth,
-        style: obj.borderTopStyle,
-        color: obj.borderTopColor,
-      },
-      {
-        side: "bottom",
-        width: obj.borderBottomWidth,
-        style: obj.borderBottomStyle,
-        color: obj.borderBottomColor,
-      },
-      {
-        side: "left",
-        width: obj.borderLeftWidth,
-        style: obj.borderLeftStyle,
-        color: obj.borderLeftColor,
-      },
-      {
-        side: "right",
-        width: obj.borderRightWidth,
-        style: obj.borderRightStyle,
-        color: obj.borderRightColor,
-      },
-    ];
-    const definedBorders = borderProps.filter(
-      (b) => b.width && b.style && b.color
-    );
-    if (
-      definedBorders.length === 4 &&
-      definedBorders.every(
-        (b) =>
-          b.width === definedBorders[0].width &&
-          b.style === definedBorders[0].style &&
-          b.color === definedBorders[0].color
-      )
-    ) {
-      const { width, style, color } = definedBorders[0];
-      styles.push(`border: ${toPx(width)} ${style} ${toRGB(color)}`);
-    } else {
-      definedBorders.forEach((b) => {
-        styles.push(
-          `border-${b.side}: ${toPx(b.width)} ${b.style} ${toRGB(b.color)}`
-        );
-      });
-    }
-
     return styles.join("; ");
   };
 
   const generateObjectHTML = (
     obj: BannerObject | BannerChild,
-    isChild: boolean = false,
-    isGroupChild: boolean = false
+    isChild = false,
+    isGroupChild = false
   ): string => {
     const outerStyles = generateStyles(
       obj,
@@ -215,36 +226,36 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
       let lines = String(obj.content || "").split("\n");
       const isTruncated = lines.length > maxLines;
       lines = lines.slice(0, maxLines);
-
       const processedContent =
         lines.map((line) => escapeHTML(line)).join("<br>") +
         (isTruncated ? "<br>" : "");
-
       const content = `<div ${
         isChild ? idAttr : ""
       } ${conditionAttr} class="text-field ${
         isChild ? "banner-object-child" : ""
       }" data-max-lines="${
         obj.maxLines || ""
-      }" style="${innerStyles}; ">${processedContent}</div>`;
+      }" style="${innerStyles};">${processedContent}</div>`;
       return isChild
         ? content
         : `<div ${idAttr} ${conditionAttr} ${classAttr} style="${outerStyles}">${content}</div>`;
-    } else if (obj.type === "image") {
-      if (!obj.src) return "";
+    }
 
+    if (obj.type === "image") {
+      if (!obj.src) return "";
       const content = `<img ${
         isChild ? idAttr : ""
       } ${conditionAttr} ${dynamicAttr} src="${obj.src}" alt="${
         obj.name || "image"
       }" loading="eager" class="image-field ${
         isChild ? "banner-object-child" : ""
-      }" style="${innerStyles} ; background: transparent; " />`;
-
+      }" style="${innerStyles}; background: transparent;" />`;
       return isChild
         ? content
         : `<div ${idAttr} ${conditionAttr} ${classAttr} style="${outerStyles}">${content}</div>`;
-    } else if (obj.type === "figure") {
+    }
+
+    if (obj.type === "figure") {
       const content = `<div ${
         isChild ? idAttr : ""
       } ${conditionAttr} class="banner-figure ${
@@ -253,7 +264,9 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
       return isChild
         ? content
         : `<div ${idAttr} ${conditionAttr} ${classAttr} style="${outerStyles}">${content}</div>`;
-    } else if (obj.type === "group" && obj.children) {
+    }
+
+    if (obj.type === "group" && obj.children) {
       const groupContent = obj.children
         .filter((child) => child && child.id && child.type)
         .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))

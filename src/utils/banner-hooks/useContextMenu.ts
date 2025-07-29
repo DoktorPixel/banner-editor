@@ -7,19 +7,32 @@ interface ContextMenuState {
   object: BannerObject | null;
 }
 
-export const useContextMenu = (ref: React.RefObject<HTMLElement>) => {
+export const useContextMenu = (
+  ref: React.RefObject<HTMLElement>,
+  scale: number
+) => {
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
 
   const openContextMenu = (event: React.MouseEvent, object: BannerObject) => {
     event.preventDefault();
     event.stopPropagation();
-    if (ref.current) {
-      setContextMenu({
-        x: event.clientX,
-        y: event.clientY,
-        object,
-      });
-    }
+
+    const container = ref.current;
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+
+    const scrollLeft = container.scrollLeft;
+    const scrollTop = container.scrollTop;
+
+    const offsetX = (event.clientX - rect.left + scrollLeft) / scale;
+    const offsetY = (event.clientY - rect.top + scrollTop) / scale;
+
+    setContextMenu({
+      x: offsetX,
+      y: offsetY,
+      object,
+    });
   };
 
   const closeContextMenu = () => {
