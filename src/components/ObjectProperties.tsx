@@ -12,6 +12,7 @@ import { GroupChildObjectForm } from "./UI/child-object-forms/GroupChildObjectFo
 import { DeployTemplateButton } from "./UI/updates-components/TemplateButtons";
 import LanguageSwitcher from "./UI/selectors/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+// import { useBanner } from "../context/BannerContext";
 import { useZoom } from "../utils/banner-hooks";
 import { ZoomControl } from "./UI/ZoomControl";
 
@@ -30,6 +31,7 @@ const ObjectProperties: React.FC = () => {
   } = useChildProperties();
   const { t } = useTranslation();
   const { scale, setScale } = useZoom();
+  // const { scale, setScale } = useBanner();
   return (
     <Box className="object-properties">
       <Box className="object-properties-header">
