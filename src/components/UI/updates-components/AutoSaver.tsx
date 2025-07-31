@@ -102,7 +102,7 @@ const AutoSaver: React.FC = () => {
     <div
       style={{
         position: "absolute",
-        left: "120px",
+        left: "130px",
         background: "#F1F1F1",
         borderRadius: "6px",
         padding: "2px 6px",

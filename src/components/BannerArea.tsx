@@ -78,7 +78,7 @@ const BannerArea: React.FC = () => {
       minHeight: `${canvasSize.height}px`,
       transform: `scale(${scale})`,
       transformOrigin: scale >= 1 ? "top left" : "center",
-      transition: "transform 0.5s ease-out",
+      transition: "transform 0.4s ease-out",
     }),
     [config.canvasSize?.width, config.canvasSize?.height, scale]
   );

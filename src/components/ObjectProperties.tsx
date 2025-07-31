@@ -35,9 +35,10 @@ const ObjectProperties: React.FC = () => {
   return (
     <Box className="object-properties">
       <Box className="object-properties-header">
-        <DeployTemplateButton />
-        <LanguageSwitcher />
         <ZoomControl scale={scale} setScale={setScale} />
+        <LanguageSwitcher />
+
+        <DeployTemplateButton />
       </Box>
 
       <div className="grey-line"></div>

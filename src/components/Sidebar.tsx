@@ -49,7 +49,7 @@ const Sidebar: React.FC = () => {
               position: "relative",
             }}
           >
-            <Typography sx={{ lineHeight: "1" }}>FeedMaker</Typography>
+            <Typography sx={{ lineHeight: "1" }}>FeedEdify Editor</Typography>
             {/* <IconButton size="small" edge="start" onClick={handleToggle}>
               {open ? <ExpandLess /> : <ExpandMore />}
             </IconButton> */}

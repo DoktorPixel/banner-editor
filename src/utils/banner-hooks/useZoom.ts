@@ -15,7 +15,7 @@ export const useZoom = (min = 0.4, max = 2, step = 0.02) => {
 
       e.preventDefault();
 
-      const delta = (-e.deltaY / 50) * step;
+      const delta = (-e.deltaY / 20) * step;
 
       const newScale = Math.min(max, Math.max(min, scaleRef.current + delta));
       setScale(parseFloat(newScale.toFixed(3)));
