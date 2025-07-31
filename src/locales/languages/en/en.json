@@ -163,7 +163,6 @@
     },
     "weight": "Weight",
     "order": "Order",
-    "zoomInput": "Zoom (%)",
     "objectFit": {
       "label": "Object Fit",
       "fill": "Fill",
