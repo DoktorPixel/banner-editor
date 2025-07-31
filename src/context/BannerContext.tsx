@@ -19,7 +19,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     [key: number]: Partial<BannerObject>;
   }>({});
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
-  const [scale, setScale] = useState<number>(1);
+  const [scale, setScale] = useState<number>(0.4);
   const objects = history[currentStep] || [];
 
   const renderedObjects = useMemo(() => {
