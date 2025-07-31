@@ -28,6 +28,11 @@ export const fonts = [
   { label: "Roboto Slab", value: "Roboto Slab", category: "serif" },
   { label: "Cairo", value: "Cairo", category: "sans-serif" },
   { label: "Manrope", value: "Manrope", category: "sans-serif" },
+  {
+    label: "Wix Madefor Display",
+    value: "Wix Madefor Display",
+    category: "sans-serif",
+  },
   //
   { label: "Poppins", value: "Poppins", category: "sans-serif" },
   { label: "DM Sans", value: "DM Sans", category: "sans-serif" },
