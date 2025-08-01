@@ -228,8 +228,8 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
           <ActionToggle
             label={t("sidebar.width")}
             options={[
-              { value: "auto", label: "Dynamic W" },
-              { value: "fixed", label: "Fixed W" },
+              { value: "auto", label: t("sidebar.auto") },
+              { value: "fixed", label: t("sidebar.fixed") },
             ]}
             selected={object.autoWidth ? "auto" : "fixed"}
             onChange={(value) => onChange("autoWidth", value === "auto")}
