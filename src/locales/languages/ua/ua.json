@@ -179,7 +179,11 @@
   "selectors": {
     "gap": "Проміжок",
     "position": "Позиція",
-    "direction": "Напрям"
+    "top": "Згори",
+    "left": "Зліва",
+    "direction": "Напрям",
+    "width": "Ш",
+    "height": "В"
   },
   "contextMenu": {
     "moveForward": "Перенести вперед",

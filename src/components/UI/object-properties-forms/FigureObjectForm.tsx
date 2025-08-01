@@ -172,7 +172,9 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">X</InputAdornment>
+                  <InputAdornment position="start">
+                    {t("selectors.left")}
+                  </InputAdornment>
                 ),
               },
             }}
@@ -187,7 +189,9 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">Y</InputAdornment>
+                  <InputAdornment position="start">
+                    {t("selectors.top")}
+                  </InputAdornment>
                 ),
               },
             }}
@@ -211,7 +215,9 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">W</InputAdornment>
+                  <InputAdornment position="start">
+                    {t("selectors.width")}
+                  </InputAdornment>
                 ),
               },
             }}
@@ -229,7 +235,9 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">H</InputAdornment>
+                  <InputAdornment position="start">
+                    {t("selectors.height")}
+                  </InputAdornment>
                 ),
               },
             }}

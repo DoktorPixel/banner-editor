@@ -166,8 +166,8 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
         childId={object.id}
         condition={object.condition}
       />
-      <div className="grey-line"></div>
-      <div className="padding-wrapper">
+      {/* <div className="grey-line"></div> */}
+      {/* <div className="padding-wrapper">
         <Typography variant="subtitle2"> {t("sidebar.general")}</Typography>
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
           {t("selectors.position")}
@@ -203,7 +203,7 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
             margin="normal"
           />
         </div>
-      </div>
+      </div> */}
       <div className="grey-line"></div>
 
       <div className="padding-wrapper">
@@ -216,7 +216,9 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">W</InputAdornment>
+                  <InputAdornment position="start">
+                    {t("selectors.width")}
+                  </InputAdornment>
                 ),
               },
             }}
@@ -234,7 +236,9 @@ export const FigureChildObjectForm: React.FC<FigureChildObjectFormProps> = ({
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">H</InputAdornment>
+                  <InputAdornment position="start">
+                    {t("selectors.height")}
+                  </InputAdornment>
                 ),
               },
             }}
