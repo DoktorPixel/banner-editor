@@ -57,7 +57,11 @@ export const DeployTemplateButton: React.FC = () => {
         disabled={deployTemplate.isPending}
         variant="contained"
         color="primary"
-        sx={{ textTransform: "none", padding: "4px 6px 2px 6px" }}
+        sx={{
+          textTransform: "none",
+          padding: "4px 6px 2px 6px",
+          minWidth: "128px",
+        }}
       >
         {deployTemplate.isPending
           ? t("deployTemplate.deploying")

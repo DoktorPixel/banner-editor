@@ -5,7 +5,7 @@
   margin-right: 5px;
   border: 1px solid #ececec;
   background: #ffffff;
-  min-width: 300px;
+  min-width: 344px;
   width: 100%;
   max-width: 440px;
   height: auto;
@@ -19,7 +19,7 @@
   .object-properties-header {
     display: flex;
     flex-direction: row;
-
+    gap: 5px;
     align-items: center;
     justify-content: space-between;
     padding: 10px;
