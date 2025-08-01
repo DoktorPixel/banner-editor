@@ -34,6 +34,7 @@ export const ZoomControl: React.FC<ZoomControlProps> = ({
       alignItems="center"
       sx={{
         userSelect: "none",
+        marginLeft: "-5px",
       }}
     >
       <IconButton
@@ -50,7 +51,7 @@ export const ZoomControl: React.FC<ZoomControlProps> = ({
           border: "1px solid #ccc",
           borderRadius: "6px",
           padding: "4px 8px 4px 3px",
-          width: "65px",
+          // width: "65px",
         }}
       >
         {" "}
