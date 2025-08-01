@@ -189,7 +189,9 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">W</InputAdornment>
+                  <InputAdornment position="start">
+                    {t("selectors.width")}
+                  </InputAdornment>
                 ),
               },
             }}
@@ -207,7 +209,9 @@ export const GroupChildObjectForm: React.FC<GroupChildObjectFormProps> = ({
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">H</InputAdornment>
+                  <InputAdornment position="start">
+                    {t("selectors.height")}
+                  </InputAdornment>
                 ),
               },
             }}

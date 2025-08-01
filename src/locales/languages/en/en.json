@@ -183,7 +183,11 @@
   "selectors": {
     "gap": "Gap",
     "position": "Position",
-    "direction": "Direction"
+    "top": "Top",
+    "left": "Left",
+    "direction": "Direction",
+    "width": "W",
+    "height": "H"
   },
 
   "Object properties": {

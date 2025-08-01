@@ -48,7 +48,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
         childId={object.id}
         condition={object.condition}
       />
-      <div className="grey-line"></div>
+      {/* <div className="grey-line"></div>
       <div className="padding-wrapper">
         <Typography variant="subtitle2">{t("sidebar.general")}</Typography>
         <InputLabel sx={{ mt: 1, mb: -2, fontSize: "12px" }}>
@@ -85,7 +85,7 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
             margin="normal"
           />
         </div>
-      </div>
+      </div> */}
       <div className="grey-line"></div>
       <div className="padding-wrapper">
         <Typography variant="subtitle2"> {t("sidebar.layouts")}</Typography>
@@ -97,7 +97,9 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">W</InputAdornment>
+                  <InputAdornment position="start">
+                    {t("selectors.width")}
+                  </InputAdornment>
                 ),
               },
             }}
@@ -115,7 +117,9 @@ export const ImageChildObjectForm: React.FC<ImageChildObjectFormProps> = ({
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">H</InputAdornment>
+                  <InputAdornment position="start">
+                    {t("selectors.height")}
+                  </InputAdornment>
                 ),
               },
             }}
