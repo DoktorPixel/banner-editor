@@ -18,8 +18,13 @@ import { GroupVisibilityToggle } from "./button-groups/GroupVisibilityToggle";
 import { useTranslation } from "react-i18next";
 
 const SidebarObjectList: React.FC = () => {
-  const { objects, selectedObjectIds, selectObject, selectAllObjects } =
-    useBanner();
+  const {
+    objects,
+    selectedObjectIds,
+    selectObject,
+    selectAllObjects,
+    clearChildSelection,
+  } = useBanner();
   const { updateObjectProperty } = useObjectProperties();
   const [nameDialogState, setNameDialogState] = useState({
     isNameDialogOpen: false,
@@ -94,9 +99,10 @@ const SidebarObjectList: React.FC = () => {
                     : "white",
                   "&:hover": { backgroundColor: "#f5f5f5" },
                 }}
-                onClick={(e) =>
-                  selectAllObjects(obj.id, e.ctrlKey || e.metaKey)
-                }
+                onClick={(e) => {
+                  selectAllObjects(obj.id, e.ctrlKey || e.metaKey);
+                  clearChildSelection();
+                }}
               >
                 <IconButton
                   size="small"
@@ -138,9 +144,10 @@ const SidebarObjectList: React.FC = () => {
                       <ListItem
                         key={groupObj.id}
                         component="li"
-                        onClick={(e) =>
-                          selectObject(groupObj.id, e.ctrlKey || e.metaKey)
-                        }
+                        onClick={(e) => {
+                          selectObject(groupObj.id, e.ctrlKey || e.metaKey);
+                          clearChildSelection();
+                        }}
                         onDoubleClick={() => openNameDialog(groupObj)}
                         sx={{
                           cursor: "pointer",
@@ -185,7 +192,10 @@ const SidebarObjectList: React.FC = () => {
             <ListItem
               key={obj.id}
               component="li"
-              onClick={(e) => selectObject(obj.id, e.ctrlKey || e.metaKey)}
+              onClick={(e) => {
+                selectObject(obj.id, e.ctrlKey || e.metaKey);
+                clearChildSelection();
+              }}
               onDoubleClick={() => openNameDialog(obj)}
               sx={{
                 cursor: "pointer",
