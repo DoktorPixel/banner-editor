@@ -138,6 +138,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const selectChild = (groupId: number, childId: number, parentId?: number) => {
+    clearSelection();
     setSelectedChildId({ groupId, childId, parentId });
   };
 
@@ -201,6 +202,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const canRedo = currentStep < history.length - 1;
 
   const selectObject = (id: number, toggle = false) => {
+    clearChildSelection();
     setSelectedObjectIds((prev) => {
       if (toggle) {
         return prev.includes(id)
