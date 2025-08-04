@@ -1,13 +1,9 @@
 .banner-area-container {
   position: relative;
-  // overflow-y: auto;
-  // overflow-x: hidden;
   overflow-y: auto;
   overflow-x: auto;
-
   z-index: -100;
   margin-bottom: 10px;
-
   cursor: default;
   user-select: none;
 }
@@ -19,10 +15,6 @@
   background: #fff;
   z-index: -100;
   overflow: hidden;
-  // transition: transform 0.2s ease;
-  // overflow-y: auto;
-  // overflow-x: auto;
-  // transform-origin: top left;
 }
 
 .object {
@@ -34,8 +26,8 @@
 .banner-object-child {
   border: 1px solid transparent;
   cursor: pointer;
-  // transform: translate3d(0, 0, 0); /* включает GPU */
-  // will-change: transform;
+  transform: translate3d(0, 0, 0); /* включает GPU */
+  will-change: transform;
 }
 .banner-object:hover {
   border: 1px solid #ccc;

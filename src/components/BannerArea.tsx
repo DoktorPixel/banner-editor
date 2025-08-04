@@ -13,7 +13,6 @@ import {
   useAutoSizeUpdate,
   ResizeHandles,
   RightClickDragScroll,
-  // ZoomToCursor,
 } from "../utils/banner-hooks";
 import {
   useChildProperties,
@@ -145,7 +144,6 @@ const BannerArea: React.FC = () => {
   return (
     <div className="banner-area-container" ref={containerRef}>
       <RightClickDragScroll containerRef={containerRef} />
-      {/* <ZoomToCursor containerRef={containerRef} contentRef={bannerRef} /> */}
       <div
         className="banner-area"
         style={bannerStyles}
