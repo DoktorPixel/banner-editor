@@ -26,7 +26,7 @@ import {
   TextObject,
   ImageObject,
   FigureObject,
-  GroupObjectChildren,
+  GroupObject,
 } from "./UI/area-objects";
 
 const BannerArea: React.FC = () => {
@@ -238,7 +238,7 @@ const BannerArea: React.FC = () => {
                       paddingRight: object.paddingRight,
                     }}
                   >
-                    <GroupObjectChildren
+                    <GroupObject
                       object={object}
                       isVisible={isVisible}
                       hiddenObjectIds={hiddenObjectIds}

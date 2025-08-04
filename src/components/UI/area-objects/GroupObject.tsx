@@ -28,7 +28,7 @@ interface Props {
   ) => void;
 }
 
-export const GroupObjectChildren: React.FC<Props> = ({
+export const GroupObject: React.FC<Props> = ({
   object,
   isVisible,
   hiddenObjectIds,
