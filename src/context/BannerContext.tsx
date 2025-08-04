@@ -176,6 +176,55 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     updateHistory(newObjects);
   };
 
+  const updateNestedChild = (
+    parentId: number,
+    groupId: number,
+    childId: number,
+    updates: Partial<BannerChild>
+  ) => {
+    const newObjects = objects.map((obj) => {
+      if (obj.id === parentId && obj.children) {
+        const updatedChildren = obj.children.map((child) => {
+          if (child.id === groupId && child.children) {
+            const updatedNestedChildren = child.children.map((nestedChild) =>
+              nestedChild.id === childId
+                ? { ...nestedChild, ...updates }
+                : nestedChild
+            );
+            return { ...child, children: updatedNestedChildren };
+          }
+          return child;
+        });
+        return { ...obj, children: updatedChildren };
+      }
+      return obj;
+    });
+    updateHistory(newObjects);
+  };
+
+  const deleteNestedChild = (
+    parentId: number,
+    groupId: number,
+    childId: number
+  ) => {
+    const newObjects = objects.map((obj) => {
+      if (obj.id === parentId && obj.children) {
+        const updatedChildren = obj.children.map((child) => {
+          if (child.id === groupId && child.children) {
+            const updatedNestedChildren = child.children.filter(
+              (nestedChild) => nestedChild.id !== childId
+            );
+            return { ...child, children: updatedNestedChildren };
+          }
+          return child;
+        });
+        return { ...obj, children: updatedChildren };
+      }
+      return obj;
+    });
+    updateHistory(newObjects);
+  };
+
   const navigate = useNavigate();
 
   const clearHistory = () => {
@@ -381,6 +430,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         clearChildSelection,
         updateChild,
         deleteChild,
+        updateNestedChild,
+        deleteNestedChild,
 
         //
         temporaryUpdates,
