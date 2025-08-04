@@ -115,6 +115,19 @@ export const GroupObjectChildren: React.FC<Props> = ({
               height,
               rotate,
               backgroundColor,
+              borderRadius,
+              borderTopStyle,
+              borderTopColor,
+              borderTopWidth,
+              borderBottomStyle,
+              borderBottomColor,
+              borderBottomWidth,
+              borderLeftStyle,
+              borderLeftColor,
+              borderLeftWidth,
+              borderRightStyle,
+              borderRightColor,
+              borderRightWidth,
               ...figureStyles
             } = child;
 
@@ -131,6 +144,7 @@ export const GroupObjectChildren: React.FC<Props> = ({
                 style={{
                   transform: `rotate(${rotate ?? 0}deg)`,
                   visibility: isVisibleCild ? "visible" : "hidden",
+                  opacity: computeOpacity(child.opacity, isHidden),
                 }}
                 onDoubleClick={(e) =>
                   handleChildClick(object.id, child.id, e, undefined)
@@ -147,6 +161,19 @@ export const GroupObjectChildren: React.FC<Props> = ({
                     position: "relative",
                     width: width ?? "100px",
                     height: height ?? "100px",
+                    borderRadius: borderRadius,
+                    borderTopStyle: borderTopStyle,
+                    borderTopColor: borderTopColor,
+                    borderTopWidth: borderTopWidth,
+                    borderBottomStyle: borderBottomStyle,
+                    borderBottomColor: borderBottomColor,
+                    borderBottomWidth: borderBottomWidth,
+                    borderLeftStyle: borderLeftStyle,
+                    borderLeftColor: borderLeftColor,
+                    borderLeftWidth: borderLeftWidth,
+                    borderRightStyle: borderRightStyle,
+                    borderRightColor: borderRightColor,
+                    borderRightWidth: borderRightWidth,
                     backgroundColor:
                       backgroundColor !== "none" ? backgroundColor : undefined,
                     ...cleanStyles,
@@ -163,7 +190,29 @@ export const GroupObjectChildren: React.FC<Props> = ({
               height,
               autoWidth,
               autoHeight,
+              display,
               backgroundColor,
+              flexDirection,
+              justifyContent,
+              alignItems,
+              gap,
+              borderRadius,
+              borderTopStyle,
+              borderTopColor,
+              borderTopWidth,
+              borderBottomStyle,
+              borderBottomColor,
+              borderBottomWidth,
+              borderLeftStyle,
+              borderLeftColor,
+              borderLeftWidth,
+              borderRightStyle,
+              borderRightColor,
+              borderRightWidth,
+              paddingTop,
+              paddingBottom,
+              paddingLeft,
+              paddingRight,
               ...groupStyles
             } = child;
             const cleanStyles = Object.fromEntries(
@@ -179,6 +228,7 @@ export const GroupObjectChildren: React.FC<Props> = ({
                 style={{
                   transform: `rotate(${rotate ?? 0}deg)`,
                   visibility: isVisibleCild ? "visible" : "hidden",
+                  opacity: computeOpacity(child.opacity, isHidden),
                 }}
                 className={`banner-object-child ${
                   selectedChildId?.groupId === object.id &&
@@ -197,6 +247,28 @@ export const GroupObjectChildren: React.FC<Props> = ({
                     backgroundColor:
                       backgroundColor !== "none" ? backgroundColor : undefined,
                     position: "relative",
+                    display: display || "flex",
+                    flexDirection: flexDirection,
+                    justifyContent: justifyContent,
+                    alignItems: alignItems,
+                    gap: gap || 0,
+                    borderRadius: borderRadius,
+                    borderTopStyle: borderTopStyle,
+                    borderTopColor: borderTopColor,
+                    borderTopWidth: borderTopWidth,
+                    borderBottomStyle: borderBottomStyle,
+                    borderBottomColor: borderBottomColor,
+                    borderBottomWidth: borderBottomWidth,
+                    borderLeftStyle: borderLeftStyle,
+                    borderLeftColor: borderLeftColor,
+                    borderLeftWidth: borderLeftWidth,
+                    borderRightStyle: borderRightStyle,
+                    borderRightColor: borderRightColor,
+                    borderRightWidth: borderRightWidth,
+                    paddingTop: paddingTop,
+                    paddingBottom: paddingBottom,
+                    paddingLeft: paddingLeft,
+                    paddingRight: paddingRight,
                     ...cleanStyles,
                   }}
                 >
