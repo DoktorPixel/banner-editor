@@ -128,6 +128,74 @@ export const useChildProperties = () => {
   };
 };
 
+export const useNestedChildProperties = () => {
+  const {
+    selectedChildId,
+    objects,
+    updateNestedChild,
+    deleteNestedChild,
+    selectChild,
+    clearChildSelection,
+  } = useBanner();
+
+  const selectedNestedChild = selectedChildId?.parentId
+    ? objects
+        .find((obj) => obj.id === selectedChildId.parentId)
+        ?.children?.find((child) => child.id === selectedChildId.groupId)
+        ?.children?.find(
+          (nestedChild) => nestedChild.id === selectedChildId.childId
+        ) || null
+    : null;
+
+  const handleChangeNestedChild = (
+    key: keyof BannerChild,
+    value: string | number | undefined | "auto" | boolean
+  ) => {
+    if (selectedChildId?.parentId) {
+      updateNestedChild(
+        selectedChildId.parentId,
+        selectedChildId.groupId,
+        selectedChildId.childId,
+        { [key]: value }
+      );
+    }
+  };
+
+  const handleChangeMultipleNestedChildProperties = (
+    updates: Partial<BannerChild>
+  ) => {
+    if (selectedChildId?.parentId) {
+      updateNestedChild(
+        selectedChildId.parentId,
+        selectedChildId.groupId,
+        selectedChildId.childId,
+        updates
+      );
+    }
+  };
+
+  const handleDeleteNestedChild = () => {
+    if (selectedChildId?.parentId) {
+      deleteNestedChild(
+        selectedChildId.parentId,
+        selectedChildId.groupId,
+        selectedChildId.childId
+      );
+      clearChildSelection();
+    }
+  };
+
+  return {
+    selectedNestedChild,
+    selectedChildId,
+    handleChangeNestedChild,
+    handleChangeMultipleNestedChildProperties,
+    handleDeleteNestedChild,
+    selectChild,
+    clearChildSelection,
+  };
+};
+
 export const useChildOrder = () => {
   const { objects, reorderChildren } = useBanner();
   const getGroupChildren = (groupId: number) => {

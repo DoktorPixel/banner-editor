@@ -1,5 +1,9 @@
 import { Box, Typography } from "@mui/material";
-import { useObjectProperties, useChildProperties } from "../utils/hooks";
+import {
+  useObjectProperties,
+  useChildProperties,
+  useNestedChildProperties,
+} from "../utils/hooks";
 import { TextObjectForm } from "./UI/object-properties-forms/TextObjectForm";
 import { ImageObjectForm } from "./UI/object-properties-forms/ImageObjectForm";
 import { GroupObjectForm } from "./UI/object-properties-forms/GroupObjectForm";
@@ -29,6 +33,13 @@ const ObjectProperties: React.FC = () => {
     handleChangeChild,
     handleChangeMultipleChildProperties,
   } = useChildProperties();
+
+  const {
+    selectedNestedChild,
+    handleChangeNestedChild,
+    handleChangeMultipleNestedChildProperties,
+  } = useNestedChildProperties();
+
   const { t } = useTranslation();
   const { scale, setScale } = useZoom();
   // const { scale, setScale } = useBanner();
@@ -47,7 +58,36 @@ const ObjectProperties: React.FC = () => {
       </Typography>
       <div className="grey-line"></div>
 
-      {selectedChild ? (
+      {selectedNestedChild ? (
+        <>
+          {selectedNestedChild.type === "text" && (
+            <TextChildObjectForm
+              object={selectedNestedChild}
+              onChange={handleChangeNestedChild}
+            />
+          )}
+          {selectedNestedChild.type === "image" && (
+            <ImageChildObjectForm
+              object={selectedNestedChild}
+              onChange={handleChangeNestedChild}
+            />
+          )}
+          {selectedNestedChild.type === "figure" && (
+            <FigureChildObjectForm
+              object={selectedNestedChild}
+              onChange={handleChangeNestedChild}
+              onChangeMultiple={handleChangeMultipleNestedChildProperties}
+            />
+          )}
+          {selectedNestedChild?.type === "group" && (
+            <GroupChildObjectForm
+              object={selectedNestedChild}
+              onChange={handleChangeNestedChild}
+              onChangeMultiple={handleChangeMultipleNestedChildProperties}
+            />
+          )}
+        </>
+      ) : selectedChild ? (
         <>
           {selectedChild.type === "text" && (
             <TextChildObjectForm

@@ -189,7 +189,11 @@ export interface BannerContextProps {
   groupSelectedObjects: () => void;
   ungroupSelectedObject: () => void;
 
-  selectedChildId: { groupId: number; childId: number } | null;
+  selectedChildId: {
+    groupId: number;
+    childId: number;
+    parentId?: number;
+  } | null;
   selectChild: (groupId: number, childId: number, parentId?: number) => void;
   clearChildSelection: () => void;
   updateChild: (
@@ -198,6 +202,17 @@ export interface BannerContextProps {
     updates: Partial<BannerChild>
   ) => void;
   deleteChild: (groupId: number, childId: number) => void;
+  updateNestedChild: (
+    parentId: number,
+    groupId: number,
+    childId: number,
+    updates: Partial<BannerChild>
+  ) => void;
+  deleteNestedChild: (
+    parentId: number,
+    groupId: number,
+    childId: number
+  ) => void;
   //
   temporaryUpdates: { [key: number]: Partial<BannerObject> };
   setTemporaryUpdates: React.Dispatch<
