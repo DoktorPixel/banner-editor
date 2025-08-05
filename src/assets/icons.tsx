@@ -79,6 +79,42 @@ export const TextAlignCenter: React.FC<SVGProps> = ({
     </svg>
   );
 };
+export const TextAlignJustify: React.FC<SVGProps> = ({
+  width = "24px",
+  height = "24px",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 16 11"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g id="Group">
+        <path
+          id="Vector"
+          d="M1 4H6.5H12"
+          stroke="black"
+          stroke-linecap="round"
+        />
+        <path
+          id="Vector_2"
+          d="M1 1H6.5H12"
+          stroke="black"
+          stroke-linecap="round"
+        />
+        <path id="Vector_3" d="M1 7H12" stroke="black" stroke-linecap="round" />
+        <path
+          id="Vector_4"
+          d="M1 10H12"
+          stroke="black"
+          stroke-linecap="round"
+        />
+      </g>
+    </svg>
+  );
+};
 
 //
 export const TextLineThrough: React.FC<SVGProps> = ({

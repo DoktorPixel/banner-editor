@@ -3,6 +3,7 @@ import {
   TextAlignLeft,
   TextAlignRight,
   TextAlignCenter,
+  TextAlignJustify,
 } from "../../../assets/icons";
 import { useTranslation } from "react-i18next";
 
@@ -66,6 +67,21 @@ const TextAlignSelector: React.FC<TextAlignSelectorProps> = ({
           }}
         >
           <TextAlignRight width="24px" height="24px" />
+        </Button>
+        <Button
+          onClick={() => onChange("justify")}
+          sx={{
+            height: "30px",
+            padding: "0 10px",
+            backgroundColor: value === "justify" ? "white" : "#F1F1F1",
+            border: "2px solid #F1F1F1",
+            color: value === "justify" ? "black" : "inherit",
+            "&:hover": {
+              backgroundColor: value === "justify" ? "white" : "#E8E8E8",
+            },
+          }}
+        >
+          <TextAlignJustify width="24px" height="24px" />
         </Button>
       </ButtonGroup>
     </div>
