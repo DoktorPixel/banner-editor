@@ -177,6 +177,7 @@ const BannerArea: React.FC = () => {
             shouldHideGroup(object.conditionForAbstract, keyValuePairs) ||
             shouldHideObject(object.condition, keyValuePairs);
           const isVisible = !hiddenObjectIds.includes(object.id);
+
           if (object.type === "group") {
             return (
               <Fragment key={object.id}>

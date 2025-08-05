@@ -149,30 +149,8 @@ export const NestedGroupObject: React.FC<Props> = ({
               src,
               ...nestedStyles
             } = nestedChild;
-            if (nestedChild.type === "image") {
-              return (
-                <img
-                  key={nestedId}
-                  id={`${nestedId}`}
-                  data-condition={JSON.stringify(condition)}
-                  src={replaceDynamicVariables(src ?? "", keyValuePairs)}
-                  alt={"image"}
-                  style={{
-                    ...nestedStyles,
-                    visibility: isVisibleCildNested ? "visible" : "hidden",
-                  }}
-                  className={`image-field banner-object-child ${
-                    selectedChildId?.groupId === child.id &&
-                    selectedChildId.childId === nestedChild.id
-                      ? "selected-grand-child"
-                      : ""
-                  }`}
-                  onDoubleClick={(e) =>
-                    handleChildClick(child.id, nestedChild.id, e, object.id)
-                  }
-                />
-              );
-            } else if (nestedChild.type === "text") {
+
+            if (nestedChild.type === "text") {
               return (
                 <div
                   id={`${nestedId}`}
@@ -198,6 +176,29 @@ export const NestedGroupObject: React.FC<Props> = ({
                 >
                   {replaceDynamicText(content ?? "", keyValuePairs)}
                 </div>
+              );
+            } else if (nestedChild.type === "image") {
+              return (
+                <img
+                  key={nestedId}
+                  id={`${nestedId}`}
+                  data-condition={JSON.stringify(condition)}
+                  src={replaceDynamicVariables(src ?? "", keyValuePairs)}
+                  alt={"image"}
+                  style={{
+                    ...nestedStyles,
+                    visibility: isVisibleCildNested ? "visible" : "hidden",
+                  }}
+                  className={`image-field banner-object-child ${
+                    selectedChildId?.groupId === child.id &&
+                    selectedChildId.childId === nestedChild.id
+                      ? "selected-grand-child"
+                      : ""
+                  }`}
+                  onDoubleClick={(e) =>
+                    handleChildClick(child.id, nestedChild.id, e, object.id)
+                  }
+                />
               );
             }
 
