@@ -70,5 +70,11 @@ export const calculateResizeUpdates = ({
       break;
   }
 
+  Object.entries(updates).forEach(([key, value]) => {
+    if (typeof value === "number") {
+      updates[key as keyof typeof updates] = Math.round(value);
+    }
+  });
+
   return updates;
 };

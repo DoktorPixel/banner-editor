@@ -137,94 +137,175 @@ export const NestedGroupObject: React.FC<Props> = ({
           ?.slice()
           .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
           .map((nestedChild) => {
-            const isVisibleCildNested =
+            const isHidden = shouldHideObject(
+              nestedChild.condition,
+              keyValuePairs
+            );
+            const isVisibleNested =
               isVisible &&
               isVisibleChild &&
               !hiddenObjectIds.includes(nestedChild.id);
-            const {
-              id: nestedId,
-              condition,
-              content,
-              rotate,
-              src,
-              ...nestedStyles
-            } = nestedChild;
-            if (nestedChild.type === "image") {
-              return (
-                <img
-                  key={nestedId}
-                  id={`${nestedId}`}
-                  data-condition={JSON.stringify(condition)}
-                  src={replaceDynamicVariables(src ?? "", keyValuePairs)}
-                  alt={"image"}
-                  style={{
-                    ...nestedStyles,
-                    visibility: isVisibleCildNested ? "visible" : "hidden",
-                  }}
-                  className={`image-field banner-object-child ${
-                    selectedChildId?.groupId === child.id &&
-                    selectedChildId.childId === nestedChild.id
-                      ? "selected-grand-child"
-                      : ""
-                  }`}
-                  onDoubleClick={(e) =>
-                    handleChildClick(child.id, nestedChild.id, e, object.id)
-                  }
-                />
-              );
-            } else if (nestedChild.type === "text") {
+
+            if (nestedChild.type === "text") {
               return (
                 <div
-                  id={`${nestedId}`}
-                  data-condition={JSON.stringify(condition)}
-                  key={nestedId}
-                  style={{
-                    ...nestedStyles,
-                    transform: `rotate(${rotate ?? 0}deg)`,
-                    position: "relative",
-                    width: "auto",
-                    height: "auto",
-                    visibility: isVisibleCildNested ? "visible" : "hidden",
-                  }}
-                  className={`image-field banner-object-child ${
+                  key={nestedChild.id}
+                  id={`${nestedChild.id}`}
+                  data-condition={JSON.stringify(nestedChild.condition)}
+                  className={`text-field banner-object-child ${
                     selectedChildId?.groupId === child.id &&
                     selectedChildId.childId === nestedChild.id
                       ? "selected-grand-child"
                       : ""
                   }`}
+                  style={{
+                    fontSize: nestedChild.fontSize,
+                    color: nestedChild.color,
+                    fontFamily: nestedChild.fontFamily,
+                    fontWeight: nestedChild.fontWeight,
+                    fontStyle: nestedChild.fontStyle,
+                    textTransform: nestedChild.textTransform,
+                    lineHeight: nestedChild.lineHeight,
+                    letterSpacing: nestedChild.letterSpacing,
+                    textDecoration: nestedChild.textDecoration,
+                    textAlign: nestedChild.textAlign,
+                    opacity: computeOpacity(nestedChild.opacity, isHidden),
+                    visibility: isVisibleNested ? "visible" : "hidden",
+                    border:
+                      selectedChildId?.groupId === child.id &&
+                      selectedChildId.childId === nestedChild.id
+                        ? "1px solid blue"
+                        : "none",
+                    transform: `rotate(${nestedChild.rotate || 0}deg)`,
+                  }}
                   onDoubleClick={(e) =>
                     handleChildClick(child.id, nestedChild.id, e, object.id)
                   }
                 >
-                  {replaceDynamicText(content ?? "", keyValuePairs)}
+                  {replaceDynamicText(nestedChild.content ?? "", keyValuePairs)}
                 </div>
               );
+            } else if (nestedChild.type === "image") {
+              return (
+                <img
+                  id={`${nestedChild.id}`}
+                  data-condition={JSON.stringify(nestedChild.condition)}
+                  key={nestedChild.id}
+                  src={replaceDynamicVariables(
+                    nestedChild.src ?? "",
+                    keyValuePairs
+                  )}
+                  alt={nestedChild.name || "image"}
+                  style={{
+                    width: nestedChild.width,
+                    height: nestedChild.height,
+                    objectFit: nestedChild.objectFit,
+                    transform: `rotate(${nestedChild.rotate || 0}deg)`,
+                    opacity: computeOpacity(nestedChild.opacity, isHidden),
+                    visibility: isVisibleNested ? "visible" : "hidden",
+                  }}
+                  onDoubleClick={(e) =>
+                    handleChildClick(child.id, nestedChild.id, e, object.id)
+                  }
+                  className={`banner-object-child image-field ${
+                    selectedChildId?.groupId === child.id &&
+                    selectedChildId.childId === nestedChild.id
+                      ? "selected-grand-child"
+                      : ""
+                  }`}
+                />
+              );
+            } else if (nestedChild.type === "figure") {
+              const {
+                id,
+                width,
+                height,
+                rotate,
+                backgroundColor,
+                borderRadius,
+                borderTopStyle,
+                borderTopColor,
+                borderTopWidth,
+                borderBottomStyle,
+                borderBottomColor,
+                borderBottomWidth,
+                borderLeftStyle,
+                borderLeftColor,
+                borderLeftWidth,
+                borderRightStyle,
+                borderRightColor,
+                borderRightWidth,
+                ...figureStyles
+              } = nestedChild;
+              const cleanStyles = Object.fromEntries(
+                Object.entries(figureStyles).filter(
+                  ([key]) => key in ({} as React.CSSProperties)
+                )
+              );
+              return (
+                <div
+                  key={id}
+                  id={`${nestedChild.id}`}
+                  data-condition={JSON.stringify(nestedChild.condition)}
+                  style={{
+                    transform: `rotate(${rotate ?? 0}deg)`,
+                    visibility: isVisibleNested ? "visible" : "hidden",
+                    opacity: computeOpacity(nestedChild.opacity, isHidden),
+                  }}
+                  onDoubleClick={(e) =>
+                    handleChildClick(child.id, nestedChild.id, e, object.id)
+                  }
+                  className={`banner-object-child ${
+                    selectedChildId?.groupId === child.id &&
+                    selectedChildId.childId === nestedChild.id
+                      ? "selected-grand-child"
+                      : ""
+                  }`}
+                >
+                  <div
+                    style={{
+                      position: "relative",
+                      width: width ?? "100px",
+                      height: height ?? "100px",
+                      borderRadius: borderRadius,
+                      borderTopStyle: borderTopStyle,
+                      borderTopColor: borderTopColor,
+                      borderTopWidth: borderTopWidth,
+                      borderBottomStyle: borderBottomStyle,
+                      borderBottomColor: borderBottomColor,
+                      borderBottomWidth: borderBottomWidth,
+                      borderLeftStyle: borderLeftStyle,
+                      borderLeftColor: borderLeftColor,
+                      borderLeftWidth: borderLeftWidth,
+                      borderRightStyle: borderRightStyle,
+                      borderRightColor: borderRightColor,
+                      borderRightWidth: borderRightWidth,
+                      backgroundColor:
+                        backgroundColor !== "none"
+                          ? backgroundColor
+                          : undefined,
+                      ...cleanStyles,
+                    }}
+                  ></div>
+                </div>
+              );
+            } else if (nestedChild.type === "group") {
+              // Рекурсивно вложенная группа
+              return (
+                <NestedGroupObject
+                  key={nestedChild.id}
+                  child={nestedChild}
+                  object={child}
+                  isVisible={isVisible}
+                  isVisibleChild={isVisibleNested}
+                  hiddenObjectIds={hiddenObjectIds}
+                  keyValuePairs={keyValuePairs}
+                  selectedChildId={selectedChildId}
+                  handleChildClick={handleChildClick}
+                />
+              );
             }
-
-            return (
-              <p
-                id={`${nestedId}`}
-                data-condition={JSON.stringify(condition)}
-                key={nestedId}
-                style={{
-                  ...nestedStyles,
-                  transform: `rotate(${rotate ?? 0}deg)`,
-                  position: "relative",
-                  visibility: isVisibleCildNested ? "visible" : "hidden",
-                }}
-                className={`image-field banner-object-child ${
-                  selectedChildId?.groupId === child.id &&
-                  selectedChildId.childId === nestedChild.id
-                    ? "selected-grand-child"
-                    : ""
-                }`}
-                onDoubleClick={(e) =>
-                  handleChildClick(child.id, nestedChild.id, e, object.id)
-                }
-              >
-                {replaceDynamicText(content ?? "", keyValuePairs)}
-              </p>
-            );
+            return null;
           })}
       </div>
     </div>

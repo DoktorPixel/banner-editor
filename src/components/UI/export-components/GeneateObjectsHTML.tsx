@@ -145,6 +145,9 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
       if (obj.fontStyle) styles.push(`font-style: ${obj.fontStyle}`);
       if (obj.textTransform)
         styles.push(`text-transform: ${obj.textTransform}`);
+      if (obj.lineHeight) styles.push(`line-height: ${obj.lineHeight}`);
+      if (obj.letterSpacing)
+        styles.push(`letter-spacing: ${toPx(obj.letterSpacing)}`);
       if (obj.textDecoration)
         styles.push(`text-decoration: ${obj.textDecoration}`);
       if (obj.textAlign) styles.push(`text-align: ${obj.textAlign}`);

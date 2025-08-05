@@ -113,8 +113,8 @@ export const useDragAndResize = ({
             const obj = objects.find((o) => o.id === id);
             if (obj) {
               updates[id] = {
-                x: scaledPos.x - offsets[id].x,
-                y: scaledPos.y - offsets[id].y,
+                x: Math.round(scaledPos.x - offsets[id].x),
+                y: Math.round(scaledPos.y - offsets[id].y),
               };
             }
           });

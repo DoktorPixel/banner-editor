@@ -146,9 +146,18 @@
       "extraBold": "ExtraBold (800)",
       "black": "Black (900)"
     },
+    "textTransform": {
+      "none": "—",
+      "uppercase": "Uppercase",
+      "lowercase": "Lowercase",
+      "capitalize": "Capitalize"
+    },
     "color": "Color",
     "fontStyle": "Font style",
     "textDecoration": "Text decoration",
+    "textTransformTitle": "Text transform",
+    "lineHeight": "Line height",
+    "letterSpacing": "Letter spacing(px)",
     "rotate": "Rotate",
     "opacity": "Opacity 100 to 1",
     "backgroundColor": "Background color",

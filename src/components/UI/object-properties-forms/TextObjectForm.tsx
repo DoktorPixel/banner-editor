@@ -16,9 +16,11 @@ import { CustomFontSelector } from "../selectors/CustomFontSelector";
 import TextAlignSelector from "../button-groups/TextAlignSelector";
 import TextDecorationSelector from "../button-groups/TextDecorationSelector";
 import FontStyleSelector from "../button-groups/FontStyleSelector";
+import { TextTransformSelector } from "../button-groups/TextTransformSelector";
 import { MuiColorInput } from "mui-color-input";
 import { ConditionSelector } from "../selectors/ConditionSelector";
 import ActionToggle from "../button-groups/ActionToggle";
+import { LineHeightInput } from "../inputs/LineHeightInput";
 import { SvgHelp } from "../../../assets/icons";
 import { useTranslation } from "react-i18next";
 
@@ -284,6 +286,45 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
           fullWidth
           sx={{ margin: "32px 0 10px 0" }}
         />
+
+        <div className="auto-size">
+          {/* <TextField
+            label={t("sidebar.lineHeight")}
+            type="number"
+            value={object.lineHeight || 1.2}
+            onChange={(e) => {
+              const value = parseFloat(e.target.value);
+              onChange("lineHeight", isNaN(value) ? 1.2 : value);
+            }}
+            fullWidth
+            margin="normal"
+            inputProps={{
+              step: 0.1,
+              min: 0.5,
+              max: 3,
+            }}
+          /> */}
+          <LineHeightInput
+            value={object.lineHeight || "120%"}
+            onChange={(value) => onChange("lineHeight", value)}
+          />
+          <TextField
+            label={t("sidebar.letterSpacing")}
+            type="number"
+            value={object.letterSpacing || 0}
+            onChange={(e) => {
+              const value = parseFloat(e.target.value);
+              onChange("letterSpacing", isNaN(value) ? 0 : value);
+            }}
+            fullWidth
+            margin="normal"
+            inputProps={{
+              step: 0.1,
+              min: -2,
+              max: 5,
+            }}
+          />
+        </div>
       </div>
       <div className="grey-line"></div>
       <CustomFontSelector templateId={currentProjectId || ""} />
@@ -301,6 +342,11 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         <TextDecorationSelector
           value={(object.textDecoration || "none").toString()}
           onChange={(value) => onChange("textDecoration", value)}
+        />
+
+        <TextTransformSelector
+          value={object.textTransform || "none"}
+          onChange={(value) => onChange("textTransform", value || "none")}
         />
       </div>
 
