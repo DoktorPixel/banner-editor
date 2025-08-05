@@ -14,6 +14,8 @@ import TextDecorationSelector from "../button-groups/TextDecorationSelector";
 import FontStyleSelector from "../button-groups/FontStyleSelector";
 import { ChildConditionSelector } from "../selectors/ChildConditionSelector";
 import ChildOrderControls from "../button-groups/ChildOrderControls";
+import { LineHeightInput } from "../inputs/LineHeightInput";
+import { TextTransformSelector } from "../button-groups/TextTransformSelector";
 import { SvgHelp } from "../../../assets/icons";
 import { useTranslation } from "react-i18next";
 
@@ -164,6 +166,29 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
           fullWidth
           sx={{ margin: "32px 0 10px 0" }}
         />
+
+        <div className="auto-size">
+          <LineHeightInput
+            value={object.lineHeight || "120%"}
+            onChange={(value) => onChange("lineHeight", value)}
+          />
+          <TextField
+            label={t("sidebar.letterSpacing")}
+            type="number"
+            value={object.letterSpacing || 0}
+            onChange={(e) => {
+              const value = parseFloat(e.target.value);
+              onChange("letterSpacing", isNaN(value) ? 0 : value);
+            }}
+            fullWidth
+            margin="normal"
+            inputProps={{
+              step: 0.1,
+              min: -2,
+              max: 5,
+            }}
+          />
+        </div>
       </div>
 
       <div className="grey-line"></div>
@@ -177,6 +202,11 @@ export const TextChildObjectForm: React.FC<TextChildObjectFormProps> = ({
         <TextDecorationSelector
           value={(object.textDecoration || "none").toString()}
           onChange={(value) => onChange("textDecoration", value)}
+        />
+
+        <TextTransformSelector
+          value={object.textTransform || "none"}
+          onChange={(value) => onChange("textTransform", value || "none")}
         />
       </div>
 
