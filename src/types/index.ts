@@ -10,6 +10,8 @@ export interface BannerObject {
   fontWeight?: React.CSSProperties["fontWeight"];
   fontStyle?: React.CSSProperties["fontStyle"];
   textTransform?: React.CSSProperties["textTransform"];
+  lineHeight?: React.CSSProperties["lineHeight"];
+  letterSpacing?: React.CSSProperties["letterSpacing"];
   textDecoration?: React.CSSProperties["textDecoration"];
   textAlign?: React.CSSProperties["textAlign"];
   color?: string;
@@ -99,6 +101,8 @@ export interface BannerChild {
   fontWeight?: React.CSSProperties["fontWeight"];
   fontStyle?: React.CSSProperties["fontStyle"];
   textTransform?: React.CSSProperties["textTransform"];
+  lineHeight?: React.CSSProperties["lineHeight"];
+  letterSpacing?: React.CSSProperties["letterSpacing"];
   textDecoration?: React.CSSProperties["textDecoration"];
   textAlign?: React.CSSProperties["textAlign"];
   color?: string;

@@ -6,7 +6,7 @@
   // margin-left: 5px;
   border: 1px solid #ececec;
   background: #ffffff;
-  min-width: 344px;
+  min-width: 350px;
   width: 100%;
   max-width: 440px;
   height: auto;
@@ -81,4 +81,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
+}
+.text-transform-buttons {
+  font-size: 18px;
 }
