@@ -288,22 +288,6 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         />
 
         <div className="auto-size">
-          {/* <TextField
-            label={t("sidebar.lineHeight")}
-            type="number"
-            value={object.lineHeight || 1.2}
-            onChange={(e) => {
-              const value = parseFloat(e.target.value);
-              onChange("lineHeight", isNaN(value) ? 1.2 : value);
-            }}
-            fullWidth
-            margin="normal"
-            inputProps={{
-              step: 0.1,
-              min: 0.5,
-              max: 3,
-            }}
-          /> */}
           <LineHeightInput
             value={object.lineHeight || "120%"}
             onChange={(value) => onChange("lineHeight", value)}
