@@ -1,0 +1,28 @@
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { Box, Typography } from "@mui/material";
+import { useObjectProperties, useChildProperties, useNestedChildProperties, } from "../utils/hooks";
+import { TextObjectForm } from "./UI/object-properties-forms/TextObjectForm";
+import { ImageObjectForm } from "./UI/object-properties-forms/ImageObjectForm";
+import { GroupObjectForm } from "./UI/object-properties-forms/GroupObjectForm";
+import { FigureObjectForm } from "./UI/object-properties-forms/FigureObjectForm";
+import { SelectedObjectsList } from "./UI/SelectedObjectsList";
+import { TextChildObjectForm } from "./UI/child-object-forms/TextChildObjectForm";
+import { ImageChildObjectForm } from "./UI/child-object-forms/ImageChildObjectForm";
+import { FigureChildObjectForm } from "./UI/child-object-forms/FigureChildObjectForm";
+import { GroupChildObjectForm } from "./UI/child-object-forms/GroupChildObjectForm";
+import { DeployTemplateButton } from "./UI/updates-components/TemplateButtons";
+import LanguageSwitcher from "./UI/selectors/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
+// import { useBanner } from "../context/BannerContext";
+import { useZoom } from "../utils/banner-hooks";
+import { ZoomControl } from "./UI/ZoomControl";
+const ObjectProperties = () => {
+    const { selectedObject, selectedObjects, selectedObjectIds, updateObjectProperty, } = useObjectProperties();
+    const { selectedChild, handleChangeChild, handleChangeMultipleChildProperties, } = useChildProperties();
+    const { selectedNestedChild, handleChangeNestedChild, handleChangeMultipleNestedChildProperties, } = useNestedChildProperties();
+    const { t } = useTranslation();
+    const { scale, setScale } = useZoom();
+    // const { scale, setScale } = useBanner();
+    return (_jsxs(Box, { className: "object-properties", children: [_jsxs(Box, { className: "object-properties-header", children: [_jsx(ZoomControl, { scale: scale, setScale: setScale }), _jsx(LanguageSwitcher, {}), _jsx(DeployTemplateButton, {})] }), _jsx("div", { className: "grey-line" }), _jsx(Typography, { variant: "h5", className: "padding-wrapper", children: t("sidebar.objectProperties") }), _jsx("div", { className: "grey-line" }), selectedNestedChild ? (_jsxs(_Fragment, { children: [selectedNestedChild.type === "text" && (_jsx(TextChildObjectForm, { object: selectedNestedChild, onChange: handleChangeNestedChild })), selectedNestedChild.type === "image" && (_jsx(ImageChildObjectForm, { object: selectedNestedChild, onChange: handleChangeNestedChild })), selectedNestedChild.type === "figure" && (_jsx(FigureChildObjectForm, { object: selectedNestedChild, onChange: handleChangeNestedChild, onChangeMultiple: handleChangeMultipleNestedChildProperties })), selectedNestedChild?.type === "group" && (_jsx(GroupChildObjectForm, { object: selectedNestedChild, onChange: handleChangeNestedChild, onChangeMultiple: handleChangeMultipleNestedChildProperties }))] })) : selectedChild ? (_jsxs(_Fragment, { children: [selectedChild.type === "text" && (_jsx(TextChildObjectForm, { object: selectedChild, onChange: handleChangeChild })), selectedChild.type === "image" && (_jsx(ImageChildObjectForm, { object: selectedChild, onChange: handleChangeChild })), selectedChild.type === "figure" && (_jsx(FigureChildObjectForm, { object: selectedChild, onChange: handleChangeChild, onChangeMultiple: handleChangeMultipleChildProperties })), selectedChild?.type === "group" && (_jsx(GroupChildObjectForm, { object: selectedChild, onChange: handleChangeChild, onChangeMultiple: handleChangeMultipleChildProperties }))] })) : selectedObjectIds.length === 0 ? (_jsx("div", { className: "padding-wrapper", children: _jsxs(Typography, { children: [" ", t("sidebar.selectObject"), " "] }) })) : selectedObjectIds.length === 1 ? (selectedObject?.type === "text" ? (_jsx(TextObjectForm, { object: selectedObject, onChange: (key, value) => updateObjectProperty(selectedObject.id, key, value) })) : selectedObject?.type === "image" ? (_jsx(ImageObjectForm, { object: selectedObject, onChange: (key, value) => updateObjectProperty(selectedObject.id, key, value) })) : selectedObject?.type === "figure" ? (_jsx(FigureObjectForm, { object: selectedObject, onChange: (key, value) => updateObjectProperty(selectedObject.id, key, value) })) : selectedObject?.type === "group" ? (_jsx(GroupObjectForm, { object: selectedObject, onChange: (key, value) => updateObjectProperty(selectedObject.id, key, value) })) : null) : (_jsx(SelectedObjectsList, { objects: selectedObjects }))] }));
+};
+export default ObjectProperties;

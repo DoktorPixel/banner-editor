@@ -192,6 +192,13 @@ export interface BannerContextProps {
   clearProject: () => void;
   groupSelectedObjects: () => void;
   ungroupSelectedObject: () => void;
+  // grouping helpers
+  groupObjectsAsFlex: (objectIds: number[]) => void;
+  groupObjectsAsAbstract: (objectIds: number[]) => void;
+  addObjectToAbstractGroup: (objectId: number, groupId: number) => void;
+  removeObjectFromAbstractGroup: (objectId: number) => void;
+  addObjectsToFlexGroup: (groupId: number, objectIds: number[]) => void;
+  removeChildFromFlexGroup: (groupId: number, childId: number) => void;
 
   selectedChildId: {
     groupId: number;

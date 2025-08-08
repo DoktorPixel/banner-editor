@@ -13,6 +13,7 @@ import {
 } from "../../assets/icons";
 import { VisibilityToggle } from "./button-groups/VisibilityToggle";
 import { useTranslation } from "react-i18next";
+import { useDroppable, useDraggable } from "@dnd-kit/core";
 
 interface GroupListItemProps {
   group: BannerObject;
@@ -40,39 +41,62 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
     event.stopPropagation();
     selectChild(groupId, child.id);
   };
+  const { setNodeRef: setDropRef, isOver } = useDroppable({
+    id: `flex-${group.id}`,
+  });
+  const {
+    setNodeRef: setDragRef,
+    attributes,
+    listeners,
+  } = useDraggable({
+    id: `root-${group.id}`,
+    data: { kind: "root", objectId: group.id },
+  });
 
   return (
     <>
-      <ListItem
-        key={group.id}
-        component="li"
-        onClick={(e) => selectObject(group.id, e.ctrlKey || e.metaKey)}
-        onDoubleClick={() => openNameDialog(group)}
-        sx={{
-          cursor: "pointer",
-          backgroundColor: selectedObjectIds.includes(group.id)
-            ? "#EEEEEE"
-            : "white",
-          "&:hover": { backgroundColor: "#f5f5f5" },
-          padding: "5px 0 5px 0",
-          display: "flex",
-          alignItems: "center",
-        }}
+      <div
+        ref={setDragRef}
+        {...listeners}
+        {...attributes}
+        style={{ touchAction: "none" }}
       >
-        <IconButton
-          size="small"
-          edge="start"
-          sx={{ marginRight: "3px" }}
-          onClick={handleToggle}
+        <div
+          ref={setDropRef}
+          style={{ backgroundColor: isOver ? "#e8f0fe" : undefined }}
         >
-          {open ? <ArrowDown /> : <ArrowRight />}
-        </IconButton>
-        {open ? <SvgLayoutOpen /> : <SvgLayout />}
-        <span className="layers-list-item">
-          {group.name?.substring(0, 10) || t("layersPanel.layout")}
-          <VisibilityToggle objectId={group.id} />
-        </span>
-      </ListItem>
+          <ListItem
+            key={group.id}
+            component="li"
+            onClick={(e) => selectObject(group.id, e.ctrlKey || e.metaKey)}
+            onDoubleClick={() => openNameDialog(group)}
+            sx={{
+              cursor: "pointer",
+              backgroundColor: selectedObjectIds.includes(group.id)
+                ? "#EEEEEE"
+                : "white",
+              "&:hover": { backgroundColor: "#f5f5f5" },
+              padding: "5px 0 5px 0",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <IconButton
+              size="small"
+              edge="start"
+              sx={{ marginRight: "3px" }}
+              onClick={handleToggle}
+            >
+              {open ? <ArrowDown /> : <ArrowRight />}
+            </IconButton>
+            {open ? <SvgLayoutOpen /> : <SvgLayout />}
+            <span className="layers-list-item">
+              {group.name?.substring(0, 10) || t("layersPanel.layout")}
+              <VisibilityToggle objectId={group.id} />
+            </span>
+          </ListItem>
+        </div>
+      </div>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding className="group-list-item">
           {group.children?.map((child) =>

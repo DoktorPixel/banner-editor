@@ -377,6 +377,186 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedObjectIds(ungroupedObjects.map((obj) => obj.id));
   };
 
+  // --- Grouping helpers for DnD ---
+  const groupObjectsAsFlex = (objectIds: number[]) => {
+    const selectedObjects = objects.filter((obj) => objectIds.includes(obj.id));
+    if (selectedObjects.length < 2) return;
+
+    const minX = Math.min(...selectedObjects.map((o) => o.x ?? 0));
+    const minY = Math.min(...selectedObjects.map((o) => o.y ?? 0));
+
+    const maxZIndex = objects.reduce(
+      (max, obj) => Math.max(max, obj.zIndex ?? 0),
+      0
+    );
+
+    const newGroup: BannerObject = {
+      id: Date.now(),
+      type: "group",
+      x: minX,
+      y: minY,
+      width:
+        Math.max(...selectedObjects.map((o) => (o.x ?? 0) + (o.width ?? 100))) -
+        minX,
+      height:
+        Math.max(
+          ...selectedObjects.map((o) => (o.y ?? 0) + (o.height ?? 100))
+        ) - minY,
+      zIndex: maxZIndex + 1,
+      children: selectedObjects.map(
+        ({ id, x, y, children = [], ...rest }, index) => ({
+          id,
+          x: (x ?? 0) - minX,
+          y: (y ?? 0) - minY,
+          order: index,
+          children:
+            children.length > 0 ? children.map((child) => ({ ...child })) : [],
+          ...rest,
+        })
+      ),
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: "10px",
+    };
+
+    const remaining = objects.filter((obj) => !objectIds.includes(obj.id));
+    updateHistory([...remaining, newGroup]);
+    setSelectedObjectIds([newGroup.id]);
+  };
+
+  const groupObjectsAsAbstract = (objectIds: number[]) => {
+    if (objectIds.length < 2) return;
+    const abstractGroupId = Date.now();
+    const updates: Record<number, Partial<BannerObject>> = {};
+    objectIds.forEach((id) => {
+      updates[id] = { abstractGroupId };
+    });
+    updateMultipleObjects(updates);
+    setSelectedObjectIds([...objectIds]);
+  };
+
+  const getAbstractGroupMembers = (groupId: number): BannerObject[] =>
+    objects.filter((o) => o.abstractGroupId === groupId);
+
+  const addObjectToAbstractGroup = (objectId: number, groupId: number) => {
+    // Remove from previous abstract group if needed and clean up
+    const current = objects.find((o) => o.id === objectId);
+    if (!current) return;
+    const prevGroupId = current.abstractGroupId ?? null;
+    if (prevGroupId && prevGroupId !== groupId) {
+      const remaining = getAbstractGroupMembers(prevGroupId).filter(
+        (o) => o.id !== objectId
+      );
+      if (remaining.length <= 1) {
+        // dissolve previous group fully
+        remaining.forEach((o) => updateObject(o.id, { abstractGroupId: null }));
+      }
+    }
+    updateObject(objectId, { abstractGroupId: groupId });
+  };
+
+  const removeObjectFromAbstractGroup = (objectId: number) => {
+    const current = objects.find((o) => o.id === objectId);
+    if (!current || current.abstractGroupId == null) {
+      updateObject(objectId, { abstractGroupId: null });
+      return;
+    }
+    const groupId = current.abstractGroupId;
+    const remaining = getAbstractGroupMembers(groupId).filter(
+      (o) => o.id !== objectId
+    );
+    if (remaining.length <= 1) {
+      // dissolve group completely
+      remaining.forEach((o) => updateObject(o.id, { abstractGroupId: null }));
+    }
+    updateObject(objectId, { abstractGroupId: null });
+  };
+
+  const addObjectsToFlexGroup = (groupId: number, objectIds: number[]) => {
+    const group = objects.find((o) => o.id === groupId);
+    if (!group || group.type !== "group") return;
+
+    const toAdd = objects.filter((o) => objectIds.includes(o.id));
+    if (toAdd.length === 0) return;
+
+    const baseOrder = group.children?.length ?? 0;
+    const newChildren = toAdd.map(
+      ({ id, x, y, children = [], ...rest }, index) => ({
+        id,
+        x: (x ?? 0) - (group.x ?? 0),
+        y: (y ?? 0) - (group.y ?? 0),
+        order: baseOrder + index,
+        children:
+          children.length > 0 ? children.map((child) => ({ ...child })) : [],
+        ...rest,
+      })
+    );
+
+    const updatedGroup: Partial<BannerObject> = {
+      children: [...(group.children ?? []), ...newChildren],
+    };
+
+    const remaining = objects.filter(
+      (o) => !objectIds.includes(o.id) || o.id === groupId
+    );
+    const merged = remaining.map((o) =>
+      o.id === groupId ? { ...o, ...updatedGroup } : o
+    );
+    updateHistory(merged);
+    setSelectedObjectIds([groupId]);
+  };
+
+  const removeChildFromFlexGroup = (groupId: number, childId: number) => {
+    const group = objects.find((o) => o.id === groupId);
+    if (!group || group.type !== "group" || !group.children) return;
+
+    const removedChild = group.children.find((c) => c.id === childId);
+    if (!removedChild) return;
+
+    const remainingChildren = group.children.filter((c) => c.id !== childId);
+
+    const liftedRemoved: BannerObject = {
+      ...removedChild,
+      id: Date.now() + Math.random(),
+      x: (removedChild.x ?? 0) + (group.x ?? 0),
+      y: (removedChild.y ?? 0) + (group.y ?? 0),
+      type: removedChild.type,
+    } as BannerObject;
+
+    if (remainingChildren.length === 0) {
+      // Remove group entirely, only the removed child is lifted
+      const others = objects.filter((o) => o.id !== groupId);
+      updateHistory([...others, liftedRemoved]);
+      setSelectedObjectIds([liftedRemoved.id]);
+      return;
+    }
+
+    if (remainingChildren.length === 1) {
+      // Also lift the last remaining child and remove group
+      const last = remainingChildren[0];
+      const liftedLast: BannerObject = {
+        ...last,
+        id: Date.now() + Math.random(),
+        x: (last.x ?? 0) + (group.x ?? 0),
+        y: (last.y ?? 0) + (group.y ?? 0),
+        type: last.type,
+      } as BannerObject;
+      const others = objects.filter((o) => o.id !== groupId);
+      updateHistory([...others, liftedRemoved, liftedLast]);
+      setSelectedObjectIds([liftedRemoved.id, liftedLast.id]);
+      return;
+    }
+
+    // Keep group with remaining children and add lifted removed child to top level
+    const updated = objects.map((o) =>
+      o.id === groupId ? { ...o, children: remainingChildren } : o
+    );
+    updateHistory([...updated, liftedRemoved]);
+    setSelectedObjectIds([liftedRemoved.id]);
+  };
+
   const reorderChildren = (groupId: number, newOrder: number[]) => {
     const group = objects.find((obj) => obj.id === groupId);
     if (!group || group.type !== "group" || !group.children) {
@@ -424,6 +604,12 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         clearProject,
         groupSelectedObjects,
         ungroupSelectedObject,
+        groupObjectsAsFlex,
+        groupObjectsAsAbstract,
+        addObjectToAbstractGroup,
+        removeObjectFromAbstractGroup,
+        addObjectsToFlexGroup,
+        removeChildFromFlexGroup,
         //
         selectedChildId,
         selectChild,
