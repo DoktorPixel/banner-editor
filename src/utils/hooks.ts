@@ -282,6 +282,39 @@ export const useAbstractGroupCondition = () => {
   return { updateGroupCondition };
 };
 
+export function useVirtualGroupActions() {
+  const { selectedObjectIds, updateMultipleObjects } = useBanner();
+
+  const groupSelectedObjectsAbstract = () => {
+    if (selectedObjectIds.length < 2) return;
+
+    const newAbstractGroupId = Date.now();
+
+    const updates = selectedObjectIds.reduce((acc, id) => {
+      acc[id] = { abstractGroupId: newAbstractGroupId };
+      return acc;
+    }, {} as Record<number, Partial<BannerObject>>);
+
+    updateMultipleObjects(updates);
+  };
+
+  const ungroupSelectedObjectsAbstract = () => {
+    if (selectedObjectIds.length === 0) return;
+
+    const updates = selectedObjectIds.reduce((acc, id) => {
+      acc[id] = { abstractGroupId: null };
+      return acc;
+    }, {} as Record<number, Partial<BannerObject>>);
+
+    updateMultipleObjects(updates);
+  };
+
+  return {
+    groupSelectedObjectsAbstract,
+    ungroupSelectedObjectsAbstract,
+  };
+}
+
 // ZIndex Collision
 
 export const isCollision = (
