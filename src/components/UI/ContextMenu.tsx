@@ -7,6 +7,7 @@ import {
 } from "../../utils/hooks";
 import { useBanner } from "../../context/BannerContext";
 import { useTranslation } from "react-i18next";
+import { useVirtualGroupActions } from "../../utils/hooks";
 
 interface ContextMenuProps {
   x: number;
@@ -25,12 +26,11 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   updateObject,
   objects,
 }) => {
-  const {
-    selectedObjectIds,
-    groupSelectedObjects,
-    ungroupSelectedObject,
-    updateMultipleObjects,
-  } = useBanner();
+  const { selectedObjectIds, groupSelectedObjects, ungroupSelectedObject } =
+    useBanner();
+  const { groupSelectedObjectsAbstract, ungroupSelectedObjectsAbstract } =
+    useVirtualGroupActions();
+
   const bringToFront = () => {
     const maxZIndex = Math.max(...objects.map((obj) => obj.zIndex || 0));
     updateObject(object.id, { zIndex: maxZIndex + 1 });
@@ -53,30 +53,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   const stepBackward = () => {
     stepBackwardWithCollision(object, objects, updateObject);
     onClose();
-  };
-
-  const groupSelectedObjectsAbstract = () => {
-    if (selectedObjectIds.length < 2) return;
-
-    const newAbstractGroupId = Date.now();
-
-    const updates = selectedObjectIds.reduce((acc, id) => {
-      acc[id] = { abstractGroupId: newAbstractGroupId };
-      return acc;
-    }, {} as Record<number, Partial<BannerObject>>);
-
-    updateMultipleObjects(updates);
-  };
-
-  const ungroupSelectedObjectsAbstract = () => {
-    if (selectedObjectIds.length === 0) return;
-
-    const updates = selectedObjectIds.reduce((acc, id) => {
-      acc[id] = { abstractGroupId: null };
-      return acc;
-    }, {} as Record<number, Partial<BannerObject>>);
-
-    updateMultipleObjects(updates);
   };
 
   return (
