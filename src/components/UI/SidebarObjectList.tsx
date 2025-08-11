@@ -181,13 +181,19 @@ const SidebarObjectList: React.FC = () => {
             onChange={() => {}}
             rowHeight={ROW_HEIGHT}
             canDrag={() => true}
-            canDrop={() => true}
+            canDrop={({ nextParent }) => Boolean(nextParent)}
+            canNodeHaveChildren={() => true}
             // Пользователь перетащил один рутовый элемент на другой — предлагаем создать группу
             onMoveNode={(params: OnMoveNodeParams) => {
               const movedNode = params.node as TreeItem & { objectId?: number };
-              const nextParentNode = params.nextParent as
-                | (TreeItem & { objectId?: number })
-                | undefined;
+              // у форка поле называется nextParentNode
+              const nextParentNode = (
+                params as unknown as {
+                  nextParentNode?:
+                    | (TreeItem & { objectId?: number })
+                    | undefined;
+                }
+              ).nextParentNode;
               if (
                 nextParentNode &&
                 movedNode?.objectId &&
