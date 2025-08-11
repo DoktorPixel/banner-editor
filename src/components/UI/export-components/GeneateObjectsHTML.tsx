@@ -156,9 +156,10 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
         styles.push(`display: -webkit-box`);
         styles.push(`-webkit-box-orient: vertical`);
         styles.push(`white-space: normal`);
-      } else {
-        styles.push(`white-space: nowrap`);
       }
+      // else {
+      //   styles.push(`white-space: nowrap`);
+      // }
 
       if (obj.objectFit) styles.push(`object-fit: ${obj.objectFit}`);
 
