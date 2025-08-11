@@ -47,6 +47,7 @@ import { useVirtualGroupActions } from "../../utils/hooks";
  *  - Позволяет переименовывать объекты через NameDialog
  *  - Предоставляет кнопки для скрытия/показа объектов и групп
  *  - Позволяет сворачивать/разворачивать группы
+ *
  */
 const SidebarObjectList: React.FC = () => {
   // Достаём объекты и функции для их выбора из контекста баннера
@@ -406,8 +407,7 @@ const SidebarObjectList: React.FC = () => {
           <DialogContent>
             <div style={{ paddingTop: 4, paddingBottom: 4 }}>
               {t("layersPanel.chooseGroupTypeDescription", {
-                defaultValue:
-                  "Вы перетащили один объект на другой. Выберите тип группы для их объединения.",
+                defaultValue: "Выберите тип группы для их объединения.",
               })}
             </div>
           </DialogContent>
