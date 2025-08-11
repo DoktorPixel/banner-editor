@@ -63,7 +63,12 @@ const GroupListItem: React.FC<GroupListItemProps> = ({
           size="small"
           edge="start"
           sx={{ marginRight: "3px" }}
-          onClick={handleToggle}
+          onPointerDown={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleToggle();
+          }}
         >
           {open ? <ArrowDown /> : <ArrowRight />}
         </IconButton>

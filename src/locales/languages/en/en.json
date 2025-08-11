@@ -55,7 +55,11 @@
   },
   "layersPanel": {
     "group": "Group",
-    "layout": "Layout"
+    "layout": "Layout",
+    "chooseGroupTypeTitle": "Which group to create?",
+    "chooseGroupTypeDescription": "Choose the type of group to combine them.",
+    "createAbstractGroup": "Virtual group",
+    "createFlexGroup": "Flex group"
   },
 
   "dialogs": {

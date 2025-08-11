@@ -54,7 +54,11 @@
   },
   "layersPanel": {
     "group": "Група",
-    "layout": "Компонування"
+    "layout": "Компонування",
+    "chooseGroupTypeTitle": "Яку групу створити?",
+    "chooseGroupTypeDescription": "Оберіть тип групи для об'єднання.",
+    "createAbstractGroup": "Віртуальна група",
+    "createFlexGroup": "Гнучка група"
   },
   "dialogs": {
     "nameDialog": {
