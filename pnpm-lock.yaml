@@ -44,6 +44,9 @@ importers:
       browser-image-compression:
         specifier: ^2.0.2
         version: 2.0.2
+      csstype:
+        specifier: ^3.1.3
+        version: 3.1.3
       dotenv:
         specifier: ^16.4.7
         version: 16.6.1
