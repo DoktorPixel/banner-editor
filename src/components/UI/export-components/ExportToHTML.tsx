@@ -328,21 +328,24 @@ export const ExportToHTML = (
 
               function calculateApproxCharsPerLine(element) {
                 const style = getComputedStyle(element);
-                const font = style.fontWeight + " " + style.fontSize + " " + style.fontFamily;
+                const font =
+                  style.fontWeight + " " + style.fontSize + " " + style.fontFamily;
                 const widthPx = parseFloat(style.width);
-
+                let letterSpacing = style.letterSpacing;
+                let letterSpacingPx =
+                  letterSpacing === "normal" ? 0 : parseFloat(letterSpacing) || 0;
                 const canvas = document.createElement("canvas");
                 const ctx = canvas.getContext("2d");
                 ctx.font = font;
-
                 const sampleText =
                   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
                 const textWidth = ctx.measureText(sampleText).width;
                 const avgCharWidth = textWidth / sampleText.length;
-
-                if (avgCharWidth === 0) return 100;
-                const approxCharsPerLine = Math.floor((widthPx / avgCharWidth) * 0.92);
+                const avgCharTotalWidth = avgCharWidth + letterSpacingPx;
+                if (avgCharTotalWidth <= 0) return 100;
+                const approxCharsPerLine = Math.floor(
+                  (widthPx / avgCharTotalWidth) * 0.97
+                );
                 return approxCharsPerLine;
               }
 
