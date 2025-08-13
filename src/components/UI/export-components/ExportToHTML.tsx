@@ -84,10 +84,17 @@ export const ExportToHTML = (
                 return typeof value === "number" ? value : NaN;
               };
               const price = normalize(props.price);
-              const salePrice = normalize(props.sale_price);
-              if (!isNaN(price) && !isNaN(salePrice)) {
-                if (salePrice >= price) {
-                  delete props.sale_price;
+              let salePrice = undefined;
+              if (
+                props.sale_price !== undefined &&
+                props.sale_price !== null &&
+                props.sale_price !== ""
+              ) {
+                salePrice = normalize(props.sale_price);
+                if (!isNaN(price) && !isNaN(salePrice)) {
+                  if (salePrice >= price) {
+                    delete props.sale_price;
+                  }
                 }
               }
 
@@ -246,6 +253,7 @@ export const ExportToHTML = (
                       return value;
                     }
                     case "discount": {
+                      if (props.sale_price === undefined || props.sale_price === null || props.sale_price === "") return match;
                       const [priceStr, saleStr] = values.map(normalizeNumber);
                       if (!priceStr || !saleStr) return match;
                     const price = parseFloat(priceStr.replace(/[^\\d.]/g, ""));
@@ -258,6 +266,7 @@ export const ExportToHTML = (
                     }
 
                     case "discountCurrency": {
+                      if (props.sale_price === undefined || props.sale_price === null || props.sale_price === "") return match;
                       const [priceStr, saleStr] = values.map(normalizeNumber);
                       if (!priceStr || !saleStr) return match;
                     const price = parseFloat(priceStr.replace(/[^\\d.]/g, ""));
@@ -276,7 +285,7 @@ export const ExportToHTML = (
                         )
                         .filter((n) => !isNaN(n));
 
-                      if (numericValues.length === 0) return match;
+                      if (numericValues.length === 0) return "";
 
                       const minValue = Math.min(...numericValues);
                       return Math.round(minValue).toLocaleString("ru", {
