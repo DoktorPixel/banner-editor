@@ -1,5 +1,5 @@
 import { List, ListItem, Collapse, IconButton, Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GroupListItem from "./GroupListItem";
 import { BannerObject } from "../../types";
 import { useObjectTypeLabel } from "../../utils/hooks";
@@ -114,8 +114,62 @@ const SidebarObjectList: React.FC = () => {
     closeNameDialog();
   };
 
+  const EventBridges: React.FC = () => {
+    const { reorderChildren, reorderNestedChildren } = useBanner();
+    useEffect(() => {
+      const handleReorder = (
+        e: CustomEvent<{ groupId: number; newOrder: number[] }>
+      ) => {
+        const { groupId, newOrder } = e.detail || {
+          groupId: undefined,
+          newOrder: undefined,
+        };
+        if (groupId && Array.isArray(newOrder)) {
+          reorderChildren(groupId, newOrder);
+        }
+      };
+      const handleReorderNested = (
+        e: CustomEvent<{
+          parentId: number;
+          groupId: number;
+          newOrder: number[];
+        }>
+      ) => {
+        const { parentId, groupId, newOrder } = e.detail || {
+          parentId: undefined,
+          groupId: undefined,
+          newOrder: undefined,
+        };
+        if (parentId && groupId && Array.isArray(newOrder)) {
+          reorderNestedChildren(parentId, groupId, newOrder);
+        }
+      };
+      window.addEventListener(
+        "reorder-children",
+        handleReorder as EventListener
+      );
+      window.addEventListener(
+        "reorder-nested-children",
+        handleReorderNested as EventListener
+      );
+      return () => {
+        window.removeEventListener(
+          "reorder-children",
+          handleReorder as EventListener
+        );
+        window.removeEventListener(
+          "reorder-nested-children",
+          handleReorderNested as EventListener
+        );
+      };
+    }, [reorderChildren, reorderNestedChildren]);
+    return null;
+  };
+
   return (
     <List sx={{ padding: "0px", margin: "0 0 0 6px" }}>
+      {/* DnD reorder events bridge from react-arborist tree */}
+      <EventBridges />
       {objects.map((obj) => {
         /**
          * ======= 1. ОБРАБОТКА ВИРТУАЛЬНЫХ ГРУПП =======

@@ -240,6 +240,11 @@ export interface BannerContextProps {
   refreshCounter: number;
   triggerRefresh: () => void;
   reorderChildren: (groupId: number, newOrder: number[]) => void;
+  reorderNestedChildren: (
+    parentId: number,
+    groupId: number,
+    newOrder: number[]
+  ) => void;
   scale: number;
   setScale: (value: number) => void;
 }

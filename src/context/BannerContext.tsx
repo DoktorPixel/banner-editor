@@ -401,6 +401,52 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     updateObject(groupId, { children: newChildren });
   };
 
+  const reorderNestedChildren = (
+    parentId: number,
+    groupId: number,
+    newOrder: number[]
+  ) => {
+    const parent = objects.find((obj) => obj.id === parentId);
+    if (!parent || parent.type !== "group" || !parent.children) {
+      console.warn("The parent object is not a group or has no children.");
+      return;
+    }
+
+    const groupChild = parent.children.find(
+      (child) => child.id === groupId && child.type === "group"
+    );
+    if (!groupChild || !groupChild.children) {
+      console.warn("Nested group not found or has no children.");
+      return;
+    }
+
+    const currentChildIds = groupChild.children.map((child) => child.id);
+    if (
+      newOrder.length !== currentChildIds.length ||
+      !newOrder.every((id) => currentChildIds.includes(id))
+    ) {
+      console.warn("Invalid ID array passed for new nested order.");
+      return;
+    }
+
+    const newNestedChildren = newOrder.map((childId, index) => {
+      const child = groupChild.children!.find((c) => c.id === childId)!;
+      return { ...child, order: index };
+    });
+
+    const newObjects = objects.map((obj) => {
+      if (obj.id !== parentId || !obj.children) return obj;
+      const updatedChildren = obj.children.map((child) =>
+        child.id === groupId && child.type === "group"
+          ? { ...child, children: newNestedChildren }
+          : child
+      );
+      return { ...obj, children: updatedChildren };
+    });
+
+    updateHistory(newObjects);
+  };
+
   return (
     <BannerContext.Provider
       value={{
@@ -453,6 +499,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         refreshCounter,
         triggerRefresh,
         reorderChildren,
+        reorderNestedChildren,
         scale,
         setScale,
       }}
