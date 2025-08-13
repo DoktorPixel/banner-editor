@@ -96,21 +96,16 @@ export const TextAlignJustify: React.FC<SVGProps> = ({
           id="Vector"
           d="M1 4H6.5H12"
           stroke="black"
-          stroke-linecap="round"
+          strokeLinecap="round"
         />
         <path
           id="Vector_2"
           d="M1 1H6.5H12"
           stroke="black"
-          stroke-linecap="round"
+          strokeLinecap="round"
         />
-        <path id="Vector_3" d="M1 7H12" stroke="black" stroke-linecap="round" />
-        <path
-          id="Vector_4"
-          d="M1 10H12"
-          stroke="black"
-          stroke-linecap="round"
-        />
+        <path id="Vector_3" d="M1 7H12" stroke="black" strokeLinecap="round" />
+        <path id="Vector_4" d="M1 10H12" stroke="black" strokeLinecap="round" />
       </g>
     </svg>
   );
