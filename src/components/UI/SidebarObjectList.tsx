@@ -1,22 +1,14 @@
-import { List, ListItem, Collapse, IconButton, Box } from "@mui/material";
-import { useEffect, useState } from "react";
-import GroupListItem from "./GroupListItem";
+import { List } from "@mui/material";
+import { useMemo, useState } from "react";
+import { Tree } from "react-arborist";
+import type { NodeRendererProps } from "react-arborist";
 import { BannerObject } from "../../types";
 import { useObjectTypeLabel } from "../../utils/hooks";
 import { useBanner } from "../../context/BannerContext";
 import { useObjectProperties } from "../../utils/hooks";
 import NameDialog from "./dialogs/NameDialog";
-import {
-  SvgImage,
-  SvgText,
-  SvgVirtual,
-  ArrowRight,
-  ArrowDown,
-} from "../../assets/icons";
+import { SvgImage, SvgText } from "../../assets/icons";
 import { VisibilityToggle } from "./button-groups/VisibilityToggle";
-import { GroupVisibilityToggle } from "./button-groups/GroupVisibilityToggle";
-import { useTranslation } from "react-i18next";
-// import { useVirtualGroupActions } from "../../utils/hooks";
 
 /**
  * Компонент SidebarObjectList — отвечает за отображение "слоёв" / дерева объектов в сайдбаре редактора.
@@ -31,19 +23,12 @@ import { useTranslation } from "react-i18next";
 const SidebarObjectList: React.FC = () => {
   // Достаём объекты и функции для их выбора из контекста баннера
   const {
-    objects, // Все объекты баннера
-    selectedObjectIds, // Массив ID выбранных объектов
-    selectObject, // Функция выбора одного объекта
-    selectAllObjects, // Функция выбора всех объектов в группе
-    clearChildSelection, // Сброс выделения вложенных элементов
-    // groupSelectedObjects,
-    // группирует объекты в флекс группу type: "group" ,
-    // ungroupSelectedObject,
-    // разгруппирует объекты из группы type: "group"
+    objects,
+    selectedObjectIds,
+    selectObject,
+    clearChildSelection,
+    updateMultipleObjects,
   } = useBanner();
-
-  // const { groupSelectedObjectsAbstract, ungroupSelectedObjectsAbstract } =
-  //   useVirtualGroupActions();
 
   // Хук для обновления свойств объектов (например, имени)
   const { updateObjectProperty } = useObjectProperties();
@@ -58,31 +43,12 @@ const SidebarObjectList: React.FC = () => {
   // Хук для получения локализованной подписи типа объекта (text → "Текст", image → "Картинка" и т.д.)
   const getObjectTypeLabel = useObjectTypeLabel();
 
-  // Локальное состояние — какие группы развёрнуты (ключ: ID группы)
-  const [openGroups, setOpenGroups] = useState<Record<number, boolean>>({});
+  // Локализация не требуется в этом компоненте
 
-  // Локализация
-  const { t } = useTranslation();
-
-  // Функция для сворачивания/разворачивания группы
-  const toggleGroup = (groupId: number) => {
-    setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
-  };
-
-  /**
-   * Группируем объекты по abstractGroupId.
-   * Если у объекта есть abstractGroupId, значит он входит в "виртуальную группу" (не путать с объектом типа group).
-   */
-  const groupedObjects = objects.reduce<Record<number, BannerObject[]>>(
-    (acc, obj) => {
-      if (obj.abstractGroupId != null) {
-        if (!acc[obj.abstractGroupId]) acc[obj.abstractGroupId] = [];
-        acc[obj.abstractGroupId].push(obj);
-      }
-      return acc;
-    },
-    {}
-  );
+  // Список объектов, отсортированный по zIndex (сверху — самый большой zIndex)
+  const sortedObjects = useMemo(() => {
+    return [...objects].sort((a, b) => (b.zIndex ?? 0) - (a.zIndex ?? 0));
+  }, [objects]);
 
   // Открытие модального окна переименования объекта
   const openNameDialog = (object: BannerObject) => {
@@ -114,237 +80,83 @@ const SidebarObjectList: React.FC = () => {
     closeNameDialog();
   };
 
-  const EventBridges: React.FC = () => {
-    const { reorderChildren, reorderNestedChildren } = useBanner();
-    useEffect(() => {
-      const handleReorder = (
-        e: CustomEvent<{ groupId: number; newOrder: number[] }>
-      ) => {
-        const { groupId, newOrder } = e.detail || {
-          groupId: undefined,
-          newOrder: undefined,
-        };
-        if (groupId && Array.isArray(newOrder)) {
-          reorderChildren(groupId, newOrder);
-        }
-      };
-      const handleReorderNested = (
-        e: CustomEvent<{
-          parentId: number;
-          groupId: number;
-          newOrder: number[];
-        }>
-      ) => {
-        const { parentId, groupId, newOrder } = e.detail || {
-          parentId: undefined,
-          groupId: undefined,
-          newOrder: undefined,
-        };
-        if (parentId && groupId && Array.isArray(newOrder)) {
-          reorderNestedChildren(parentId, groupId, newOrder);
-        }
-      };
-      window.addEventListener(
-        "reorder-children",
-        handleReorder as EventListener
-      );
-      window.addEventListener(
-        "reorder-nested-children",
-        handleReorderNested as EventListener
-      );
-      return () => {
-        window.removeEventListener(
-          "reorder-children",
-          handleReorder as EventListener
-        );
-        window.removeEventListener(
-          "reorder-nested-children",
-          handleReorderNested as EventListener
-        );
-      };
-    }, [reorderChildren, reorderNestedChildren]);
-    return null;
+  // Обработчик перемещения для обновления zIndex
+  const handleMove = ({
+    dragNodes,
+    index,
+    parentId,
+  }: {
+    dragNodes: { data: BannerObject }[];
+    index: number;
+    parentId: number | string | null;
+  }) => {
+    // Разрешаем перетаскивание только на корневом уровне (между BannerObject)
+    if (parentId !== null && parentId !== undefined) return;
+    if (!dragNodes || dragNodes.length === 0) return;
+    const draggedIds: number[] = dragNodes.map((n) => n.data.id);
+
+    const currentOrder = sortedObjects.map((o) => o.id);
+    const remaining = currentOrder.filter((id) => !draggedIds.includes(id));
+    // Вставляем перетаскиваемые элементы на новую позицию
+    const newOrderIds = [
+      ...remaining.slice(0, index),
+      ...draggedIds,
+      ...remaining.slice(index),
+    ];
+
+    // Назначаем новые zIndex: сверху — больший индекс
+    const updates: Record<number, Partial<BannerObject>> = {};
+    const maxIndex = newOrderIds.length - 1;
+    newOrderIds.forEach((id, i) => {
+      updates[id] = { zIndex: maxIndex - i };
+    });
+    updateMultipleObjects(updates);
   };
 
   return (
     <List sx={{ padding: "0px", margin: "0 0 0 6px" }}>
-      {/* DnD reorder events bridge from react-arborist tree */}
-      <EventBridges />
-      {objects.map((obj) => {
-        /**
-         * ======= 1. ОБРАБОТКА ВИРТУАЛЬНЫХ ГРУПП =======
-         * Если объект принадлежит virtual group (abstractGroupId != null),
-         * то мы берём все объекты этой группы и выводим общий заголовок.
-         */
-        if (
-          obj.abstractGroupId != null &&
-          groupedObjects[obj.abstractGroupId]
-        ) {
-          const group = groupedObjects[obj.abstractGroupId];
-          // Чтобы группа не отрисовалась повторно для других элементов, удаляем её из списка
-          delete groupedObjects[obj.abstractGroupId];
-
+      <Tree
+        data={sortedObjects}
+        idAccessor="id"
+        childrenAccessor="children"
+        rowHeight={28}
+        disableMultiSelection
+        openByDefault
+        onMove={handleMove}
+      >
+        {(props: NodeRendererProps<BannerObject>) => {
+          const { node, style, dragHandle } = props;
+          const obj: BannerObject = node.data;
+          const isSelected = selectedObjectIds.includes(obj.id);
           return (
-            <Box key={`group-${obj.abstractGroupId}`}>
-              {/* Заголовок виртуальной группы */}
-              <ListItem
-                component="div"
-                sx={{
-                  padding: "5px 0 5px 0px",
-                  backgroundColor: group.every((groupObj) =>
-                    selectedObjectIds.includes(groupObj.id)
-                  )
-                    ? "#f0f0f0" // Если все выделены — подсветка
-                    : "white",
-                  "&:hover": { backgroundColor: "#f5f5f5" },
-                }}
-                onClick={(e) => {
-                  selectAllObjects(obj.id, e.ctrlKey || e.metaKey);
-                  clearChildSelection();
-                }}
-              >
-                {/* Кнопка сворачивания/разворачивания */}
-                <IconButton
-                  size="small"
-                  edge="start"
-                  sx={{ marginRight: "3px" }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleGroup(obj.abstractGroupId!);
-                  }}
-                >
-                  {openGroups[obj.abstractGroupId!] ? (
-                    <ArrowDown />
-                  ) : (
-                    <ArrowRight />
-                  )}
-                </IconButton>
-
-                {/* Иконка виртуальной группы */}
-                <SvgVirtual />
-
-                {/* Название группы */}
-                <span className="layers-list-item">
-                  {t("layersPanel.group")}
-                </span>
-
-                {/* Кнопка скрытия/показа всей группы */}
-                <GroupVisibilityToggle objectIds={group.map((o) => o.id)} />
-              </ListItem>
-
-              {/* Список объектов внутри виртуальной группы */}
-              <Collapse
-                in={openGroups[obj.abstractGroupId]}
-                timeout="auto"
-                unmountOnExit
-              >
-                <List component="div" sx={{ padding: "0 0 0 36px" }}>
-                  {group.map((groupObj) =>
-                    groupObj.type === "group" ? (
-                      // Если объект сам является группой — рендерим GroupListItem
-                      <GroupListItem
-                        key={groupObj.id}
-                        group={groupObj}
-                        selectedObjectIds={selectedObjectIds}
-                        selectObject={selectObject}
-                        openNameDialog={openNameDialog}
-                      />
-                    ) : (
-                      // Если обычный объект (текст, изображение, фигура)
-                      <ListItem
-                        key={groupObj.id}
-                        component="li"
-                        onClick={(e) => {
-                          selectObject(groupObj.id, e.ctrlKey || e.metaKey);
-                          clearChildSelection();
-                        }}
-                        onDoubleClick={() => openNameDialog(groupObj)}
-                        sx={{
-                          cursor: "pointer",
-                          backgroundColor: selectedObjectIds.includes(
-                            groupObj.id
-                          )
-                            ? "#f0f0f0"
-                            : "white",
-                          "&:hover": { backgroundColor: "#f5f5f5" },
-                          padding: "5px 0 5px 0px",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        {/* Иконка по типу объекта */}
-                        {groupObj.type === "text" && <SvgText />}
-                        {groupObj.type === "image" && <SvgImage />}
-                        {groupObj.type === "figure" && <SvgImage />}
-
-                        {/* Имя объекта + кнопка видимости */}
-                        <span className="layers-list-item">
-                          {groupObj.name?.substring(0, 12) ||
-                            getObjectTypeLabel(groupObj.type)}
-                          <VisibilityToggle objectId={groupObj.id} />
-                        </span>
-                      </ListItem>
-                    )
-                  )}
-                </List>
-              </Collapse>
-            </Box>
-          );
-        }
-
-        /**
-         * ======= 2. ОБРАБОТКА ОБЪЕКТОВ БЕЗ abstractGroupId =======
-         * Если объект не входит в виртуальную группу:
-         *   - Если он типа "group", рендерим GroupListItem
-         *   - Иначе рендерим обычный ListItem
-         */
-        if (obj.abstractGroupId == null) {
-          return obj.type === "group" ? (
-            <GroupListItem
-              key={obj.id}
-              group={obj}
-              selectedObjectIds={selectedObjectIds}
-              selectObject={selectObject}
-              openNameDialog={openNameDialog}
-            />
-          ) : (
-            <ListItem
-              key={obj.id}
-              component="li"
+            <div
+              style={{
+                ...style,
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: isSelected ? "#f0f0f0" : "white",
+                padding: "5px 0 5px 0px",
+                cursor: "pointer",
+              }}
+              ref={dragHandle as unknown as React.Ref<HTMLDivElement>}
               onClick={(e) => {
                 selectObject(obj.id, e.ctrlKey || e.metaKey);
                 clearChildSelection();
               }}
               onDoubleClick={() => openNameDialog(obj)}
-              sx={{
-                cursor: "pointer",
-                backgroundColor: selectedObjectIds.includes(obj.id)
-                  ? "#f0f0f0"
-                  : "white",
-                "&:hover": { backgroundColor: "#f5f5f5" },
-                padding: "5px 0 5px 0px",
-                display: "flex",
-                alignItems: "center",
-              }}
             >
-              {/* Иконка по типу */}
               {obj.type === "text" && <SvgText />}
               {obj.type === "image" && <SvgImage />}
               {obj.type === "figure" && <SvgImage />}
-
-              {/* Название + кнопка видимости */}
               <span className="layers-list-item">
                 {obj.name?.substring(0, 14) || getObjectTypeLabel(obj.type)}
                 <VisibilityToggle objectId={obj.id} />
               </span>
-            </ListItem>
+            </div>
           );
-        }
+        }}
+      </Tree>
 
-        return null;
-      })}
-
-      {/* Диалог переименования объекта */}
       <NameDialog
         open={nameDialogState.isNameDialogOpen}
         name={nameDialogState.currentName}

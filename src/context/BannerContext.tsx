@@ -408,43 +408,37 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   ) => {
     const parent = objects.find((obj) => obj.id === parentId);
     if (!parent || parent.type !== "group" || !parent.children) {
-      console.warn("The parent object is not a group or has no children.");
+      console.warn("Parent group not found or has no children.");
       return;
     }
 
-    const groupChild = parent.children.find(
-      (child) => child.id === groupId && child.type === "group"
+    const targetGroup = parent.children.find(
+      (c) => c.id === groupId && c.type === "group" && Array.isArray(c.children)
     );
-    if (!groupChild || !groupChild.children) {
-      console.warn("Nested group not found or has no children.");
+    if (!targetGroup || !targetGroup.children) {
+      console.warn("Target nested group not found or has no children.");
       return;
     }
 
-    const currentChildIds = groupChild.children.map((child) => child.id);
+    const currentIds = targetGroup.children.map((c) => c.id);
     if (
-      newOrder.length !== currentChildIds.length ||
-      !newOrder.every((id) => currentChildIds.includes(id))
+      newOrder.length !== currentIds.length ||
+      !newOrder.every((id) => currentIds.includes(id))
     ) {
-      console.warn("Invalid ID array passed for new nested order.");
+      console.warn("Invalid ID array passed for nested new order.");
       return;
     }
 
     const newNestedChildren = newOrder.map((childId, index) => {
-      const child = groupChild.children!.find((c) => c.id === childId)!;
+      const child = targetGroup.children!.find((c) => c.id === childId)!;
       return { ...child, order: index };
     });
 
-    const newObjects = objects.map((obj) => {
-      if (obj.id !== parentId || !obj.children) return obj;
-      const updatedChildren = obj.children.map((child) =>
-        child.id === groupId && child.type === "group"
-          ? { ...child, children: newNestedChildren }
-          : child
-      );
-      return { ...obj, children: updatedChildren };
-    });
+    const updatedParentChildren = parent.children.map((c) =>
+      c.id === groupId ? { ...c, children: newNestedChildren } : c
+    );
 
-    updateHistory(newObjects);
+    updateObject(parentId, { children: updatedParentChildren });
   };
 
   return (
