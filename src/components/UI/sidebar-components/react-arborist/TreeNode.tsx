@@ -10,6 +10,7 @@ import {
   ArrowDown,
 } from "../../../../assets/icons";
 import { IconButton } from "@mui/material";
+import { VisibilityToggle } from "../../button-groups/VisibilityToggle";
 
 export function TreeNode({
   node,
@@ -94,7 +95,7 @@ export function TreeNode({
 
       {/* ID объекта */}
       <div style={{ marginLeft: 8, opacity: 0.6, fontSize: 12 }}>
-        #{data.originalId}
+        <VisibilityToggle objectId={data.originalId} />
       </div>
     </div>
   );
