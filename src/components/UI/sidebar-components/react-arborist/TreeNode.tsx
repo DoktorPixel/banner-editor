@@ -9,6 +9,7 @@ import {
   ArrowRight,
   ArrowDown,
 } from "../../../../assets/icons";
+import { IconButton } from "@mui/material";
 
 export function TreeNode({
   node,
@@ -26,14 +27,15 @@ export function TreeNode({
           display: "flex",
           alignItems: "center",
           cursor: "pointer",
-          width: "14px",
+          width: "20px",
+          marginLeft: "-8px",
         }}
         onClick={(e) => {
           e.stopPropagation();
           node.toggle();
         }}
       >
-        {node.isOpen ? <ArrowDown /> : <ArrowRight />}
+        <IconButton> {node.isOpen ? <ArrowDown /> : <ArrowRight />}</IconButton>
       </div>
     ) : (
       <></> // пустое место вместо стрелки
