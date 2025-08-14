@@ -73,7 +73,7 @@ function useSelectionHelpers() {
     clearChildSelection,
     selectedChildId,
     selectChild,
-  } = useBanner() as any;
+  } = useBanner();
 
   const isObjectSelected = useCallback(
     (id: number) => selectedObjectIds.includes(id),

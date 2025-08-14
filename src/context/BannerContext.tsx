@@ -138,7 +138,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const selectChild = (groupId: number, childId: number, parentId?: number) => {
-    // clearSelection();
     setSelectedChildId({ groupId, childId, parentId });
   };
 
