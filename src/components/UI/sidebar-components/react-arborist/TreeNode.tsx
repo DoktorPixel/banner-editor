@@ -1,4 +1,5 @@
 // react-arborist/TreeNode.tsx
+import { useState, useEffect, useRef } from "react";
 import type { NodeRendererProps } from "react-arborist";
 import type { ArboristNodeData } from "./convertObjectsToTree";
 import {
@@ -11,6 +12,7 @@ import {
 } from "../../../../assets/icons";
 import { IconButton } from "@mui/material";
 import { VisibilityToggle } from "../../button-groups/VisibilityToggle";
+import { useBanner } from "../../../../context/BannerContext";
 
 export function TreeNode({
   node,
@@ -18,9 +20,24 @@ export function TreeNode({
   dragHandle,
   preview,
 }: NodeRendererProps<ArboristNodeData>) {
+  const { updateObject, updateChild } = useBanner();
   const data = node.data;
 
-  // Кнопка-стрелка для открытия/закрытия
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(
+    data.raw.name ?? data.label // дефолтный лейбл если name пустой
+  );
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // при активации режима редактирования автофокус на инпут
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current?.focus();
+    }
+  }, [isEditing]);
+
+  // кнопка раскрытия/сворачивания группы
   const toggleButton =
     data.type === "group" ? (
       <div
@@ -36,13 +53,15 @@ export function TreeNode({
           node.toggle();
         }}
       >
-        <IconButton> {node.isOpen ? <ArrowDown /> : <ArrowRight />}</IconButton>
+        <IconButton size="small">
+          {node.isOpen ? <ArrowDown /> : <ArrowRight />}
+        </IconButton>
       </div>
     ) : (
-      <></> // пустое место вместо стрелки
+      <></>
     );
 
-  // Иконка по типу
+  // иконка типа объекта
   const typeIcon = (() => {
     switch (data.type) {
       case "text":
@@ -64,24 +83,63 @@ export function TreeNode({
     preview ? "row--preview" : "",
   ].join(" ");
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey) {
+      // toggle select
+      if (node.isSelected) {
+        node.deselect();
+      } else {
+        node.selectMulti();
+      }
+    } else if (e.shiftKey) {
+      node.select();
+    } else {
+      node.select();
+    }
+  };
+
+  const handleDoubleClick = () => {
+    setEditValue(data.raw.name ?? data.label);
+    setIsEditing(true);
+  };
+
+  const handleBlur = () => {
+    setIsEditing(false);
+    const trimmed = editValue.trim();
+    if (data.parentId) {
+      updateChild(data.parentId, data.originalId, {
+        name: trimmed || undefined,
+      });
+    } else {
+      updateObject(data.originalId, { name: trimmed || undefined });
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleBlur();
+    } else if (e.key === "Escape") {
+      setIsEditing(false);
+      setEditValue(data.raw.name ?? data.label);
+    }
+  };
+
   return (
     <div
       style={{
         ...style,
         display: "flex",
         alignItems: "center",
-        paddingLeft: node.level * 16 + 4, // отступ слева в зависимости от вложенности
+        paddingLeft: node.level * 16 + 4,
       }}
       ref={dragHandle}
       className={rowClass}
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
     >
-      {/* Кнопка открытия/закрытия (для группы) */}
       {toggleButton}
-
-      {/* Иконка типа */}
       <div style={{ width: 14, textAlign: "center" }}>{typeIcon}</div>
 
-      {/* Название */}
       <div
         style={{
           flex: 1,
@@ -90,13 +148,26 @@ export function TreeNode({
           textOverflow: "ellipsis",
         }}
       >
-        {data.label}
+        {isEditing ? (
+          <input
+            ref={inputRef}
+            value={editValue}
+            onChange={(e) => setEditValue(e.target.value)}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            style={{
+              width: "100%",
+              fontSize: "inherit",
+              border: "1px solid #ccc",
+              padding: "2px 4px",
+            }}
+          />
+        ) : (
+          <span>{data.raw.name || data.label}</span>
+        )}
       </div>
 
-      {/* ID объекта */}
-      <div style={{ marginLeft: 8, opacity: 0.6, fontSize: 12 }}>
-        <VisibilityToggle objectId={data.originalId} />
-      </div>
+      <VisibilityToggle objectId={data.originalId} />
     </div>
   );
 }

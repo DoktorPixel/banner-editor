@@ -14,16 +14,16 @@ export type ArboristNodeData = {
 
 function labelFor(obj: BannerObject | BannerChild) {
   if (obj.type === "text") {
-    return `Text `;
+    return obj.name?.substring(0, 14) || "Text";
   }
   if (obj.type === "image") {
-    return `Image `;
+    return obj.name?.substring(0, 14) || "Image";
   }
   if (obj.type === "group") {
-    return `Group `;
+    return obj.name?.substring(0, 14) || "Layout";
   }
   if (obj.type === "figure") {
-    return `Figure `;
+    return obj.name?.substring(0, 14) || "Figure";
   }
   return `Item `;
 }

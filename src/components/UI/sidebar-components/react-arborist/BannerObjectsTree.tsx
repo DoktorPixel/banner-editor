@@ -8,7 +8,7 @@ export const BannerObjectsTree: React.FC = () => {
   const {
     objects,
     selectedObjectIds,
-    selectedChildId, // добавь в контекст, если ещё не пробрасывал
+    selectedChildId,
     selectObject,
     selectChild,
     clearChildSelection,
@@ -17,7 +17,6 @@ export const BannerObjectsTree: React.FC = () => {
   const treeRef = useRef<TreeApi<ArboristNodeData> | null>(null);
   const treeData = useMemo(() => convertObjectsToTree(objects), [objects]);
 
-  // Когда кликаем в дереве
   // Когда кликаем в дереве
   const handleSelect = (nodes: NodeApi<ArboristNodeData>[]) => {
     if (!Array.isArray(nodes) || nodes.length === 0) {
@@ -100,19 +99,18 @@ export const BannerObjectsTree: React.FC = () => {
   }, [selectedObjectIds, selectedChildId]);
 
   return (
-    <div style={{ width: "100%", height: "100%", minHeight: 200 }}>
-      <Tree
-        ref={treeRef}
-        data={treeData}
-        rowHeight={34}
-        height={400}
-        indent={18}
-        overscanCount={5}
-        disableEdit
-        onSelect={handleSelect}
-      >
-        {TreeNode}
-      </Tree>
-    </div>
+    <Tree
+      ref={treeRef}
+      data={treeData}
+      rowHeight={34}
+      // height={400}
+      width={300}
+      indent={18}
+      overscanCount={5}
+      disableEdit={false}
+      onSelect={handleSelect}
+    >
+      {TreeNode}
+    </Tree>
   );
 };
