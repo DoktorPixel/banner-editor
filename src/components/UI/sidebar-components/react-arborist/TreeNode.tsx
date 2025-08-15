@@ -19,7 +19,6 @@ export function TreeNode({
   const [editValue, setEditValue] = useState(data.raw.name ?? data.label);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // автофокус на инпут
   useEffect(() => {
     if (isEditing) inputRef.current?.focus();
   }, [isEditing]);

@@ -17,7 +17,6 @@ export const BannerObjectsTree: React.FC = () => {
   const treeRef = useRef<TreeApi<ArboristNodeData> | null>(null);
   const treeData = useMemo(() => convertObjectsToTree(objects), [objects]);
 
-  // Когда кликаем в дереве
   const handleSelect = (nodes: NodeApi<ArboristNodeData>[]) => {
     if (!Array.isArray(nodes) || nodes.length === 0) {
       clearChildSelection();
@@ -25,7 +24,6 @@ export const BannerObjectsTree: React.FC = () => {
     }
 
     clearChildSelection();
-
     nodes.forEach((n, index) => {
       const data = n.data;
 
@@ -46,12 +44,10 @@ export const BannerObjectsTree: React.FC = () => {
     });
   };
 
-  // Синхронизация состояния из контекста в дерево
   useEffect(() => {
     const tree = treeRef.current;
     if (!tree) return;
 
-    // Снять выделение, если пусто
     const noRootSel = !selectedObjectIds || selectedObjectIds.length === 0;
     const noChildSel = !selectedChildId;
     if (noRootSel && noChildSel) {
@@ -60,10 +56,8 @@ export const BannerObjectsTree: React.FC = () => {
     }
 
     tree.selectedNodes?.forEach((n) => n.deselect());
-
     let firstNode: NodeApi<ArboristNodeData> | null = null;
 
-    // выделяем root
     if (selectedObjectIds?.length) {
       selectedObjectIds.forEach((id, i) => {
         const node = tree.get(String(id));
@@ -79,8 +73,6 @@ export const BannerObjectsTree: React.FC = () => {
         }
       });
     }
-
-    // выделяем child
     if (selectedChildId) {
       const node = tree.get(String(selectedChildId.childId));
       if (node) {
@@ -88,7 +80,6 @@ export const BannerObjectsTree: React.FC = () => {
         node.select();
       }
     }
-    // фокус на первый выделенный
     firstNode?.focus();
   }, [selectedObjectIds, selectedChildId]);
 
@@ -97,7 +88,6 @@ export const BannerObjectsTree: React.FC = () => {
       ref={treeRef}
       data={treeData}
       rowHeight={34}
-      // height={400}
       width={300}
       indent={18}
       overscanCount={5}
