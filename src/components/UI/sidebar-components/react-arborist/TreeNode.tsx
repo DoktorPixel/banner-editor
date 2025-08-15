@@ -2,8 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import type { NodeRendererProps } from "react-arborist";
 import type { ArboristNodeData } from "./convertObjectsToTree";
-import { EditButton, ToggleButton, TypeIcon } from "./SubComponents";
-import { VisibilityToggle } from "../../button-groups/VisibilityToggle";
+import { ToggleButton, TypeIcon } from "./SubComponents";
+import { VisibilityToggle2 } from "../../button-groups/VisibilityToggle2";
 import { useBanner } from "../../../../context/BannerContext";
 import { updateNodeName } from "./helpers";
 
@@ -16,14 +16,17 @@ export function TreeNode({
   const { updateObject, updateChild, updateNestedChild } = useBanner();
   const data = node.data;
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(data.raw.name ?? data.label);
+  const [isHovered, setIsHovered] = useState(false);
+  const [editValue, setEditValue] = useState(
+    data.raw.name ?? data.label // дефолтный лейбл если name пустой
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isEditing) inputRef.current?.focus();
   }, [isEditing]);
 
-  const startEditing = () => {
+  const handleDoubleClick = () => {
     setEditValue(data.raw.name ?? data.label);
     setIsEditing(true);
   };
@@ -73,10 +76,14 @@ export function TreeNode({
       style={{
         ...style,
         paddingLeft: node.level * 16 + 4,
+        backgroundColor: isHovered ? "#F5F5F5" : "",
       }}
       ref={dragHandle}
       className={rowClass}
       onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <ToggleButton node={node} />
       <div style={{ width: 14, textAlign: "center" }}>
@@ -102,19 +109,11 @@ export function TreeNode({
         ) : (
           <>
             <span>{data.raw.name || data.label}</span>
-            {node.isSelected && !isEditing && (
-              <EditButton
-                onDoubleClick={(e) => {
-                  e.stopPropagation();
-                  startEditing();
-                }}
-              />
-            )}
           </>
         )}
       </div>
 
-      <VisibilityToggle objectId={data.originalId} />
+      <VisibilityToggle2 objectId={data.originalId} show={isHovered} />
     </div>
   );
 }
