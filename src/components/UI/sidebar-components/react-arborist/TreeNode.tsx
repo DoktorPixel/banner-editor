@@ -24,20 +24,17 @@ export function TreeNode({
   const data = node.data;
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(
-    data.raw.name ?? data.label // дефолтный лейбл если name пустой
-  );
+  const [editValue, setEditValue] = useState(data.raw.name ?? data.label);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // при активации режима редактирования автофокус на инпут
+  // автофокус при старте редактирования
   useEffect(() => {
     if (isEditing) {
       inputRef.current?.focus();
     }
   }, [isEditing]);
 
-  // кнопка раскрытия/сворачивания группы
   const toggleButton =
     data.type === "group" ? (
       <div
@@ -96,7 +93,7 @@ export function TreeNode({
     }
   };
 
-  const handleDoubleClick = () => {
+  const startEditing = () => {
     setEditValue(data.raw.name ?? data.label);
     setIsEditing(true);
   };
@@ -143,7 +140,6 @@ export function TreeNode({
       ref={dragHandle}
       className={rowClass}
       onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
     >
       {toggleButton}
       <div style={{ width: 14, textAlign: "center" }}>{typeIcon}</div>
@@ -171,7 +167,26 @@ export function TreeNode({
             }}
           />
         ) : (
-          <span>{data.raw.name || data.label}</span>
+          <>
+            <span>{data.raw.name || data.label}</span>
+            {node.isSelected && !isEditing && (
+              <button
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  marginLeft: 4,
+                  fontSize: "14px",
+                }}
+                onDoubleClick={(e) => {
+                  e.stopPropagation();
+                  startEditing();
+                }}
+              >
+                ✍️
+              </button>
+            )}
+          </>
         )}
       </div>
 

@@ -30,22 +30,17 @@ export const BannerObjectsTree: React.FC = () => {
       const data = n.data;
 
       if (data.parentId) {
-        // если у узла есть parentId, значит это child
-        // ищем родителя в дереве
         const parentNode = n.parent;
         if (parentNode?.data?.parentId) {
-          // это nested child (второй уровень и глубже)
           selectChild(
             parentNode.data.originalId,
             data.originalId,
             parentNode.data.parentId
           );
         } else {
-          // это child первого уровня
           selectChild(data.parentId, data.originalId);
         }
       } else {
-        // root объект
         selectObject(data.originalId, index > 0);
       }
     });
@@ -93,7 +88,6 @@ export const BannerObjectsTree: React.FC = () => {
         node.select();
       }
     }
-
     // фокус на первый выделенный
     firstNode?.focus();
   }, [selectedObjectIds, selectedChildId]);
