@@ -20,7 +20,7 @@ export function TreeNode({
   dragHandle,
   preview,
 }: NodeRendererProps<ArboristNodeData>) {
-  const { updateObject, updateChild } = useBanner();
+  const { updateObject, updateChild, updateNestedChild } = useBanner();
   const data = node.data;
 
   const [isEditing, setIsEditing] = useState(false);
@@ -61,7 +61,6 @@ export function TreeNode({
       <></>
     );
 
-  // иконка типа объекта
   const typeIcon = (() => {
     switch (data.type) {
       case "text":
@@ -85,7 +84,6 @@ export function TreeNode({
 
   const handleClick = (e: React.MouseEvent) => {
     if (e.metaKey || e.ctrlKey) {
-      // toggle select
       if (node.isSelected) {
         node.deselect();
       } else {
@@ -107,9 +105,19 @@ export function TreeNode({
     setIsEditing(false);
     const trimmed = editValue.trim();
     if (data.parentId) {
-      updateChild(data.parentId, data.originalId, {
-        name: trimmed || undefined,
-      });
+      const parentNode = node.parent;
+      if (parentNode?.data?.parentId) {
+        updateNestedChild(
+          parentNode.parent!.data.originalId,
+          parentNode.data.originalId,
+          data.originalId,
+          { name: trimmed || undefined }
+        );
+      } else {
+        updateChild(data.parentId, data.originalId, {
+          name: trimmed || undefined,
+        });
+      }
     } else {
       updateObject(data.originalId, { name: trimmed || undefined });
     }
