@@ -34,6 +34,13 @@
   .row--preview {
     opacity: 0.6;
   }
+
+  .input-wrapper {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 .sidebar-wrapper {
   padding: 10px 10px 0 10px;

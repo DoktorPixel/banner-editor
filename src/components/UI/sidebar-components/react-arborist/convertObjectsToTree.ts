@@ -1,4 +1,4 @@
-// utils/convertObjectsToTree.ts
+// react-arborist/convertObjectsToTree.ts
 import type { BannerObject, BannerChild } from "../../../../types/index";
 
 export type ArboristNodeData = {
@@ -6,9 +6,8 @@ export type ArboristNodeData = {
   label: string;
   type: BannerObject["type"];
   originalId: number;
-  // keep original object handy for later needs
   raw: BannerObject | BannerChild;
-  parentId?: number; // <--- новое поле
+  parentId?: number;
   children?: ArboristNodeData[] | null;
 };
 
@@ -43,9 +42,6 @@ function mapChild(child: BannerChild, parentId: number): ArboristNodeData {
   };
 }
 
-/**
- * Преобразует массив BannerObject[] в формат, совместимый с react-arborist.
- */
 export function convertObjectsToTree(data: BannerObject[]): ArboristNodeData[] {
   return data.map((obj) => ({
     id: String(obj.id),
