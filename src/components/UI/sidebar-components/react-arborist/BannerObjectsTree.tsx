@@ -4,6 +4,7 @@ import { useBanner } from "../../../../context/BannerContext";
 import { convertObjectsToTree, ArboristNodeData } from "./convertObjectsToTree";
 import { TreeNode } from "./TreeNode";
 import { BannerObject } from "../../../../types";
+
 export const BannerObjectsTree: React.FC = () => {
   const {
     objects,
@@ -14,15 +15,21 @@ export const BannerObjectsTree: React.FC = () => {
     clearChildSelection,
     updateMultipleObjects,
   } = useBanner();
+
   const treeRef = useRef<TreeApi<ArboristNodeData> | null>(null);
+
+  // Сортируем по убыванию zIndex — большее zIndex выше в дереве
   const treeData = useMemo(() => {
     const sortedObjects = [...objects].sort((a, b) => {
-      const zIndexA = a.zIndex === undefined ? -Infinity : a.zIndex;
-      const zIndexB = b.zIndex === undefined ? -Infinity : b.zIndex;
-      return zIndexA - zIndexB;
+      const zIndexA =
+        a.zIndex === undefined || a.zIndex === null ? -Infinity : a.zIndex;
+      const zIndexB =
+        b.zIndex === undefined || b.zIndex === null ? -Infinity : b.zIndex;
+      return zIndexB - zIndexA; // descending
     });
     return convertObjectsToTree(sortedObjects);
   }, [objects]);
+
   const handleSelect = (nodes: NodeApi<ArboristNodeData>[]) => {
     if (!Array.isArray(nodes) || nodes.length === 0) {
       clearChildSelection();
@@ -47,6 +54,7 @@ export const BannerObjectsTree: React.FC = () => {
       }
     });
   };
+
   useEffect(() => {
     const tree = treeRef.current;
     if (!tree) return;
@@ -82,6 +90,7 @@ export const BannerObjectsTree: React.FC = () => {
     }
     firstNode?.focus();
   }, [selectedObjectIds, selectedChildId]);
+
   const handleMove = ({
     dragIds,
     parentId,
@@ -91,34 +100,57 @@ export const BannerObjectsTree: React.FC = () => {
     parentId: string | null;
     index: number;
   }) => {
+    // Перемещения внутрь групп/детей мы не обрабатываем здесь (как и раньше)
     if (parentId !== null) {
       return;
     }
+
+    // Преобразуем dragIds в set чисел
     const draggedObjectIds = new Set(dragIds.map((id) => parseInt(id, 10)));
-    const rootObjects = objects.filter(
-      (obj) => obj.abstractGroupId === null || obj.abstractGroupId === undefined
-    );
+
+    // Берём только корневые объекты и отсортируем их так же, как дерево (descending zIndex)
+    const rootObjects = objects
+      .filter(
+        (obj) =>
+          obj.abstractGroupId === null || obj.abstractGroupId === undefined
+      )
+      .sort((a, b) => {
+        const zIndexA =
+          a.zIndex === undefined || a.zIndex === null ? -Infinity : a.zIndex;
+        const zIndexB =
+          b.zIndex === undefined || b.zIndex === null ? -Infinity : b.zIndex;
+        return zIndexB - zIndexA;
+      });
+
     const otherRootObjects = rootObjects.filter(
       (obj) => !draggedObjectIds.has(obj.id)
     );
     const draggedObjects = rootObjects.filter((obj) =>
       draggedObjectIds.has(obj.id)
     );
+
+    // newOrder — порядок сверху вниз (index = позиция сверху)
     const newOrder: BannerObject[] = [
       ...otherRootObjects.slice(0, index),
       ...draggedObjects,
       ...otherRootObjects.slice(index),
     ];
+
+    // Пересчитываем zIndex так, чтобы элемент с индексом 0 (топ) получил наибольший zIndex
+    const total = newOrder.length;
     const updates: Record<number, Partial<BannerObject>> = {};
     newOrder.forEach((obj, idx) => {
-      if (obj.zIndex !== idx) {
-        updates[obj.id] = { zIndex: idx };
+      const newZ = total - 1 - idx; // top -> max (total-1), bottom -> 0
+      if (obj.zIndex !== newZ) {
+        updates[obj.id] = { zIndex: newZ };
       }
     });
+
     if (Object.keys(updates).length > 0) {
       updateMultipleObjects(updates);
     }
   };
+
   return (
     <Tree
       ref={treeRef}
