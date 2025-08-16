@@ -1,8 +1,10 @@
+// BannerObjectsTree.tsx
 import React, { useMemo, useRef, useEffect } from "react";
 import { Tree, NodeApi, TreeApi } from "react-arborist";
 import { useBanner } from "../../../../context/BannerContext";
 import { convertObjectsToTree, ArboristNodeData } from "./convertObjectsToTree";
 import { TreeNode } from "./TreeNode";
+import { DragPreview } from "./SubComponents";
 import { BannerObject } from "../../../../types";
 
 export const BannerObjectsTree: React.FC = () => {
@@ -18,14 +20,13 @@ export const BannerObjectsTree: React.FC = () => {
 
   const treeRef = useRef<TreeApi<ArboristNodeData> | null>(null);
 
-  // Сортируем по убыванию zIndex — большее zIndex выше в дереве
   const treeData = useMemo(() => {
     const sortedObjects = [...objects].sort((a, b) => {
       const zIndexA =
         a.zIndex === undefined || a.zIndex === null ? -Infinity : a.zIndex;
       const zIndexB =
         b.zIndex === undefined || b.zIndex === null ? -Infinity : b.zIndex;
-      return zIndexB - zIndexA; // descending
+      return zIndexB - zIndexA;
     });
     return convertObjectsToTree(sortedObjects);
   }, [objects]);
@@ -100,15 +101,10 @@ export const BannerObjectsTree: React.FC = () => {
     parentId: string | null;
     index: number;
   }) => {
-    // Перемещения внутрь групп/детей мы не обрабатываем здесь (как и раньше)
-    if (parentId !== null) {
-      return;
-    }
+    if (parentId !== null) return;
 
-    // Преобразуем dragIds в set чисел
     const draggedObjectIds = new Set(dragIds.map((id) => parseInt(id, 10)));
 
-    // Берём только корневые объекты и отсортируем их так же, как дерево (descending zIndex)
     const rootObjects = objects
       .filter(
         (obj) =>
@@ -129,18 +125,16 @@ export const BannerObjectsTree: React.FC = () => {
       draggedObjectIds.has(obj.id)
     );
 
-    // newOrder — порядок сверху вниз (index = позиция сверху)
     const newOrder: BannerObject[] = [
       ...otherRootObjects.slice(0, index),
       ...draggedObjects,
       ...otherRootObjects.slice(index),
     ];
 
-    // Пересчитываем zIndex так, чтобы элемент с индексом 0 (топ) получил наибольший zIndex
     const total = newOrder.length;
     const updates: Record<number, Partial<BannerObject>> = {};
     newOrder.forEach((obj, idx) => {
-      const newZ = total - 1 - idx; // top -> max (total-1), bottom -> 0
+      const newZ = total - 1 - idx;
       if (obj.zIndex !== newZ) {
         updates[obj.id] = { zIndex: newZ };
       }
@@ -162,6 +156,10 @@ export const BannerObjectsTree: React.FC = () => {
       disableEdit={false}
       onSelect={handleSelect}
       onMove={handleMove}
+      openByDefault={false}
+      renderDragPreview={(props) => (
+        <DragPreview {...props} objects={objects} />
+      )}
     >
       {TreeNode}
     </Tree>

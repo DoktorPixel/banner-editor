@@ -68,3 +68,66 @@ export const EditButton = memo(
     </button>
   )
 );
+
+// DragPreview.tsx
+
+import { BannerObject } from "../../../../types";
+
+type DragPreviewProps = {
+  offset: { x: number; y: number } | null;
+  mouse: { x: number; y: number } | null;
+  id: string | null;
+  dragIds: string[];
+  isDragging: boolean;
+  objects: BannerObject[];
+};
+
+export const DragPreview: React.FC<DragPreviewProps> = ({
+  offset,
+  dragIds,
+  isDragging,
+  objects,
+}) => {
+  if (!isDragging || !offset) return null;
+
+  const draggedLabels = dragIds
+    .map((did) => {
+      const obj = objects.find((o) => String(o.id) === String(did));
+      return obj ? obj.name || `Item ${obj.id}` : String(did);
+    })
+    .filter(Boolean);
+
+  const firstLabel = draggedLabels[0] ?? "Item";
+  const more = dragIds.length > 1 ? ` +${dragIds.length - 1}` : "";
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        left: 0,
+        top: 0,
+        pointerEvents: "none",
+        transform: `translate(${Math.round(offset.x)}px, ${Math.round(
+          offset.y
+        )}px)`,
+        zIndex: 9999,
+      }}
+    >
+      <div
+        style={{
+          padding: "6px 10px",
+          borderRadius: 6,
+          boxShadow: "0 6px 18px rgba(0,0,0,0.16)",
+          background: "white",
+          border: "1px solid rgba(0,0,0,0.08)",
+          fontSize: 13,
+          fontWeight: 500,
+          whiteSpace: "nowrap",
+        }}
+      >
+        {firstLabel}
+        {more}
+      </div>
+    </div>
+  );
+};

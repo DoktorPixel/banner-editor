@@ -17,10 +17,14 @@ export function TreeNode({
   const data = node.data;
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [editValue, setEditValue] = useState(
-    data.raw.name ?? data.label // дефолтный лейбл если name пустой
-  );
+  const [editValue, setEditValue] = useState(data.raw.name ?? data.label);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    dragHandle?.(rowRef.current);
+    return () => dragHandle?.(null);
+  }, [dragHandle]);
 
   useEffect(() => {
     if (isEditing) inputRef.current?.focus();
@@ -66,7 +70,7 @@ export function TreeNode({
   };
 
   const rowClass = [
-    "row",
+    "row arborist-row", // добавим класс для CSS-фикса ниже
     node.isSelected ? "row--selected" : "",
     preview ? "row--preview" : "",
   ].join(" ");
@@ -77,15 +81,22 @@ export function TreeNode({
         ...style,
         paddingLeft: node.level * 16 + 4,
         backgroundColor: isHovered ? "#F5F5F5" : "",
+        // cursor: preview ? "grabbing" : "grab",
       }}
-      ref={dragHandle}
+      // ref={dragHandle}
+      ref={rowRef}
       className={rowClass}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <ToggleButton node={node} />
+      <div
+        onPointerDown={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        <ToggleButton node={node} />
+      </div>
       <div style={{ width: 14, textAlign: "center" }}>
         <TypeIcon node={node} />
       </div>
@@ -113,7 +124,12 @@ export function TreeNode({
         )}
       </div>
 
-      <VisibilityToggle2 objectId={data.originalId} show={isHovered} />
+      <div
+        onPointerDown={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        <VisibilityToggle2 objectId={data.originalId} show={isHovered} />
+      </div>
     </div>
   );
 }
