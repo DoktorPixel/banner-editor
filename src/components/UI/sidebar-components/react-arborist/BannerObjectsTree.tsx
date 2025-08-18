@@ -150,7 +150,7 @@ export const BannerObjectsTree: React.FC = () => {
       ref={treeRef}
       data={treeData}
       rowHeight={34}
-      width={300}
+      width={"100%"}
       indent={18}
       overscanCount={5}
       disableEdit={false}

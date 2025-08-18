@@ -13,14 +13,20 @@
   margin-left: 5px;
   margin-right: 8px;
 
-  /* Разрешаем юзер-селект на самом handle, чтобы dnd стартовал стабильно */
   .arborist-row {
     user-select: text; /* важно для старта drag */
     -webkit-user-select: text; /* Safari */
-    -webkit-user-drag: element; /* Safari */
+    // -webkit-user-drag: element; /* Safari */
+    // width: 100%;
+    // max-width: 300px;
+    // min-width: 200px;
   }
-
-  /* Но внутри подписи можно выключить селект, чтобы текст не подсвечивался */
+  .row {
+    -webkit-user-drag: element;
+  }
+  .row--editing {
+    -webkit-user-drag: none;
+  }
   .arborist-row .arborist-label {
     user-select: none;
     -webkit-user-select: none;
@@ -53,6 +59,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    width: 100px;
   }
 }
 .sidebar-wrapper {

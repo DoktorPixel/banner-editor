@@ -70,7 +70,7 @@ export function TreeNode({
   };
 
   const rowClass = [
-    "row arborist-row", // добавим класс для CSS-фикса ниже
+    "row arborist-row",
     node.isSelected ? "row--selected" : "",
     preview ? "row--preview" : "",
   ].join(" ");
@@ -81,11 +81,12 @@ export function TreeNode({
         ...style,
         paddingLeft: node.level * 16 + 4,
         backgroundColor: isHovered ? "#F5F5F5" : "",
-        // cursor: preview ? "grabbing" : "grab",
+        cursor: preview ? "grabbing" : "grab",
+        userSelect: isEditing ? "none" : "text",
       }}
       // ref={dragHandle}
       ref={rowRef}
-      className={rowClass}
+      className={`${rowClass} ${isEditing ? "row--editing" : ""}`}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onMouseEnter={() => setIsHovered(true)}
@@ -115,6 +116,7 @@ export function TreeNode({
               fontSize: "inherit",
               border: "1px solid #ccc",
               padding: "2px 4px",
+              cursor: "text",
             }}
           />
         ) : (
