@@ -4,7 +4,7 @@ import { Tree, NodeApi, TreeApi } from "react-arborist";
 import { useBanner } from "../../../../context/BannerContext";
 import { convertObjectsToTree, ArboristNodeData } from "./convertObjectsToTree";
 import { TreeNode } from "./TreeNode";
-import { DragPreview } from "./SubComponents";
+// import { DragPreview } from "./SubComponents";
 import { BannerObject } from "../../../../types";
 
 export const BannerObjectsTree: React.FC = () => {
@@ -157,9 +157,9 @@ export const BannerObjectsTree: React.FC = () => {
       onSelect={handleSelect}
       onMove={handleMove}
       openByDefault={false}
-      renderDragPreview={(props) => (
-        <DragPreview {...props} objects={objects} />
-      )}
+      // renderDragPreview={(props) => (
+      //   <DragPreview {...props} objects={objects} />
+      // )}
     >
       {TreeNode}
     </Tree>
