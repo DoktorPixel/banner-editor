@@ -6,6 +6,9 @@ import { ToggleButton, TypeIcon } from "./SubComponents";
 import { VisibilityToggle2 } from "../../button-groups/VisibilityToggle2";
 import { useBanner } from "../../../../context/BannerContext";
 import { updateNodeName } from "./helpers";
+import { SvgVirtual } from "../../../../assets/icons";
+import { GroupVisibilityToggle2 } from "../../button-groups/GroupVisibilityToggle2";
+import { useTranslation } from "react-i18next";
 
 export function TreeNode({
   node,
@@ -75,11 +78,13 @@ export function TreeNode({
     preview ? "row--preview" : "",
   ].join(" ");
 
+  const { t } = useTranslation();
+
   return (
     <div
       style={{
         ...style,
-        paddingLeft: node.level * 16 + 4,
+        paddingLeft: node.level * 16 + 0,
         backgroundColor: isHovered ? "#F5F5F5" : "",
         cursor: preview ? "grabbing" : "grab",
         userSelect: isEditing ? "none" : "text",
@@ -98,9 +103,15 @@ export function TreeNode({
       >
         <ToggleButton node={node} />
       </div>
-      <div style={{ width: 14, textAlign: "center" }}>
-        <TypeIcon node={node} />
-      </div>
+      {data.isAbstractGroup ? (
+        <div style={{ width: 14, textAlign: "center" }}>
+          <SvgVirtual />
+        </div>
+      ) : (
+        <div style={{ width: 14, textAlign: "center" }}>
+          <TypeIcon node={node} />
+        </div>
+      )}
 
       <div className="input-wrapper">
         {isEditing ? (
@@ -121,7 +132,11 @@ export function TreeNode({
           />
         ) : (
           <>
-            <span>{data.raw.name || data.label}</span>
+            <span>
+              {data.isAbstractGroup
+                ? t("layersPanel.group")
+                : data.raw.name || data.label}
+            </span>
           </>
         )}
       </div>
@@ -130,7 +145,16 @@ export function TreeNode({
         onPointerDown={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <VisibilityToggle2 objectId={data.originalId} show={isHovered} />
+        {data.isAbstractGroup ? (
+          <GroupVisibilityToggle2
+            objectIds={
+              node.children ? node.children.map((c) => c.data.originalId) : []
+            }
+            show={isHovered}
+          />
+        ) : (
+          <VisibilityToggle2 objectId={data.originalId} show={isHovered} />
+        )}
       </div>
     </div>
   );

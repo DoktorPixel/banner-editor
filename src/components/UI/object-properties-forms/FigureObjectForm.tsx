@@ -158,7 +158,7 @@ export const FigureObjectForm: React.FC<FigureObjectFormProps> = ({
       >
         {t("sidebar.figure")}
       </Typography>
-
+      <div>zIndex:{object.zIndex} </div>
       <div className="grey-line"></div>
       <ConditionSelector objectId={object.id} condition={object.condition} />
       <div className="grey-line"></div>

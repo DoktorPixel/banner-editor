@@ -22,7 +22,7 @@ export const ToggleButton = memo(
           alignItems: "center",
           cursor: "pointer",
           width: "20px",
-          marginLeft: "-8px",
+          marginLeft: "5px",
         }}
         onClick={(e) => {
           e.stopPropagation();

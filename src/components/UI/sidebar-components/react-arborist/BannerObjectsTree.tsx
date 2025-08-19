@@ -16,6 +16,7 @@ export const BannerObjectsTree: React.FC = () => {
     selectChild,
     clearChildSelection,
     updateMultipleObjects,
+    selectAllObjects,
   } = useBanner();
 
   const treeRef = useRef<TreeApi<ArboristNodeData> | null>(null);
@@ -49,6 +50,11 @@ export const BannerObjectsTree: React.FC = () => {
           );
         } else {
           selectChild(data.parentId, data.originalId);
+        }
+      } else if (data.isAbstractGroup) {
+        // If an abstract group node is selected, select all its children
+        if (n.children) {
+          selectAllObjects(data.originalId, index > 0);
         }
       } else {
         selectObject(data.originalId, index > 0);
@@ -106,17 +112,8 @@ export const BannerObjectsTree: React.FC = () => {
     const draggedObjectIds = new Set(dragIds.map((id) => parseInt(id, 10)));
 
     const rootObjects = objects
-      .filter(
-        (obj) =>
-          obj.abstractGroupId === null || obj.abstractGroupId === undefined
-      )
-      .sort((a, b) => {
-        const zIndexA =
-          a.zIndex === undefined || a.zIndex === null ? -Infinity : a.zIndex;
-        const zIndexB =
-          b.zIndex === undefined || b.zIndex === null ? -Infinity : b.zIndex;
-        return zIndexB - zIndexA;
-      });
+      .filter((obj) => obj.abstractGroupId == null)
+      .sort((a, b) => (b.zIndex ?? -Infinity) - (a.zIndex ?? -Infinity));
 
     const otherRootObjects = rootObjects.filter(
       (obj) => !draggedObjectIds.has(obj.id)
@@ -125,10 +122,18 @@ export const BannerObjectsTree: React.FC = () => {
       draggedObjectIds.has(obj.id)
     );
 
+    let adjustedIndex = index;
+    const firstDraggedIndex = rootObjects.findIndex((obj) =>
+      draggedObjectIds.has(obj.id)
+    );
+    if (firstDraggedIndex < index) {
+      adjustedIndex -= draggedObjects.length;
+    }
+
     const newOrder: BannerObject[] = [
-      ...otherRootObjects.slice(0, index),
+      ...otherRootObjects.slice(0, adjustedIndex),
       ...draggedObjects,
-      ...otherRootObjects.slice(index),
+      ...otherRootObjects.slice(adjustedIndex),
     ];
 
     const total = newOrder.length;
