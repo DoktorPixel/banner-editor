@@ -6,8 +6,8 @@ export type ArboristNodeData = {
   label: string;
   type: BannerObject["type"];
   originalId: number;
-  raw: BannerObject | BannerChild | null; // допускаем null для абстрактной группы
-  parentId?: number; // для детей virtual group НЕ ставим
+  raw: BannerObject | BannerChild | null; // null для абстрактной группы
+  parentId?: number; // для nested children (если есть)
   abstractGroupId?: number | null;
   isAbstractGroup?: boolean;
   children?: ArboristNodeData[] | null;
@@ -36,64 +36,70 @@ function mapChild(child: BannerChild, parentId: number): ArboristNodeData {
   };
 }
 
+/**
+ * convertObjectsToTree
+ * - ожидает на вход массив объектов (предпочтительно уже отсортированных по zIndex desc)
+ * - шаг за шагом формирует порядок root-entities, где каждая виртуальная группа
+ *   представлена одним root-node (id = `abstract-group-<groupId>`)
+ */
 export function convertObjectsToTree(data: BannerObject[]): ArboristNodeData[] {
-  const groupedObjects: Record<number, BannerObject[]> = {};
-  const rootObjects: BannerObject[] = [];
-
-  data.forEach((obj) => {
-    if (obj.abstractGroupId != null) {
-      (groupedObjects[obj.abstractGroupId] ??= []).push(obj);
-    } else {
-      rootObjects.push(obj);
-    }
-  });
-
+  // предполагаем data отсортирован по zIndex desc (тот же сорт, что и в BannerObjectsTree)
+  // чтобы гарантировать порядок в дереве, проходим по data в порядке zIndex desc
+  const groupedSeen = new Set<number>();
   const treeNodes: ArboristNodeData[] = [];
 
-  // Виртуальные группы — создаём отдельный узел-обёртку
-  for (const groupIdStr in groupedObjects) {
-    const group = groupedObjects[Number(groupIdStr)]!;
-    const firstObjectInGroup = group[0];
-    if (!firstObjectInGroup) continue;
+  for (const obj of data) {
+    // если объект входит в abstract group
+    if (obj.abstractGroupId != null) {
+      const gid = obj.abstractGroupId;
+      if (groupedSeen.has(gid)) {
+        // группу уже добавили — пропускаем
+        continue;
+      }
+      groupedSeen.add(gid);
 
-    const groupId = Number(groupIdStr);
-    treeNodes.push({
-      id: `abstract-group-${groupId}`, // уникальный id для группы в дереве
-      label: `Group ${groupId}`,
-      type: "group", // тип для отображения (не настоящий объект)
-      originalId: firstObjectInGroup.id, // оставляем id первого объекта — используется selectAllObjects
-      raw: null, // у группы нет собственного объекта для редактирования
-      isAbstractGroup: true,
-      children: group.map((obj) => ({
+      // найдем всех членов группы в том же порядке (data уже отсортирован)
+      const members = data.filter((o) => o.abstractGroupId === gid);
+
+      // формируем узел группы — raw=null (нельзя редактировать имя группы)
+      const groupNode: ArboristNodeData = {
+        id: `abstract-group-${gid}`,
+        label: `Group ${gid}`,
+        type: "group",
+        originalId: members[0].id, // используем id первого члена (как раньше)
+        raw: null,
+        isAbstractGroup: true,
+        children: members.map((m) => ({
+          id: String(m.id),
+          label: labelFor(m),
+          type: m.type,
+          originalId: m.id,
+          raw: m,
+          // parentId НЕ ставим — virtual group не является реальным родителем
+          abstractGroupId: m.abstractGroupId,
+          children:
+            Array.isArray(m.children) && m.children.length > 0
+              ? m.children.map((ch) => mapChild(ch, m.id))
+              : null,
+        })),
+      };
+
+      treeNodes.push(groupNode);
+    } else {
+      // обычный корневой объект
+      treeNodes.push({
         id: String(obj.id),
         label: labelFor(obj),
         type: obj.type,
         originalId: obj.id,
         raw: obj,
-        // parentId НЕ указываем — виртуальная группа не является реальным родителем
-        abstractGroupId: obj.abstractGroupId,
         children:
           Array.isArray(obj.children) && obj.children.length > 0
             ? obj.children.map((ch) => mapChild(ch, obj.id))
             : null,
-      })),
-    });
+      });
+    }
   }
-
-  // Корневые объекты вне групп
-  rootObjects.forEach((obj) => {
-    treeNodes.push({
-      id: String(obj.id),
-      label: labelFor(obj),
-      type: obj.type,
-      originalId: obj.id,
-      raw: obj,
-      children:
-        Array.isArray(obj.children) && obj.children.length > 0
-          ? obj.children.map((ch) => mapChild(ch, obj.id))
-          : null,
-    });
-  });
 
   return treeNodes;
 }
