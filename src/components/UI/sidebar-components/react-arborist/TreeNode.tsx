@@ -20,9 +20,10 @@ export function TreeNode({
   const data = node.data;
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [editValue, setEditValue] = useState(data.raw.name ?? data.label);
+  const [editValue, setEditValue] = useState(data.raw?.name ?? data.label);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // dragHandle attach (ручная привязка)
   const rowRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     dragHandle?.(rowRef.current);
@@ -33,13 +34,16 @@ export function TreeNode({
     if (isEditing) inputRef.current?.focus();
   }, [isEditing]);
 
+  // Double click: запрещаем редактирование у abstract group
   const handleDoubleClick = () => {
-    setEditValue(data.raw.name ?? data.label);
+    if (data.isAbstractGroup) return;
+    setEditValue(data.raw?.name ?? data.label);
     setIsEditing(true);
   };
 
   const handleBlur = () => {
     setIsEditing(false);
+    if (data.isAbstractGroup) return; // защитить от попытки обновить виртуальную группу
     updateNodeName(
       data,
       editValue,
@@ -54,17 +58,16 @@ export function TreeNode({
     if (e.key === "Enter") handleBlur();
     else if (e.key === "Escape") {
       setIsEditing(false);
-      setEditValue(data.raw.name ?? data.label);
+      setEditValue(data.raw?.name ?? data.label);
     }
   };
 
+  // Нативная логика выделения в дереве — используем node.select / selectMulti / deselect,
+  // чтобы arborist корректно управлял внутренними выделениями и вызывал onSelect.
   const handleClick = (e: React.MouseEvent) => {
     if (e.metaKey || e.ctrlKey) {
-      if (node.isSelected) {
-        node.deselect();
-      } else {
-        node.selectMulti();
-      }
+      if (node.isSelected) node.deselect();
+      else node.selectMulti();
     } else if (e.shiftKey) {
       node.select();
     } else {
@@ -82,6 +85,8 @@ export function TreeNode({
 
   return (
     <div
+      ref={rowRef}
+      className={`${rowClass} ${isEditing ? "row--editing" : ""}`}
       style={{
         ...style,
         paddingLeft: node.level * 16 + 0,
@@ -89,9 +94,6 @@ export function TreeNode({
         cursor: preview ? "grabbing" : "grab",
         userSelect: isEditing ? "none" : "text",
       }}
-      // ref={dragHandle}
-      ref={rowRef}
-      className={`${rowClass} ${isEditing ? "row--editing" : ""}`}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onMouseEnter={() => setIsHovered(true)}
@@ -103,6 +105,7 @@ export function TreeNode({
       >
         <ToggleButton node={node} />
       </div>
+
       {data.isAbstractGroup ? (
         <div style={{ width: 14, textAlign: "center" }}>
           <SvgVirtual />
@@ -114,7 +117,7 @@ export function TreeNode({
       )}
 
       <div className="input-wrapper">
-        {isEditing ? (
+        {isEditing && !data.isAbstractGroup ? (
           <input
             ref={inputRef}
             value={editValue}
@@ -129,15 +132,14 @@ export function TreeNode({
               padding: "2px 4px",
               cursor: "text",
             }}
+            onMouseDown={(e) => e.stopPropagation()}
           />
         ) : (
-          <>
-            <span>
-              {data.isAbstractGroup
-                ? t("layersPanel.group")
-                : data.raw.name || data.label}
-            </span>
-          </>
+          <span>
+            {data.isAbstractGroup
+              ? t("layersPanel.group")
+              : data.raw?.name || data.label}
+          </span>
         )}
       </div>
 
