@@ -228,55 +228,112 @@ export function handleMoveFactory(
     parentId: string | null;
     index: number;
   }) {
-    if (parentId !== null) return;
+    // === 1. Перетаскивание внутри root-уровня ===
+    if (parentId === null) {
+      const entities = buildRootEntities(sortedObjects);
+      const draggedEntityIds = new Set<string>(dragIds);
 
-    const entities = buildRootEntities(sortedObjects);
-    const draggedEntityIds = new Set<string>(dragIds);
+      const firstDraggedIndex = entities.findIndex((e) =>
+        draggedEntityIds.has(e.id)
+      );
+      if (firstDraggedIndex === -1) {
+        console.warn("handleMove: не удалось найти dragged entity", dragIds);
+        return;
+      }
 
-    const firstDraggedIndex = entities.findIndex((e) =>
-      draggedEntityIds.has(e.id)
-    );
-    if (firstDraggedIndex === -1) {
-      console.warn("handleMove: не удалось найти dragged entity", dragIds);
+      const draggedEntities = entities.filter((e) =>
+        draggedEntityIds.has(e.id)
+      );
+      const otherEntities = entities.filter((e) => !draggedEntityIds.has(e.id));
+
+      let adjustedIndex = index;
+      if (firstDraggedIndex < index) {
+        adjustedIndex -= draggedEntities.length;
+      }
+      if (adjustedIndex < 0) adjustedIndex = 0;
+      if (adjustedIndex > otherEntities.length)
+        adjustedIndex = otherEntities.length;
+
+      const newEntities = [
+        ...otherEntities.slice(0, adjustedIndex),
+        ...draggedEntities,
+        ...otherEntities.slice(adjustedIndex),
+      ];
+
+      const flattenedIds: number[] = [];
+      for (const ent of newEntities) {
+        flattenedIds.push(...ent.memberIds);
+      }
+
+      const total = flattenedIds.length;
+      const updates: Record<number, Partial<BannerObject>> = {};
+      flattenedIds.forEach((objId, pos) => {
+        const newZ = total - 1 - pos;
+        const existing = objects.find((o) => o.id === objId);
+        if (!existing) return;
+        if (existing.zIndex !== newZ) {
+          updates[objId] = { zIndex: newZ };
+        }
+      });
+
+      if (Object.keys(updates).length > 0) {
+        updateMultipleObjects(updates);
+      }
       return;
     }
 
-    const draggedEntities = entities.filter((e) => draggedEntityIds.has(e.id));
-    const otherEntities = entities.filter((e) => !draggedEntityIds.has(e.id));
+    // === 2. Перетаскивание внутри abstract-group ===
+    if (parentId.startsWith("abstract-group-")) {
+      const gid = Number(parentId.replace("abstract-group-", ""));
+      const groupMembers = sortedObjects.filter(
+        (o) => o.abstractGroupId === gid
+      );
 
-    let adjustedIndex = index;
-    if (firstDraggedIndex < index) {
-      adjustedIndex -= draggedEntities.length;
-    }
-    if (adjustedIndex < 0) adjustedIndex = 0;
-    if (adjustedIndex > otherEntities.length)
-      adjustedIndex = otherEntities.length;
+      const draggedIds = new Set(dragIds.map((id) => Number(id)));
+      const dragged = groupMembers.filter((m) => draggedIds.has(m.id));
+      const others = groupMembers.filter((m) => !draggedIds.has(m.id));
 
-    const newEntities = [
-      ...otherEntities.slice(0, adjustedIndex),
-      ...draggedEntities,
-      ...otherEntities.slice(adjustedIndex),
-    ];
-
-    const flattenedIds: number[] = [];
-    for (const ent of newEntities) {
-      flattenedIds.push(...ent.memberIds);
-    }
-
-    const total = flattenedIds.length;
-    const updates: Record<number, Partial<BannerObject>> = {};
-    flattenedIds.forEach((objId, pos) => {
-      const newZ = total - 1 - pos;
-
-      const existing = objects.find((o) => o.id === objId);
-      if (!existing) return;
-      if (existing.zIndex !== newZ) {
-        updates[objId] = { zIndex: newZ };
+      let adjustedIndex = index;
+      const firstDraggedIndex = groupMembers.findIndex((m) =>
+        draggedIds.has(m.id)
+      );
+      if (firstDraggedIndex < index) {
+        adjustedIndex -= dragged.length;
       }
-    });
+      if (adjustedIndex < 0) adjustedIndex = 0;
+      if (adjustedIndex > others.length) adjustedIndex = others.length;
 
-    if (Object.keys(updates).length > 0) {
-      updateMultipleObjects(updates);
+      const newGroupOrder = [
+        ...others.slice(0, adjustedIndex),
+        ...dragged,
+        ...others.slice(adjustedIndex),
+      ];
+
+      // теперь нужно встроить новый порядок группы в общий порядок
+      const newSorted = [...sortedObjects];
+      // выкидываем старых членов
+      const filtered = newSorted.filter((o) => o.abstractGroupId !== gid);
+
+      // нужно найти место, где группа стояла раньше
+      const firstIndexInOld = sortedObjects.findIndex(
+        (o) => o.abstractGroupId === gid
+      );
+      // вставляем на то же место
+      filtered.splice(firstIndexInOld, 0, ...newGroupOrder);
+
+      // пересчитываем zIndex для всех
+      const total = filtered.length;
+      const updates: Record<number, Partial<BannerObject>> = {};
+      filtered.forEach((obj, pos) => {
+        const newZ = total - 1 - pos;
+        if (obj.zIndex !== newZ) {
+          updates[obj.id] = { zIndex: newZ };
+        }
+      });
+
+      if (Object.keys(updates).length > 0) {
+        updateMultipleObjects(updates);
+      }
     }
   };
 }
