@@ -449,6 +449,46 @@ export const ExportToHTML = (
               window.allImagesLoaded = true;
               console.log("✅ All dynamic images loaded");
 
+
+              (function waitForImages() {
+                const imgs = document.querySelectorAll("img#replacing_img");
+                if (!imgs.length) return;
+                let loadedCount = 0;
+                const total = imgs.length;
+                function checkAllLoaded() {
+                  if (loadedCount >= total) {
+                    const evt = new CustomEvent("allImagesLoaded", {
+                      detail: { total },
+                    });
+                    window.dispatchEvent(evt);
+                  }
+                }
+                imgs.forEach((img) => {
+                  function onLoad() {
+                    if (img.naturalWidth > 0) {
+                      loadedCount++;
+                      checkAllLoaded();
+                    }
+                  }
+
+                  if (img.complete && img.naturalWidth > 0) {
+                    loadedCount++;
+                    checkAllLoaded();
+                  } else {
+                    img.addEventListener("load", onLoad, { once: true });
+                    img.addEventListener(
+                      "error",
+                      () => {
+                        console.warn("Error loading image:", img.src);
+                        loadedCount++;
+                        checkAllLoaded();
+                      },
+                      { once: true }
+                    );
+                  }
+                });
+              })();
+
             // 
           }; 
       </script>
