@@ -247,11 +247,14 @@ export const GenerateObjectsHTML = (objects: BannerObject[]): string => {
 
     if (obj.type === "image") {
       if (!obj.src) return "";
+
+      const dynamicsIdAttr = obj.dynamics ? `id="replacing_img"` : "";
+
       const content = `<img ${
         isChild ? idAttr : ""
-      } ${conditionAttr} ${dynamicAttr} src="${obj.src}" alt="${
-        obj.name || "image"
-      }" loading="eager" class="image-field ${
+      } ${conditionAttr} ${dynamicAttr} ${dynamicsIdAttr} src="${
+        obj.src
+      }" alt="${obj.name || "image"}" loading="eager" class="image-field ${
         isChild ? "banner-object-child" : ""
       }" style="${innerStyles}; background: transparent;" />`;
       return isChild
