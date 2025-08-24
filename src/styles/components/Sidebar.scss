@@ -54,6 +54,11 @@
     opacity: 0.6;
   }
 
+  .row--drop-target {
+    border: 1px dashed #1976d2; // Пример стилизации: синяя пунктирная рамка
+    background-color: #e0f2f7; // Светло-голубой фон
+  }
+
   .input-wrapper {
     flex: 1;
     white-space: nowrap;

@@ -424,6 +424,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         groupSelectedObjects,
         ungroupSelectedObject,
         //
+        setSelectedObjectIds,
         selectedChildId,
         selectChild,
         clearChildSelection,

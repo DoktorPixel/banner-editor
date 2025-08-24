@@ -192,6 +192,7 @@ export interface BannerContextProps {
   clearProject: () => void;
   groupSelectedObjects: () => void;
   ungroupSelectedObject: () => void;
+  setSelectedObjectIds: React.Dispatch<React.SetStateAction<number[]>>;
 
   selectedChildId: {
     groupId: number;

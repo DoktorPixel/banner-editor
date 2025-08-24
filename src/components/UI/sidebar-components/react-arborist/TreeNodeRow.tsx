@@ -12,6 +12,7 @@ interface Props {
   node: NodeApi<ArboristNodeData>;
   style: React.CSSProperties;
   preview?: boolean;
+  isDropTarget?: boolean; // Добавляем новый пропс
   state: {
     isEditing: boolean;
     isHovered: boolean;
@@ -30,13 +31,14 @@ interface Props {
 }
 
 export const TreeNodeRow = forwardRef<HTMLDivElement, Props>(
-  ({ node, style, preview, state, handlers }, ref) => {
+  ({ node, style, preview, state, handlers, isDropTarget }, ref) => {
     // const { t } = useTranslation();
 
     const rowClass = [
       "row arborist-row",
       node.isSelected ? "row--selected" : "",
       preview ? "row--preview" : "",
+      isDropTarget ? "row--drop-target" : "", // Добавляем класс
     ].join(" ");
 
     return (

@@ -212,12 +212,21 @@ export function syncSelectionWithTree(
 
 // react-arborist/moveHelpers.ts
 
+// вспомогательное
+type ProposeGroupFn = (payload: {
+  dragIds: number[];
+  targetRootId: number;
+}) => boolean;
+type GetHoveredFn = () => number | null;
+
 export function handleMoveFactory(
   objects: BannerObject[],
   sortedObjects: BannerObject[],
   updateMultipleObjects: (
     updates: Record<number, Partial<BannerObject>>
-  ) => void
+  ) => void,
+  proposeGroup: ProposeGroupFn, // <— добавили
+  getHoveredRootId: GetHoveredFn // <— добавили
 ) {
   return function handleMove({
     dragIds,
@@ -228,6 +237,21 @@ export function handleMoveFactory(
     parentId: string | null;
     index: number;
   }) {
+    // === 0. Попытка "drop НА root" → предлагаем сделать группу ===
+    // Если canDrop уже разрешил этот drop как группировку, сразу вызываем proposeGroup
+    const hovered = getHoveredRootId?.() ?? null;
+    const dragged = dragIds.map(Number);
+
+    // Мы предполагаем, что если canDrop разрешил, то это именно drop на элемент для группировки
+    // Поэтому мы просто вызываем proposeGroup без повторной проверки всех условий
+    if (parentId === null && hovered != null && !dragged.includes(hovered)) {
+      const consumed = proposeGroup({
+        dragIds: dragged,
+        targetRootId: hovered,
+      });
+      if (consumed) return; // Диалог открыт — отменяем стандартный reorder
+    }
+
     // === 1. Перетаскивание внутри root-уровня ===
     if (parentId === null) {
       const entities = buildRootEntities(sortedObjects);
@@ -309,19 +333,14 @@ export function handleMoveFactory(
         ...others.slice(adjustedIndex),
       ];
 
-      // теперь нужно встроить новый порядок группы в общий порядок
       const newSorted = [...sortedObjects];
-      // выкидываем старых членов
       const filtered = newSorted.filter((o) => o.abstractGroupId !== gid);
 
-      // нужно найти место, где группа стояла раньше
       const firstIndexInOld = sortedObjects.findIndex(
         (o) => o.abstractGroupId === gid
       );
-      // вставляем на то же место
       filtered.splice(firstIndexInOld, 0, ...newGroupOrder);
 
-      // пересчитываем zIndex для всех
       const total = filtered.length;
       const updates: Record<number, Partial<BannerObject>> = {};
       filtered.forEach((obj, pos) => {
@@ -337,3 +356,4 @@ export function handleMoveFactory(
     }
   };
 }
+

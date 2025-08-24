@@ -11,6 +11,7 @@ export type ArboristNodeData = {
   abstractGroupId?: number | null;
   isAbstractGroup?: boolean;
   children?: ArboristNodeData[] | null;
+  droppable?: boolean; // Добавляем новое свойство
 };
 
 function labelFor(obj: BannerObject | BannerChild) {
@@ -69,6 +70,7 @@ export function convertObjectsToTree(data: BannerObject[]): ArboristNodeData[] {
         originalId: members[0].id, // используем id первого члена (как раньше)
         raw: null,
         isAbstractGroup: true,
+        droppable: false, // Группы не могут быть целью для drop
         children: members.map((m) => ({
           id: String(m.id),
           label: labelFor(m),
@@ -93,6 +95,7 @@ export function convertObjectsToTree(data: BannerObject[]): ArboristNodeData[] {
         type: obj.type,
         originalId: obj.id,
         raw: obj,
+        droppable: true, // Обычные корневые объекты могут быть целью для drop
         children:
           Array.isArray(obj.children) && obj.children.length > 0
             ? obj.children.map((ch) => mapChild(ch, obj.id))
@@ -103,3 +106,4 @@ export function convertObjectsToTree(data: BannerObject[]): ArboristNodeData[] {
 
   return treeNodes;
 }
+
