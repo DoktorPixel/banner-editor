@@ -77,9 +77,35 @@ export function handleSelectFactory(
     }
 
     const groupRootIds = new Set<string>();
+
     nodes.forEach((n) => {
-      if (n.data.isAbstractGroup) groupRootIds.add(n.id);
+      // если сам выбранный узел — корень абстрактной группы
+      if (n.data?.isAbstractGroup) {
+        groupRootIds.add(n.id);
+        return;
+      }
+
+      // если выбранный узел — дочерний элемент, у которого родитель — абстрактная группа,
+      // то тоже считаем, что пользователь кликнул по корню группы
+      const parent = n.parent;
+      if (parent?.data?.isAbstractGroup) {
+        // parent.id — это id узла вида "abstract-group-<gid>"
+        groupRootIds.add(parent.id);
+        return;
+      }
+
+      // дополнительная страховка: иногда Tree может отдавать grandparent
+      // или иную структуру — пробуем найти ближайшего предка с isAbstractGroup
+      let p = parent;
+      while (p) {
+        if (p.data?.isAbstractGroup) {
+          groupRootIds.add(p.id);
+          break;
+        }
+        p = p.parent;
+      }
     });
+
     selectedAbstractRootIdsRef.current = groupRootIds;
 
     clearChildSelection();
@@ -173,11 +199,6 @@ export function syncSelectionWithTree(
   isApplyingSelection.current = false;
 }
 
-/**
- * Помощник — строит список entity (в том же порядке, что и дерево),
- * где entity = { id, type: 'single'|'group', memberIds: number[] }.
- * Важное требование: order должен соответствовать порядку по zIndex desc.
- */
 export function buildRootEntities(objects: BannerObject[]) {
   const seenGroups = new Set<number>();
   const entities: {
@@ -219,11 +240,6 @@ function applyUpdatesToSorted(
   );
 }
 
-/**
- * handleMoveFactory:
- * - добавлена поддержка: перетаскивание в abstract-group (установить abstractGroupId)
- *   и перетаскивание в root (сброс abstractGroupId)
- */
 export function handleMoveFactory(
   objects: BannerObject[],
   sortedObjects: BannerObject[],
@@ -437,12 +453,6 @@ export function handleMoveFactory(
       return;
     }
 
-    // ===========================
-    // 3) Остальные случаи (например drop внутрь реальной группы type==='group') — оставляем прежней логикой caller'а
-    // ===========================
-    // если нужны — сюда можно добавить обработку для real-flex groups (отдельно).
-    // Для текущего шага (abstract-group) ничего не делаем.
-    // eslint-disable-next-line no-console
     console.warn(
       "handleMove: unsupported parentId case for abstract-only implementation",
       parentId
