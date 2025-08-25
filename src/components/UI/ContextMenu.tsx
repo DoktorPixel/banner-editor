@@ -3,7 +3,7 @@ import "../../styles/components/ContextMenu.scss";
 import { Button } from "@mui/material";
 import { useBanner } from "../../context/BannerContext";
 import { useTranslation } from "react-i18next";
-import { useVirtualGroupActions } from "../../utils/hooks";
+import { useAbstractGroupActions } from "../../utils/hooks";
 
 interface ContextMenuProps {
   x: number;
@@ -28,7 +28,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
     updateMultipleObjects,
   } = useBanner();
   const { groupSelectedObjectsAbstract, ungroupSelectedObjectsAbstract } =
-    useVirtualGroupActions();
+    useAbstractGroupActions();
   const { t } = useTranslation();
 
   const getRootObjects = () =>

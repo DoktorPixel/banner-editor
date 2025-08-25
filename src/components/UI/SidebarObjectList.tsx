@@ -16,7 +16,7 @@ import {
 import { VisibilityToggle } from "./button-groups/VisibilityToggle";
 import { GroupVisibilityToggle } from "./button-groups/GroupVisibilityToggle";
 import { useTranslation } from "react-i18next";
-// import { useVirtualGroupActions } from "../../utils/hooks";
+// import { useAbstractGroupActions } from "../../utils/hooks";
 
 /**
  * Компонент SidebarObjectList — отвечает за отображение "слоёв" / дерева объектов в сайдбаре редактора.
@@ -43,7 +43,7 @@ const SidebarObjectList: React.FC = () => {
   } = useBanner();
 
   // const { groupSelectedObjectsAbstract, ungroupSelectedObjectsAbstract } =
-  //   useVirtualGroupActions();
+  //   useAbstractGroupActions();
 
   // Хук для обновления свойств объектов (например, имени)
   const { updateObjectProperty } = useObjectProperties();

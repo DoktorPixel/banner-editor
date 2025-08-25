@@ -40,43 +40,6 @@ export function updateNodeName(
   }
 }
 
-export /**
- * Помощник — строит список entity (в том же порядке, что и дерево),
- * где entity = { id, type: 'single'|'group', memberIds: number[] }.
- * Важное требование: order должен соответствовать порядку по zIndex desc.
- */
-function buildRootEntities(objects: BannerObject[]) {
-  // objects ожидаются уже отсортированы по zIndex desc
-  const seenGroups = new Set<number>();
-  const entities: {
-    id: string;
-    type: "single" | "group";
-    memberIds: number[];
-  }[] = [];
-
-  for (const obj of objects) {
-    if (obj.abstractGroupId != null) {
-      const gid = obj.abstractGroupId;
-      if (seenGroups.has(gid)) continue;
-      seenGroups.add(gid);
-      // возьмём всех членов группы в порядке прохода (objects уже отсортирован)
-      const members = objects.filter((o) => o.abstractGroupId === gid);
-      entities.push({
-        id: `abstract-group-${gid}`,
-        type: "group",
-        memberIds: members.map((m) => m.id),
-      });
-    } else {
-      entities.push({
-        id: String(obj.id),
-        type: "single",
-        memberIds: [obj.id],
-      });
-    }
-  }
-  return entities;
-}
-
 // react-arborist/selectionHelpers.ts
 type BannerApi = {
   clearChildSelection: () => void;
@@ -208,6 +171,43 @@ export function syncSelectionWithTree(
   firstNode?.focus();
 
   isApplyingSelection.current = false;
+}
+
+export /**
+ * Помощник — строит список entity (в том же порядке, что и дерево),
+ * где entity = { id, type: 'single'|'group', memberIds: number[] }.
+ * Важное требование: order должен соответствовать порядку по zIndex desc.
+ */
+function buildRootEntities(objects: BannerObject[]) {
+  // objects ожидаются уже отсортированы по zIndex desc
+  const seenGroups = new Set<number>();
+  const entities: {
+    id: string;
+    type: "single" | "group";
+    memberIds: number[];
+  }[] = [];
+
+  for (const obj of objects) {
+    if (obj.abstractGroupId != null) {
+      const gid = obj.abstractGroupId;
+      if (seenGroups.has(gid)) continue;
+      seenGroups.add(gid);
+      // возьмём всех членов группы в порядке прохода (objects уже отсортирован)
+      const members = objects.filter((o) => o.abstractGroupId === gid);
+      entities.push({
+        id: `abstract-group-${gid}`,
+        type: "group",
+        memberIds: members.map((m) => m.id),
+      });
+    } else {
+      entities.push({
+        id: String(obj.id),
+        type: "single",
+        memberIds: [obj.id],
+      });
+    }
+  }
+  return entities;
 }
 
 // react-arborist/moveHelpers.ts
