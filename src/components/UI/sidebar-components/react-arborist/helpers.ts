@@ -225,8 +225,8 @@ export function handleMoveFactory(
   updateMultipleObjects: (
     updates: Record<number, Partial<BannerObject>>
   ) => void,
-  proposeGroup: ProposeGroupFn, // <— добавили
-  getHoveredRootId: GetHoveredFn // <— добавили
+  proposeGroup: ProposeGroupFn, // <— Функция для предложения группы (из useGroupOnDrop)
+  getHoveredRootId: GetHoveredFn // <— Getter для hovered (из useGroupOnDrop)
 ) {
   return function handleMove({
     dragIds,
@@ -239,17 +239,22 @@ export function handleMoveFactory(
   }) {
     // === 0. Попытка "drop НА root" → предлагаем сделать группу ===
     // Если canDrop уже разрешил этот drop как группировку, сразу вызываем proposeGroup
-    const hovered = getHoveredRootId?.() ?? null;
-    const dragged = dragIds.map(Number);
+    const hovered = getHoveredRootId?.() ?? null; // <— Получаем текущий hovered root ID (на момент drop)
+    const dragged = dragIds.map(Number); // <— dragged IDs как числа
 
     // Мы предполагаем, что если canDrop разрешил, то это именно drop на элемент для группировки
     // Поэтому мы просто вызываем proposeGroup без повторной проверки всех условий
     if (parentId === null && hovered != null && !dragged.includes(hovered)) {
+      // <— КЛЮЧЕВАЯ ПРОВЕРКА ОТЛИЧИЯ:
+      // - parentId === null: drop на root-уровне (общий для обоих сценариев)
+      // - hovered != null: курсор НАД root-элементом (из hover listeners в TreeNode)
+      // - !dragged.includes(hovered): не дропаем на самого себя
+      // Если да — это "drop НА root" для группы
       const consumed = proposeGroup({
         dragIds: dragged,
         targetRootId: hovered,
-      });
-      if (consumed) return; // Диалог открыт — отменяем стандартный reorder
+      }); // <— Предлагаем группу: открывает диалог
+      if (consumed) return; // Диалог открыт — отменяем стандартный reorder  // <— Если true, выходим: НЕ ДЕЛАЕМ реордер (zIndex не меняется)
     }
 
     // === 1. Перетаскивание внутри root-уровня ===
@@ -356,4 +361,3 @@ export function handleMoveFactory(
     }
   };
 }
-

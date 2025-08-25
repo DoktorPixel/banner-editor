@@ -40,7 +40,7 @@ export function useGroupOnDrop() {
 export const GroupOnDropProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const hoveredRootIdRef = useRef<number | null>(null);
+  const hoveredRootIdRef = useRef<number | null>(null); // <— Ref для хранения текущего hovered root ID (не вызывает ререндер)
   const [pending, setPending] = useState<GroupProposal | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -50,15 +50,15 @@ export const GroupOnDropProvider: React.FC<{ children: React.ReactNode }> = ({
   }>({});
 
   const setHoveredRootId = useCallback((id: number | null) => {
-    hoveredRootIdRef.current = id;
+    hoveredRootIdRef.current = id; // <— Setter: обновляет ref (используется в TreeNode)
   }, []);
 
   const getHoveredRootId = useCallback(() => hoveredRootIdRef.current, []);
 
   const proposeGroup = useCallback((payload: GroupProposal) => {
     setPending(payload);
-    setOpen(true);
-    return true; // сигнализируем "не делать reorder: мы перехватили дроп"
+    setOpen(true); // <— Открывает диалог для выбора типа группы
+    return true; // сигнализируем "не делать reorder: мы перехватили дроп"  // <— Возвращает true, чтобы handleMove знал, что drop "поглощен" группировкой
   }, []);
 
   const closeDialog = useCallback(() => {

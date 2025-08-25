@@ -292,4 +292,3 @@ export const BannerObjectsTree: React.FC = () => {
     </GroupOnDropProvider>
   );
 };
-
