@@ -135,6 +135,7 @@ export interface BannerChild {
       | "less-or-eq";
     compareValue?: string;
   };
+  abstractGroupId?: number | null;
   flexDirection?: React.CSSProperties["flexDirection"];
   justifyContent?: React.CSSProperties["justifyContent"];
   alignItems?: React.CSSProperties["alignItems"];
@@ -242,6 +243,26 @@ export interface BannerContextProps {
   reorderChildren: (groupId: number, newOrder: number[]) => void;
   scale: number;
   setScale: (value: number) => void;
+  //
+  findParentGroupOfChild: (childId: number) => BannerObject | null;
+  // promoteChildToRoot: (
+  //   child: BannerChild,
+  //   parentGroup?: BannerObject
+  // ) => BannerObject;
+  // demoteRootToChild: (
+  //   root: BannerObject,
+  //   parentGroup: BannerObject
+  // ) => BannerChild;
+  moveObjectsToFlexGroup: (
+    ids: number[],
+    parentGroupId: number,
+    atIndex?: number
+  ) => void;
+  removeObjectsFromFlexGroup: (
+    ids: number[],
+    parentGroupId?: number,
+    atIndex?: number
+  ) => void;
 }
 
 export interface DynamicImg {

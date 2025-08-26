@@ -243,10 +243,28 @@ function applyUpdatesToSorted(
 export function handleMoveFactory(
   objects: BannerObject[],
   sortedObjects: BannerObject[],
-  updateMultipleObjects: (
-    updates: Record<number, Partial<BannerObject>>
-  ) => void
+  options: {
+    updateMultipleObjects: (
+      updates: Record<number, Partial<BannerObject>>
+    ) => void;
+    moveObjectsToFlexGroup?: (
+      ids: number[],
+      parentGroupId: number,
+      atIndex?: number
+    ) => void;
+    removeObjectsFromFlexGroup?: (
+      ids: number[],
+      parentGroupId?: number,
+      atIndex?: number
+    ) => void;
+  }
 ) {
+  const {
+    updateMultipleObjects,
+    moveObjectsToFlexGroup,
+    removeObjectsFromFlexGroup,
+  } = options;
+
   return function handleMove({
     dragIds,
     parentId,
@@ -256,13 +274,11 @@ export function handleMoveFactory(
     parentId: string | null;
     index: number;
   }) {
-    // dragIds может содержать и строковые id для abstract-group-<gid>
     const dragIdsStr = dragIds;
     const dragIdsNum = dragIds
       .map((id) => Number(id))
       .filter((n) => !Number.isNaN(n));
 
-    // === 0. Helper: обновление zIndex для нового порядка root (используется в нескольких ветках) ===
     function recalcZForRootFromEntities(
       entities: { id: string; memberIds: number[] }[]
     ) {
@@ -279,11 +295,33 @@ export function handleMoveFactory(
       if (Object.keys(updates).length > 0) updateMultipleObjects(updates);
     }
 
-    // ===========================
-    // 1) Drop to root (parentId === null)
-    // ===========================
+    // === 1) Drop to root (parentId === null) ===
     if (parentId === null) {
-      // --- 1.1: если среди dragged есть объекты, которые сейчас в abstract group -> нужно их "извлечь"
+      // Если dragged содержат детей из flex-групп -> извлечь их в root
+      const childrenToExtract: number[] = [];
+      for (const id of dragIdsNum) {
+        // если id соответствует child (т.е. есть группа, в children которой этот id) — пометим
+        const isChild = objects.some(
+          (o) =>
+            o.type === "group" &&
+            Array.isArray(o.children) &&
+            o.children.some((ch) => ch.id === id)
+        );
+        if (isChild) childrenToExtract.push(id);
+      }
+
+      if (childrenToExtract.length > 0) {
+        if (!removeObjectsFromFlexGroup) {
+          console.warn(
+            "handleMove: removeObjectsFromFlexGroup not provided but needed"
+          );
+        } else {
+          // извлекаем детей в root (promote)
+          removeObjectsFromFlexGroup(childrenToExtract);
+        }
+      }
+
+      // === дальше — существующая логика по перемещению root-entities ===
       const needUnset: Record<number, Partial<BannerObject>> = {};
       for (const id of dragIdsNum) {
         const existing = objects.find((o) => o.id === id);
@@ -292,8 +330,6 @@ export function handleMoveFactory(
         }
       }
 
-      // применим локально к sortedObjects (чтобы корректно пересчитать порядок),
-      // и вызовем updateMultipleObjects(needUnset) чтобы реально обновить состояние
       const locallyUpdatedSorted = applyUpdatesToSorted(
         sortedObjects,
         needUnset
@@ -303,7 +339,6 @@ export function handleMoveFactory(
         updateMultipleObjects(needUnset);
       }
 
-      // Теперь делаем перемещение внутри root-уровня (включая случаи, когда dragged были ранее в группе)
       const entities = buildRootEntities(locallyUpdatedSorted);
       const draggedEntityIds = new Set<string>(dragIdsStr);
 
@@ -311,14 +346,10 @@ export function handleMoveFactory(
         draggedEntityIds.has(e.id)
       );
       if (firstDraggedIndex === -1) {
-        // Возможно перетащили отдельные элементы (которые были внутри abstract group и мы только что извлекли их).
-        // В этом случае нужно найти entity entries that contain these member ids.
         const draggedEntityIdsDerived = new Set<string>();
         for (const ent of entities) {
           for (const mem of ent.memberIds) {
-            if (dragIdsNum.includes(mem)) {
-              draggedEntityIdsDerived.add(ent.id);
-            }
+            if (dragIdsNum.includes(mem)) draggedEntityIdsDerived.add(ent.id);
           }
         }
         if (draggedEntityIdsDerived.size === 0) {
@@ -328,7 +359,6 @@ export function handleMoveFactory(
           );
           return;
         }
-        // используем derived set
         const draggedEntities = entities.filter((e) =>
           draggedEntityIdsDerived.has(e.id)
         );
@@ -351,16 +381,13 @@ export function handleMoveFactory(
         return;
       }
 
-      // обычный путь (как раньше) — с dragIdsStr непосредственно:
       const draggedEntities = entities.filter((e) =>
         draggedEntityIds.has(e.id)
       );
       const otherEntities = entities.filter((e) => !draggedEntityIds.has(e.id));
 
       let adjustedIndex = index;
-      if (firstDraggedIndex < index) {
-        adjustedIndex -= draggedEntities.length;
-      }
+      if (firstDraggedIndex < index) adjustedIndex -= draggedEntities.length;
       if (adjustedIndex < 0) adjustedIndex = 0;
       if (adjustedIndex > otherEntities.length)
         adjustedIndex = otherEntities.length;
@@ -375,46 +402,31 @@ export function handleMoveFactory(
       return;
     }
 
-    // ===========================
-    // 2) Drop inside abstract-group (parentId like "abstract-group-<gid>")
-    // ===========================
+    // === 2) Drop inside abstract-group (unchanged) ===
     if (
       typeof parentId === "string" &&
       parentId.startsWith("abstract-group-")
     ) {
       const gid = Number(parentId.replace("abstract-group-", ""));
-
-      // --- 2.1: подготовим updates, чтобы установить abstractGroupId = gid для всех перетаскиваемых (числовых) id
       const updates: Record<number, Partial<BannerObject>> = {};
-      for (const id of dragIdsNum) {
-        updates[id] = { abstractGroupId: gid };
-      }
+      for (const id of dragIdsNum) updates[id] = { abstractGroupId: gid };
 
-      // применим локально к sortedObjects для расчёта порядка
       const locallyUpdatedSorted = applyUpdatesToSorted(sortedObjects, updates);
+      if (Object.keys(updates).length > 0) updateMultipleObjects(updates);
 
-      // запишем в состояние
-      if (Object.keys(updates).length > 0) {
-        updateMultipleObjects(updates);
-      }
-
-      // --- 2.2: теперь сформируем порядок членов группы (включая новые добавленные элементы)
       const groupMembers = locallyUpdatedSorted.filter(
         (o) => o.abstractGroupId === gid
       );
-
       const draggedSet = new Set<number>(dragIdsNum);
       const dragged = groupMembers.filter((m) => draggedSet.has(m.id));
       const others = groupMembers.filter((m) => !draggedSet.has(m.id));
 
       let adjustedIndex = index;
-      // firstDraggedIndex в локальном groupMembers (учитывая, что некоторое dragged могли быть новыми)
       const firstDraggedIndex = groupMembers.findIndex((m) =>
         draggedSet.has(m.id)
       );
-      if (firstDraggedIndex !== -1 && firstDraggedIndex < index) {
+      if (firstDraggedIndex !== -1 && firstDraggedIndex < index)
         adjustedIndex -= dragged.length;
-      }
       if (adjustedIndex < 0) adjustedIndex = 0;
       if (adjustedIndex > others.length) adjustedIndex = others.length;
 
@@ -424,12 +436,9 @@ export function handleMoveFactory(
         ...others.slice(adjustedIndex),
       ];
 
-      // встроим новый порядок группы в общий порядок root-объектов
       const filtered = locallyUpdatedSorted.filter(
         (o) => o.abstractGroupId !== gid
       );
-
-      // определим место, где группа должна быть — используем индекс первого члена из локального списка (если есть)
       const firstIndexInNew = locallyUpdatedSorted.findIndex(
         (o) => o.abstractGroupId === gid
       );
@@ -438,24 +447,67 @@ export function handleMoveFactory(
 
       filtered.splice(insertPos, 0, ...newGroupOrder);
 
-      // пересчитываем zIndex для всех
       const total = filtered.length;
       const zUpdates: Record<number, Partial<BannerObject>> = {};
       filtered.forEach((obj, pos) => {
         const newZ = total - 1 - pos;
         if (obj.zIndex !== newZ) zUpdates[obj.id] = { zIndex: newZ };
       });
+      if (Object.keys(zUpdates).length > 0) updateMultipleObjects(zUpdates);
+      return;
+    }
 
-      if (Object.keys(zUpdates).length > 0) {
-        updateMultipleObjects(zUpdates);
+    // === 3) Drop inside real flex-group (parentId === "<groupId>") ===
+    const parentNumeric = Number(parentId);
+    const parentObj = objects.find((o) => o.id === parentNumeric);
+    if (parentObj && parentObj.type === "group") {
+      // вычислим фактические member ids для перетаскиваемых (учитывая abstract-groups и одиночные id)
+      const draggedMemberIds: number[] = [];
+      for (const idStr of dragIdsStr) {
+        if (typeof idStr === "string" && idStr.startsWith("abstract-group-")) {
+          const gid = Number(idStr.replace("abstract-group-", ""));
+          const members = sortedObjects
+            .filter((o) => o.abstractGroupId === gid)
+            .map((m) => m.id);
+          draggedMemberIds.push(...members);
+        } else {
+          const num = Number(idStr);
+          if (!Number.isNaN(num)) draggedMemberIds.push(num);
+        }
       }
+
+      // вызываем moveObjectsToFlexGroup (должен выполнить структурные изменения объектов)
+      if (!moveObjectsToFlexGroup) {
+        console.warn("handleMove: moveObjectsToFlexGroup not provided");
+        return;
+      }
+      moveObjectsToFlexGroup(draggedMemberIds, parentNumeric, index);
+
+      // удалим abstractGroupId если был
+      const clearAbstract: Record<number, Partial<BannerObject>> = {};
+      draggedMemberIds.forEach((id) => {
+        const o = objects.find((x) => x.id === id);
+        if (o && o.abstractGroupId != null)
+          clearAbstract[id] = { abstractGroupId: null };
+      });
+      if (Object.keys(clearAbstract).length > 0)
+        updateMultipleObjects(clearAbstract);
+
+      // пересчитаем zIndex для оставшихся root (удаляем moved ids из sortedObjects и пересчитываем)
+      const filtered = sortedObjects.filter(
+        (o) => !draggedMemberIds.includes(o.id)
+      );
+      const total = filtered.length;
+      const zUpdates: Record<number, Partial<BannerObject>> = {};
+      filtered.forEach((obj, pos) => {
+        const newZ = total - 1 - pos;
+        if (obj.zIndex !== newZ) zUpdates[obj.id] = { zIndex: newZ };
+      });
+      if (Object.keys(zUpdates).length > 0) updateMultipleObjects(zUpdates);
 
       return;
     }
 
-    console.warn(
-      "handleMove: unsupported parentId case for abstract-only implementation",
-      parentId
-    );
+    console.warn("handleMove: unsupported parentId case", parentId);
   };
 }

@@ -18,6 +18,10 @@ export const BannerObjectsTree: React.FC = () => {
     clearSelection,
     updateMultipleObjects,
     selectAllObjects,
+
+    // новые методы, которые мы добавили в BannerContext
+    moveObjectsToFlexGroup,
+    removeObjectsFromFlexGroup,
   } = useBanner();
 
   const treeRef = useRef<TreeApi<ArboristNodeData> | null>(null);
@@ -52,8 +56,19 @@ export const BannerObjectsTree: React.FC = () => {
   );
 
   const handleMove = useMemo(
-    () => handleMoveFactory(objects, sortedObjects, updateMultipleObjects),
-    [objects, sortedObjects]
+    () =>
+      handleMoveFactory(objects, sortedObjects, {
+        updateMultipleObjects,
+        moveObjectsToFlexGroup,
+        removeObjectsFromFlexGroup,
+      }),
+    [
+      objects,
+      sortedObjects,
+      updateMultipleObjects,
+      moveObjectsToFlexGroup,
+      removeObjectsFromFlexGroup,
+    ]
   );
 
   useEffect(() => {
