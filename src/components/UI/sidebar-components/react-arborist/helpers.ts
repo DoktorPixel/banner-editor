@@ -277,6 +277,7 @@ export function handleMoveFactory(
     const dragIdsNum = dragIds
       .map((id) => Number(id))
       .filter((n) => !Number.isNaN(n));
+
     const pendingUpdates: Record<number, Partial<BannerObject>> = {};
 
     function recalcZForRootFromEntities(
@@ -290,12 +291,15 @@ export function handleMoveFactory(
         const newZ = total - 1 - pos;
         const existing = objects.find((o) => o.id === objId);
         if (!existing) return;
-        if (existing.zIndex !== newZ) pendingUpdates[objId] = { zIndex: newZ };
+        if (existing.zIndex !== newZ) {
+          pendingUpdates[objId] = { ...pendingUpdates[objId], zIndex: newZ };
+        }
       });
     }
 
     // === 1) Drop to root ===
     if (parentId === null) {
+      // если тащим детей группы -> вытаскиваем
       const childrenToExtract: number[] = [];
       for (const id of dragIdsNum) {
         const isChild = objects.some(
@@ -306,11 +310,11 @@ export function handleMoveFactory(
         );
         if (isChild) childrenToExtract.push(id);
       }
-
       if (childrenToExtract.length > 0 && removeObjectsFromFlexGroup) {
         removeObjectsFromFlexGroup(childrenToExtract);
       }
 
+      // снимаем abstractGroupId
       for (const id of dragIdsNum) {
         const existing = objects.find((o) => o.id === id);
         if (existing && existing.abstractGroupId != null) {
@@ -322,7 +326,6 @@ export function handleMoveFactory(
         sortedObjects,
         pendingUpdates
       );
-
       const entities = buildRootEntities(locallyUpdatedSorted);
       const draggedEntityIds = new Set<string>(dragIds);
 
@@ -350,13 +353,11 @@ export function handleMoveFactory(
           0,
           Math.min(index, otherEntities.length)
         );
-
         const newEntities = [
           ...otherEntities.slice(0, adjustedIndex),
           ...draggedEntities,
           ...otherEntities.slice(adjustedIndex),
         ];
-
         recalcZForRootFromEntities(newEntities);
       } else {
         const draggedEntities = entities.filter((e) =>
@@ -378,7 +379,6 @@ export function handleMoveFactory(
           ...draggedEntities,
           ...otherEntities.slice(adjustedIndex),
         ];
-
         recalcZForRootFromEntities(newEntities);
       }
     }
@@ -427,7 +427,6 @@ export function handleMoveFactory(
       );
       const insertPos =
         firstIndexInNew === -1 ? filtered.length : firstIndexInNew;
-
       filtered.splice(insertPos, 0, ...newGroupOrder);
 
       const total = filtered.length;
@@ -457,10 +456,12 @@ export function handleMoveFactory(
           }
         }
 
+        // ⚡ сначала структурная операция
         if (moveObjectsToFlexGroup) {
           moveObjectsToFlexGroup(draggedMemberIds, parentNumeric, index);
         }
 
+        // потом косметика
         draggedMemberIds.forEach((id) => {
           const o = objects.find((x) => x.id === id);
           if (o && o.abstractGroupId != null) {
@@ -486,6 +487,7 @@ export function handleMoveFactory(
       }
     }
 
+    // ⚡ всегда после структурных изменений
     if (Object.keys(pendingUpdates).length > 0) {
       updateMultipleObjects(pendingUpdates);
     }
