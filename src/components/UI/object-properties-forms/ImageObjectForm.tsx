@@ -49,7 +49,7 @@ export const ImageObjectForm: React.FC<ImageObjectFormProps> = ({
       >
         {t("sidebar.image")}
       </Typography>
-      <div>zIndex:{object.zIndex} </div>
+      {/* <div>zIndex:{object.zIndex} </div> */}
       <div className="grey-line"></div>
       <ConditionSelector objectId={object.id} condition={object.condition} />
       <div className="grey-line"></div>

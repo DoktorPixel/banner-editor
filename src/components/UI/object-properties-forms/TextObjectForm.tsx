@@ -94,7 +94,7 @@ export const TextObjectForm: React.FC<TextObjectFormProps> = ({
         />
       </div>
 
-      <div>zIndex:{object.zIndex} </div>
+      {/* <div>zIndex:{object.zIndex} </div> */}
 
       <div className="auto-size padding-wrapper">
         {!object.autoWidth && (
