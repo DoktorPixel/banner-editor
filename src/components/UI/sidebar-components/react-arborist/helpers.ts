@@ -274,10 +274,10 @@ export function handleMoveFactory(
     parentId: string | null;
     index: number;
   }) {
-    const dragIdsStr = dragIds;
     const dragIdsNum = dragIds
       .map((id) => Number(id))
       .filter((n) => !Number.isNaN(n));
+    const pendingUpdates: Record<number, Partial<BannerObject>> = {};
 
     function recalcZForRootFromEntities(
       entities: { id: string; memberIds: number[] }[]
@@ -285,22 +285,19 @@ export function handleMoveFactory(
       const flattened: number[] = [];
       for (const ent of entities) flattened.push(...ent.memberIds);
       const total = flattened.length;
-      const updates: Record<number, Partial<BannerObject>> = {};
+
       flattened.forEach((objId, pos) => {
         const newZ = total - 1 - pos;
         const existing = objects.find((o) => o.id === objId);
         if (!existing) return;
-        if (existing.zIndex !== newZ) updates[objId] = { zIndex: newZ };
+        if (existing.zIndex !== newZ) pendingUpdates[objId] = { zIndex: newZ };
       });
-      if (Object.keys(updates).length > 0) updateMultipleObjects(updates);
     }
 
-    // === 1) Drop to root (parentId === null) ===
+    // === 1) Drop to root ===
     if (parentId === null) {
-      // Если dragged содержат детей из flex-групп -> извлечь их в root
       const childrenToExtract: number[] = [];
       for (const id of dragIdsNum) {
-        // если id соответствует child (т.е. есть группа, в children которой этот id) — пометим
         const isChild = objects.some(
           (o) =>
             o.type === "group" &&
@@ -310,41 +307,29 @@ export function handleMoveFactory(
         if (isChild) childrenToExtract.push(id);
       }
 
-      if (childrenToExtract.length > 0) {
-        if (!removeObjectsFromFlexGroup) {
-          console.warn(
-            "handleMove: removeObjectsFromFlexGroup not provided but needed"
-          );
-        } else {
-          // извлекаем детей в root (promote)
-          removeObjectsFromFlexGroup(childrenToExtract);
-        }
+      if (childrenToExtract.length > 0 && removeObjectsFromFlexGroup) {
+        removeObjectsFromFlexGroup(childrenToExtract);
       }
 
-      // === дальше — существующая логика по перемещению root-entities ===
-      const needUnset: Record<number, Partial<BannerObject>> = {};
       for (const id of dragIdsNum) {
         const existing = objects.find((o) => o.id === id);
         if (existing && existing.abstractGroupId != null) {
-          needUnset[id] = { abstractGroupId: null };
+          pendingUpdates[id] = { ...pendingUpdates[id], abstractGroupId: null };
         }
       }
 
       const locallyUpdatedSorted = applyUpdatesToSorted(
         sortedObjects,
-        needUnset
+        pendingUpdates
       );
 
-      if (Object.keys(needUnset).length > 0) {
-        updateMultipleObjects(needUnset);
-      }
-
       const entities = buildRootEntities(locallyUpdatedSorted);
-      const draggedEntityIds = new Set<string>(dragIdsStr);
+      const draggedEntityIds = new Set<string>(dragIds);
 
       const firstDraggedIndex = entities.findIndex((e) =>
         draggedEntityIds.has(e.id)
       );
+
       if (firstDraggedIndex === -1) {
         const draggedEntityIdsDerived = new Set<string>();
         for (const ent of entities) {
@@ -352,13 +337,8 @@ export function handleMoveFactory(
             if (dragIdsNum.includes(mem)) draggedEntityIdsDerived.add(ent.id);
           }
         }
-        if (draggedEntityIdsDerived.size === 0) {
-          console.warn(
-            "handleMove (to root): Could not find dragged entity",
-            dragIds
-          );
-          return;
-        }
+        if (draggedEntityIdsDerived.size === 0) return;
+
         const draggedEntities = entities.filter((e) =>
           draggedEntityIdsDerived.has(e.id)
         );
@@ -366,10 +346,10 @@ export function handleMoveFactory(
           (e) => !draggedEntityIdsDerived.has(e.id)
         );
 
-        let adjustedIndex = index;
-        if (adjustedIndex < 0) adjustedIndex = 0;
-        if (adjustedIndex > otherEntities.length)
-          adjustedIndex = otherEntities.length;
+        const adjustedIndex = Math.max(
+          0,
+          Math.min(index, otherEntities.length)
+        );
 
         const newEntities = [
           ...otherEntities.slice(0, adjustedIndex),
@@ -378,41 +358,45 @@ export function handleMoveFactory(
         ];
 
         recalcZForRootFromEntities(newEntities);
-        return;
+      } else {
+        const draggedEntities = entities.filter((e) =>
+          draggedEntityIds.has(e.id)
+        );
+        const otherEntities = entities.filter(
+          (e) => !draggedEntityIds.has(e.id)
+        );
+
+        let adjustedIndex = index;
+        if (firstDraggedIndex < index) adjustedIndex -= draggedEntities.length;
+        adjustedIndex = Math.max(
+          0,
+          Math.min(adjustedIndex, otherEntities.length)
+        );
+
+        const newEntities = [
+          ...otherEntities.slice(0, adjustedIndex),
+          ...draggedEntities,
+          ...otherEntities.slice(adjustedIndex),
+        ];
+
+        recalcZForRootFromEntities(newEntities);
       }
-
-      const draggedEntities = entities.filter((e) =>
-        draggedEntityIds.has(e.id)
-      );
-      const otherEntities = entities.filter((e) => !draggedEntityIds.has(e.id));
-
-      let adjustedIndex = index;
-      if (firstDraggedIndex < index) adjustedIndex -= draggedEntities.length;
-      if (adjustedIndex < 0) adjustedIndex = 0;
-      if (adjustedIndex > otherEntities.length)
-        adjustedIndex = otherEntities.length;
-
-      const newEntities = [
-        ...otherEntities.slice(0, adjustedIndex),
-        ...draggedEntities,
-        ...otherEntities.slice(adjustedIndex),
-      ];
-
-      recalcZForRootFromEntities(newEntities);
-      return;
     }
 
-    // === 2) Drop inside abstract-group (unchanged) ===
-    if (
+    // === 2) Drop inside abstract-group ===
+    else if (
       typeof parentId === "string" &&
       parentId.startsWith("abstract-group-")
     ) {
       const gid = Number(parentId.replace("abstract-group-", ""));
-      const updates: Record<number, Partial<BannerObject>> = {};
-      for (const id of dragIdsNum) updates[id] = { abstractGroupId: gid };
+      for (const id of dragIdsNum) {
+        pendingUpdates[id] = { ...pendingUpdates[id], abstractGroupId: gid };
+      }
 
-      const locallyUpdatedSorted = applyUpdatesToSorted(sortedObjects, updates);
-      if (Object.keys(updates).length > 0) updateMultipleObjects(updates);
+      const locallyUpdatedSorted = applyUpdatesToSorted(
+        sortedObjects,
+        pendingUpdates
+      );
 
       const groupMembers = locallyUpdatedSorted.filter(
         (o) => o.abstractGroupId === gid
@@ -427,8 +411,7 @@ export function handleMoveFactory(
       );
       if (firstDraggedIndex !== -1 && firstDraggedIndex < index)
         adjustedIndex -= dragged.length;
-      if (adjustedIndex < 0) adjustedIndex = 0;
-      if (adjustedIndex > others.length) adjustedIndex = others.length;
+      adjustedIndex = Math.max(0, Math.min(adjustedIndex, others.length));
 
       const newGroupOrder = [
         ...others.slice(0, adjustedIndex),
@@ -448,66 +431,63 @@ export function handleMoveFactory(
       filtered.splice(insertPos, 0, ...newGroupOrder);
 
       const total = filtered.length;
-      const zUpdates: Record<number, Partial<BannerObject>> = {};
       filtered.forEach((obj, pos) => {
         const newZ = total - 1 - pos;
-        if (obj.zIndex !== newZ) zUpdates[obj.id] = { zIndex: newZ };
+        if (obj.zIndex !== newZ)
+          pendingUpdates[obj.id] = { ...pendingUpdates[obj.id], zIndex: newZ };
       });
-      if (Object.keys(zUpdates).length > 0) updateMultipleObjects(zUpdates);
-      return;
     }
 
-    // === 3) Drop inside real flex-group (parentId === "<groupId>") ===
-    const parentNumeric = Number(parentId);
-    const parentObj = objects.find((o) => o.id === parentNumeric);
-    if (parentObj && parentObj.type === "group") {
-      // вычислим фактические member ids для перетаскиваемых (учитывая abstract-groups и одиночные id)
-      const draggedMemberIds: number[] = [];
-      for (const idStr of dragIdsStr) {
-        if (typeof idStr === "string" && idStr.startsWith("abstract-group-")) {
-          const gid = Number(idStr.replace("abstract-group-", ""));
-          const members = sortedObjects
-            .filter((o) => o.abstractGroupId === gid)
-            .map((m) => m.id);
-          draggedMemberIds.push(...members);
-        } else {
-          const num = Number(idStr);
-          if (!Number.isNaN(num)) draggedMemberIds.push(num);
+    // === 3) Drop inside real flex-group ===
+    else {
+      const parentNumeric = Number(parentId);
+      const parentObj = objects.find((o) => o.id === parentNumeric);
+      if (parentObj && parentObj.type === "group") {
+        const draggedMemberIds: number[] = [];
+        for (const idStr of dragIds) {
+          if (idStr.startsWith("abstract-group-")) {
+            const gid = Number(idStr.replace("abstract-group-", ""));
+            const members = sortedObjects
+              .filter((o) => o.abstractGroupId === gid)
+              .map((m) => m.id);
+            draggedMemberIds.push(...members);
+          } else {
+            const num = Number(idStr);
+            if (!Number.isNaN(num)) draggedMemberIds.push(num);
+          }
         }
+
+        if (moveObjectsToFlexGroup) {
+          moveObjectsToFlexGroup(draggedMemberIds, parentNumeric, index);
+        }
+
+        draggedMemberIds.forEach((id) => {
+          const o = objects.find((x) => x.id === id);
+          if (o && o.abstractGroupId != null) {
+            pendingUpdates[id] = {
+              ...pendingUpdates[id],
+              abstractGroupId: null,
+            };
+          }
+        });
+
+        const filtered = sortedObjects.filter(
+          (o) => !draggedMemberIds.includes(o.id)
+        );
+        const total = filtered.length;
+        filtered.forEach((obj, pos) => {
+          const newZ = total - 1 - pos;
+          if (obj.zIndex !== newZ)
+            pendingUpdates[obj.id] = {
+              ...pendingUpdates[obj.id],
+              zIndex: newZ,
+            };
+        });
       }
-
-      // вызываем moveObjectsToFlexGroup (должен выполнить структурные изменения объектов)
-      if (!moveObjectsToFlexGroup) {
-        console.warn("handleMove: moveObjectsToFlexGroup not provided");
-        return;
-      }
-      moveObjectsToFlexGroup(draggedMemberIds, parentNumeric, index);
-
-      // удалим abstractGroupId если был
-      const clearAbstract: Record<number, Partial<BannerObject>> = {};
-      draggedMemberIds.forEach((id) => {
-        const o = objects.find((x) => x.id === id);
-        if (o && o.abstractGroupId != null)
-          clearAbstract[id] = { abstractGroupId: null };
-      });
-      if (Object.keys(clearAbstract).length > 0)
-        updateMultipleObjects(clearAbstract);
-
-      // пересчитаем zIndex для оставшихся root (удаляем moved ids из sortedObjects и пересчитываем)
-      const filtered = sortedObjects.filter(
-        (o) => !draggedMemberIds.includes(o.id)
-      );
-      const total = filtered.length;
-      const zUpdates: Record<number, Partial<BannerObject>> = {};
-      filtered.forEach((obj, pos) => {
-        const newZ = total - 1 - pos;
-        if (obj.zIndex !== newZ) zUpdates[obj.id] = { zIndex: newZ };
-      });
-      if (Object.keys(zUpdates).length > 0) updateMultipleObjects(zUpdates);
-
-      return;
     }
 
-    console.warn("handleMove: unsupported parentId case", parentId);
+    if (Object.keys(pendingUpdates).length > 0) {
+      updateMultipleObjects(pendingUpdates);
+    }
   };
 }

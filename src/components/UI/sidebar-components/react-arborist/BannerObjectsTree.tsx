@@ -18,8 +18,6 @@ export const BannerObjectsTree: React.FC = () => {
     clearSelection,
     updateMultipleObjects,
     selectAllObjects,
-
-    // новые методы, которые мы добавили в BannerContext
     moveObjectsToFlexGroup,
     removeObjectsFromFlexGroup,
   } = useBanner();
