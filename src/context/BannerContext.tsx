@@ -406,8 +406,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     updateObject(groupId, { children: newChildren });
   };
 
-  // добавь эти вспомогательные функции в BannerProvider (внутри компонента, рядом с другими методами)
-
   const findParentGroupOfChild = useCallback(
     (childId: number) => {
       return (
@@ -422,21 +420,17 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     [objects]
   );
 
-  // promote child -> root (абсолютные координаты, учитывая позицию родителя)
   const promoteChildToRoot = useCallback(
     (child: BannerChild, parentGroup?: BannerObject) => {
       const absX = (parentGroup?.x ?? 0) + (child.x ?? 0);
       const absY = (parentGroup?.y ?? 0) + (child.y ?? 0);
       const promoted: BannerObject = {
-        // копируем свойства child, но делаем его root-объектом
         ...child,
         x: absX,
         y: absY,
-        // children можно оставить (если child имел вложенные children)
         children: Array.isArray(child.children)
           ? child.children.map((c) => ({ ...c }))
           : undefined,
-        // Сбрасываем abstractGroupId при подъёме (если нужно)
         abstractGroupId: child.abstractGroupId ?? null,
       } as BannerObject;
       return promoted;
@@ -444,7 +438,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     []
   );
 
-  // demote root -> child (относительные координаты внутри parentGroup)
   const demoteRootToChild = useCallback(
     (root: BannerObject, parentGroup: BannerObject) => {
       const relX = (root.x ?? 0) - (parentGroup?.x ?? 0);
@@ -453,7 +446,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         ...root,
         x: relX,
         y: relY,
-        // children остаются, если были
         children: Array.isArray(root.children)
           ? root.children.map((c) => ({ ...c }))
           : undefined,

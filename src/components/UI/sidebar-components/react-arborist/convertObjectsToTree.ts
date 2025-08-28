@@ -36,15 +36,7 @@ function mapChild(child: BannerChild, parentId: number): ArboristNodeData {
   };
 }
 
-/**
- * convertObjectsToTree
- * - ожидает на вход массив объектов (предпочтительно уже отсортированных по zIndex desc)
- * - шаг за шагом формирует порядок root-entities, где каждая виртуальная группа
- *   представлена одним root-node (id = `abstract-group-<groupId>`)
- */
 export function convertObjectsToTree(data: BannerObject[]): ArboristNodeData[] {
-  // предполагаем data отсортирован по zIndex desc (тот же сорт, что и в BannerObjectsTree)
-  // чтобы гарантировать порядок в дереве, проходим по data в порядке zIndex desc
   const groupedSeen = new Set<number>();
   const treeNodes: ArboristNodeData[] = [];
 
