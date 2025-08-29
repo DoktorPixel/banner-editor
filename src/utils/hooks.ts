@@ -282,7 +282,7 @@ export const useAbstractGroupCondition = () => {
   return { updateGroupCondition };
 };
 
-export function useVirtualGroupActions() {
+export function useAbstractGroupActions() {
   const { selectedObjectIds, updateMultipleObjects } = useBanner();
 
   const groupSelectedObjectsAbstract = () => {

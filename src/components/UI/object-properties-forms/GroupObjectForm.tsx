@@ -169,7 +169,7 @@ export const GroupObjectForm: React.FC<TextObjectFormProps> = ({
         {t("sidebar.layout")}
       </Typography>
       <div className="grey-line"></div>
-
+      {/* <div>zIndex:{object.zIndex} </div> */}
       <ConditionSelector objectId={object.id} condition={object.condition} />
       <div className="grey-line"></div>
 

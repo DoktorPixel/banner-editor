@@ -1,13 +1,9 @@
 import { BannerObject } from "../../types";
 import "../../styles/components/ContextMenu.scss";
 import { Button } from "@mui/material";
-import {
-  stepForwardWithCollision,
-  stepBackwardWithCollision,
-} from "../../utils/hooks";
 import { useBanner } from "../../context/BannerContext";
 import { useTranslation } from "react-i18next";
-import { useVirtualGroupActions } from "../../utils/hooks";
+import { useAbstractGroupActions } from "../../utils/hooks";
 
 interface ContextMenuProps {
   x: number;
@@ -23,52 +19,93 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   y,
   object,
   onClose,
-  updateObject,
   objects,
 }) => {
-  const { selectedObjectIds, groupSelectedObjects, ungroupSelectedObject } =
-    useBanner();
+  const {
+    selectedObjectIds,
+    groupSelectedObjects,
+    ungroupSelectedObject,
+    updateMultipleObjects,
+  } = useBanner();
   const { groupSelectedObjectsAbstract, ungroupSelectedObjectsAbstract } =
-    useVirtualGroupActions();
-
-  const bringToFront = () => {
-    const maxZIndex = Math.max(...objects.map((obj) => obj.zIndex || 0));
-    updateObject(object.id, { zIndex: maxZIndex + 1 });
-    onClose();
-  };
+    useAbstractGroupActions();
   const { t } = useTranslation();
 
+  const getRootObjects = () =>
+    objects.filter(
+      (o) => o.abstractGroupId === null || o.abstractGroupId === undefined
+    );
+
+  const sortTopFirst = (list: BannerObject[]) =>
+    [...list].sort((a, b) => {
+      const za =
+        a.zIndex === undefined || a.zIndex === null ? -Infinity : a.zIndex;
+      const zb =
+        b.zIndex === undefined || b.zIndex === null ? -Infinity : b.zIndex;
+      return zb - za; // descending
+    });
+
+  const applyTopOrder = (topFirst: BannerObject[]) => {
+    const total = topFirst.length;
+    const updates: Record<number, Partial<BannerObject>> = {};
+    topFirst.forEach((obj, idx) => {
+      const newZ = total - 1 - idx; // idx=0 (top) -> max
+      if (obj.zIndex !== newZ) updates[obj.id] = { zIndex: newZ };
+    });
+    if (Object.keys(updates).length > 0) updateMultipleObjects(updates);
+  };
+
+  const getTopAndIndex = () => {
+    const roots = getRootObjects();
+    const top = sortTopFirst(roots);
+    const i = top.findIndex((o) => o.id === object.id);
+    return { top, i };
+  };
+
+  const bringToFront = () => {
+    const { top, i } = getTopAndIndex();
+    if (i === -1) return onClose(); // объект не из корня — пропускаем (логика как в Tree)
+    const item = top[i];
+    const rest = [...top.slice(0, i), ...top.slice(i + 1)];
+    const newTop = [item, ...rest]; // в начало (front)
+    applyTopOrder(newTop);
+    onClose();
+  };
+
   const sendToBack = () => {
-    const minZIndex = Math.min(...objects.map((obj) => obj.zIndex || 0));
-    const newZIndex = minZIndex - 1;
-    updateObject(object.id, { zIndex: newZIndex });
+    const { top, i } = getTopAndIndex();
+    if (i === -1) return onClose();
+    const item = top[i];
+    const rest = [...top.slice(0, i), ...top.slice(i + 1)];
+    const newTop = [...rest, item]; // в конец (back)
+    applyTopOrder(newTop);
     onClose();
   };
 
   const stepForward = () => {
-    stepForwardWithCollision(object, objects, updateObject);
+    const { top, i } = getTopAndIndex();
+    if (i === -1 || i === 0) return onClose();
+    const swapped = [...top];
+    [swapped[i - 1], swapped[i]] = [swapped[i], swapped[i - 1]];
+    applyTopOrder(swapped);
     onClose();
   };
 
   const stepBackward = () => {
-    stepBackwardWithCollision(object, objects, updateObject);
+    const { top, i } = getTopAndIndex();
+    if (i === -1 || i === top.length - 1) return onClose();
+    const swapped = [...top];
+    [swapped[i], swapped[i + 1]] = [swapped[i + 1], swapped[i]];
+    applyTopOrder(swapped);
     onClose();
   };
 
   return (
-    <div
-      className="context-menu"
-      id="context-menu"
-      style={{
-        top: y,
-        left: x,
-      }}
-    >
+    <div className="context-menu" id="context-menu" style={{ top: y, left: x }}>
       <Button
         onClick={stepForward}
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
-        {/* перенести вперед */}
         {t("contextMenu.moveForward")}
       </Button>
 
@@ -76,7 +113,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         onClick={bringToFront}
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
-        {/* на передній план */}
         {t("contextMenu.bringToFront")}
       </Button>
 
@@ -84,7 +120,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         onClick={stepBackward}
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
-        {/* перенести назад */}
         {t("contextMenu.moveBackward")}
       </Button>
 
@@ -92,7 +127,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         onClick={sendToBack}
         style={{ padding: "2px 6px", fontSize: "12px" }}
       >
-        {/* на задній план */}
         {t("contextMenu.sendToBack")}
       </Button>
 
@@ -108,6 +142,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
       >
         {t("contextMenu.group")}
       </Button>
+
       <Button
         onClick={ungroupSelectedObject}
         disabled={
@@ -135,6 +170,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
       >
         {t("contextMenu.groupVirtual")}
       </Button>
+
       <Button
         onClick={ungroupSelectedObjectsAbstract}
         disabled={

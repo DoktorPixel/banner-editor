@@ -218,7 +218,7 @@
 
   "contextMenu": {
     "moveForward": "Move Forward",
-    "bringToFront": "Bring to Front",
+    "bringToFront": "Send to Front",
     "moveBackward": "Move Backward",
     "sendToBack": "Send to Back",
     "group": "Group",

@@ -12,6 +12,55 @@
   margin-bottom: 10px;
   margin-left: 5px;
   margin-right: 8px;
+
+  .arborist-row {
+    user-select: text; /* важно для старта drag */
+    -webkit-user-select: text; /* Safari */
+    // -webkit-user-drag: element; /* Safari */
+    // width: 100%;
+    // max-width: 300px;
+    // min-width: 200px;
+  }
+  .row {
+    -webkit-user-drag: element;
+  }
+  .row--editing {
+    -webkit-user-drag: none;
+  }
+  .arborist-row .arborist-label {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  .group-icon {
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+  }
+
+  .row--selected {
+    background-color: #e5e7eb; /* bg-gray-200 */
+  }
+
+  .row--preview {
+    opacity: 0.6;
+  }
+
+  .input-wrapper {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100px;
+  }
 }
 .sidebar-wrapper {
   padding: 10px 10px 0 10px;
