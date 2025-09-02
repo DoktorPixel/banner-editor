@@ -4,13 +4,19 @@ import { useConfig } from "../../../context/ConfigContext";
 
 interface VisibilityToggleProps {
   objectId: number;
+  show?: boolean;
 }
 
-export const VisibilityToggle: React.FC<VisibilityToggleProps> = ({
+export const VisibilityToggle2: React.FC<VisibilityToggleProps> = ({
   objectId,
+  show = false,
 }) => {
   const { hiddenObjectIds, toggleHiddenObject } = useConfig();
   const isVisible = !hiddenObjectIds.includes(objectId);
+
+  if (!show && isVisible) {
+    return null;
+  }
 
   return (
     <IconButton
@@ -20,7 +26,6 @@ export const VisibilityToggle: React.FC<VisibilityToggleProps> = ({
         width: 24,
         height: 24,
         padding: 0,
-        // marginLeft: "10px",
       }}
     >
       {isVisible ? <EyeOpen /> : <EyeClosed />}
