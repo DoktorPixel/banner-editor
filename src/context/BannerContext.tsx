@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useMemo } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import {
   BannerObject,
@@ -138,7 +144,6 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const selectChild = (groupId: number, childId: number, parentId?: number) => {
-    // clearSelection();
     setSelectedChildId({ groupId, childId, parentId });
   };
 
@@ -401,6 +406,187 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
     updateObject(groupId, { children: newChildren });
   };
 
+  const findParentGroupOfChild = useCallback(
+    (childId: number) => {
+      return (
+        objects.find(
+          (o) =>
+            o.type === "group" &&
+            Array.isArray(o.children) &&
+            o.children.some((ch) => ch.id === childId)
+        ) ?? null
+      );
+    },
+    [objects]
+  );
+
+  const promoteChildToRoot = useCallback(
+    (child: BannerChild, parentGroup?: BannerObject) => {
+      const absX = (parentGroup?.x ?? 0) + (child.x ?? 0);
+      const absY = (parentGroup?.y ?? 0) + (child.y ?? 0);
+      const promoted: BannerObject = {
+        ...child,
+        x: absX,
+        y: absY,
+        children: Array.isArray(child.children)
+          ? child.children.map((c) => ({ ...c }))
+          : undefined,
+        abstractGroupId: child.abstractGroupId ?? null,
+      } as BannerObject;
+      return promoted;
+    },
+    []
+  );
+
+  const demoteRootToChild = useCallback(
+    (root: BannerObject, parentGroup: BannerObject) => {
+      const relX = (root.x ?? 0) - (parentGroup?.x ?? 0);
+      const relY = (root.y ?? 0) - (parentGroup?.y ?? 0);
+      const child: BannerChild = {
+        ...root,
+        x: relX,
+        y: relY,
+        children: Array.isArray(root.children)
+          ? root.children.map((c) => ({ ...c }))
+          : undefined,
+      };
+      return child;
+    },
+    []
+  );
+
+  /**
+   * Переместить объекты (ids) в существующую flex-группу parentGroupId.
+   * ids могут быть:
+   *  - id root-объектов,
+   *  - id children из других групп.
+   *
+   * Поведение:
+   *  - удалить перемещаемые из root (если были вкладены как root),
+   *  - удалить из предыдущих групп (если были children),
+   *  - поместить в targetGroup.children на позицию atIndex как относительные child{ x,y }.
+   */
+  const moveObjectsToFlexGroup = useCallback(
+    (ids: number[], parentGroupId: number, atIndex?: number) => {
+      const target = objects.find(
+        (o) => o.id === parentGroupId && o.type === "group"
+      );
+      if (!target) {
+        console.warn(
+          "moveObjectsToFlexGroup: target group not found",
+          parentGroupId
+        );
+        return;
+      }
+
+      const movedChildren: BannerChild[] = [];
+      const newObjects: BannerObject[] = [];
+
+      for (const o of objects) {
+        if (
+          o.type === "group" &&
+          Array.isArray(o.children) &&
+          o.children.length
+        ) {
+          const taken = o.children.filter((ch) => ids.includes(ch.id));
+          if (taken.length) {
+            movedChildren.push(...taken.map((ch) => ({ ...ch })));
+            const kept = o.children.filter((ch) => !ids.includes(ch.id));
+
+            // если детей не осталось — не добавляем эту группу
+            if (kept.length > 0) {
+              newObjects.push({ ...o, children: kept });
+            }
+            continue;
+          }
+        }
+
+        if (ids.includes(o.id)) {
+          const child = demoteRootToChild(o, target);
+          movedChildren.push(child);
+          continue;
+        }
+
+        newObjects.push(o);
+      }
+
+      const result = newObjects
+        .map((o) => {
+          if (o.id === parentGroupId && o.type === "group") {
+            const existing = Array.isArray(o.children) ? [...o.children] : [];
+            const insertAt = Math.max(
+              0,
+              Math.min(existing.length, atIndex ?? existing.length)
+            );
+            const newChildren = [
+              ...existing.slice(0, insertAt),
+              ...movedChildren.map((ch, idx) => ({ ...ch, order: idx })),
+              ...existing.slice(insertAt),
+            ];
+
+            // если после вставки детей нет — группу удаляем
+            if (newChildren.length === 0) return null;
+
+            return { ...o, children: newChildren };
+          }
+          return o;
+        })
+        .filter((o): o is BannerObject => o !== null);
+
+      updateHistory(result);
+    },
+    [objects, demoteRootToChild, updateHistory]
+  );
+
+  /**
+   * Извлечь детей (ids) из flex-групп и промотировать в root.
+   * parentGroupId — опционален (если указан, искать только в этой группе).
+   *
+   * Поведение:
+   *  - удалить children из группы(ок),
+   *  - промотировать в root с абсолютными координатами и append к корню (можно изменить место вставки).
+   */
+  const removeObjectsFromFlexGroup = useCallback(
+    (
+      ids: number[],
+      parentGroupId?: number
+      // atIndex?: number
+    ) => {
+      const newObjects: BannerObject[] = [];
+      const promotedRoots: BannerObject[] = [];
+
+      for (const o of objects) {
+        if (o.type === "group" && Array.isArray(o.children)) {
+          if (parentGroupId != null && o.id !== parentGroupId) {
+            newObjects.push(o);
+            continue;
+          }
+
+          const removed = o.children.filter((ch) => ids.includes(ch.id));
+          const kept = o.children.filter((ch) => !ids.includes(ch.id));
+
+          if (removed.length) {
+            for (const ch of removed) {
+              const promoted = promoteChildToRoot(ch, o);
+              promoted.abstractGroupId = null;
+              promotedRoots.push(promoted);
+            }
+          }
+
+          // если остались дети — оставляем группу, если нет — удаляем
+          if (kept.length > 0) {
+            newObjects.push({ ...o, children: kept });
+          }
+        } else {
+          newObjects.push(o);
+        }
+      }
+
+      updateHistory([...newObjects, ...promotedRoots]);
+    },
+    [objects, promoteChildToRoot, updateHistory]
+  );
+
   return (
     <BannerContext.Provider
       value={{
@@ -455,6 +641,10 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         reorderChildren,
         scale,
         setScale,
+        //
+        findParentGroupOfChild,
+        moveObjectsToFlexGroup,
+        removeObjectsFromFlexGroup,
       }}
     >
       {children}

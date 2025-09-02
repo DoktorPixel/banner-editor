@@ -18,10 +18,9 @@ export const useAuth = () => {
         } catch (error) {
           console.error("Auto-sign-in failed:", error);
         }
+      } else {
+        console.log("Existing session:", session);
       }
-      // else {
-      //   console.log("Existing session:", session);
-      // }
 
       setIsAuthReady(true);
     };
