@@ -8,9 +8,10 @@ import {
   TextField,
   Typography,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import { useObjectCondition, parsePropsString } from "../../../utils/hooks";
-import { PlusIcon, MinusIcon } from "../../../assets/icons";
+import { PlusIcon, MinusIcon, SvgHelp } from "../../../assets/icons";
 import ActionToggle from "../button-groups/ActionToggle";
 import { useTranslation } from "react-i18next";
 
@@ -169,9 +170,37 @@ export const ConditionSelector: FC<ConditionSelectorProps> = ({
         sx={{ display: "flex", gap: 2, marginTop: "12px" }}
       >
         <Box sx={{ flex: 1 }}>
-          <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
-            {t("sidebar.property")}
-          </InputLabel>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "-15px",
+            }}
+          >
+            <InputLabel sx={{ mt: "-2px", mb: "8px", fontSize: "12px" }}>
+              {t("sidebar.property")}
+            </InputLabel>
+            <Tooltip
+              arrow
+              title={
+                <Typography sx={{ whiteSpace: "pre-line", fontSize: "14px" }}>
+                  {t("sidebar.dynamicPropertyHelp")}
+                </Typography>
+              }
+            >
+              <span
+                style={{
+                  cursor: "pointer",
+                  display: "inline-block",
+                  zIndex: 100,
+                  marginTop: "-6px",
+                }}
+              >
+                <SvgHelp width="18px" height="18px" />
+              </span>
+            </Tooltip>
+          </div>
           <TextField
             value={inputPropsString}
             onChange={(e) => {

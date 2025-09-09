@@ -132,6 +132,7 @@
     "appearance": "Вигляд",
     "typography": "Типографіка",
     "dynamicTagsHelp": "Використовуйте динамічні теги для вставки даних про продукт:\n{{...}} – Вставити динамічну змінну, наприклад 'title'\n{{format(price)}} — Ціна без валюти\n{{discount(price, sale_price)}} — Знижка у %\n{{discountCurrency(price, sale_price)}} — Знижка у валюті\n{{min(price, sale_price)}} — Мінімальне значення з двох",
+    "dynamicPropertyHelp": "Вставте динамічні змінні\n наприклад: price, sale_price\n або формули з ними\n {{min(price, sale_price)}}",
     "maxLines": "Максимум рядків",
     "font": "Шрифт",
     "fontWeights": {
