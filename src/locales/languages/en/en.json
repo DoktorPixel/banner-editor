@@ -135,6 +135,7 @@
     "appearance": "Appearance",
     "typography": "Typography",
     "dynamicTagsHelp": "Use dynamic tags to insert product data:\n{{...}} – Insert dynamic variable like 'title'\n{{format(price)}} — Price without currency\n{{discount(price, sale_price)}} — Discount in %\n{{discountCurrency(price, sale_price)}} — Discount in Currency\n{{min(price, sale_price)}} — Minimum of two values",
+    "dynamicPropertyHelp": "Insert dynamic variables\n for example: price, sale_price\n or formulas with them\n {{min(price, sale_price)}}",
     "maxLines": "Max lines",
     "font": "Font",
     "fontWeights": {
