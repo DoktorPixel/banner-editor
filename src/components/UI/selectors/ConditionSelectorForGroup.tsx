@@ -8,8 +8,9 @@ import {
   TextField,
   Typography,
   IconButton,
+  Tooltip,
 } from "@mui/material";
-import { PlusIcon, MinusIcon } from "../../../assets/icons";
+import { PlusIcon, MinusIcon, SvgHelp } from "../../../assets/icons";
 import ActionToggle from "../button-groups/ActionToggle";
 import {
   useAbstractGroupCondition,
@@ -146,9 +147,37 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
 
       <Box display="flex" gap={2} mt={1}>
         <Box sx={{ flex: 1 }}>
-          <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
-            {t("sidebar.property")}
-          </InputLabel>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "-15px",
+            }}
+          >
+            <InputLabel sx={{ mt: "-2px", mb: "8px", fontSize: "12px" }}>
+              {t("sidebar.property")}
+            </InputLabel>
+            <Tooltip
+              arrow
+              title={
+                <Typography sx={{ whiteSpace: "pre-line", fontSize: "14px" }}>
+                  {t("sidebar.dynamicPropertyHelp")}
+                </Typography>
+              }
+            >
+              <span
+                style={{
+                  cursor: "pointer",
+                  display: "inline-block",
+                  zIndex: 100,
+                  marginTop: "-6px",
+                }}
+              >
+                <SvgHelp width="18px" height="18px" />
+              </span>
+            </Tooltip>
+          </div>
           <TextField
             value={inputValue}
             onChange={(e) => {
@@ -168,7 +197,7 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
         </Box>
 
         <Box sx={{ flex: 1 }}>
-          <InputLabel sx={{ mt: "-2px", mb: -1, fontSize: "12px" }}>
+          <InputLabel sx={{ mt: "4px", mb: "-5px", fontSize: "12px" }}>
             {t("sidebar.condition")}
           </InputLabel>
           <FormControl fullWidth margin="normal">
