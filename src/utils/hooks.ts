@@ -606,13 +606,30 @@ export const shouldHideObject = (
   if (!condition) {
     return false;
   }
-
+  // console.log("condition::", condition);
   const { type, props: conditionProps, state, compareValue } = condition;
 
+  const isExpression = (prop: string) => /\{\{[\s\S]*\}\}/.test(prop);
+
+  const evaluatePropValue = (prop: string): string | undefined => {
+    if (isExpression(prop)) {
+      const evaluated = replaceDynamicText(prop, keyValuePairs);
+      return evaluated ?? "";
+    } else {
+      const pair = keyValuePairs.find((p) => p.key === prop);
+      return pair?.value;
+    }
+  };
+
   if (state === "exist" || state === "noExist") {
-    const propsExist = conditionProps.some((prop) =>
-      keyValuePairs.some((pair) => pair.key === prop)
-    );
+    const propsExist = conditionProps.some((prop) => {
+      if (isExpression(prop)) {
+        const val = evaluatePropValue(prop);
+        return val !== undefined && val !== "";
+      } else {
+        return keyValuePairs.some((pair) => pair.key === prop);
+      }
+    });
 
     if (state === "exist") {
       return (
@@ -624,25 +641,19 @@ export const shouldHideObject = (
       );
     }
   }
-
-  const propToCompare = conditionProps[0];
-  if (!propToCompare) {
+  const propToCompareRaw = conditionProps[0];
+  if (!propToCompareRaw) {
     return false;
   }
-
-  const pair = keyValuePairs.find((p) => p.key === propToCompare);
-
-  if (!pair) {
+  const actualValue = evaluatePropValue(propToCompareRaw);
+  if (actualValue === undefined || actualValue === "") {
     if (type === "showIf") {
       return true;
     } else {
       return false;
     }
   }
-
-  const actualValue = pair.value;
   const targetValue = compareValue ?? "";
-
   const clean = (val: string): number => {
     return Number(val.replace(/[^\d.,-]/g, "").replace(",", "."));
   };
@@ -658,24 +669,16 @@ export const shouldHideObject = (
       case "not-eq":
         return actualValue !== targetValue;
       case "more-than":
-        if (bothAreNumbers) {
-          return actualNum > targetNum;
-        }
+        if (bothAreNumbers) return actualNum > targetNum;
         return actualValue > targetValue;
       case "less-than":
-        if (bothAreNumbers) {
-          return actualNum < targetNum;
-        }
+        if (bothAreNumbers) return actualNum < targetNum;
         return actualValue < targetValue;
       case "more-or-eq":
-        if (bothAreNumbers) {
-          return actualNum >= targetNum;
-        }
+        if (bothAreNumbers) return actualNum >= targetNum;
         return actualValue >= targetValue;
       case "less-or-eq":
-        if (bothAreNumbers) {
-          return actualNum <= targetNum;
-        }
+        if (bothAreNumbers) return actualNum <= targetNum;
         return actualValue <= targetValue;
       default:
         return false;
@@ -710,8 +713,10 @@ export const shouldHideGroup = (
     | undefined,
   keyValuePairs: { key: string; value: string }[]
 ): boolean => {
-  if (!conditionForAbstract) return false;
-
+  if (!conditionForAbstract) {
+    return false;
+  }
+  // console.log("conditionForAbstract::", conditionForAbstract);
   const {
     type,
     props: conditionProps,
@@ -719,54 +724,264 @@ export const shouldHideGroup = (
     compareValue,
   } = conditionForAbstract;
 
-  const evaluate = () => {
-    for (const prop of conditionProps) {
-      const pair = keyValuePairs.find((kv) => kv.key === prop);
-      const value = pair?.value;
+  const isExpression = (prop: string) => /\{\{[\s\S]*\}\}/.test(prop);
 
-      switch (state) {
-        case "exist":
-          if (value !== undefined) return true;
-          break;
-        case "noExist":
-          if (value === undefined) return true;
-          break;
-        case "eq":
-          if (value == compareValue) return true;
-          break;
-        case "not-eq":
-          if (value != compareValue) return true;
-          break;
-        case "more-than":
-          if (parseFloat(value ?? "") > parseFloat(compareValue ?? ""))
-            return true;
-          break;
-        case "less-than":
-          if (parseFloat(value ?? "") < parseFloat(compareValue ?? ""))
-            return true;
-          break;
-        case "more-or-eq":
-          if (parseFloat(value ?? "") >= parseFloat(compareValue ?? ""))
-            return true;
-          break;
-        case "less-or-eq":
-          if (parseFloat(value ?? "") <= parseFloat(compareValue ?? ""))
-            return true;
-          break;
-        default:
-          break;
-      }
+  const evaluatePropValue = (prop: string): string | undefined => {
+    if (isExpression(prop)) {
+      const evaluated = replaceDynamicText(prop, keyValuePairs);
+      return evaluated ?? "";
+    } else {
+      const pair = keyValuePairs.find((p) => p.key === prop);
+      return pair?.value;
     }
-
-    return false;
   };
 
-  const match = evaluate();
-  const shouldHide =
-    (type === "hideIf" && match) || (type === "showIf" && !match);
+  if (state === "exist" || state === "noExist") {
+    const propsExist = conditionProps.some((prop) => {
+      if (isExpression(prop)) {
+        const val = evaluatePropValue(prop);
+        return val !== undefined && val !== "";
+      } else {
+        return keyValuePairs.some((pair) => pair.key === prop);
+      }
+    });
 
-  return shouldHide;
+    if (state === "exist") {
+      return (
+        (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)
+      );
+    } else {
+      return (
+        (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist)
+      );
+    }
+  }
+
+  const propToCompareRaw = conditionProps[0];
+  if (!propToCompareRaw) {
+    return false;
+  }
+
+  const actualValue = evaluatePropValue(propToCompareRaw);
+
+  if (actualValue === undefined || actualValue === "") {
+    if (type === "showIf") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const targetValue = compareValue ?? "";
+
+  const clean = (val: string): number => {
+    return Number(val.replace(/[^\d.,-]/g, "").replace(",", "."));
+  };
+
+  const actualNum = clean(actualValue);
+  const targetNum = clean(targetValue);
+  const bothAreNumbers = !isNaN(actualNum) && !isNaN(targetNum);
+
+  const doesComparisonHold = (): boolean => {
+    switch (state) {
+      case "eq":
+        return actualValue === targetValue;
+      case "not-eq":
+        return actualValue !== targetValue;
+      case "more-than":
+        if (bothAreNumbers) return actualNum > targetNum;
+        return actualValue > targetValue;
+      case "less-than":
+        if (bothAreNumbers) return actualNum < targetNum;
+        return actualValue < targetValue;
+      case "more-or-eq":
+        if (bothAreNumbers) return actualNum >= targetNum;
+        return actualValue >= targetValue;
+      case "less-or-eq":
+        if (bothAreNumbers) return actualNum <= targetNum;
+        return actualValue <= targetValue;
+      default:
+        return false;
+    }
+  };
+
+  const comparisonResult = doesComparisonHold();
+
+  if (type === "hideIf") {
+    return comparisonResult;
+  } else {
+    return !comparisonResult;
+  }
 };
+
+// export const shouldHideObject = (
+//   condition: ObjectCondition | undefined,
+//   keyValuePairs: { key: string; value: string }[]
+// ): boolean => {
+//   if (!condition) {
+//     return false;
+//   }
+
+//   const { type, props: conditionProps, state, compareValue } = condition;
+
+//   if (state === "exist" || state === "noExist") {
+//     const propsExist = conditionProps.some((prop) =>
+//       keyValuePairs.some((pair) => pair.key === prop)
+//     );
+
+//     if (state === "exist") {
+//       return (
+//         (type === "hideIf" && propsExist) || (type === "showIf" && !propsExist)
+//       );
+//     } else {
+//       return (
+//         (type === "hideIf" && !propsExist) || (type === "showIf" && propsExist)
+//       );
+//     }
+//   }
+
+//   const propToCompare = conditionProps[0];
+//   if (!propToCompare) {
+//     return false;
+//   }
+
+//   const pair = keyValuePairs.find((p) => p.key === propToCompare);
+
+//   if (!pair) {
+//     if (type === "showIf") {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   }
+
+//   const actualValue = pair.value;
+//   const targetValue = compareValue ?? "";
+
+//   const clean = (val: string): number => {
+//     return Number(val.replace(/[^\d.,-]/g, "").replace(",", "."));
+//   };
+
+//   const actualNum = clean(actualValue);
+//   const targetNum = clean(targetValue);
+//   const bothAreNumbers = !isNaN(actualNum) && !isNaN(targetNum);
+
+//   const doesComparisonHold = (): boolean => {
+//     switch (state) {
+//       case "eq":
+//         return actualValue === targetValue;
+//       case "not-eq":
+//         return actualValue !== targetValue;
+//       case "more-than":
+//         if (bothAreNumbers) {
+//           return actualNum > targetNum;
+//         }
+//         return actualValue > targetValue;
+//       case "less-than":
+//         if (bothAreNumbers) {
+//           return actualNum < targetNum;
+//         }
+//         return actualValue < targetValue;
+//       case "more-or-eq":
+//         if (bothAreNumbers) {
+//           return actualNum >= targetNum;
+//         }
+//         return actualValue >= targetValue;
+//       case "less-or-eq":
+//         if (bothAreNumbers) {
+//           return actualNum <= targetNum;
+//         }
+//         return actualValue <= targetValue;
+//       default:
+//         return false;
+//     }
+//   };
+
+//   const comparisonResult = doesComparisonHold();
+
+//   if (type === "hideIf") {
+//     return comparisonResult;
+//   } else {
+//     return !comparisonResult;
+//   }
+// };
+
+// export const shouldHideGroup = (
+//   conditionForAbstract:
+//     | {
+//         type: "showIf" | "hideIf";
+//         props: string[];
+//         state:
+//           | "exist"
+//           | "noExist"
+//           | "eq"
+//           | "not-eq"
+//           | "more-than"
+//           | "less-than"
+//           | "more-or-eq"
+//           | "less-or-eq";
+//         compareValue?: string;
+//       }
+//     | undefined,
+//   keyValuePairs: { key: string; value: string }[]
+// ): boolean => {
+//   if (!conditionForAbstract) return false;
+
+//   const {
+//     type,
+//     props: conditionProps,
+//     state,
+//     compareValue,
+//   } = conditionForAbstract;
+
+//   const evaluate = () => {
+//     for (const prop of conditionProps) {
+//       const pair = keyValuePairs.find((kv) => kv.key === prop);
+//       const value = pair?.value;
+
+//       switch (state) {
+//         case "exist":
+//           if (value !== undefined) return true;
+//           break;
+//         case "noExist":
+//           if (value === undefined) return true;
+//           break;
+//         case "eq":
+//           if (value == compareValue) return true;
+//           break;
+//         case "not-eq":
+//           if (value != compareValue) return true;
+//           break;
+//         case "more-than":
+//           if (parseFloat(value ?? "") > parseFloat(compareValue ?? ""))
+//             return true;
+//           break;
+//         case "less-than":
+//           if (parseFloat(value ?? "") < parseFloat(compareValue ?? ""))
+//             return true;
+//           break;
+//         case "more-or-eq":
+//           if (parseFloat(value ?? "") >= parseFloat(compareValue ?? ""))
+//             return true;
+//           break;
+//         case "less-or-eq":
+//           if (parseFloat(value ?? "") <= parseFloat(compareValue ?? ""))
+//             return true;
+//           break;
+//         default:
+//           break;
+//       }
+//     }
+
+//     return false;
+//   };
+
+//   const match = evaluate();
+//   const shouldHide =
+//     (type === "hideIf" && match) || (type === "showIf" && !match);
+
+//   return shouldHide;
+// };
 
 export function computeOpacity(
   opacity: Property.Opacity | undefined,
@@ -777,3 +992,43 @@ export function computeOpacity(
   }
   return opacity ?? 1;
 }
+
+export const parsePropsString = (str: string): string[] => {
+  const result: string[] = [];
+  let buffer = "";
+  let i = 0;
+  let inExpr = false;
+  while (i < str.length) {
+    if (!inExpr && str[i] === "{" && str[i + 1] === "{") {
+      inExpr = true;
+      buffer += "{{";
+      i += 2;
+      continue;
+    }
+
+    if (inExpr && str[i] === "}" && str[i + 1] === "}") {
+      inExpr = false;
+      buffer += "}}";
+      i += 2;
+      continue;
+    }
+
+    const ch = str[i];
+
+    if (ch === "," && !inExpr) {
+      const trimmed = buffer.trim();
+      if (trimmed !== "") result.push(trimmed);
+      buffer = "";
+      i++;
+      continue;
+    }
+
+    buffer += ch;
+    i++;
+  }
+
+  const last = buffer.trim();
+  if (last !== "") result.push(last);
+
+  return Array.from(new Set(result.filter((p) => p !== "")));
+};

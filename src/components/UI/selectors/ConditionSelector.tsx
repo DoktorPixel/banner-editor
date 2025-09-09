@@ -9,10 +9,11 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { useObjectCondition } from "../../../utils/hooks";
+import { useObjectCondition, parsePropsString } from "../../../utils/hooks";
 import { PlusIcon, MinusIcon } from "../../../assets/icons";
 import ActionToggle from "../button-groups/ActionToggle";
 import { useTranslation } from "react-i18next";
+
 export type ObjectCondition = {
   type: "showIf" | "hideIf";
   props: string[];
@@ -176,15 +177,7 @@ export const ConditionSelector: FC<ConditionSelectorProps> = ({
             onChange={(e) => {
               const newValue = e.target.value;
               setInputPropsString(newValue);
-
-              if (newValue.endsWith(",") && newValue !== ",") {
-                return;
-              }
-
-              const propsArray = newValue
-                .split(",")
-                .map((p) => p.trim())
-                .filter((p) => p !== "");
+              const propsArray = parsePropsString(newValue);
               handleConditionChange(
                 undefined,
                 undefined,
@@ -193,10 +186,8 @@ export const ConditionSelector: FC<ConditionSelectorProps> = ({
               );
             }}
             onBlur={() => {
-              const finalPropsArray = inputPropsString
-                .split(",")
-                .map((p) => p.trim())
-                .filter((p) => p !== "");
+              const finalPropsArray = parsePropsString(inputPropsString);
+              setInputPropsString(finalPropsArray.join(", "));
               handleConditionChange(
                 undefined,
                 undefined,

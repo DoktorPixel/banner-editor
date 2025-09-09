@@ -11,7 +11,10 @@ import {
 } from "@mui/material";
 import { PlusIcon, MinusIcon } from "../../../assets/icons";
 import ActionToggle from "../button-groups/ActionToggle";
-import { useAbstractGroupCondition } from "../../../utils/hooks";
+import {
+  useAbstractGroupCondition,
+  parsePropsString,
+} from "../../../utils/hooks";
 import { useTranslation } from "react-i18next";
 
 export type Condition = {
@@ -151,20 +154,12 @@ export const ConditionSelectorForGroup: FC<ConditionSelectorForGroupProps> = ({
             onChange={(e) => {
               const newValue = e.target.value;
               setInputValue(newValue);
-
               if (newValue.endsWith(",")) return;
-
-              const propsArray = newValue
-                .split(",")
-                .map((p) => p.trim())
-                .filter((p) => p !== "");
+              const propsArray = parsePropsString(newValue);
               handleConditionChange(undefined, undefined, propsArray);
             }}
             onBlur={() => {
-              const finalPropsArray = inputValue
-                .split(",")
-                .map((p) => p.trim())
-                .filter((p) => p !== "");
+              const finalPropsArray = parsePropsString(inputValue);
               handleConditionChange(undefined, undefined, finalPropsArray);
             }}
             fullWidth
