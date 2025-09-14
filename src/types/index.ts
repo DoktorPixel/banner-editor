@@ -382,3 +382,15 @@ export interface SupabaseImageItem {
 // };
 
 export type Product = Record<string, string>;
+
+export type ExtendedPair = KeyValuePair & { editable: boolean };
+
+export interface KeyValueTableProps {
+  combinedPairs: ExtendedPair[]; // уже объединённый список: кастомные сверху, далее product-ordered
+  onEditKey: (oldKey: string, newKey: string) => void;
+  onEditValue: (key: string, value: string) => void;
+  onRemoveByKey: (key: string) => void;
+  onAddCustom: () => void;
+  onAddText: (text: string) => void;
+  onCommitProductValue: (key: string, value: string) => void;
+}

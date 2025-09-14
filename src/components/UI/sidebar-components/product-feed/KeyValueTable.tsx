@@ -1,156 +1,156 @@
+// src/components/InsertingProps/KeyValueTable.tsx
 import React from "react";
 import { TextField, IconButton } from "@mui/material";
 import { AddButton, DeleteFile, AddFile } from "../../../../assets/icons";
 import { useTranslation } from "react-i18next";
+import type { ExtendedPair } from "../../../../types";
 
-interface ExtendedPair {
-  key: string;
-  value: string;
-  editable: boolean;
+interface Props {
+  combinedPairs: ExtendedPair[];
+  onEditKey: (oldKey: string, newKey: string) => void;
+  onEditValue: (key: string, value: string) => void;
+  onRemoveByKey: (key: string) => void;
+  onAddCustom: () => void;
+  onAddText: (text: string) => void;
+  onCommitProductValue: (key: string, value: string) => void;
 }
 
-interface KeyValueTableProps {
-  keyValuePairs: ExtendedPair[];
-  handleKeyChange: (index: number, value: string) => void;
-  handleValueChange: (index: number, value: string) => void;
-  removeKeyValuePair: (index: number) => void;
-  addKeyValuePair: () => void;
-  handleAddText: (text: string) => void;
-  commitProductValue: (key: string, value: string) => void;
-}
+/**
+ * Для списка используем ключ индекс (index) — как вы уже сделали,
+ * чтобы избежать проблем с дублирующимися ключами.
+ * Примечание: индекс ключа имеет недостатки при перестановке элементов,
+ * но в нашем случае порядок контролируется (новые сверху + product-ordered),
+ * и вы сами предпочли индекс.
+ */
+const KeyValueTable: React.FC<Props> = React.memo(
+  ({
+    combinedPairs,
+    onEditKey,
+    onEditValue,
+    onRemoveByKey,
+    onAddCustom,
+    onAddText,
+    onCommitProductValue,
+  }) => {
+    const { t } = useTranslation();
 
-const KeyValueTable: React.FC<KeyValueTableProps> = ({
-  keyValuePairs,
-  handleKeyChange,
-  handleValueChange,
-  removeKeyValuePair,
-  addKeyValuePair,
-  handleAddText,
-  commitProductValue,
-}) => {
-  const { t } = useTranslation();
-
-  return (
-    <div className="variables-panel">
-      <div className="table-header" style={{ display: "flex" }}>
-        <div className="table-cell" style={{ flex: "0 0 35%", padding: "6px" }}>
-          {t("property")}
-        </div>
-        <div className="table-cell" style={{ flex: "0 0 50%", padding: "6px" }}>
-          {t("value")}
-        </div>
-        <div
-          className="table-cell table-actions"
-          style={{
-            flex: "0 0 15%",
-            marginLeft: "-6px",
-          }}
-        >
-          <IconButton onClick={addKeyValuePair}>
-            <AddButton />
-          </IconButton>
-        </div>
-      </div>
-
-      {keyValuePairs.map((pair, index) => (
-        <div className="table-row" key={index} style={{ display: "flex" }}>
-          <div className="table-cell" style={{ flex: "0 0 35%" }}>
-            <TextField
-              fullWidth
-              variant="standard"
-              value={pair.key}
-              onChange={(e) => handleKeyChange(index, e.target.value)}
-              placeholder="key"
-              slotProps={{
-                input: {
-                  disableUnderline: true,
-                  sx: {
-                    padding: "4px 4px 4px 6px",
-                    lineHeight: "120%",
-                  },
-                },
-              }}
-              sx={{
-                "& .MuiInputBase-root": { backgroundColor: "white" },
-              }}
-              disabled={!pair.editable}
-            />
+    return (
+      <div className="variables-panel">
+        <div className="table-header" style={{ display: "flex" }}>
+          <div
+            className="table-cell"
+            style={{ flex: "0 0 35%", padding: "6px" }}
+          >
+            {t("property")}
           </div>
-          <div className="table-cell" style={{ flex: "0 0 50%" }}>
-            <TextField
-              fullWidth
-              variant="standard"
-              value={pair.value}
-              onChange={(e) => {
-                if (pair.editable) {
-                  handleValueChange(index, e.target.value);
-                }
-              }}
-              onBlur={(e) => {
-                if (!pair.editable) {
-                  commitProductValue(pair.key, e.target.value);
-                }
-              }}
-              onKeyDown={(e) => {
-                if (!pair.editable && e.key === "Enter") {
-                  commitProductValue(
-                    pair.key,
-                    (e.target as HTMLInputElement).value
-                  );
-                  e.currentTarget.blur();
-                }
-              }}
-              placeholder="value"
-              multiline
-              maxRows={3}
-              slotProps={{
-                input: {
-                  disableUnderline: true,
-                  sx: {
-                    padding: "4px 4px 4px 6px",
-                    lineHeight: "120%",
-                  },
-                },
-              }}
-              sx={{
-                "& .MuiInputBase-root": { backgroundColor: "white" },
-              }}
-              // disabled={!pair.editable}
-            />
+          <div
+            className="table-cell"
+            style={{ flex: "0 0 50%", padding: "6px" }}
+          >
+            {t("value")}
           </div>
           <div
             className="table-cell table-actions"
-            style={{
-              flex: "0 0 15%",
-              display: "flex",
-              justifyContent: "space-around",
-            }}
+            style={{ flex: "0 0 15%", marginLeft: "-6px" }}
           >
-            <IconButton
-              sx={{ padding: "0" }}
-              onClick={() => {
-                const trimmedKey = pair.key.trim();
-                if (trimmedKey && trimmedKey !== "{{}}") {
-                  handleAddText?.(`{{${trimmedKey}}}`);
-                }
-              }}
-            >
-              <AddFile />
+            <IconButton onClick={onAddCustom}>
+              <AddButton />
             </IconButton>
-
-            {pair.editable && (
-              <IconButton
-                sx={{ padding: "0" }}
-                onClick={() => removeKeyValuePair(index)}
-              >
-                <DeleteFile />
-              </IconButton>
-            )}
           </div>
         </div>
-      ))}
-    </div>
-  );
-};
+
+        {combinedPairs.map((pair, index) => (
+          <div className="table-row" key={index} style={{ display: "flex" }}>
+            <div className="table-cell" style={{ flex: "0 0 35%" }}>
+              <TextField
+                fullWidth
+                variant="standard"
+                value={pair.key}
+                onChange={(e) => onEditKey(pair.key, e.target.value)}
+                placeholder="key"
+                slotProps={{
+                  input: {
+                    disableUnderline: true,
+                    sx: { padding: "4px 4px 4px 6px", lineHeight: "120%" },
+                  },
+                }}
+                sx={{ "& .MuiInputBase-root": { backgroundColor: "white" } }}
+                disabled={!pair.editable}
+              />
+            </div>
+
+            <div className="table-cell" style={{ flex: "0 0 50%" }}>
+              <TextField
+                fullWidth
+                variant="standard"
+                value={pair.value}
+                onChange={(e) => {
+                  if (pair.editable) onEditValue(pair.key, e.target.value);
+                }}
+                onBlur={(e) => {
+                  if (!pair.editable)
+                    onCommitProductValue(pair.key, e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (!pair.editable && e.key === "Enter") {
+                    onCommitProductValue(
+                      pair.key,
+                      (e.target as HTMLInputElement).value
+                    );
+                    e.currentTarget.blur();
+                  }
+                }}
+                onMouseDown={() => {
+                  // раннее копирование product-field в config, чтобы можно было сразу начать ввод
+                  if (!pair.editable)
+                    onCommitProductValue(pair.key, pair.value);
+                }}
+                placeholder="value"
+                multiline
+                maxRows={3}
+                slotProps={{
+                  input: {
+                    disableUnderline: true,
+                    sx: { padding: "4px 4px 4px 6px", lineHeight: "120%" },
+                  },
+                }}
+                sx={{ "& .MuiInputBase-root": { backgroundColor: "white" } }}
+              />
+            </div>
+
+            <div
+              className="table-cell table-actions"
+              style={{
+                flex: "0 0 15%",
+                display: "flex",
+                justifyContent: "space-around",
+              }}
+            >
+              {pair.editable && (
+                <IconButton
+                  sx={{ padding: "0" }}
+                  onClick={() => onRemoveByKey(pair.key)}
+                >
+                  <DeleteFile />
+                </IconButton>
+              )}
+              <IconButton
+                sx={{ padding: "0" }}
+                onClick={() => {
+                  const trimmedKey = pair.key.trim();
+                  if (trimmedKey && trimmedKey !== "{{}}") {
+                    onAddText(`{{${trimmedKey}}}`);
+                  }
+                }}
+              >
+                <AddFile />
+              </IconButton>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+);
 
 export default KeyValueTable;

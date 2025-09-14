@@ -1,71 +1,65 @@
-import React, { useState, useMemo } from "react";
+// src/components/InsertingProps/InsertingProps.tsx
+import React, { useState, useMemo, useCallback } from "react";
 import { Button } from "@mui/material";
-import KeyValueTable from "./KeyValueTable";
+import { useTranslation } from "react-i18next";
 import { useConfig } from "../../../../context/ConfigContext";
 import { useBanner } from "../../../../context/BannerContext";
+import KeyValueTable from "./KeyValueTable";
 import { KeyValuePair, Product } from "../../../../types";
 import { mockProducts } from "../../../../constants/mockProducts";
-
-type ExtendedPair = KeyValuePair & { editable: boolean };
+import type { ExtendedPair } from "../../../../types";
 
 const InsertingProps: React.FC = () => {
   const { config, setConfig } = useConfig();
   const { addObject } = useBanner();
-
+  const { t } = useTranslation();
   const [productIndex, setProductIndex] = useState(0);
 
   const keyValuePairs = config?.keyValuePairs ?? [];
 
-  const updatePairs = (newPairs: typeof keyValuePairs) => {
-    setConfig((prev) => ({
-      ...prev,
-      keyValuePairs: newPairs,
-    }));
-  };
+  const updatePairs = useCallback(
+    (newPairs: typeof keyValuePairs) => {
+      setConfig((prev) => ({ ...prev, keyValuePairs: newPairs }));
+    },
+    [setConfig]
+  );
 
-  const handleKeyChange = (index: number, newKey: string) => {
-    const updated = [...keyValuePairs];
-    updated[index].key = newKey;
-    updatePairs(updated);
-  };
+  const addKeyValuePair = useCallback(() => {
+    const newPair: KeyValuePair = { key: "", value: "" };
+    // новые добавляем в начало (новые сверху)
+    updatePairs([newPair, ...keyValuePairs]);
+  }, [keyValuePairs, updatePairs]);
 
-  const handleValueChange = (index: number, newValue: string) => {
-    const updated = [...keyValuePairs];
-    updated[index].value = newValue;
-    updatePairs(updated);
-  };
+  const removeKeyValuePair = useCallback(
+    (key: string) => {
+      updatePairs(keyValuePairs.filter((p) => p.key !== key));
+    },
+    [keyValuePairs, updatePairs]
+  );
 
-  const addKeyValuePair = () => {
-    updatePairs([...keyValuePairs, { key: "", value: "" }]);
-  };
+  const handleAddText = useCallback(
+    (text: string) => {
+      if (!text.trim()) return;
+      addObject({
+        id: Date.now(),
+        type: "text",
+        x: 50,
+        y: 50,
+        width: 200,
+        height: 50,
+        content: text,
+        fontSize: 16,
+        color: "#000000",
+        name: "",
+      });
+    },
+    [addObject]
+  );
 
-  const removeKeyValuePair = (index: number) => {
-    updatePairs(keyValuePairs.filter((_, i) => i !== index));
-  };
-
-  const handleAddText = (text: string) => {
-    if (!text.trim()) return;
-
-    addObject({
-      id: Date.now(),
-      type: "text",
-      x: 50,
-      y: 50,
-      width: 200,
-      height: 50,
-      content: text,
-      fontSize: 16,
-      color: "#000000",
-      name: "",
-    });
-  };
-
-  // текущий продукт
   const product: Product | null =
     mockProducts.length > 0 ? mockProducts[productIndex] : null;
 
-  // превращаем product в пары
-  const productPairs: ExtendedPair[] = useMemo(() => {
+  const productPairs = useMemo<ExtendedPair[]>(() => {
     if (!product) return [];
     return Object.entries(product).map(([k, v]) => ({
       key: k,
@@ -74,49 +68,92 @@ const InsertingProps: React.FC = () => {
     }));
   }, [product]);
 
-  // исключаем дубликаты с keyValuePairs
-  const usedKeys = new Set(keyValuePairs.map((p) => p.key));
-  const filteredProductPairs = productPairs.filter((p) => !usedKeys.has(p.key));
+  const productKeys = useMemo(
+    () => new Set(productPairs.map((p) => p.key)),
+    [productPairs]
+  );
 
-  // итоговый список
-  const combinedPairs: ExtendedPair[] = [
-    ...keyValuePairs.map((p) => ({ ...p, editable: true })),
-    ...filteredProductPairs,
-  ];
+  // кастомные пары из config (те, что не принадлежат product) идут сверху
+  const customPairsOrdered = useMemo(
+    () =>
+      keyValuePairs
+        .filter((p) => !productKeys.has(p.key))
+        .map((p) => ({ ...p, editable: true })),
+    [keyValuePairs, productKeys]
+  );
 
-  const commitProductValue = (key: string, value: string) => {
-    const exists = keyValuePairs.find((p) => p.key === key);
-    if (exists) {
-      updatePairs(
-        keyValuePairs.map((p) => (p.key === key ? { ...p, value } : p))
-      );
-    } else {
-      updatePairs([...keyValuePairs, { key, value }]);
-    }
-  };
+  // product-пары в порядке product; если значение есть в keyValuePairs — используем его и делаем editable
+  const productOrderedPairs = useMemo(() => {
+    return productPairs.map((pp) => {
+      const found = keyValuePairs.find((kp) => kp.key === pp.key);
+      return found ? ({ ...found, editable: true } as ExtendedPair) : pp;
+    });
+  }, [productPairs, keyValuePairs]);
 
-  const goPrev = () => {
-    setProductIndex((i) => (i - 1 < 0 ? mockProducts.length - 1 : i - 1));
-  };
+  const combinedPairs = useMemo(
+    () => [...customPairsOrdered, ...productOrderedPairs],
+    [customPairsOrdered, productOrderedPairs]
+  );
 
-  const goNext = () => {
-    setProductIndex((i) => (i + 1 >= mockProducts.length ? 0 : i + 1));
-  };
+  const handleEditKey = useCallback(
+    (oldKey: string, newKey: string) => {
+      const idx = keyValuePairs.findIndex((p) => p.key === oldKey);
+      if (idx === -1) return;
+      const updated = [...keyValuePairs];
+      updated[idx] = { ...updated[idx], key: newKey };
+      updatePairs(updated);
+    },
+    [keyValuePairs, updatePairs]
+  );
+
+  const handleEditValue = useCallback(
+    (key: string, newValue: string) => {
+      const idx = keyValuePairs.findIndex((p) => p.key === key);
+      if (idx === -1) return;
+      const updated = [...keyValuePairs];
+      updated[idx] = { ...updated[idx], value: newValue };
+      updatePairs(updated);
+    },
+    [keyValuePairs, updatePairs]
+  );
+
+  // commitProductValue: если пары нет — push (в конец keyValuePairs).
+  // Это важно: порядок рендера productOrderedPairs не зависит от порядка keyValuePairs,
+  // поэтому visual 'подпрыгивание' не происходит.
+  const commitProductValue = useCallback(
+    (key: string, value: string) => {
+      const exists = keyValuePairs.find((p) => p.key === key);
+      if (exists) {
+        updatePairs(
+          keyValuePairs.map((p) => (p.key === key ? { ...p, value } : p))
+        );
+      } else {
+        updatePairs([...keyValuePairs, { key, value }]);
+      }
+    },
+    [keyValuePairs, updatePairs]
+  );
+
+  const goPrev = useCallback(
+    () => setProductIndex((i) => (i - 1 < 0 ? mockProducts.length - 1 : i - 1)),
+    []
+  );
+  const goNext = useCallback(
+    () => setProductIndex((i) => (i + 1 >= mockProducts.length ? 0 : i + 1)),
+    []
+  );
 
   return (
     <div className="inserting-props">
       <div>
         <p className="inserting-props-title">
-          Product example: <span> {product?.title ?? ""}</span>
+          {t("product_example") ?? "Product example"}:{" "}
+          <span> {product?.title ?? ""}</span>
         </p>
+
         {mockProducts.length > 1 && (
           <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "10px",
-              // marginBottom: 8,
-            }}
+            style={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
             <Button onClick={goPrev} sx={{ height: 30, whiteSpace: "nowrap" }}>
               ← Prev
@@ -139,13 +176,13 @@ const InsertingProps: React.FC = () => {
       </div>
 
       <KeyValueTable
-        keyValuePairs={combinedPairs}
-        handleKeyChange={handleKeyChange}
-        handleValueChange={handleValueChange}
-        removeKeyValuePair={removeKeyValuePair}
-        addKeyValuePair={addKeyValuePair}
-        handleAddText={handleAddText}
-        commitProductValue={commitProductValue}
+        combinedPairs={combinedPairs}
+        onEditKey={handleEditKey}
+        onEditValue={handleEditValue}
+        onRemoveByKey={removeKeyValuePair}
+        onAddCustom={addKeyValuePair}
+        onAddText={handleAddText}
+        onCommitProductValue={commitProductValue}
       />
     </div>
   );
