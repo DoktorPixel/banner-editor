@@ -353,3 +353,32 @@ export interface SupabaseImageItem {
   created_at?: string;
   name?: string;
 }
+
+// export type Product = {
+//   id: string;
+//   title?: string;
+//   description?: string;
+//   html_description?: string;
+//   link?: string | null;
+//   image_link?: string | null;
+//   additional_image_links?: string[];
+//   availability?: string;
+//   stock_quantity?: number;
+//   price?: { value: number; currency: string } | null;
+//   sale_price?: { value: number; currency: string } | null;
+//   sale_price_effective_date?: string | null;
+//   google_product_category?: number | null;
+//   item_group_id?: string | null;
+//   product_type?: string | null;
+//   brand?: string | null;
+//   condition?: string | null;
+//   attributes?: Record<string, any>;
+//   variants?: any[];
+//   rating?: { avg?: number; count?: number } | null;
+//   tags?: string[];
+//   shipping?: Record<string, any>;
+//   created_at?: string;
+//   [k: string]: any;
+// };
+
+export type Product = Record<string, string>;
