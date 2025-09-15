@@ -1,7 +1,12 @@
 // src/components/InsertingProps/KeyValueTable.tsx
 import React from "react";
 import { TextField, IconButton } from "@mui/material";
-import { AddButton, DeleteFile, AddFile } from "../../../../assets/icons";
+import {
+  AddButton,
+  DeleteFile,
+  AddFile,
+  ClearFile,
+} from "../../../../assets/icons";
 import { useTranslation } from "react-i18next";
 import type { ExtendedPair } from "../../../../types";
 
@@ -35,6 +40,8 @@ const KeyValueTable: React.FC<Props> = React.memo(
         return true;
       });
     }, [combinedPairs]);
+
+    console.log("combinedPairs:", combinedPairs);
 
     return (
       <div className="variables-panel">
@@ -85,7 +92,8 @@ const KeyValueTable: React.FC<Props> = React.memo(
               <TextField
                 fullWidth
                 variant="standard"
-                value={pair.value}
+                value={pair.editable ? pair.value : ""}
+                placeholder={!pair.editable ? pair.value : "value"}
                 onChange={(e) => {
                   if (pair.editable) onEditValue(pair.key, e.target.value);
                 }}
@@ -103,11 +111,9 @@ const KeyValueTable: React.FC<Props> = React.memo(
                   }
                 }}
                 onMouseDown={() => {
-                  // раннее копирование product-field в config, чтобы можно было сразу начать ввод
                   if (!pair.editable)
                     onCommitProductValue(pair.key, pair.value);
                 }}
-                placeholder="value"
                 multiline
                 maxRows={3}
                 slotProps={{
@@ -133,7 +139,7 @@ const KeyValueTable: React.FC<Props> = React.memo(
                   sx={{ padding: "0" }}
                   onClick={() => onRemoveByKey(pair.key)}
                 >
-                  <DeleteFile />
+                  {pair.custom ? <DeleteFile /> : <ClearFile />}
                 </IconButton>
               )}
               <IconButton
