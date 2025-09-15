@@ -5,9 +5,16 @@ import { useTranslation } from "react-i18next";
 import { useConfig } from "../../../../context/ConfigContext";
 import { useBanner } from "../../../../context/BannerContext";
 import KeyValueTable from "./KeyValueTable";
-import { KeyValuePair, Product } from "../../../../types";
+import {
+  KeyValuePair,
+  // Product
+} from "../../../../types";
 import { mockProducts } from "../../../../constants/mockProducts";
 import type { ExtendedPair } from "../../../../types";
+import { useProductsFeed } from "../../../../utils/useProductsFeed";
+
+const HARDCODED_FEED = "https://ivan-chohol.ua/price/facebook-catalog.xml";
+const MAX_PRODUCTS = 1000;
 
 const InsertingProps: React.FC = () => {
   const { config, setConfig } = useConfig();
@@ -55,8 +62,22 @@ const InsertingProps: React.FC = () => {
     [addObject]
   );
 
-  const product: Product | null =
-    mockProducts.length > 0 ? mockProducts[productIndex] : null;
+  // --- Получаем продукты из фида через react-query ---
+  const {
+    data: fetchedProducts,
+    isLoading,
+    isError,
+    error,
+  } = useProductsFeed(HARDCODED_FEED, { limit: MAX_PRODUCTS, enabled: true });
+
+  // fallback to mockProducts if fetch failed or empty (helps during dev)
+  const productsSource =
+    fetchedProducts && fetchedProducts.length > 0
+      ? fetchedProducts
+      : mockProducts;
+
+  const product =
+    productsSource.length > 0 ? productsSource[productIndex] : null;
 
   const productPairs = useMemo<ExtendedPair[]>(() => {
     if (!product) return [];
@@ -131,12 +152,13 @@ const InsertingProps: React.FC = () => {
   );
 
   const goPrev = useCallback(
-    () => setProductIndex((i) => (i - 1 < 0 ? mockProducts.length - 1 : i - 1)),
-    []
+    () =>
+      setProductIndex((i) => (i - 1 < 0 ? productsSource.length - 1 : i - 1)),
+    [productsSource.length]
   );
   const goNext = useCallback(
-    () => setProductIndex((i) => (i + 1 >= mockProducts.length ? 0 : i + 1)),
-    []
+    () => setProductIndex((i) => (i + 1 >= productsSource.length ? 0 : i + 1)),
+    [productsSource.length]
   );
 
   return (
@@ -147,7 +169,7 @@ const InsertingProps: React.FC = () => {
           <span> {product?.title ?? ""}</span>
         </p>
 
-        {mockProducts.length > 1 && (
+        {productsSource.length > 1 && (
           <div
             style={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
@@ -162,12 +184,17 @@ const InsertingProps: React.FC = () => {
                 marginTop: 2,
               }}
             >
-              {productIndex + 1} / {mockProducts.length}
+              {productIndex + 1} / {productsSource.length}
             </span>
             <Button onClick={goNext} sx={{ height: 30, whiteSpace: "nowrap" }}>
               Next →
             </Button>
           </div>
+        )}
+
+        {isLoading && <div>Loading products…</div>}
+        {isError && (
+          <div style={{ color: "red" }}>Feed error: {error?.message}</div>
         )}
       </div>
 

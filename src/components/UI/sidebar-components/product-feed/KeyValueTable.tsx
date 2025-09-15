@@ -41,7 +41,7 @@ const KeyValueTable: React.FC<Props> = React.memo(
       });
     }, [combinedPairs]);
 
-    console.log("combinedPairs:", combinedPairs);
+    // console.log("combinedPairs:", combinedPairs);
 
     return (
       <div className="variables-panel">
