@@ -309,6 +309,8 @@ export interface CustomFont {
 export interface KeyValuePair {
   key: string;
   value: string;
+  fromProduct?: boolean;
+  custom?: boolean;
 }
 
 export type ResizeDirection =
@@ -383,7 +385,10 @@ export interface SupabaseImageItem {
 
 export type Product = Record<string, string>;
 
-export type ExtendedPair = KeyValuePair & { editable: boolean };
+export type ExtendedPair = KeyValuePair & {
+  editable: boolean;
+  custom?: boolean;
+};
 
 export interface KeyValueTableProps {
   combinedPairs: ExtendedPair[]; // уже объединённый список: кастомные сверху, далее product-ordered

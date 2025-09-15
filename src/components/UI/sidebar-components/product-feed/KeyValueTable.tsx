@@ -15,13 +15,6 @@ interface Props {
   onCommitProductValue: (key: string, value: string) => void;
 }
 
-/**
- * Для списка используем ключ индекс (index) — как вы уже сделали,
- * чтобы избежать проблем с дублирующимися ключами.
- * Примечание: индекс ключа имеет недостатки при перестановке элементов,
- * но в нашем случае порядок контролируется (новые сверху + product-ordered),
- * и вы сами предпочли индекс.
- */
 const KeyValueTable: React.FC<Props> = React.memo(
   ({
     combinedPairs,
@@ -33,6 +26,15 @@ const KeyValueTable: React.FC<Props> = React.memo(
     onCommitProductValue,
   }) => {
     const { t } = useTranslation();
+
+    const uniquePairs = React.useMemo(() => {
+      const seen = new Set<string>();
+      return combinedPairs.filter((pair) => {
+        if (seen.has(pair.key)) return false;
+        seen.add(pair.key);
+        return true;
+      });
+    }, [combinedPairs]);
 
     return (
       <div className="variables-panel">
@@ -59,7 +61,7 @@ const KeyValueTable: React.FC<Props> = React.memo(
           </div>
         </div>
 
-        {combinedPairs.map((pair, index) => (
+        {uniquePairs.map((pair, index) => (
           <div className="table-row" key={index} style={{ display: "flex" }}>
             <div className="table-cell" style={{ flex: "0 0 35%" }}>
               <TextField
@@ -75,7 +77,7 @@ const KeyValueTable: React.FC<Props> = React.memo(
                   },
                 }}
                 sx={{ "& .MuiInputBase-root": { backgroundColor: "white" } }}
-                disabled={!pair.editable}
+                disabled={!pair.custom}
               />
             </div>
 

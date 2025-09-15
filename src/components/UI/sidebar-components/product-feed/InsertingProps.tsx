@@ -25,8 +25,7 @@ const InsertingProps: React.FC = () => {
   );
 
   const addKeyValuePair = useCallback(() => {
-    const newPair: KeyValuePair = { key: "", value: "" };
-    // новые добавляем в начало (новые сверху)
+    const newPair: KeyValuePair = { key: "", value: "", custom: true };
     updatePairs([newPair, ...keyValuePairs]);
   }, [keyValuePairs, updatePairs]);
 
@@ -68,25 +67,23 @@ const InsertingProps: React.FC = () => {
     }));
   }, [product]);
 
-  const productKeys = useMemo(
-    () => new Set(productPairs.map((p) => p.key)),
-    [productPairs]
-  );
-
-  // кастомные пары из config (те, что не принадлежат product) идут сверху
   const customPairsOrdered = useMemo(
     () =>
       keyValuePairs
-        .filter((p) => !productKeys.has(p.key))
-        .map((p) => ({ ...p, editable: true })),
-    [keyValuePairs, productKeys]
+        .filter((p) => !p.fromProduct)
+        .map((p) => ({ ...p, editable: true, custom: true })),
+    [keyValuePairs]
   );
 
-  // product-пары в порядке product; если значение есть в keyValuePairs — используем его и делаем editable
   const productOrderedPairs = useMemo(() => {
     return productPairs.map((pp) => {
-      const found = keyValuePairs.find((kp) => kp.key === pp.key);
-      return found ? ({ ...found, editable: true } as ExtendedPair) : pp;
+      const override = keyValuePairs.find(
+        (kp) => kp.key === pp.key && kp.fromProduct
+      );
+      if (override) {
+        return { ...override, editable: true } as ExtendedPair;
+      }
+      return { ...pp, editable: false } as ExtendedPair;
     });
   }, [productPairs, keyValuePairs]);
 
@@ -117,18 +114,17 @@ const InsertingProps: React.FC = () => {
     [keyValuePairs, updatePairs]
   );
 
-  // commitProductValue: если пары нет — push (в конец keyValuePairs).
-  // Это важно: порядок рендера productOrderedPairs не зависит от порядка keyValuePairs,
-  // поэтому visual 'подпрыгивание' не происходит.
   const commitProductValue = useCallback(
     (key: string, value: string) => {
       const exists = keyValuePairs.find((p) => p.key === key);
       if (exists) {
         updatePairs(
-          keyValuePairs.map((p) => (p.key === key ? { ...p, value } : p))
+          keyValuePairs.map((p) =>
+            p.key === key ? { ...p, value, fromProduct: true } : p
+          )
         );
       } else {
-        updatePairs([...keyValuePairs, { key, value }]);
+        updatePairs([...keyValuePairs, { key, value, fromProduct: true }]);
       }
     },
     [keyValuePairs, updatePairs]
