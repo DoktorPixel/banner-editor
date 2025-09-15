@@ -1,19 +1,17 @@
 // src/components/InsertingProps/InsertingProps.tsx
 import React, { useState, useMemo, useCallback } from "react";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useConfig } from "../../../../context/ConfigContext";
 import { useBanner } from "../../../../context/BannerContext";
 import KeyValueTable from "./KeyValueTable";
-import {
-  KeyValuePair,
-  // Product
-} from "../../../../types";
+import { KeyValuePair, Product } from "../../../../types";
 import { mockProducts } from "../../../../constants/mockProducts";
 import type { ExtendedPair } from "../../../../types";
 import { useProductsFeed } from "../../../../utils/useProductsFeed";
 
-const HARDCODED_FEED = "https://ivan-chohol.ua/price/facebook-catalog.xml";
+// const HARDCODED_FEED = "https://ivan-chohol.ua/price/facebook-catalog.xml";
+const HARDCODED_FEED = "/api/catalog";
 const MAX_PRODUCTS = 1000;
 
 const InsertingProps: React.FC = () => {
@@ -62,30 +60,31 @@ const InsertingProps: React.FC = () => {
     [addObject]
   );
 
-  // --- Получаем продукты из фида через react-query ---
+  // --- fetch products ---
   const {
     data: fetchedProducts,
     isLoading,
     isError,
     error,
   } = useProductsFeed(HARDCODED_FEED, { limit: MAX_PRODUCTS, enabled: true });
-
-  // fallback to mockProducts if fetch failed or empty (helps during dev)
-  const productsSource =
-    fetchedProducts && fetchedProducts.length > 0
-      ? fetchedProducts
-      : mockProducts;
-
+  console.log("fetchedProducts:", fetchedProducts);
+  // fallback to mockProducts (mockProducts остаются Record<string,string>)
+  const productsSource: Product[] =
+    (fetchedProducts?.length ? fetchedProducts : mockProducts) ?? [];
   const product =
     productsSource.length > 0 ? productsSource[productIndex] : null;
 
   const productPairs = useMemo<ExtendedPair[]>(() => {
     if (!product) return [];
-    return Object.entries(product).map(([k, v]) => ({
-      key: k,
-      value: String(v),
-      editable: false,
-    }));
+    return Object.entries(product).map(([k, v]) => {
+      // v может быть string или string[]
+      const displayValue = Array.isArray(v) ? v.join(", ") : String(v ?? "");
+      return {
+        key: k,
+        value: displayValue,
+        editable: false,
+      } as ExtendedPair;
+    });
   }, [product]);
 
   const customPairsOrdered = useMemo(
@@ -166,7 +165,7 @@ const InsertingProps: React.FC = () => {
       <div>
         <p className="inserting-props-title">
           {t("product_example") ?? "Product example"}:{" "}
-          <span> {product?.title ?? ""}</span>
+          <span> {String(product?.title ?? "")}</span>
         </p>
 
         {productsSource.length > 1 && (
@@ -192,7 +191,12 @@ const InsertingProps: React.FC = () => {
           </div>
         )}
 
-        {isLoading && <div>Loading products…</div>}
+        {isLoading && (
+          <div>
+            {" "}
+            <CircularProgress size="12px" /> Loading products…
+          </div>
+        )}
         {isError && (
           <div style={{ color: "red" }}>Feed error: {error?.message}</div>
         )}

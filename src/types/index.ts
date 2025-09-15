@@ -383,7 +383,7 @@ export interface SupabaseImageItem {
 //   [k: string]: any;
 // };
 
-export type Product = Record<string, string>;
+export type Product = Record<string, string | string[]>;
 
 export type ExtendedPair = KeyValuePair & {
   editable: boolean;
