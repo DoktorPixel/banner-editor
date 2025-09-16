@@ -52,7 +52,7 @@ async function fetchAndParseXml(
   signal?: AbortSignal
 ): Promise<Product[]> {
   const res = await fetch(url, { signal });
-  console.log("res fetchAndParseXml :", res);
+
   if (!res.ok) {
     throw new Error(`Feed fetch failed: ${res.status} ${res.statusText}`);
   }
@@ -69,8 +69,6 @@ async function fetchAndParseXml(
   entries.push(...Array.from(xml.getElementsByTagNameNS("*", "item"))); // RSS
   entries.push(...Array.from(xml.getElementsByTagName("entry"))); // fallback
   entries.push(...Array.from(xml.getElementsByTagName("item"))); // fallback
-
-  console.log("XML entries found:", entries.length);
 
   const products = entries.map(parseEntryToProduct).slice(0, limit);
   return products;

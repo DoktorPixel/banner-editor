@@ -68,7 +68,6 @@ const InsertingProps: React.FC = () => {
     isError,
     error,
   } = useProductsFeed(HARDCODED_FEED, { limit: MAX_PRODUCTS, enabled: true });
-  console.log("fetchedProducts:", fetchedProducts);
 
   const productsSource: Product[] =
     (fetchedProducts?.length ? fetchedProducts : mockProducts) ?? [];
