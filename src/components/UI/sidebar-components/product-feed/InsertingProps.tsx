@@ -70,7 +70,6 @@ const InsertingProps: React.FC = () => {
   } = useProductsFeed(HARDCODED_FEED, { limit: MAX_PRODUCTS, enabled: true });
   console.log("fetchedProducts:", fetchedProducts);
 
-  // fallback to mockProducts (mockProducts остаются Record<string,string>)
   const productsSource: Product[] =
     (fetchedProducts?.length ? fetchedProducts : mockProducts) ?? [];
   const product =
@@ -79,7 +78,6 @@ const InsertingProps: React.FC = () => {
   const productPairs = useMemo<ExtendedPair[]>(() => {
     if (!product) return [];
     return Object.entries(product).map(([k, v]) => {
-      // v может быть string или string[]
       const displayValue = Array.isArray(v) ? v.join(", ") : String(v ?? "");
       return {
         key: k,
@@ -180,7 +178,6 @@ const InsertingProps: React.FC = () => {
             <span
               style={{
                 whiteSpace: "nowrap",
-                // width: 60,
                 fontSize: 16,
                 marginTop: 2,
               }}

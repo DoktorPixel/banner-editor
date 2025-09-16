@@ -14,6 +14,6 @@
     "module": "ESNext",
     "noEmit": true
   },
-  "include": ["src"],
+  "include": ["src", "api/catalog.ts"],
   "exclude": ["node_modules"]
 }

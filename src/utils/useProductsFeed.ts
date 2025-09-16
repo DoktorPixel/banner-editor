@@ -1,6 +1,6 @@
 // src/utils/useProductsFeed.ts
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import type { Product } from "../types"; // Product = Record<string, string | string[]>
+import type { Product } from "../types";
 
 const DEFAULT_LIMIT = 1000;
 
@@ -10,21 +10,12 @@ function textOf(el: Element | null): string {
 }
 
 function normalizeKey(rawLocalName: string): string {
-  // localName обычно уже без префикса ('g:title' -> 'title'),
-  // но на всякий случай убираем возможный префикс.
   const withoutPrefix = rawLocalName.includes(":")
     ? rawLocalName.split(":").pop() || rawLocalName
     : rawLocalName;
   return withoutPrefix;
 }
 
-/**
- * product[key] может быть string или string[]
- * Функция аккуратно добавляет значение:
- * - если ключа нет — записывает строку
- * - если ключ есть и это строка — превращает в массив [old, new]
- * - если ключ есть и это массив — пушит
- */
 function addValue(product: Product, key: string, value: string) {
   if (!key) return;
   const prev = product[key];
@@ -36,7 +27,7 @@ function addValue(product: Product, key: string, value: string) {
     prev.push(value);
     return;
   }
-  // prev is string -> convert to array
+
   product[key] = [prev, value];
 }
 
@@ -73,7 +64,6 @@ async function fetchAndParseXml(
     throw new Error("Failed to parse XML feed (parsererror detected).");
   }
 
-  // Универсальный поиск товаров
   const entries: Element[] = [];
   entries.push(...Array.from(xml.getElementsByTagNameNS("*", "entry"))); // Atom
   entries.push(...Array.from(xml.getElementsByTagNameNS("*", "item"))); // RSS
@@ -86,9 +76,6 @@ async function fetchAndParseXml(
   return products;
 }
 
-/**
- * Типизированный хук: возвращает UseQueryResult<Product[], Error>
- */
 export function useProductsFeed(
   url: string,
   opts?: { limit?: number; enabled?: boolean }
