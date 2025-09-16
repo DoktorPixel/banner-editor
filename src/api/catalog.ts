@@ -1,10 +1,12 @@
+// catalog.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import fetch from "node-fetch";
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
     const response = await fetch(
-      "https://ivan-chohol.ua/price/facebook-catalog.xml"
+      // "https://ivan-chohol.ua/price/facebook-catalog.xml"
+      "https://www.vyshyvanka-barvy.com/wp-content/uploads/woo-feed/facebook/xml/vyshyvanka-barvy-feed.xml"
     );
     const xml = await response.text();
 

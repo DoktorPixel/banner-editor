@@ -1,4 +1,4 @@
-// src/components/InsertingProps/InsertingProps.tsx
+// InsertingProps.tsx
 import React, { useState, useMemo, useCallback } from "react";
 import { Button, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ import type { ExtendedPair } from "../../../../types";
 import { useProductsFeed } from "../../../../utils/useProductsFeed";
 
 // const HARDCODED_FEED = "https://ivan-chohol.ua/price/facebook-catalog.xml";
+
 const HARDCODED_FEED = "/api/catalog";
 const MAX_PRODUCTS = 1000;
 
@@ -68,6 +69,7 @@ const InsertingProps: React.FC = () => {
     error,
   } = useProductsFeed(HARDCODED_FEED, { limit: MAX_PRODUCTS, enabled: true });
   console.log("fetchedProducts:", fetchedProducts);
+
   // fallback to mockProducts (mockProducts остаются Record<string,string>)
   const productsSource: Product[] =
     (fetchedProducts?.length ? fetchedProducts : mockProducts) ?? [];
@@ -178,7 +180,7 @@ const InsertingProps: React.FC = () => {
             <span
               style={{
                 whiteSpace: "nowrap",
-                width: 52,
+                // width: 60,
                 fontSize: 16,
                 marginTop: 2,
               }}
