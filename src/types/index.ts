@@ -263,6 +263,8 @@ export interface BannerContextProps {
     parentGroupId?: number,
     atIndex?: number
   ) => void;
+  combinedPairs: ExtendedPair[];
+  setCombinedPairs: React.Dispatch<React.SetStateAction<ExtendedPair[]>>;
 }
 
 export interface DynamicImg {

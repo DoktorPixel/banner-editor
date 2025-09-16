@@ -1,4 +1,4 @@
-// src/components/InsertingProps/KeyValueTable.tsx
+// KeyValueTable.tsx
 import React from "react";
 import { TextField, IconButton } from "@mui/material";
 import {
@@ -17,8 +17,18 @@ interface Props {
   onRemoveByKey: (key: string) => void;
   onAddCustom: () => void;
   onAddText: (text: string) => void;
+  onAddImage: (url: string) => void;
   onCommitProductValue: (key: string, value: string) => void;
 }
+
+const isImageUrl = (value: string): boolean => {
+  try {
+    const url = new URL(value);
+    return /\.(jpe?g|png|gif|webp|avif|svg)$/i.test(url.pathname);
+  } catch {
+    return false;
+  }
+};
 
 const KeyValueTable: React.FC<Props> = React.memo(
   ({
@@ -28,6 +38,7 @@ const KeyValueTable: React.FC<Props> = React.memo(
     onRemoveByKey,
     onAddCustom,
     onAddText,
+    onAddImage,
     onCommitProductValue,
   }) => {
     const { t } = useTranslation();
@@ -40,6 +51,18 @@ const KeyValueTable: React.FC<Props> = React.memo(
         return true;
       });
     }, [combinedPairs]);
+
+    const handleAddFile = (pair: ExtendedPair) => {
+      const trimmedKey = pair.key.trim();
+      const trimmedValue = pair.value.trim();
+
+      if (!trimmedKey || trimmedValue === "{{}}") return;
+      if (isImageUrl(trimmedValue)) {
+        onAddImage(`{{${trimmedKey}}}`);
+      } else {
+        onAddText(`{{${trimmedKey}}}`);
+      }
+    };
 
     // console.log("combinedPairs:", combinedPairs);
 
@@ -144,12 +167,7 @@ const KeyValueTable: React.FC<Props> = React.memo(
               )}
               <IconButton
                 sx={{ padding: "0" }}
-                onClick={() => {
-                  const trimmedKey = pair.key.trim();
-                  if (trimmedKey && trimmedKey !== "{{}}") {
-                    onAddText(`{{${trimmedKey}}}`);
-                  }
-                }}
+                onClick={() => handleAddFile(pair)}
               >
                 <AddFile />
               </IconButton>

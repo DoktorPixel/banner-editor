@@ -11,6 +11,7 @@ import {
   BannerContextProps,
   BannerChild,
   DynamicImg,
+  ExtendedPair,
 } from "../types";
 
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
@@ -27,6 +28,7 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
   const [scale, setScale] = useState<number>(0.4);
   const objects = history[currentStep] || [];
+  const [combinedPairs, setCombinedPairs] = useState<ExtendedPair[]>([]);
 
   const renderedObjects = useMemo(() => {
     return objects.map((obj) => ({
@@ -645,6 +647,8 @@ export const BannerProvider: React.FC<{ children: React.ReactNode }> = ({
         findParentGroupOfChild,
         moveObjectsToFlexGroup,
         removeObjectsFromFlexGroup,
+        combinedPairs,
+        setCombinedPairs,
       }}
     >
       {children}

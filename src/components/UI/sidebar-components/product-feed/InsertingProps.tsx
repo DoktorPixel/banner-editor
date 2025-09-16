@@ -1,5 +1,5 @@
 // InsertingProps.tsx
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Button, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useConfig } from "../../../../context/ConfigContext";
@@ -17,7 +17,7 @@ const MAX_PRODUCTS = 1000;
 
 const InsertingProps: React.FC = () => {
   const { config, setConfig } = useConfig();
-  const { addObject } = useBanner();
+  const { addObject, setCombinedPairs } = useBanner();
   const { t } = useTranslation();
   const [productIndex, setProductIndex] = useState(0);
 
@@ -60,6 +60,20 @@ const InsertingProps: React.FC = () => {
     },
     [addObject]
   );
+
+  const handleAddDynamicsImage = (url: string) => {
+    addObject({
+      id: Date.now(),
+      type: "image",
+      width: 250,
+      height: 250,
+      x: 50,
+      y: 50,
+      src: url,
+      name: "",
+      dynamics: true,
+    });
+  };
 
   // --- fetch products ---
   const {
@@ -110,6 +124,10 @@ const InsertingProps: React.FC = () => {
     () => [...customPairsOrdered, ...productOrderedPairs],
     [customPairsOrdered, productOrderedPairs]
   );
+
+  useEffect(() => {
+    setCombinedPairs(combinedPairs);
+  }, [combinedPairs, setCombinedPairs]);
 
   const handleEditKey = useCallback(
     (oldKey: string, newKey: string) => {
@@ -207,6 +225,7 @@ const InsertingProps: React.FC = () => {
         onRemoveByKey={removeKeyValuePair}
         onAddCustom={addKeyValuePair}
         onAddText={handleAddText}
+        onAddImage={handleAddDynamicsImage}
         onCommitProductValue={commitProductValue}
       />
     </div>
