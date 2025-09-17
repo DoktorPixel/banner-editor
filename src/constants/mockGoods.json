@@ -1,0 +1,509 @@
+{
+  "mockProducts": [
+    {
+      "id": "55001",
+      "title": "Комплект постільної білизни \"Тигри\"",
+      "description": "Постільна білизна \"Тигри\" 🐯 стиль і сила в кожному дотику. Країна виробник: Україна. Тканина: Бязь GOLD. Щільність: 115 г/м². Колір: чорний з принтом тигрів.",
+      "html_description": "<![CDATA[ Постільна білизна \"Тигри\" 🐯 стиль і сила в кожному дотику<br/>Країна виробник: Україна<br/>Тканина: Бязь GOLD<br/>Щільність: 115 г/м²<br/>Колір: чорний з принтом тигрів ]]>",
+      "link": "https://cottonhome.site/komplekt-postilnoi-bilyzny-tyhr/",
+      "image_link": "https://my.feededify.app/feedmaker/55001.jpg?v=331B18E73631257115C502DEBCB9561C",
+      "additional_image_links": [
+        "https://cottonhome.site/images/55001-1.jpg",
+        "https://cottonhome.site/images/55001-2.jpg"
+      ],
+      "availability": "in stock",
+      "stock_quantity": 48,
+      "price": { "value": 798, "currency": "UAH" },
+      "sale_price": { "value": 399, "currency": "UAH" },
+      "sale_price_effective_date": "2025-08-01/2025-09-15",
+      "google_product_category": 4171,
+      "item_group_id": "457_17",
+      "product_type": "Постільна білизна",
+      "brand": "CottonHome",
+      "condition": "new",
+      "attributes": {
+        "material": "Бязь GOLD",
+        "density_g_m2": 115,
+        "color": "black",
+        "size_set": "Полуторний"
+      },
+      "variants": [
+        {
+          "id": "55001-1",
+          "size": "1.5",
+          "color": "black",
+          "price": 798,
+          "availability": "in stock"
+        }
+      ],
+      "rating": { "avg": 4.6, "count": 123 },
+      "reviews": [
+        {
+          "user": "Олена",
+          "text": "Дуже м'яка, рекомендую.",
+          "rating": 5,
+          "date": "2025-06-21"
+        }
+      ],
+      "tags": ["bedding", "cotton", "GOLD"],
+      "shipping": {
+        "weight_kg": 1.2,
+        "dimensions_cm": [40, 30, 6],
+        "shipping_class": "standard"
+      },
+      "created_at": "2025-01-10T12:34:00Z"
+    },
+
+    {
+      "id": "55002",
+      "title": "Комплект постільної білизни \"Тигри\" (2-спальний)",
+      "description": "Більш широкий комплект \"Тигри\" для великого ліжка.",
+      "link": "https://cottonhome.site/komplekt-postilnoi-bilyzny-tyhr/819/",
+      "image_link": "https://my.feededify.app/feedmaker/55002.jpg?v=9F336947C807A3470FD09052F900DE38",
+      "availability": "in stock",
+      "stock_quantity": 12,
+      "price": { "value": 998, "currency": "UAH" },
+      "sale_price": { "value": 499, "currency": "UAH" },
+      "google_product_category": 4171,
+      "item_group_id": "457_17",
+      "product_type": "Постільна білизна",
+      "brand": "CottonHome",
+      "condition": "new",
+      "attributes": {
+        "material": "Бязь GOLD",
+        "color": "black",
+        "set_size": "2-спальний"
+      },
+      "variants": [
+        {
+          "id": "55002-1",
+          "size": "2.0",
+          "color": "black",
+          "price": 998,
+          "availability": "in stock"
+        }
+      ],
+      "rating": { "avg": 4.4, "count": 45 },
+      "tags": ["bedding", "double"]
+    },
+
+    {
+      "id": "55003",
+      "title": "Комплект постільної білизни \"Тигри\" (євро)",
+      "description": "Євро комплект. Велика кількість різних SKU.",
+      "link": "https://cottonhome.site/komplekt-postilnoi-bilyzny-tyhr/820/",
+      "image_link": null,
+      "availability": "in stock",
+      "stock_quantity": 0,
+      "price": { "value": 1198, "currency": "UAH" },
+      "sale_price": { "value": 599, "currency": "UAH" },
+      "sale_price_effective_date": "2025-09-01/2025-09-30",
+      "google_product_category": 4171,
+      "item_group_id": "457_17",
+      "product_type": "Постільна білизна",
+      "brand": "CottonHome",
+      "condition": "new",
+      "attributes": { "color": "black", "package_count": 1 },
+      "variants": [],
+      "tags": []
+    },
+
+    {
+      "id": "55005",
+      "title": "Комплект постільної білизни \"Зіркове небо\"",
+      "description": "Затишок під зоряним небом, світло-блакитний відтінок.",
+      "link": "https://cottonhome.site/komplekt-postilnoi-bilyzny-zirkove-nebo/",
+      "image_link": "https://my.feededify.app/feedmaker/55005.jpg?v=25FDE559B3C5D4D32CD018A53D3EC284",
+      "availability": "in stock",
+      "stock_quantity": 200,
+      "price": { "value": 798, "currency": "UAH" },
+      "sale_price": { "value": 399, "currency": "UAH" },
+      "google_product_category": 4171,
+      "item_group_id": "457_18",
+      "product_type": "Постільна білизна",
+      "brand": "CottonHome",
+      "condition": "new",
+      "attributes": { "pattern": "stars", "color": "blue" },
+      "variants": [
+        { "id": "55005-s", "size": "single", "price": 798 },
+        { "id": "55005-d", "size": "double", "price": 998 }
+      ],
+      "rating": { "avg": 4.8, "count": 321 }
+    },
+
+    {
+      "id": "55017",
+      "title": "Комплект постільної білизни \"Шоколадна насолода\"",
+      "description": "Коричневий набір, теплий тон.",
+      "link": "https://cottonhome.site/komplekt-postilnoi-bilyzny-shokoladna-nasoloda/",
+      "image_link": "https://cottonhome.site/content/images/35/komplekt-shokolad.jpg",
+      "availability": "out of stock",
+      "stock_quantity": 0,
+      "price": { "value": 798, "currency": "UAH" },
+      "sale_price": { "value": 399, "currency": "UAH" },
+      "google_product_category": 4171,
+      "item_group_id": "457_21",
+      "product_type": "Постільна білизна",
+      "brand": "CottonHome",
+      "condition": "new",
+      "attributes": { "color": "brown", "scent": null },
+      "tags": ["seasonal"]
+    },
+
+    {
+      "id": "55019",
+      "title": "Комплект постільної білизни \"Шоколадна насолода\" (комплект)",
+      "link": "https://cottonhome.site/komplekt-postilnoi-bilyzny-shokoladna-nasoloda/836/",
+      "image_link": "https://my.feededify.app/feedmaker/55019.jpg?v=67692D4EE52901455C7E1FACC8F8D180",
+      "availability": "in stock",
+      "stock_quantity": 9,
+      "price": { "value": 1198, "currency": "UAH" },
+      "sale_price": { "value": 599, "currency": "UAH" },
+      "google_product_category": 4171,
+      "item_group_id": "457_21",
+      "product_type": "Постільна білизна",
+      "brand": "CottonHome",
+      "condition": "new"
+    },
+
+    {
+      "id": "55021",
+      "title": "Комплект постільної білизни \"Мармур\"",
+      "description": "Мармуровий принт, ексклюзивна серія.",
+      "link": "https://cottonhome.site/komplekt-postilnoi-bilyzny-marmur/",
+      "image_link": "https://my.feededify.app/feedmaker/55021.jpg?v=94CFA7B04752506C45F06B0522497931",
+      "additional_image_link": "https://cottonhome.site/content/images/30/komplekt-marmur.png",
+      "availability": "in stock",
+      "stock_quantity": 5,
+      "price": { "value": 798, "currency": "UAH" },
+      "sale_price": { "value": 398, "currency": "UAH" },
+      "google_product_category": 4171,
+      "item_group_id": "457_28",
+      "product_type": "Постільна білизна",
+      "brand": "CottonHome",
+      "condition": "new",
+      "attributes": { "material": "Бязь GOLD", "color": "marble" }
+    },
+
+    {
+      "id": "55057",
+      "title": "Комплект постільної білизни \"Релакс\"",
+      "link": "https://cottonhome.site/komplekt-postilnoi-bilyzny-relaks/",
+      "image_link": "https://my.feededify.app/feedmaker/55057.jpg?v=2913EF8C",
+      "availability": "in stock",
+      "stock_quantity": 73,
+      "price": { "value": 798, "currency": "UAH" },
+      "sale_price": { "value": 399, "currency": "UAH" },
+      "item_group_id": "457_31",
+      "brand": "CottonHome",
+      "condition": "new"
+    },
+
+    {
+      "id": "55065",
+      "title": "Комплект постільної білизни \"Білий\"",
+      "link": "https://cottonhome.site/komplekt-postilnoi-bilyzny-bilyi/",
+      "image_link": "https://my.feededify.app/feedmaker/55065.jpg?v=A6F75FD0",
+      "availability": "in stock",
+      "stock_quantity": 120,
+      "price": { "value": 798, "currency": "UAH" },
+      "sale_price": { "value": 399, "currency": "UAH" },
+      "item_group_id": "457_33",
+      "brand": "CottonHome",
+      "condition": "new"
+    },
+
+    {
+      "id": "55077",
+      "title": "Комплект постільної білизни \"Цвіт сакури\"",
+      "description": "Ніжні кольори, флористичний принт.",
+      "link": "https://cottonhome.site/komplekt-postilnoi-bilyzny-tsvit-sakura/933/",
+      "image_link": "https://my.feededify.app/feedmaker/55077.jpg?v=638FB5A8",
+      "availability": "in stock",
+      "stock_quantity": 30,
+      "price": { "value": 798, "currency": "UAH" },
+      "sale_price": { "value": 399, "currency": "UAH" },
+      "item_group_id": "457_36",
+      "brand": "CottonHome",
+      "condition": "new"
+    },
+
+    {
+      "id": "21001",
+      "title": "Ремінець Upex Single Tour для Apple Watch Indigo Epsom Leather",
+      "description": "Ремінець для Apple Watch (42/41/40/38). Indigo Epsom leather.",
+      "link": "https://ivan-chohol.ua/remeshok-21001",
+      "image_link": "https://ivan-chohol.ua/image/catalog/product-21001.jpg",
+      "additional_image_links": [
+        "https://ivan-chohol.ua/image/catalog/product_image-21001-1.jpg",
+        "https://ivan-chohol.ua/image/catalog/product_image-21001-2.jpg"
+      ],
+      "availability": "in stock",
+      "stock_quantity": 18,
+      "price": { "value": 2399, "currency": "UAH" },
+      "sale_price": { "value": 1549, "currency": "UAH" },
+      "sale_price_effective_date": "2025-09-07/2026-09-07",
+      "google_product_category": 2353,
+      "item_group_id": "UPEX_SINGLE_42",
+      "product_type": "Watch strap",
+      "brand": "Upex",
+      "condition": "new",
+      "attributes": {
+        "compatible_with": ["Apple Watch 42", "41", "40", "38"],
+        "material": "Epsom Leather",
+        "color": "indigo"
+      },
+      "variants": [
+        {
+          "id": "21001-38",
+          "size": 38,
+          "price": 2399,
+          "availability": "in stock"
+        },
+        {
+          "id": "21001-42",
+          "size": 42,
+          "price": 2399,
+          "availability": "in stock"
+        }
+      ],
+      "rating": { "avg": 4.7, "count": 78 }
+    },
+
+    {
+      "id": "21002",
+      "title": "Ремінець Upex Single Tour Black Swift Leather",
+      "link": "https://ivan-chohol.ua/remeshok-21002",
+      "image_link": "https://ivan-chohol.ua/image/catalog/product-21002.jpg",
+      "availability": "in stock",
+      "stock_quantity": 0,
+      "price": { "value": 2399, "currency": "UAH" },
+      "sale_price": { "value": 1549, "currency": "UAH" },
+      "sale_price_effective_date": "2025-09-07/2026-09-07",
+      "google_product_category": 2353,
+      "item_group_id": "UPEX_SINGLE_42",
+      "brand": "Upex",
+      "condition": "new"
+    },
+
+    {
+      "id": "21010",
+      "title": "Ремінець Upex Double Tour Feu Epsom Leather",
+      "link": "https://ivan-chohol.ua/remeshok-21010",
+      "image_link": "https://ivan-chohol.ua/image/catalog/product-21010.jpg",
+      "availability": "preorder",
+      "stock_quantity": 0,
+      "price": { "value": 2999, "currency": "UAH" },
+      "sale_price": { "value": 1989, "currency": "UAH" },
+      "sale_price_effective_date": "2025-09-07/2026-09-07",
+      "google_product_category": 2353,
+      "item_group_id": "UPEX_DOUBLE_42",
+      "brand": "Upex",
+      "condition": "new",
+      "attributes": { "type": "Double Tour", "origin": "EU" }
+    },
+
+    {
+      "id": "21346",
+      "title": "Ремінець Upex Single Tour Feu Epsom (1-3 series)",
+      "link": "https://ivan-chohol.ua/remeshok-21346",
+      "image_link": "https://ivan-chohol.ua/image/catalog/48401.jpg",
+      "availability": "in stock",
+      "stock_quantity": 54,
+      "price": { "value": 2399, "currency": "UAH" },
+      "sale_price": { "value": 1549, "currency": "UAH" },
+      "sale_price_effective_date": "2025-09-07/2026-09-07",
+      "google_product_category": 2353,
+      "item_group_id": "UPEX_SINGLE_1_3",
+      "brand": "Upex",
+      "condition": "new"
+    },
+
+    {
+      "id": "58738",
+      "title": "Ремінець Upex Single Tour Brique/Beton Swift Leather",
+      "link": "https://ivan-chohol.ua/remeshok-58738",
+      "image_link": "https://ivan-chohol.ua/image/catalog/cases/44412.jpg",
+      "availability": "in stock",
+      "stock_quantity": 7,
+      "price": { "value": 2399, "currency": "UAH" },
+      "sale_price": { "value": 1549, "currency": "UAH" },
+      "google_product_category": 2353,
+      "item_group_id": "UPEX_SINGLE_42",
+      "brand": "Upex",
+      "condition": "new"
+    },
+
+    {
+      "id": "99901",
+      "title": "Подушка ортопедична \"SleepWell\"",
+      "description": "Ортопедична подушка з пінополіуретану, регульована висота.",
+      "link": "https://example.com/sleepwell/99901",
+      "image_link": "https://example.com/images/99901.png",
+      "availability": "backorder",
+      "stock_quantity": 0,
+      "price": { "value": 1299, "currency": "UAH" },
+      "sale_price": null,
+      "google_product_category": 5020,
+      "item_group_id": "SLEEP_01",
+      "product_type": "Подушка",
+      "brand": "SleepWell",
+      "condition": "new",
+      "attributes": {
+        "fill": "memory foam",
+        "height_cm": [8, 12],
+        "washable_cover": true
+      },
+      "shipping": { "weight_kg": 1.8, "dimensions_cm": [60, 40, 12] }
+    },
+
+    {
+      "id": "40001",
+      "title": "Наматрацник водовідштовхувальний \"DryGuard\"",
+      "link": "https://example.com/dryguard/40001",
+      "image_link": "https://example.com/images/40001.jpg",
+      "availability": "in stock",
+      "stock_quantity": 250,
+      "price": { "value": 499, "currency": "UAH" },
+      "sale_price": { "value": 399, "currency": "UAH" },
+      "google_product_category": 4171,
+      "item_group_id": "MATTRESS_PROT_01",
+      "product_type": "Наматрацник",
+      "brand": "HomeProtect",
+      "condition": "new",
+      "attributes": {
+        "sizes": ["90x200", "160x200", "180x200"],
+        "waterproof": true
+      },
+      "tags": ["accessory", "waterproof"]
+    },
+
+    {
+      "id": "discont-01",
+      "title": "Старий колекційний комплект (discontinued)",
+      "description": "Знятий з виробництва комплект, товар зі статусом discontinued.",
+      "link": "https://cottonhome.site/discontinued/01",
+      "image_link": null,
+      "availability": "discontinued",
+      "stock_quantity": 0,
+      "price": { "value": 0, "currency": "UAH" },
+      "sale_price": null,
+      "google_product_category": 4171,
+      "item_group_id": "DISCONT_01",
+      "brand": "CottonHome",
+      "condition": "used"
+    },
+
+    {
+      "id": "multi-currency-1",
+      "title": "Тестовий товар (EUR pricing)",
+      "link": "https://example.com/multi/1",
+      "image_link": "https://example.com/images/multi1.jpg",
+      "availability": "in stock",
+      "stock_quantity": 6,
+      "price": { "value": 29.99, "currency": "EUR" },
+      "sale_price": { "value": 24.99, "currency": "EUR" },
+      "google_product_category": 9999,
+      "item_group_id": "MULTI_01",
+      "brand": "TestBrand",
+      "condition": "new",
+      "attributes": { "promo": "euro-test" }
+    },
+
+    {
+      "id": "edge-blank-fields",
+      "title": "Товар з пропущеними полями",
+      "link": null,
+      "image_link": null,
+      "availability": "in stock",
+      "price": null,
+      "google_product_category": null,
+      "item_group_id": "EDGE_01",
+      "brand": null,
+      "condition": "new"
+    },
+
+    {
+      "id": "complex-variants-01",
+      "title": "Комплект \"Mix & Match\" (мультіваріант)",
+      "description": "Набір з багатьма варіантами кольору і розміру.",
+      "link": "https://example.com/mixmatch/complex-01",
+      "image_link": "https://example.com/images/mixmatch.jpg",
+      "availability": "in stock",
+      "stock_quantity": 300,
+      "price": { "value": 1599, "currency": "UAH" },
+      "sale_price": { "value": 1299, "currency": "UAH" },
+      "google_product_category": 4171,
+      "item_group_id": "MIX_001",
+      "brand": "CustomLine",
+      "condition": "new",
+      "attributes": {
+        "colors": ["red", "green", "navy", "beige"],
+        "sizes": ["S", "M", "L", "XL"]
+      },
+      "variants": [
+        {
+          "id": "c-01-S-red",
+          "size": "S",
+          "color": "red",
+          "price": 1599,
+          "stock": 10
+        },
+        {
+          "id": "c-01-M-navy",
+          "size": "M",
+          "color": "navy",
+          "price": 1599,
+          "stock": 5
+        },
+        {
+          "id": "c-01-L-beige",
+          "size": "L",
+          "color": "beige",
+          "price": 1599,
+          "stock": 0,
+          "availability": "out of stock"
+        }
+      ],
+      "rating": { "avg": 4.2, "count": 12 },
+      "tags": ["mix", "bundle"]
+    },
+
+    {
+      "id": "gift-001",
+      "title": "Подарунковий сертифікат 1000 UAH",
+      "description": "Електронний сертифікат на 1000 UAH, негнучкий.",
+      "link": "https://shop.example.com/gift/1000",
+      "image_link": "https://shop.example.com/images/gift-1000.png",
+      "availability": "in stock",
+      "stock_quantity": 9999,
+      "price": { "value": 1000, "currency": "UAH" },
+      "sale_price": null,
+      "google_product_category": 239,
+      "item_group_id": "GIFT_CARDS",
+      "product_type": "Gift card",
+      "brand": "Shop",
+      "condition": "new",
+      "attributes": { "redeemable_online": true }
+    },
+
+    {
+      "id": "bundle-01",
+      "title": "Набір: Подушка + Наматрацник + Комплект \"Релакс\"",
+      "description": "Промо-набір, знижка на комплект.",
+      "link": "https://example.com/bundle/01",
+      "image_link": "https://example.com/images/bundle-01.jpg",
+      "availability": "in stock",
+      "stock_quantity": 15,
+      "price": { "value": 2499, "currency": "UAH" },
+      "sale_price": { "value": 1999, "currency": "UAH" },
+      "google_product_category": 4171,
+      "item_group_id": "BUNDLE_001",
+      "brand": "CottonHome",
+      "condition": "new",
+      "attributes": {
+        "contains": ["Подушка 99901", "Наматрацник 40001", "Комплект 55057"]
+      }
+    }
+  ]
+}

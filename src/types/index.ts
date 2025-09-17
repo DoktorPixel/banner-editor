@@ -263,6 +263,8 @@ export interface BannerContextProps {
     parentGroupId?: number,
     atIndex?: number
   ) => void;
+  combinedPairs: ExtendedPair[];
+  setCombinedPairs: React.Dispatch<React.SetStateAction<ExtendedPair[]>>;
 }
 
 export interface DynamicImg {
@@ -295,6 +297,7 @@ export interface ConfigItem {
   keyValuePairs: KeyValuePair[];
   canvasSize: { width: number; height: number };
   customFonts?: CustomFont[];
+  attributListenerProps?: string[];
 }
 
 export interface CustomFont {
@@ -309,6 +312,8 @@ export interface CustomFont {
 export interface KeyValuePair {
   key: string;
   value: string;
+  fromProduct?: boolean;
+  custom?: boolean;
 }
 
 export type ResizeDirection =
@@ -352,4 +357,48 @@ export interface SupabaseImageItem {
   user_id?: string;
   created_at?: string;
   name?: string;
+}
+
+// export type Product = {
+//   id: string;
+//   title?: string;
+//   description?: string;
+//   html_description?: string;
+//   link?: string | null;
+//   image_link?: string | null;
+//   additional_image_links?: string[];
+//   availability?: string;
+//   stock_quantity?: number;
+//   price?: { value: number; currency: string } | null;
+//   sale_price?: { value: number; currency: string } | null;
+//   sale_price_effective_date?: string | null;
+//   google_product_category?: number | null;
+//   item_group_id?: string | null;
+//   product_type?: string | null;
+//   brand?: string | null;
+//   condition?: string | null;
+//   attributes?: Record<string, any>;
+//   variants?: any[];
+//   rating?: { avg?: number; count?: number } | null;
+//   tags?: string[];
+//   shipping?: Record<string, any>;
+//   created_at?: string;
+//   [k: string]: any;
+// };
+
+export type Product = Record<string, string | string[]>;
+
+export type ExtendedPair = KeyValuePair & {
+  editable: boolean;
+  custom?: boolean;
+};
+
+export interface KeyValueTableProps {
+  combinedPairs: ExtendedPair[]; // уже объединённый список: кастомные сверху, далее product-ordered
+  onEditKey: (oldKey: string, newKey: string) => void;
+  onEditValue: (key: string, value: string) => void;
+  onRemoveByKey: (key: string) => void;
+  onAddCustom: () => void;
+  onAddText: (text: string) => void;
+  onCommitProductValue: (key: string, value: string) => void;
 }

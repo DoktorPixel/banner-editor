@@ -11,6 +11,11 @@ interface ConfigContextType {
   setCustomFonts: (fonts: CustomFont[]) => void;
   addCustomFont: (font: CustomFont) => void;
   removeCustomFont: (fontId: string) => void;
+  //
+  attributListenerProps: string[];
+  setAttributListenerProps: (props: string[]) => void;
+  addAttributListenerProp: (prop: string) => void;
+  removeAttributListenerProp: (prop: string) => void;
 }
 
 const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
@@ -21,13 +26,12 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   const [config, setConfig] = useState<ConfigItem>({
     hiddenObjectIds: [],
     keyValuePairs: [
-      { key: "title", value: "Назва продукту" },
+      { key: "example_title", value: "Назва продукту" },
       { key: "img", value: "https://placehold.co/300" },
-      { key: "price", value: "1000" },
-      { key: "sale_price", value: "800 UAH" },
     ],
     canvasSize: { width: 1080, height: 1080 },
     customFonts: [],
+    attributListenerProps: [],
   });
 
   const toggleHiddenObject = (id: number) => {
@@ -64,6 +68,29 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
       customFonts: (prev.customFonts ?? []).filter((f) => f.id !== fontId),
     }));
   };
+  // attributListenerProps
+  const setAttributListenerProps = (props: string[]) => {
+    setConfig((prev) => ({ ...prev, attributListenerProps: props }));
+  };
+
+  const addAttributListenerProp = (prop: string) => {
+    setConfig((prev) => ({
+      ...prev,
+      attributListenerProps: [
+        ...(prev.attributListenerProps ?? []),
+        prop,
+      ].filter((v, i, arr) => arr.indexOf(v) === i),
+    }));
+  };
+
+  const removeAttributListenerProp = (prop: string) => {
+    setConfig((prev) => ({
+      ...prev,
+      attributListenerProps: (prev.attributListenerProps ?? []).filter(
+        (p) => p !== prop
+      ),
+    }));
+  };
 
   return (
     <ConfigContext.Provider
@@ -77,6 +104,11 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
         setCustomFonts,
         addCustomFont,
         removeCustomFont,
+        //
+        attributListenerProps: config.attributListenerProps ?? [],
+        setAttributListenerProps,
+        addAttributListenerProp,
+        removeAttributListenerProp,
       }}
     >
       {children}
