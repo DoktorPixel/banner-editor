@@ -44,6 +44,7 @@ const BannerArea: React.FC = () => {
     renderedObjects,
     dynamicImgs,
     scale,
+    combinedPairs,
   } = useBanner();
 
   const { hiddenObjectIds, config, canvasSize } = useConfig();
@@ -63,7 +64,7 @@ const BannerArea: React.FC = () => {
   );
 
   // 4. Кастомные значения и генерация стилей
-  const keyValuePairs = config?.keyValuePairs ?? [];
+  const keyValuePairs = combinedPairs ?? [];
   const fallbackText = encodeURIComponent(
     t("dialogs.dynamicImageDialog.fillIn")
   );

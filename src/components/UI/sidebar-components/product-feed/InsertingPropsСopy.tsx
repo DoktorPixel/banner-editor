@@ -1,8 +1,8 @@
-import KeyValueTable from "./UI/KeyValueTable";
-import { useConfig } from "../context/ConfigContext";
-import { useBanner } from "../context/BannerContext";
+import KeyValueTableCopy from "./KeyValueTableСopy";
+import { useConfig } from "../../../../context/ConfigContext";
+import { useBanner } from "../../../../context/BannerContext";
 
-const InsertingProps: React.FC = () => {
+const InsertingPropsCopy: React.FC = () => {
   const { config, setConfig } = useConfig();
 
   const { addObject } = useBanner();
@@ -56,7 +56,7 @@ const InsertingProps: React.FC = () => {
 
   return (
     <div className="inserting-props">
-      <KeyValueTable
+      <KeyValueTableCopy
         keyValuePairs={keyValuePairs}
         handleKeyChange={handleKeyChange}
         handleValueChange={handleValueChange}
@@ -68,4 +68,4 @@ const InsertingProps: React.FC = () => {
   );
 };
 
-export default InsertingProps;
+export default InsertingPropsCopy;

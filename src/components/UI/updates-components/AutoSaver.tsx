@@ -51,7 +51,7 @@ const AutoSaver: React.FC = () => {
         objects,
         dynamicImgs: dynamicImgs ?? [],
       });
-
+      // console.log("Auto-saved config:", config);
       // console.log("Auto-saved project:", projectData);
 
       lastDataRef.current = {

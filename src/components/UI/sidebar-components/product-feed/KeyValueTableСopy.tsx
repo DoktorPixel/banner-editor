@@ -1,8 +1,8 @@
 import React from "react";
 import { TextField, IconButton } from "@mui/material";
-import { AddButton } from "../../assets/icons";
-import { DeleteFile, AddFile } from "../../assets/icons";
-import { KeyValuePair } from "../../types";
+import { AddButton } from "../../../../assets/icons";
+import { DeleteFile, AddFile } from "../../../../assets/icons";
+import { KeyValuePair } from "../../../../types";
 import { useTranslation } from "react-i18next";
 
 interface KeyValueTableProps {
@@ -14,7 +14,7 @@ interface KeyValueTableProps {
   handleAddText: (text: string) => void;
 }
 
-const KeyValueTable: React.FC<KeyValueTableProps> = ({
+const KeyValueTableCopy: React.FC<KeyValueTableProps> = ({
   keyValuePairs,
   handleKeyChange,
   handleValueChange,
@@ -115,4 +115,4 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({
   );
 };
 
-export default KeyValueTable;
+export default KeyValueTableCopy;

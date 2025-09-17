@@ -16,10 +16,8 @@ interface LayoutProps {
 const defaultConfig = {
   hiddenObjectIds: [],
   keyValuePairs: [
-    { key: "title", value: "Назва продукту" },
+    { key: "example_title", value: "Назва продукту" },
     { key: "img", value: "https://placehold.co/300" },
-    { key: "price", value: "1000 UAH" },
-    { key: "sale_price", value: "800 UAH" },
   ],
   canvasSize: {
     width: 1080,
@@ -50,7 +48,7 @@ const Layout: React.FC<LayoutProps> = ({ isAuthReady }) => {
         if (template.config_dev?.trim()) {
           parsed = JSON.parse(template.config_dev);
         }
-        // console.log("Parsed project configuration:", parsed);
+        console.log("Parsed project configuration:", parsed);
       } catch {
         console.error("Error parsing project configuration JSON");
       }

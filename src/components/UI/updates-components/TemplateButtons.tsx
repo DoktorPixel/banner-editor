@@ -11,10 +11,13 @@ import {
 } from "@mui/material";
 import { useSupabaseProject } from "../../../utils/useSupabaseProject";
 import { useBanner } from "../../../context/BannerContext";
+import { useConfig } from "../../../context/ConfigContext";
 import { useTranslation } from "react-i18next";
+import { collectParamsFromObjects } from "../../../utils/collectParams";
 
 export const DeployTemplateButton: React.FC = () => {
-  const { currentProjectId } = useBanner();
+  const { currentProjectId, objects } = useBanner();
+  const { setAttributListenerProps } = useConfig();
   const { deployTemplate } = useSupabaseProject();
   const { t } = useTranslation();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -32,6 +35,8 @@ export const DeployTemplateButton: React.FC = () => {
     if (!currentProjectId) return;
 
     try {
+      const params = collectParamsFromObjects(objects);
+      setAttributListenerProps(params);
       await deployTemplate.mutateAsync(currentProjectId);
       setSnackbar({
         open: true,
