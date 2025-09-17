@@ -16,10 +16,8 @@ interface LayoutProps {
 const defaultConfig = {
   hiddenObjectIds: [],
   keyValuePairs: [
-    { key: "title", value: "Назва продукту" },
+    { key: "example_title", value: "Назва продукту" },
     { key: "img", value: "https://placehold.co/300" },
-    { key: "price", value: "1000 UAH" },
-    { key: "sale_price", value: "800 UAH" },
   ],
   canvasSize: {
     width: 1080,

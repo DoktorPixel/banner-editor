@@ -297,6 +297,7 @@ export interface ConfigItem {
   keyValuePairs: KeyValuePair[];
   canvasSize: { width: number; height: number };
   customFonts?: CustomFont[];
+  attributListenerProps?: string[];
 }
 
 export interface CustomFont {
