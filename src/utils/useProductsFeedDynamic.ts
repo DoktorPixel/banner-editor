@@ -1,4 +1,4 @@
-// src/utils/useProductsFeed.ts
+// src/utils/useProductsFeedDynamic.ts
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import type { Product } from "../types";
 
@@ -46,47 +46,61 @@ function parseEntryToProduct(entry: Element): Product {
   return product;
 }
 
-async function fetchAndParseXml(
-  url: string,
-  limit = DEFAULT_LIMIT,
-  signal?: AbortSignal
-): Promise<Product[]> {
-  const res = await fetch(url, { signal });
+function parseXmlStringToProducts(
+  xmlString: string,
+  limit = DEFAULT_LIMIT
+): Product[] {
+  if (!xmlString || !xmlString.trim()) return [];
 
-  if (!res.ok) {
-    throw new Error(`Feed fetch failed: ${res.status} ${res.statusText}`);
+  if (typeof xmlString !== "string") {
+    throw new Error("parseXmlStringToProducts: expected XML string");
   }
-  const text = await res.text();
+
   const parser = new DOMParser();
-  const xml = parser.parseFromString(text, "application/xml");
-  console.log("xml::", xml);
+  const xml = parser.parseFromString(xmlString, "application/xml");
 
   if (xml.getElementsByTagName("parsererror").length > 0) {
     throw new Error("Failed to parse XML feed (parsererror detected).");
   }
 
   const entries: Element[] = [];
-  entries.push(...Array.from(xml.getElementsByTagNameNS("*", "entry"))); // Atom
-  entries.push(...Array.from(xml.getElementsByTagNameNS("*", "item"))); // RSS
-  entries.push(...Array.from(xml.getElementsByTagName("entry"))); // fallback
-  entries.push(...Array.from(xml.getElementsByTagName("item"))); // fallback
+
+  entries.push(...Array.from(xml.getElementsByTagNameNS("*", "entry")));
+  entries.push(...Array.from(xml.getElementsByTagNameNS("*", "item")));
+  entries.push(...Array.from(xml.getElementsByTagName("entry")));
+  entries.push(...Array.from(xml.getElementsByTagName("item")));
 
   const products = entries.map(parseEntryToProduct).slice(0, limit);
+
   return products;
 }
 
-export function useProductsFeed(
-  url: string,
+/**
+ * useProductsFeedDynamic
+ * @param xmlContent - строка XML (feed content). Если null/undefined/empty -> enabled = false.
+ * @param opts - { limit?, enabled? }
+ */
+export function useProductsFeedDynamic(
+  xmlContent: string | null | undefined,
   opts?: { limit?: number; enabled?: boolean }
 ): UseQueryResult<Product[], Error> {
   const limit = opts?.limit ?? DEFAULT_LIMIT;
+  const enabled =
+    Boolean(opts?.enabled ?? true) && Boolean(xmlContent && xmlContent.trim());
 
   return useQuery<Product[], Error>({
-    queryKey: ["productsFromFeed", url, limit],
-    queryFn: async ({ signal }) => {
-      return await fetchAndParseXml(url, limit, signal ?? undefined);
+    queryKey: [
+      "productsFromFeedDynamic",
+      xmlContent?.slice(0, 200) ?? null,
+      limit,
+    ],
+    queryFn: async () => {
+      if (!xmlContent || typeof xmlContent !== "string") {
+        return [];
+      }
+      return parseXmlStringToProducts(xmlContent, limit);
     },
-    enabled: opts?.enabled ?? true,
+    enabled,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
   });
