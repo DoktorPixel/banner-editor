@@ -2,8 +2,9 @@ import html2canvas from "html2canvas";
 import axios from "axios";
 import { getToken } from "../../../utils/supabaseClient";
 
-const API_URL =
-  "https://tgitxrjsbuimawihmkth.supabase.co/functions/v1/templates/uploadPreview";
+const API_URL = `${
+  import.meta.env.VITE_SUPABASE_URL
+}/functions/v1/templates/uploadPreview`;
 
 export const captureAndUploadPreview = async (templateId: string) => {
   const element = document.querySelector(".banner-area") as HTMLElement;
@@ -52,6 +53,18 @@ export const captureAndUploadPreview = async (templateId: string) => {
               template_id: templateId,
             },
           });
+          // const formData = new FormData();
+          // formData.append("file", blob, "preview.jpg");
+          // await axios.post(API_URL, formData, {
+          //   headers: {
+          //     Authorization: `Bearer ${
+          //       import.meta.env.VITE_SUPABASE_TEMP_ACCESS_TOKEN
+          //     }`,
+          //   },
+          //   params: {
+          //     template_id: templateId,
+          //   },
+          // });
 
           resolve();
         } catch (error) {

@@ -40,6 +40,7 @@ export const signIn = async (email: string, password: string) => {
     console.error("Sign-in error:", error);
     throw new Error(`Failed to sign in: ${error.message}`);
   }
+  console.log("signIn data:", data);
   return data;
 };
 
