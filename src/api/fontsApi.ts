@@ -1,8 +1,16 @@
 import axios from "axios";
 import { getToken } from "../utils/supabaseClient";
 
-export const FONTS_API_BASE_URL =
-  "https://tgitxrjsbuimawihmkth.supabase.co/functions/v1/fonts";
+export const FONTS_API_BASE_URL = `${
+  import.meta.env.VITE_SUPABASE_URL
+}/functions/v1/fonts`;
+
+// export const fontsApiClient = axios.create({
+//   baseURL: FONTS_API_BASE_URL,
+//   headers: {
+//     Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_TEMP_ACCESS_TOKEN}`,
+//   },
+// });
 
 export const fontsApiClient = axios.create({
   baseURL: FONTS_API_BASE_URL,

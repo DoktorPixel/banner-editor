@@ -37,7 +37,12 @@ export const DeployTemplateButton: React.FC = () => {
     try {
       const params = collectParamsFromObjects(objects);
       setAttributListenerProps(params);
-      await deployTemplate.mutateAsync(currentProjectId);
+
+      await deployTemplate.mutateAsync({
+        templateId: currentProjectId,
+        params,
+      });
+
       setSnackbar({
         open: true,
         message: `✅ ${t("deployTemplate.successMessage")} `,

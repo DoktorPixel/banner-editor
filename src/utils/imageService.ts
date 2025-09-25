@@ -11,8 +11,8 @@ export const uploadImage = async (
   compress: boolean = true
 ): Promise<SupabaseImageItem> => {
   const compressionSettings = objectId
-    ? { maxSizeMB: 0.01, maxWidthOrHeight: 512 }
-    : { maxSizeMB: 0.512, maxWidthOrHeight: 1600 };
+    ? { maxSizeMB: 0.05, maxWidthOrHeight: 512 }
+    : { maxSizeMB: 1, maxWidthOrHeight: 1600 };
 
   const fileToUpload = compress
     ? await compressImage(file, { ...compressionSettings, useWebWorker: true })
