@@ -7,11 +7,12 @@
   max-width: 440px;
   height: auto;
   max-height: 100vh;
-  overflow-y: scroll;
-  overflow-y: auto;
-  margin-bottom: 10px;
+  // overflow-y: scroll;
+  // overflow-y: auto;
+  margin-bottom: 1px;
   margin-left: 5px;
   margin-right: 8px;
+  position: relative;
 
   .arborist-row {
     user-select: text; /* важно для старта drag */
@@ -64,6 +65,7 @@
 }
 .sidebar-wrapper {
   padding: 10px 10px 0 10px;
+  position: sticky;
 }
 
 .sidebar-tabs {
@@ -105,6 +107,8 @@
   display: flex;
   flex-direction: column;
   font-size: 14px;
+  overflow-y: scroll;
+  max-height: calc(100vh - 202px);
   .table-header,
   .table-row {
     display: flex;

@@ -85,6 +85,7 @@ export const BannerObjectsTree: React.FC = () => {
       data={treeData}
       rowHeight={34}
       width={"100%"}
+      height={600}
       indent={18}
       overscanCount={5}
       disableEdit={false}
