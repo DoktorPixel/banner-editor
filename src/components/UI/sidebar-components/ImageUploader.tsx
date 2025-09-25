@@ -10,10 +10,15 @@ const ImageUploader: React.FC = () => {
   const { uploadImage } = useSupabaseImages();
   const { currentProjectId, triggerRefresh, addObject } = useBanner();
   const { t } = useTranslation();
+
   const normalizeImagePath = (url: string): string => {
     if (url.includes("/feedmaker/")) return url;
     return url.replace("/templates/", "/feedmaker/templates/");
   };
+
+  // const normalizeImagePath = (url: string): string => {
+  //   return url;
+  // };
   const handleAddImage = (url: string) => {
     addObject({
       id: Date.now(),

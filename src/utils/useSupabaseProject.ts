@@ -1,3 +1,4 @@
+// useSupabaseProject.ts
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiClient } from "../api/apiClient";
 import { ProjectData, ConfigItem, BannerObject, DynamicImg } from "../types";
@@ -40,9 +41,24 @@ export const useSupabaseProject = () => {
     },
   });
 
+  // const deployTemplate = useMutation({
+  //   mutationFn: async (templateId: string) => {
+  //     await apiClient.post(`/deploy?template_id=${templateId}`, {});
+  //     return true;
+  //   },
+  // });
+
   const deployTemplate = useMutation({
-    mutationFn: async (templateId: string) => {
-      await apiClient.post(`/deploy?template_id=${templateId}`, {});
+    mutationFn: async ({
+      templateId,
+      params,
+    }: {
+      templateId: string;
+      params: string[];
+    }) => {
+      await apiClient.post(`/deploy?template_id=${templateId}`, {
+        params,
+      });
       return true;
     },
   });
@@ -59,6 +75,9 @@ export const useProject = (templateId: string) =>
     queryKey: ["project", templateId],
     queryFn: async () => {
       const res = await apiClient.get(`?template_id=${templateId}`);
+      // const res = await apiClient.get(`?id=${templateId}`);
+      // const res = await apiClient.post("/", { feed_id: templateId });
+      // const res = await apiClient.post(`?id=${templateId}`, { id: templateId });
       return res.data;
     },
     enabled: !!templateId,

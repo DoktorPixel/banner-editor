@@ -69,6 +69,10 @@ const ManageDynamicImgsComponent: React.FC<ManageDynamicImgsComponentProps> = ({
     return url.replace("/templates/", "/feedmaker/templates/");
   };
 
+  // const normalizeImagePath = (url: string): string => {
+  //   return url;
+  // };
+
   useEffect(() => {
     if (!images || !dynamicImgs) return;
 

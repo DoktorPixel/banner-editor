@@ -1,7 +1,7 @@
 .object-properties {
   flex: 1 1 0;
   padding: 10px 0;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
   margin-right: 5px;
   // margin-left: 5px;
   border: 1px solid #ececec;
@@ -11,7 +11,7 @@
   max-width: 440px;
   height: auto;
   max-height: 100vh;
-  overflow-y: scroll;
+  // overflow-y: scroll;
   .properties-list {
     display: flex;
     flex-direction: column;
@@ -24,6 +24,11 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px;
+  }
+
+  .object-properties-content {
+    overflow-y: scroll;
+    max-height: calc(100vh - 90px);
   }
 }
 
