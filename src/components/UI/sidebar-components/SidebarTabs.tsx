@@ -13,6 +13,7 @@ import LayersPanel from "./LayersPanel";
 import VariablesPanel from "./VariablesPanel";
 import DevPanel from "./DevPanel";
 import { useTranslation } from "react-i18next";
+import { CombinedPairsSync } from "../../../utils/CombinedPairsSync";
 
 const SidebarTabs: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("text");
@@ -39,6 +40,7 @@ const SidebarTabs: React.FC = () => {
           marginTop: "0",
         }}
       >
+        <CombinedPairsSync />
         {tabs.map((tab) => (
           <Button
             key={tab.id}
