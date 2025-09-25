@@ -22,6 +22,10 @@ const ImageGallery: React.FC = () => {
     return url.replace("/templates/", "/feedmaker/templates/");
   };
 
+  // const normalizeImagePath = (url: string): string => {
+  //   return url;
+  // };
+
   const { data: images = [], isLoading } = useSupabaseImages().useImages(
     currentProjectId!,
     undefined
