@@ -625,9 +625,11 @@ export const shouldHideObject = (
     const propsExist = conditionProps.some((prop) => {
       if (isExpression(prop)) {
         const val = evaluatePropValue(prop);
-        return val !== undefined && val !== "";
+        return val !== undefined && val.trim() !== "";
       } else {
-        return keyValuePairs.some((pair) => pair.key === prop);
+        return keyValuePairs.some(
+          (pair) => pair.key === prop && pair.value.trim() !== ""
+        );
       }
     });
 
@@ -695,22 +697,7 @@ export const shouldHideObject = (
 };
 
 export const shouldHideGroup = (
-  conditionForAbstract:
-    | {
-        type: "showIf" | "hideIf";
-        props: string[];
-        state:
-          | "exist"
-          | "noExist"
-          | "eq"
-          | "not-eq"
-          | "more-than"
-          | "less-than"
-          | "more-or-eq"
-          | "less-or-eq";
-        compareValue?: string;
-      }
-    | undefined,
+  conditionForAbstract: ObjectCondition | undefined,
   keyValuePairs: { key: string; value: string }[]
 ): boolean => {
   if (!conditionForAbstract) {
@@ -740,9 +727,11 @@ export const shouldHideGroup = (
     const propsExist = conditionProps.some((prop) => {
       if (isExpression(prop)) {
         const val = evaluatePropValue(prop);
-        return val !== undefined && val !== "";
+        return val !== undefined && val.trim() !== "";
       } else {
-        return keyValuePairs.some((pair) => pair.key === prop);
+        return keyValuePairs.some(
+          (pair) => pair.key === prop && pair.value.trim() !== ""
+        );
       }
     });
 
