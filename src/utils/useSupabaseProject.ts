@@ -56,6 +56,7 @@ export const useSupabaseProject = () => {
       templateId: string;
       params: string[];
     }) => {
+      console.log("deployTemplate params:", params);
       await apiClient.post(`/deploy?template_id=${templateId}`, {
         params,
       });
