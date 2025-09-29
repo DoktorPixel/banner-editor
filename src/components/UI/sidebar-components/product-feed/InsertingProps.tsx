@@ -8,12 +8,10 @@ import KeyValueTable from "./KeyValueTable";
 import { KeyValuePair, Product } from "../../../../types";
 import { mockProducts } from "../../../../constants/mockProducts";
 import type { ExtendedPair } from "../../../../types";
-// import { useProductsFeed } from "../../../../utils/useProductsFeed";
+
 import { fetchDynamicFeed } from "../../../../utils/fetchDynamicFeed";
 import { useProductsFeedDynamic } from "../../../../utils/useProductsFeedDynamic";
 
-// const HARDCODED_FEED = "https://ivan-chohol.ua/price/facebook-catalog.xml";
-// const HARDCODED_FEED = "/api/catalog";
 const DYNAMIC_FEED = await fetchDynamicFeed(
   "https://ivan-chohol.ua/price/facebook-catalog.xml"
 );
@@ -81,12 +79,6 @@ const InsertingProps: React.FC = () => {
   };
 
   // --- fetch products ---
-  // const {
-  //   data: fetchedProducts,
-  //   isLoading,
-  //   isError,
-  //   error,
-  // } = useProductsFeed(HARDCODED_FEED, { limit: MAX_PRODUCTS, enabled: true });
 
   const {
     data: fetchedProducts,
